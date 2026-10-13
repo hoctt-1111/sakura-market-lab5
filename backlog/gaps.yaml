@@ -3,6 +3,8 @@
 # Đường dẫn trong `spec` tính từ gốc repo LAB-4 đã nộp; file nằm sâu trong specs/ và references/ ghi bằng tên file (tên là duy nhất
 # trong cây). xu_ly ∈ {"premise:P-xx", "gia_dinh:P-xx", "issue:<key>", "de-mo"}; dòng trùng nội dung ghi `trung: <mã giữ lại>`
 # và mang cùng xu_ly với dòng đó. Mã G không đánh lại; `phat_hien` giữ nơi phát hiện.
+# `ai_quyet` (tuỳ chọn, dòng `de-mo`): ai đóng dòng để mở khi khác mặc định «người giữ bộ spec LAB-4» (cột «Ai quyết»
+# của task-breakdown.md §4).
 # Nguồn P2: (a) 9 mục Low của reviewer P4 LAB-4 (reviewer-261012-p4-noi-dung.md, L1–L7 lượt 1 và 2 mục lượt 2)
 #        (b) HANDOFF.md dòng 29–39 · (c) lệch 55/53 màn chưa có API (trùng L2, gộp vào G-01)
 #        (d) câu hỏi mở trong spec LAB-4 phát hiện khi dò nguồn cho PREMISE (G-15…G-20)
@@ -67,12 +69,14 @@ g:
     mo_ta: Ca kiểm KC-01 của LAB-4 đối chiếu spec màn với bản HTML sinh từ cùng một registry, nên đây là kiểm chứng vòng tròn; reviewer LAB-4 xếp mục M6 (HANDOFF.md dòng 39).
     xu_ly: de-mo
     ly_do: Mục M6 nói về cách LAB-4 tự kiểm bộ tài liệu, không phải chỗ hở của thiết kế hệ đích, nên backlog không có issue nào; ca KC-01 chỉ được sửa nếu LAB-4 nộp lại, còn LAB-5 tránh lặp lỗi bằng cách lấy tập đích của cổng độ phủ từ cây LAB-4 đã nộp.
+    ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p2
   - ma: G-11
     spec: '`AI-report.md:441` (bài học KN-24)'
     mo_ta: Con trỏ từ AI-report và PREMISE của LAB-4 sang file ngoài cây nộp dùng số dòng, chưa có neo ổn định, nên sửa file được dẫn là con trỏ trôi (HANDOFF.md dòng 33, 39).
     xu_ly: de-mo
     ly_do: Đây là việc của bộ công cụ LAB-4, không thuộc backlog hệ đích và chỉ sửa nếu LAB-4 nộp lại; PREMISE LAB-5 tránh lặp lỗi bằng cách luôn kèm câu trích bên cạnh số dòng.
+    ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p2
   - ma: G-12
     spec: '`SKM_DB.md:23` · `SKM_DB.md:415`'
@@ -160,6 +164,7 @@ g:
     mo_ta: 'adr.yaml không nạp được bằng YAML (dòng 24: could not find expected '':''); bộ sinh backlog đọc trạng thái ADR từ các file adr-0*.md.'
     xu_ly: de-mo
     ly_do: Lỗi nằm ở registry làm việc của LAB-4, ngoài cây đã nộp, và không đổi việc nào của backlog vì bộ sinh đọc trạng thái ADR từ các file ADR đã nộp; người giữ bộ công cụ LAB-4 sửa nếu LAB-4 nộp lại, nên dòng này để mở tới lúc đó.
+    ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p1
   # ----- P3 FG-01 (gaps/FG-01.yaml) -----
   - ma: G-FG01-01
@@ -268,7 +273,7 @@ g:
   - ma: G-FG02-06
     spec: rfp p.37 (FIG-010) · SKM_PARTICIPANT_EDIT_SPEC.md (A-8) · SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md (qualification)
     mo_ta: 'Bộ trạng thái tư cách lệch RFP: RFP có bốn trạng thái, spec LAB-4 chỉ có ba. RFP vẽ thêm 再審査 (xét lại), còn SC-011, SC-013 và API-204 không có; không spec nào ghi bước chuyển nào được phép, kể cả 失効 có mở lại được không và quá hạn có tự chuyển sang 失効 không.'
-    xu_ly: gia_dinh:P-29
+    xu_ly: premise:P-29
     ly_do: P-29 thêm 再審査 vào danh sách trạng thái và để bảng chuyển ở cấu hình, khởi tạo theo ba thao tác của LAB-4; INV-FG02-TRANG-THAI hỏi khách bảng chuyển trước sprint của SC-013/BE.
     phat_hien: FG-02
   - ma: G-FG02-07
@@ -360,7 +365,7 @@ g:
   - ma: G-FG04-01
     spec: SKM_AITAI_BUYER_ELIGIBILITY_TECH.md §4.2 · SKM_AITAI_TRADE_CREATE_API.md (quantityKg) · SKM_DB.md §4.8 lots
     mo_ta: Lô không có chỗ giữ lượng khả dụng khi bán một phần. API-208 và API-209 đòi số lượng không vượt phần còn lại, FR-AITAI-01 đòi trừ đúng lượng khả dụng, nhưng TECH-301 so với toàn bộ weight_kg rồi chuyển cả lô sang sold_aitai, và bảng lots không có cột phần còn lại.
-    xu_ly: gia_dinh:P-30
+    xu_ly: premise:P-30
     ly_do: P-30 tính lượng còn lại từ giao dịch còn hiệu lực, không thêm cột số dư; INV-LOT-KHA-DUNG hỏi khách việc bán một phần trước sprint của SC-030/BE.
     phat_hien: FG-04
   - ma: G-FG04-02
@@ -946,6 +951,7 @@ g:
     mo_ta: Bảy kịch bản nghiệm thu chỉ có ba vế điều kiện, hành động, kết quả. Không kịch bản nào nêu bộ dữ liệu cần dựng, môi trường chạy, ai nghiệm thu và bằng chứng phải lưu; mục 9 của thiết kế hệ thống cũng chỉ đối chiếu độ phủ mã quy tắc.
     xu_ly: de-mo
     ly_do: Bảy story AC-n đã tự nêu dữ liệu chuẩn bị, môi trường staging, người nghiệm thu qua BrSE và bằng chứng phải lưu, nên phần còn mở chỉ là mẫu biên bản nghiệm thu của khách; PM chốt mẫu đó với khách qua BrSE trước đợt nghiệm thu đầu, tới lúc đó dòng này để mở.
+    ai_quyet: PM, chốt với khách qua BrSE
     phat_hien: E17
   - ma: G-E17-02
     spec: SKM_SYSTEM_DESIGN.feature (AC3) · SKM_SYSTEM_DESIGN.md A4 · error-codes.md (M_23) · SKM_SERI_UNSOLD_TO_AITAI_TECH.md

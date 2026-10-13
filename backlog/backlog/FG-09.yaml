@@ -726,7 +726,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Cách tính 適格金額 và bảng 交付率
-  han: Trước LAB-5
+  han: 20/10/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách
   nguon: PREMISE.md (LAB-4) §4.1 dòng 3
   spec_refs:
@@ -755,7 +755,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Xử lý khi lưu kết quả chờ của bước tính thưởng thất bại
-  han: '2026-10-08'
+  han: 19/10/2026 (checkpoint; hạn cũ 08/10/2026 đã qua)
   nguoi_tra_loi: Tech Lead
   nguon: detail-flows.yaml › details[SKM_INCENTIVE_EVALUATE_CONFIRM].cau_hoi_mo[1]
   spec_refs:
@@ -785,7 +785,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Ai xác nhận 次期差分 và cách đưa chênh lệch vào kỳ sau
-  han: Trước sprint của TECH-304/BE
+  han: Trước sprint của TECH-304/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_INCENTIVE_NEXT_DIFF_SPEC.md §3 (LAB-4)
   spec_refs:

@@ -351,7 +351,10 @@ items:
   gap_refs:
   - G-FG13-04
   - G-FG13-05
-  mo_ta: 運用担当者 (người phụ trách vận hành tư cách) và 事務部門 (bộ phận hành chính) theo dõi yêu cầu về dữ liệu cá nhân còn mở, nhất là yêu cầu sắp tới hạn, rồi ghi từng bước xử lý tới khi đóng. Cho xem, sửa hay xoá là việc người phụ trách quyết; hệ thống ghi ai đổi trạng thái, lúc nào, kết quả gì. Spec màn mới có danh sách nên story bổ sung đường ghi bước xử lý (G-FG13-04).
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) và 事務部門 (bộ phận hành chính) theo dõi yêu cầu về dữ liệu cá nhân còn mở, nhất là yêu cầu sắp tới hạn, rồi ghi từng bước xử lý tới khi đóng. Cho xem, sửa hay xoá là việc người phụ trách quyết; hệ thống ghi ai đổi trạng thái, lúc nào, kết quả gì. Spec màn mới có danh sách nên story bổ sung đường ghi bước xử lý (G-FG13-04).
+
+
+    Ràng buộc đặc thù: Cho xem, sửa hay xoá là việc người phụ trách quyết; mỗi lần đổi trạng thái hệ thống thêm dòng ghi người của phiên, giờ máy chủ và kết quả, máy không tự xoá.'
   pham_vi: Màn SC-132 (SPEC-SKM-165) ở văn phòng; đọc và thêm dòng trạng thái cho `personal_data_requests` (migration thuộc SC-131/DB), ghi `audit_log`. API đọc và lệnh đổi trạng thái chưa có spec, SC-132/BE viết rồi làm (P-01).
   luong_chinh:
   - Người theo dõi mở SC-132, lọc theo 業務日 (ngày nghiệp vụ) nhận và trạng thái; yêu cầu còn mở xếp theo hạn gần nhất.
@@ -387,7 +390,10 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG13-04
-  mo_ta: 'Dựng màn theo dõi yêu cầu ở văn phòng: lọc ngày nhận và trạng thái, bảng có nhãn sắp tới hạn và quá hạn, khung đổi trạng thái kèm ô kết quả cho yêu cầu còn mở.'
+  mo_ta: 'Dựng màn theo dõi yêu cầu ở văn phòng: lọc ngày nhận và trạng thái, bảng có nhãn sắp tới hạn và quá hạn, khung đổi trạng thái kèm ô kết quả cho yêu cầu còn mở.
+
+
+    Ràng buộc đặc thù: Khung đổi trạng thái kèm ô kết quả chỉ hiện với yêu cầu còn mở; người đổi và thời điểm do máy chủ ghi, màn không có ô nhập hai giá trị này.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -418,7 +424,10 @@ items:
   - P-01
   gap_refs:
   - G-FG13-04
-  mo_ta: Viết spec rồi làm API đọc danh sách và lệnh đổi trạng thái trên module audit (P-01); trạng thái hiện hành của mỗi yêu cầu là dòng mới nhất.
+  mo_ta: 'Viết spec rồi làm API đọc danh sách và lệnh đổi trạng thái trên module audit (P-01); trạng thái hiện hành của mỗi yêu cầu là dòng mới nhất.
+
+
+    Ràng buộc đặc thù: Lệnh đổi trạng thái chỉ thêm dòng mới mang người của phiên và giờ máy chủ, ghi audit_log trong cùng giao dịch CSDL; đóng yêu cầu xoá không chạy lệnh xoá hay sửa dữ liệu nghiệp vụ nào.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -679,7 +688,7 @@ items:
   cha: FG-13
   tracker: investigation
   title_vi: Cách xử lý yêu cầu xoá dữ liệu cá nhân khi dữ liệu nằm ở bảng chỉ thêm
-  han: Trước sprint của SC-132/BE
+  han: Trước sprint của SC-132/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DB.md §4.39 personal_data_requests (LAB-4) · rfp p.54
   spec_refs:

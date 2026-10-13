@@ -551,7 +551,7 @@ items:
   cha: FG-05
   tracker: investigation
   title_vi: Số lần tái せり tối đa cho mỗi lô
-  han: Trước sprint của SC-040/BE
+  han: Trước sprint của SC-040/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_SYSTEM_DESIGN.md A4 (LAB-4)
   spec_refs:

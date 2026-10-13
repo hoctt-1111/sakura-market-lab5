@@ -474,7 +474,10 @@ items:
   gap_refs:
   - G-FG07-05
   - G-FG07-06
-  mo_ta: '配送部門 (bộ phận giao hàng) ghi ngoại lệ của một lần 引渡し (giao hàng): thiếu, vượt, trả lại hoặc huỷ một phần, kèm lý do chọn từ danh mục và số lượng. Máy chỉ ghi; ngoại lệ có hiệu lực khi một người xác nhận, và hệ thống lưu ai xác nhận, lúc nào.'
+  mo_ta: '配送部門 (bộ phận giao hàng) ghi ngoại lệ của một lần 引渡し (giao hàng): thiếu, vượt, trả lại hoặc huỷ một phần, kèm lý do chọn từ danh mục và số lượng. Máy chỉ ghi; ngoại lệ có hiệu lực khi một người xác nhận, và hệ thống lưu ai xác nhận, lúc nào.
+
+
+    Ràng buộc đặc thù: Ngoại lệ chỉ có hiệu lực khi người khác người ghi bấm Xác nhận; hệ thống ghi người xác nhận từ phiên và giờ máy chủ, ngày còn ngoại lệ chờ thì không khoá được.'
   pham_vi: Màn SC-063 (SPEC-SKM-132) trên tablet hiện trường, mở từ SC-062 hoặc khi SC-060 báo lệch; bảng `delivery_exceptions` (chủ migration, chỉ thêm dòng); API ghi và xác nhận chưa có spec, SC-063/BE viết rồi làm (P-01).
   luong_chinh:
   - Người giao hàng chọn loại, lý do trong danh mục, nhập số lượng rồi bấm Lưu; máy chủ ghi ngoại lệ ở trạng thái chờ xác nhận.
@@ -511,7 +514,10 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG07-05
-  mo_ta: 'Dựng màn ghi ngoại lệ trên tablet: chọn một trong bốn loại, chọn lý do từ danh mục, ô số lượng, nút Lưu; người xác nhận thấy thêm nút Xác nhận ở ngoại lệ đang chờ.'
+  mo_ta: 'Dựng màn ghi ngoại lệ trên tablet: chọn một trong bốn loại, chọn lý do từ danh mục, ô số lượng, nút Lưu; người xác nhận thấy thêm nút Xác nhận ở ngoại lệ đang chờ.
+
+
+    Ràng buộc đặc thù: Nút Xác nhận chỉ hiện với người khác người ghi; người xác nhận và thời điểm chỉ hiển thị theo máy chủ trả về, màn không có ô nhập hai giá trị này.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -544,7 +550,10 @@ items:
   gap_refs:
   - G-FG07-05
   - G-FG08-08
-  mo_ta: 'Viết spec rồi làm hai API trên module delivery (P-01): ghi ngoại lệ ở trạng thái chờ và xác nhận ngoại lệ, lấy người và giờ ở phía máy chủ.'
+  mo_ta: 'Viết spec rồi làm hai API trên module delivery (P-01): ghi ngoại lệ ở trạng thái chờ và xác nhận ngoại lệ, lấy người và giờ ở phía máy chủ.
+
+
+    Ràng buộc đặc thù: API xác nhận lấy người từ phiên và giờ máy chủ, từ chối khi người ghi tự xác nhận; lệch ngoài dung sai thì ngoại lệ luôn chờ người, máy không tự đóng.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -576,7 +585,10 @@ items:
   gap_refs:
   - G-FG07-02
   - G-FG07-05
-  mo_ta: Viết migration bảng delivery_exceptions, chỉ thêm dòng; thêm chỗ lưu trạng thái xác nhận, người xác nhận, thời điểm và các cột ghi sổ của ADR-003 (P-06, G-FG07-05).
+  mo_ta: 'Viết migration bảng delivery_exceptions, chỉ thêm dòng; thêm chỗ lưu trạng thái xác nhận, người xác nhận, thời điểm và các cột ghi sổ của ADR-003 (P-06, G-FG07-05).
+
+
+    Ràng buộc đặc thù: Bảng chỉ thêm dòng; bước xác nhận lưu người xác nhận (khoá ngoại tới profiles) và thời điểm mà không sửa dòng ngoại lệ gốc, cách lưu được chốt có người duyệt.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -739,7 +751,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Dung sai 精算 giữa số đã giao và số giao dịch
-  han: Trước LAB-5 (viết migration D2)
+  han: 20/10/2026 (trước Sprint 1, trước khi viết migration D2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-SD1]
   spec_refs:
@@ -770,7 +782,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Danh mục lý do và người xác nhận ngoại lệ giao hàng
-  han: Trước sprint của SC-063/BE
+  han: Trước sprint của SC-063/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DELIVERY_EXCEPTION_SPEC.md §3, A-2, A-3 (LAB-4)
   spec_refs:

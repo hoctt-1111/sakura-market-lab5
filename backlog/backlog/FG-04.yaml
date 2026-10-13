@@ -22,7 +22,7 @@ epic:
   - P-04
   - P-06
   gap_refs: []
-  mo_ta: 'Nhóm chức năng này ghi và chốt 相対取引 (giao dịch thỏa thuận) giữa bán buôn đầu mối và bên mua, kênh mang khoảng 90% giá trị giao dịch của chợ, khác hẳn せり (đấu giá). Lúc chốt, hệ thống kiểm lại tư cách bên mua theo đúng loại giấy, từ chối kèm lý do khi không đạt, và cho huỷ giao dịch khi ngày nghiệp vụ chưa khoá.
+  mo_ta: 'Nhóm chức năng này ghi và chốt 相対取引 (giao dịch thỏa thuận) giữa bán buôn đầu mối và bên mua, kênh chiếm phần lớn giá trị giao dịch theo tải tham chiếu của RFP (giả định 90/10), khác hẳn せり (đấu giá). Lúc chốt, hệ thống kiểm lại tư cách bên mua theo đúng loại giấy, từ chối kèm lý do khi không đạt, và cho huỷ giao dịch khi ngày nghiệp vụ chưa khoá.
 
     Ràng buộc đặc thù: Luồng 相対 là luồng chính, nên dữ liệu, màn và kiểm thử của epic đi từ giao dịch thỏa thuận; せり chỉ ghi chung bảng transactions qua kênh riêng.'
   pham_vi: Các màn SC-030 đến SC-034, API-207 đến API-210, API-221 đến API-223, luồng TECH-301 và các bảng transactions, transaction_cancellations, reservations; bán trực tiếp và đặt trước giữ ở mức có điều kiện theo P-18 và P-20.
@@ -1291,7 +1291,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Điều kiện và hạn mức bán cho bên thứ ba 第三者販売
-  han: Trước LAB-5
+  han: 20/10/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-11]
   spec_refs:
@@ -1322,7 +1322,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Chợ có tập quán đặt trước 事前予約 hay không
-  han: Trước LAB-5
+  han: 20/10/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-21]
   spec_refs:
@@ -1355,7 +1355,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: 買出人 có luôn trả ngay khi mua trực tiếp không
-  han: Trước LAB-5 (đề xuất)
+  han: 20/10/2026 (trước Sprint 1, hạn đề xuất)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: PREMISE.md (LAB-4) §4.1 dòng 1
   spec_refs:
@@ -1386,7 +1386,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Trạng thái lô và phạm vi huỷ giao dịch 相対 (huỷ một phần, kênh せり)
-  han: Trước LAB-5
+  han: 20/10/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: HANDOFF.md mục Next Steps 3 (đầu vào còn treo cho LAB-5)
   spec_refs:
@@ -1422,7 +1422,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Lượng khả dụng của lô khi bán một phần 相対
-  han: Trước sprint của SC-030/BE
+  han: Trước sprint của SC-030/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_BUYER_ELIGIBILITY_TECH.md §4.2 (LAB-4)
   spec_refs:
@@ -1455,7 +1455,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Cách gán bên bán 売り手 cho giao dịch 相対 ở hệ đích
-  han: Trước sprint của SC-030/BE
+  han: Trước sprint của SC-030/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_TRADE_ENTRY_SPEC.md §6.3 (LAB-4)
   spec_refs:

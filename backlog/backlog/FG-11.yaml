@@ -2376,7 +2376,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Chỉ số đã công bố dùng cho báo cáo tháng RPT-10, RPT-11
-  han: Trước sprint của SC-110/BE
+  han: Trước sprint của SC-110/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT10_PARTICIPANT_MONTHLY_SPEC.md §6.2 Q-17 (LAB-4)
   spec_refs:
@@ -2409,7 +2409,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Mục tiêu số ngày xử lý tranh chấp cho báo cáo RPT-09
-  han: Trước sprint của SC-109/BE
+  han: Trước sprint của SC-109/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT09_DISPUTE_SLA_SPEC.md §6.2 Q-18 (LAB-4)
   spec_refs:

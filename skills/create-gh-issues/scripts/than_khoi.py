@@ -10,6 +10,8 @@ from seed_doc import la_leaf
 
 DUONG_DAN = (r"`[^`]*/[^`]*`", r"\b[\w.-]+\.(?:md|ya?ml|py|sql|json|txt|csv)\b")
 NHAN_RB = "constraint:"
+XU_LY_RE = re.compile(r"^(premise|gia_dinh|issue):(\S+)$")
+XU_LY_CHU = {"premise": "đã sửa thiết kế (PREMISE {})", "gia_dinh": "giả định (PREMISE {})", "issue": "issue {}"}
 
 
 def loai_mau(it: dict) -> str:
@@ -75,6 +77,13 @@ def cho_ho(it: dict, ctx) -> list[str]:
     for m in it.get("gap_refs") or []:
         if m not in ctx.gaps:
             raise LoiBoSinh(f"{it['key']}: gap_refs {m} không có trong gaps")
-        g = ctx.gaps[m]
-        ra.append(f"{m} — {cau_dau(g['mo_ta'])} (xử lý: {lam_sach(g['xu_ly'])})")
+        ra.append(f"{m} — {cau_dau(ctx.gaps[m]['mo_ta'])} (xử lý: {xu_ly_than(ctx.gaps[m]['xu_ly'], ctx)})")
     return ra
+
+
+def xu_ly_than(s, ctx) -> str:
+    """Khoá xử lý của gaps → chữ đọc được; `issue:<key>` kèm #số khi board-map có (ctx.so_issue), `de-mo` → «để mở»."""
+    if str(s).strip() == "de-mo":
+        return "để mở"
+    m = XU_LY_RE.match(str(s).strip())
+    return XU_LY_CHU[m[1]].format(ctx.so_issue(m[2]) if m[1] == "issue" else m[2]) if m else lam_sach(s)

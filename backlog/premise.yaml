@@ -1,7 +1,7 @@
 # PREMISE LAB-05 — nguồn của PREMISE.md (P2 viết tay, P4 gộp và chốt; mã P-xx không đánh lại; P4 thêm P-26…P-42, dòng nằm
 # trong nhóm của nó nên mã trong một bảng không liền số).
 # Mốc so sánh: repo LAB-4 đã nộp hoctt-1111/sakura-market-lab4-spec, nhánh main, commit 3ab06e6, nộp 12/10/2026.
-# Đường dẫn trong `nguon` tính từ gốc repo LAB-4 đó (file nằm sâu trong specs/ ghi bằng tên file, tên là duy nhất trong cây; README.md, PREMISE.md, AI-report.md là file ở gốc); HANDOFF.md, plans/… và `rfp p.NN` là file ngoài repo nộp, luôn kèm «trích».
+# Đường dẫn trong `nguon` tính từ gốc repo LAB-4 đó (file nằm sâu trong specs/ ghi bằng tên file, tên là duy nhất trong cây; README.md, PREMISE.md, AI-report.md là file ở gốc); HANDOFF.md, báo cáo soát nội bộ và `rfp p.NN` là file ngoài repo nộp, luôn kèm «trích».
 # Cách ghép cột (đề Lab_05.txt mục IV.3):
 #   thay_doi   → Spec = spec · Thêm/Bỏ/Sửa = loai · Trước → sau = truoc → sau · Vì sao = vi_sao · Issue bị ảnh hưởng = anh_huong
 #   gia_dinh   → Giả định = sau · Chỗ spec/RFP để ngỏ = cho_de_ngo · Ảnh hưởng tới issue/estimate = anh_huong + anh_huong_uoc
@@ -72,7 +72,7 @@ p:
     truoc: "SC-034 ghi cột Data Source là «DB (server)» dù ghi chú cùng dòng nói màn đọc giao dịch qua API 222; mục xử lý lỗi của SC-033 ghi «Đang gọi» API tạo giao dịch dù màn không gọi API nào."
     sau: "Sub-issue FE của SC-034 lấy dữ liệu qua API 222 và gửi huỷ qua API 223, không đọc bảng trực tiếp; sub-issue FE của SC-033 chỉ hiện lỗi mà SC-030 đã nhận từ API tạo giao dịch, không gọi lại API."
     vi_sao: "Reviewer nội dung của LAB-4, ở lượt soát thứ hai, nêu hai chỗ này là mục Low chưa sửa trước khi nộp; làm theo đúng chữ của cột thì FE đọc thẳng cơ sở dữ liệu hoặc gọi lại API tạo, trái với ghi chú của chính hai spec (chỗ hở G-08, G-09)."
-    nguon: "`SKM_TRADE_CANCEL_SPEC.md:84` «DB (server)» · `SKM_TRADE_REJECT_REASON_SPEC.md:97` «Màn không gọi API nào khi mở» · `SKM_TRADE_REJECT_REASON_SPEC.md:101` «Đang gọi `SKM_AITAI_TRADE_CREATE`» · `plans/261012-1340-lab04-bo-sung-api-kieu-db-vai-gio/reports/reviewer-261012-p4-noi-dung.md:81` «Finding mới (Low, không chặn)»"
+    nguon: "`SKM_TRADE_CANCEL_SPEC.md:84` «DB (server)» · `SKM_TRADE_REJECT_REASON_SPEC.md:97` «Màn không gọi API nào khi mở» · `SKM_TRADE_REJECT_REASON_SPEC.md:101` «Đang gọi `SKM_AITAI_TRADE_CREATE`» · `reviewer-261012-p4-noi-dung.md:81` «phát hiện mới (mức Low, không chặn)» — dịch từ câu của bản soát"
     anh_huong: [SC-034/FE, SC-033/FE]
 
   - ma: P-26
@@ -84,6 +84,33 @@ p:
     vi_sao: "Thiếu ba thứ này thì công cụ nạp không giữ được dòng gốc để đối chiếu, không hoàn tác được theo lô, và báo cáo không lọc được dữ liệu di trú như ADR-003 và ADR-016 đòi. Gom việc thêm cột vào một migration của MIG-02/DB để sub-issue DB của từng bảng không phải chờ quyết định di trú (chỗ hở G-E16-02)."
     nguon: "`adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:55` «Bảng nghiệp vụ mang» · `adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:52` «người tham gia và quyền» · `SKM_DB.md:31` «Khởi tạo — 45 thực thể»"
     anh_huong: [MIG-02/DB, SC-011/DB, SC-020/DB, DATA-FG03/DB, SC-030/DB, SC-060/DB, DATA-FG08/DB, DATA-FG09/DB]
+
+  # P-29, P-30: soát độc lập P6 (M2) dời từ nhóm giả định sang đây vì cả hai sửa điều spec LAB-4 đã viết. `cho_de_ngo`,
+  # `anh_huong_uoc` giữ lại cho issue điều tra và cho bước ước lượng; bảng 1 của PREMISE.md không in hai trường này.
+  - ma: P-29
+    nhom: thay_doi
+    spec: "Trạng thái tư cách và bảng chuyển trạng thái, thêm 再審査 (xét lại) (`SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md`, `SKM_QUALIFICATION_CHANGE_SPEC.md`)"
+    loai: sua
+    truoc: "Spec của API-204 (đổi tư cách) chỉ cho trường trạng thái tư cách nhận một trong ba giá trị `active`, `suspended`, `expired`, tức có hiệu lực, tạm dừng và 失効 (mất hiệu lực); spec màn SC-013 chỉ có ba thao tác dừng, mở lại và 失効. Trạng thái 再審査 (xét lại) mà sơ đồ FIG-010 của RFP vẽ không có trong spec LAB-4."
+    sau: "Trạng thái tư cách gồm ba trạng thái của spec LAB-4 cộng 再審査 (xét lại) mà sơ đồ của RFP vẽ, để cột trạng thái không phải đổi về sau. Bảng chuyển trạng thái là cấu hình của dịch vụ đổi tư cách, khởi tạo đúng ba thao tác của LAB-4 (dừng từ có hiệu lực, mở lại từ tạm dừng, 失効 (mất hiệu lực) từ hai trạng thái kia) và chưa có bước nào vào 再審査 tới khi khách đáp. Giấy quá hạn không tự đổi trạng thái, chỉ bị chặn lúc chốt giao dịch theo TECH-301."
+    cho_de_ngo: "Spec LAB-4 có ba trạng thái (có hiệu lực, tạm dừng, 失効 (mất hiệu lực)) với ba thao tác dừng, mở lại, 失効, còn sơ đồ FIG-010 của RFP vẽ thêm 再審査; không spec nào ghi bước chuyển nào được phép, 失効 có mở lại được không, giấy quá hạn có tự đổi trạng thái không."
+    anh_huong_uoc: "SC-013/BE ước theo bảng chuyển ở cấu hình; khách đáp thêm bước vào, ra 再審査 hay cho mở lại 失効 thì chỉ thêm dòng cấu hình và ca kiểm thử, còn nếu 再審査 cần luồng xét riêng thì SC-011, SC-013 thêm item và TECH-301 thêm một nhánh từ chối."
+    vi_sao: "Spec LAB-4 chỉ cho ba giá trị, nên thêm 再審査 là sửa spec chứ không chỉ lấp chỗ để ngỏ. Giữ trạng thái RFP đã vẽ và để bảng chuyển ở cấu hình thì không bỏ điều RFP nêu, cũng không đặt quy chế thay khách, mà máy chủ vẫn từ chối được bước lạ. Phần còn để ngỏ (bước nào vào, ra 再審査, 失効 có mở lại được không) do khách trả lời ở INV-FG02-TRANG-THAI (chỗ hở G-FG02-06)."
+    nguon: "`SKM_QUALIFICATION_CHANGE_SPEC.md:47` «đổi trạng thái: dừng · mở lại · 失効» · `SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md:48` «∈ active/suspended/expired»"
+    anh_huong: [SC-013/BE, SC-011/BE]
+    inv: INV-FG02-TRANG-THAI
+  - ma: P-30
+    nhom: thay_doi
+    spec: "Luồng TECH-301 và bảng lots: lượng khả dụng của lô khi bán một phần 相対 (`SKM_AITAI_BUYER_ELIGIBILITY_TECH.md`, `SKM_DB.md`)"
+    loai: sua
+    truoc: "TECH-301 kiểm số lượng bán không vượt toàn bộ khối lượng lô (so `quantityKg` với `weight_kg`), rồi trong cùng một giao dịch CSDL ghi giao dịch và chuyển cả lô sang trạng thái đã bán qua 相対 (`sold_aitai`); bảng lots không có cột phần còn lại, nên mỗi lô chỉ bán được một lần."
+    sau: "Một lô bán được nhiều lần cho tới hết. Lượng còn lại tính lúc đọc bằng khối lượng lô trừ tổng số lượng của các giao dịch còn hiệu lực (chưa có dòng huỷ); lô chỉ sang trạng thái đã bán khi phần còn lại bằng 0, không thêm cột số dư vào lots. Huỷ giao dịch thì phần còn lại tự tăng lại, khớp P-21."
+    cho_de_ngo: "FR-AITAI-01 đòi trừ đúng lượng khả dụng và API-208, API-209 đòi số lượng không vượt phần còn lại, nhưng TECH-301 so số lượng với toàn bộ khối lượng lô rồi chuyển cả lô sang đã bán, và bảng lots không có cột phần còn lại."
+    anh_huong_uoc: "SC-030/BE và SC-034/BE ước theo một hàm tính lượng còn lại dùng chung; nếu khách đáp mỗi lô chỉ bán một lần thì bỏ hàm này và giữ cách chuyển cả lô của TECH-301."
+    vi_sao: "FR-AITAI-01 đòi trừ đúng lượng khả dụng và API-208, API-209 đòi số lượng không vượt phần còn lại, trái với cách TECH-301 chuyển cả lô, nên đây là sửa luồng của spec chứ không chỉ lấp chỗ để ngỏ. Tính từ dòng giao dịch thì không cột nào bị sửa, đúng luật chỉ thêm của ADR-003, và lần huỷ ở SC-034 không phải hoàn lượng vào đâu. Cách này không đổi điều RFP nêu; khách đáp mỗi lô chỉ bán một lần thì quay về cách của TECH-301, câu hỏi nằm ở INV-LOT-KHA-DUNG (chỗ hở G-FG04-01)."
+    nguon: "`SKM_AITAI_BUYER_ELIGIBILITY_TECH.md:161` «So `quantityKg` với `weight_kg`» · `SKM_AITAI_BUYER_ELIGIBILITY_TECH.md:81` «UPDATE lots SET status='sold_aitai'»"
+    anh_huong: [SC-030/BE, SC-034/BE, TECH-301/BE]
+    inv: INV-LOT-KHA-DUNG
 
   # ---------- Nhóm 2: giả định bổ sung ----------
   - ma: P-08
@@ -247,26 +274,6 @@ p:
     nguon: "`architecture/SKM_SYSTEM_DESIGN.md:323` «システム管理者 (quản trị hệ thống)» · `architecture/SKM_SYSTEM_DESIGN.md:323` «Chưa gán» · `SKM_DB.md:41` «thiếu dòng = không cho phép»"
     anh_huong: [SC-003, SC-003/DB]
     inv: INV-Q-SD4
-  - ma: P-29
-    nhom: gia_dinh
-    spec: "Bảng chuyển trạng thái tư cách và 再審査 (xét lại)"
-    cho_de_ngo: "Spec LAB-4 có ba trạng thái (có hiệu lực, tạm dừng, 失効 (mất hiệu lực)) với ba thao tác dừng, mở lại, 失効, còn sơ đồ FIG-010 của RFP vẽ thêm 再審査; không spec nào ghi bước chuyển nào được phép, 失効 có mở lại được không, giấy quá hạn có tự đổi trạng thái không."
-    sau: "Trạng thái tư cách gồm ba trạng thái của spec LAB-4 cộng 再審査 (xét lại) mà sơ đồ của RFP vẽ, để cột trạng thái không phải đổi về sau. Bảng chuyển trạng thái là cấu hình của dịch vụ đổi tư cách, khởi tạo đúng ba thao tác của LAB-4 (dừng từ có hiệu lực, mở lại từ tạm dừng, 失効 (mất hiệu lực) từ hai trạng thái kia) và chưa có bước nào vào 再審査 tới khi khách đáp. Giấy quá hạn không tự đổi trạng thái, chỉ bị chặn lúc chốt giao dịch theo TECH-301."
-    anh_huong_uoc: "SC-013/BE ước theo bảng chuyển ở cấu hình; khách đáp thêm bước vào, ra 再審査 hay cho mở lại 失効 thì chỉ thêm dòng cấu hình và ca kiểm thử, còn nếu 再審査 cần luồng xét riêng thì SC-011, SC-013 thêm item và TECH-301 thêm một nhánh từ chối."
-    vi_sao: "RFP vẽ 再審査 nhưng không spec nào tả bước chuyển. Giữ trạng thái RFP đã vẽ và để bảng chuyển ở cấu hình thì không bỏ điều RFP nêu, cũng không đặt quy chế thay khách, mà máy chủ vẫn từ chối được bước lạ (chỗ hở G-FG02-06)."
-    nguon: "`SKM_QUALIFICATION_CHANGE_SPEC.md:47` «đổi trạng thái: dừng · mở lại · 失効» · `SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md:48` «∈ active/suspended/expired»"
-    anh_huong: [SC-013/BE, SC-011/BE]
-    inv: INV-FG02-TRANG-THAI
-  - ma: P-30
-    nhom: gia_dinh
-    spec: "Lượng khả dụng của lô khi bán một phần 相対"
-    cho_de_ngo: "FR-AITAI-01 đòi trừ đúng lượng khả dụng và API-208, API-209 đòi số lượng không vượt phần còn lại, nhưng TECH-301 so số lượng với toàn bộ khối lượng lô rồi chuyển cả lô sang đã bán, và bảng lots không có cột phần còn lại."
-    sau: "Một lô bán được nhiều lần cho tới hết. Lượng còn lại tính lúc đọc bằng khối lượng lô trừ tổng số lượng của các giao dịch còn hiệu lực (chưa có dòng huỷ); lô chỉ sang trạng thái đã bán khi phần còn lại bằng 0, không thêm cột số dư vào lots. Huỷ giao dịch thì phần còn lại tự tăng lại, khớp P-21."
-    anh_huong_uoc: "SC-030/BE và SC-034/BE ước theo một hàm tính lượng còn lại dùng chung; nếu khách đáp mỗi lô chỉ bán một lần thì bỏ hàm này và giữ cách chuyển cả lô của TECH-301."
-    vi_sao: "Tính từ dòng giao dịch thì không cột nào bị sửa, đúng luật chỉ thêm của ADR-003, và lần huỷ ở SC-034 không phải hoàn lượng vào đâu. Giá trị này chỉ lấp chỗ thiết kế để ngỏ, không đổi điều RFP nêu (chỗ hở G-FG04-01)."
-    nguon: "`SKM_AITAI_BUYER_ELIGIBILITY_TECH.md:161` «So `quantityKg` với `weight_kg`» · `SKM_AITAI_BUYER_ELIGIBILITY_TECH.md:81` «UPDATE lots SET status='sold_aitai'»"
-    anh_huong: [SC-030/BE, SC-034/BE, TECH-301/BE]
-    inv: INV-LOT-KHA-DUNG
   - ma: P-31
     nhom: gia_dinh
     spec: "Bên bán 売り手 của giao dịch 相対 ở hệ đích"

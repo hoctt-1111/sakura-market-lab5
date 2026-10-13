@@ -1090,7 +1090,7 @@ items:
   cha: FG-01
   tracker: investigation
   title_vi: Ngưỡng hết phiên và khoá tạm khi đăng nhập sai
-  han: Checkpoint BTC 2026-10-19
+  han: 19/10/2026 (checkpoint BTC)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-SD3]
   spec_refs:

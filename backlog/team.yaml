@@ -1,11 +1,12 @@
 # Đội giả lập và luật gán field của seed backlog LAB-5. P1 viết tay; P4 chốt `rang_buoc[].vi_sao`.
-# Tên field và tên lựa chọn chép nguyên từ plans/261012-2209-lab05-tien-de-va-break-task/evidence/p0-field-list.json
-# (Project #3 nâng theo danh sách field của 148 — nhánh #3, p0-copy.txt). check-board.py --seed đối chiếu lại file đó.
+# Tên field và tên lựa chọn chép nguyên từ danh sách field của Project #3, chụp lúc dựng Project (field nâng theo
+# Project mẫu của lớp). check-board.py --seed đối chiếu lại bản chụp đó.
 assignee: hoctt-1111
+ma_hoc_vien: HocTT   # U10, user cung cấp 13/10/2026; in ở dòng đầu README
 status_dau: New
 
 # Priority trừu tượng 3 mức trong seed → tên lựa chọn của field «Priority» trên Project.
-#   1: điều tra có hạn «trước LAB-5» hoặc đã quá hạn so với ngay_xet_qua_han
+#   1: điều tra có hạn «trước Sprint 1» (bản đầu ghi «trước LAB-5») hoặc đã quá hạn so với ngay_xet_qua_han
 #   2: issue mang nhãn ràng buộc đặc thù (constraint:*) hoặc thuộc FG-01, FG-03, FG-04, FG-07, FG-08
 #   3: còn lại
 priority_map: {1: Urgent, 2: High, 3: Normal}

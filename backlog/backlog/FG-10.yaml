@@ -174,15 +174,19 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:incentive
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-10
   gap_refs:
   - G-FG10-02
   - G-FG10-05
-  mo_ta: ルール管理者 (người quản lý quy tắc và suất) lập bản mới cho một trong năm khoá quy tắc kèm 発効日 (ngày hiệu lực) và giá trị, ví dụ 交付率 (tỷ lệ chi thưởng) của 完納奨励金 (thưởng thanh toán đủ hạn). Mỗi lần lưu tạo một bản nháp mới, bản đã lưu không bị sửa tại chỗ, và nháp chỉ có hiệu lực sau khi được duyệt ở SC-092.
+  mo_ta: 'ルール管理者 (người quản lý quy tắc và suất) lập bản mới cho một trong năm khoá quy tắc kèm 発効日 (ngày hiệu lực) và giá trị, ví dụ 交付率 (tỷ lệ chi thưởng) của 完納奨励金 (thưởng thanh toán đủ hạn). Mỗi lần lưu tạo một bản nháp mới, bản đã lưu không bị sửa tại chỗ, và nháp chỉ có hiệu lực sau khi được duyệt ở SC-092.
+
+
+    Ràng buộc đặc thù: 交付率 do người nhập, không có số mặc định; hệ số thuế 110/100 và làm tròn xuống yên cố định; bản chỉ có hiệu lực khi người khác người lập duyệt ở SC-092.'
   pham_vi: Màn SC-091 (SPEC-SKM-142); API-217 (lập bản nháp); bảng `business_rules` và `rule_versions` (chủ migration cả hai).
   luong_chinh:
   - ルール管理者 chọn khoá, nhập 発効日 và giá trị theo khoá.
@@ -214,12 +218,16 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:incentive
   owner: FE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-10
   gap_refs: []
-  mo_ta: 'Dựng màn lập bản quy tắc: chọn khoá, ô 発効日 (ngày hiệu lực), ô giá trị đổi theo khoá; số bản, người lập, trạng thái chỉ hiện.'
+  mo_ta: 'Dựng màn lập bản quy tắc: chọn khoá, ô 発効日 (ngày hiệu lực), ô giá trị đổi theo khoá; số bản, người lập, trạng thái chỉ hiện.
+
+
+    Ràng buộc đặc thù: Với khoá incentive, hệ số thuế 110/100 và cách làm tròn xuống yên là nhãn chỉ đọc; người dùng chỉ nhập suất, màn không điền sẵn số nào.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -244,14 +252,18 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:incentive
   owner: BE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-05
   - P-10
   gap_refs:
   - G-FG10-05
-  mo_ta: 'Làm API-217 trên module rules: kiểm khoá, ngày, hình dạng giá trị theo khoá, chặn hệ số thuế khác 110/100, rồi ghi bản nháp mới.'
+  mo_ta: 'Làm API-217 trên module rules: kiểm khoá, ngày, hình dạng giá trị theo khoá, chặn hệ số thuế khác 110/100, rồi ghi bản nháp mới.
+
+
+    Ràng buộc đặc thù: Máy chủ chặn hệ số thuế khác 110/100 cho khoá incentive và chỉ ghi bản nháp mang người lập của phiên; không có đường nào ghi thẳng trạng thái đã duyệt.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -276,8 +288,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:incentive
   owner: BE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-04
   - P-06
@@ -285,7 +298,10 @@ items:
   - G-FG10-01
   - G-FG10-02
   - G-FG10-05
-  mo_ta: Viết migration hai bảng bản quy tắc trên kho mã hệ đích; chốt bảng nào giữ trạng thái, người lập, người duyệt, và các ô kiểu còn để trống của rule_versions (P-06).
+  mo_ta: 'Viết migration hai bảng bản quy tắc trên kho mã hệ đích; chốt bảng nào giữ trạng thái, người lập, người duyệt, và các ô kiểu còn để trống của rule_versions (P-06).
+
+
+    Ràng buộc đặc thù: Khoảng hiệu lực của các bản cùng khoá không được chồng nhau và bản mới luôn là nháp, để 完納奨励金 luôn tính theo đúng một bản quy tắc tại hạn thanh toán.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -311,8 +327,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:incentive
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử lập bản quy tắc, nhắm vào hệ số thuế cố định và việc bản nháp chưa có hiệu lực.
@@ -343,14 +360,18 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:hitl
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs:
   - G-FG10-03
   - G-FG10-06
-  mo_ta: 照合部門長 (trưởng bộ phận đối soát) hoặc 承認者 (người duyệt) xem bản nháp và duyệt kèm lý do; bản được duyệt có hiệu lực từ 発効日 (ngày hiệu lực). Người duyệt phải khác người lập, không có ngoại lệ theo vai, và mỗi khoá chỉ được duyệt tối đa 4 lần mỗi năm dương lịch.
+  mo_ta: '照合部門長 (trưởng bộ phận đối soát) hoặc 承認者 (người duyệt) xem bản nháp và duyệt kèm lý do; bản được duyệt có hiệu lực từ 発効日 (ngày hiệu lực). Người duyệt phải khác người lập, không có ngoại lệ theo vai, và mỗi khoá chỉ được duyệt tối đa 4 lần mỗi năm dương lịch.
+
+
+    Ràng buộc đặc thù: Bản chỉ có hiệu lực khi người duyệt khác người lập bấm duyệt kèm lý do; hệ thống ghi người duyệt từ phiên, thời điểm và giá trị trước, sau.'
   pham_vi: Màn SC-092 (SPEC-SKM-143); API-218 theo luồng TECH-303; đổi trạng thái bản trong `business_rules`, `rule_versions`; lý do vào nhật ký kiểm toán.
   luong_chinh:
   - Người duyệt mở bản nháp từ SC-090; màn hiện khoá, bản, ngày hiệu lực, giá trị, người lập, mọi ô chỉ đọc.
@@ -380,11 +401,15 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:hitl
   owner: FE-2
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Dựng màn duyệt bản quy tắc chỉ đọc, chỉ có ô lý do và hai nút Duyệt, Quay lại.
+  mo_ta: 'Dựng màn duyệt bản quy tắc chỉ đọc, chỉ có ô lý do và hai nút Duyệt, Quay lại.
+
+
+    Ràng buộc đặc thù: Mọi ô của bản đều chỉ đọc, người duyệt chỉ nhập lý do; người lập không thấy nút Duyệt nhưng máy chủ vẫn kiểm lại.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -410,14 +435,18 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:hitl
   owner: BE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-05
   gap_refs:
   - G-FG10-03
   - G-FG09-09
-  mo_ta: 'Làm API-218 trên module rules: kiểm lý do, tìm bản, gọi hàm kiểm của TECH-303/BE rồi đổi trạng thái và ghi nhật ký trong một giao dịch CSDL.'
+  mo_ta: 'Làm API-218 trên module rules: kiểm lý do, tìm bản, gọi hàm kiểm của TECH-303/BE rồi đổi trạng thái và ghi nhật ký trong một giao dịch CSDL.
+
+
+    Ràng buộc đặc thù: Người duyệt lấy từ phiên và phải khác người lập; việc đếm số lần duyệt trong năm và đổi trạng thái chạy trong cùng giao dịch CSDL, kèm nhật ký có giá trị trước, sau và lý do.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -442,8 +471,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:hitl
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử bước duyệt, nhắm vào tách người lập với người duyệt và trần 4 lần mỗi năm.
@@ -691,7 +721,7 @@ items:
   cha: FG-10
   tracker: investigation
   title_vi: Số người giữ vai lập và vai duyệt bản quy tắc
-  han: Trước sprint của SC-092/BE
+  han: Trước sprint của SC-092/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md §6.2 Q-09 (LAB-4)
   spec_refs:

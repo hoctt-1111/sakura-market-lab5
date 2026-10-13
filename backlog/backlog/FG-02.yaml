@@ -15,12 +15,16 @@ epic:
     nfr: []
   labels:
   - type:epic
+  - constraint:two-tier
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-09
   gap_refs: []
-  mo_ta: 'Nhóm chức năng này lưu hồ sơ bốn loại người tham gia và tư cách của họ, tách hai loại giấy: 仲卸 (trung gian bán buôn) giữ 許可 (giấy phép), 売買参加者 (người tham gia mua bán) giữ 承認 (chấp thuận), không gộp thành một quyền. Hệ thống chỉ ghi kết quả xét duyệt làm trên giấy, giữ lịch sử đổi tư cách và cảnh báo giấy sắp hết hạn để chợ gia hạn trước khi giao dịch bị chặn lúc chốt.'
+  mo_ta: 'Nhóm chức năng này lưu hồ sơ bốn loại người tham gia và tư cách của họ, tách hai loại giấy: 仲卸 (trung gian bán buôn) giữ 許可 (giấy phép), 売買参加者 (người tham gia mua bán) giữ 承認 (chấp thuận), không gộp thành một quyền. Hệ thống chỉ ghi kết quả xét duyệt làm trên giấy, giữ lịch sử đổi tư cách và cảnh báo giấy sắp hết hạn để chợ gia hạn trước khi giao dịch bị chặn lúc chốt.
+
+
+    Ràng buộc đặc thù: 許可 của 仲卸 và 承認 của 売買参加者 là hai bộ cột riêng, một hồ sơ không mang cả hai; hệ thống chỉ ghi kết quả người xét duyệt trên giấy, và lúc chốt giao dịch kiểm lại hạn của đúng loại giấy theo TECH-301.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -802,7 +806,7 @@ items:
   cha: FG-02
   tracker: investigation
   title_vi: Ngưỡng cảnh báo 失効間近 và cách cấu hình
-  han: Trước LAB-5 (đề xuất)
+  han: 20/10/2026 (trước Sprint 1, hạn đề xuất)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: PREMISE.md (LAB-4) §4.1 dòng 2
   spec_refs:
@@ -829,7 +833,7 @@ items:
   cha: FG-02
   tracker: investigation
   title_vi: Bảng chuyển trạng thái tư cách và trạng thái 再審査
-  han: Trước sprint của SC-013/BE
+  han: Trước sprint của SC-013/BE — ngày chốt khi xếp Sprint ở đầu việc 4
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_QUALIFICATION_CHANGE_SPEC.md §3 (LAB-4) · rfp p.37 FIG-010
   spec_refs:

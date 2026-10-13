@@ -188,7 +188,10 @@ items:
   gap_refs:
   - G-FG08-01
   - G-FG08-03
-  mo_ta: 照合事務 (nhóm đối soát) hoặc 照合部門長 (trưởng bộ phận đối soát) khoá một 業務日 (ngày nghiệp vụ) sau khi xem bảng đối soát; khoá rồi thì chỉ còn đường điều chỉnh có duyệt của FG-06. Khoá là quyết định của người; máy kiểm điều kiện rồi ghi ai khoá, lúc nào, vì sao.
+  mo_ta: '照合事務 (nhóm đối soát) hoặc 照合部門長 (trưởng bộ phận đối soát) khoá một 業務日 (ngày nghiệp vụ) sau khi xem bảng đối soát; khoá rồi thì chỉ còn đường điều chỉnh có duyệt của FG-06. Khoá là quyết định của người; máy kiểm điều kiện rồi ghi ai khoá, lúc nào, vì sao.
+
+
+    Ràng buộc đặc thù: Khoá 業務日 là quyết định của người đối soát; máy chỉ kiểm điều kiện rồi ghi người khoá từ phiên, giờ máy chủ và lý do.'
   pham_vi:
   - Màn SC-071 (SPEC-SKM-135) ở văn phòng; bảng `business_day_locks` (chủ migration, chỉ thêm dòng).
   - Lệnh khoá ngày và dịch vụ kiểm ngày đã khoá chưa có spec, SC-071/BE viết rồi làm; chốt hoá đơn tháng cho FG-09 tách thành story API-213, gọi riêng (G-FG08-01).
@@ -225,7 +228,10 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG08-02
-  mo_ta: 'Dựng màn khoá ngày ở văn phòng: chọn 業務日 (ngày nghiệp vụ), ô lý do, nút Khoá; người khoá và thời điểm chỉ hiển thị sau khi khoá.'
+  mo_ta: 'Dựng màn khoá ngày ở văn phòng: chọn 業務日 (ngày nghiệp vụ), ô lý do, nút Khoá; người khoá và thời điểm chỉ hiển thị sau khi khoá.
+
+
+    Ràng buộc đặc thù: Người khoá và thời điểm khoá chỉ hiện sau khi máy chủ ghi; màn không có ô nhập hai giá trị này và không cho khoá khi mất kết nối.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -259,7 +265,10 @@ items:
   - G-FG08-01
   - G-FG08-02
   - G-FG08-08
-  mo_ta: Viết spec rồi làm lệnh khoá ngày trên module settle và dịch vụ kiểm ngày đã khoá cho module khác gọi; lệnh chốt hoá đơn tháng tách sang story API-213 (G-FG08-01).
+  mo_ta: 'Viết spec rồi làm lệnh khoá ngày trên module settle và dịch vụ kiểm ngày đã khoá cho module khác gọi; lệnh chốt hoá đơn tháng tách sang story API-213 (G-FG08-01).
+
+
+    Ràng buộc đặc thù: Lệnh khoá ghi người của phiên, giờ máy chủ và lý do vào business_day_locks cùng audit_log; không tác vụ nền nào tự khoá ngày thay người.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -290,7 +299,10 @@ items:
   - P-06
   gap_refs:
   - G-FG08-09
-  mo_ta: Viết migration bảng business_day_locks, chỉ thêm dòng; chốt kiểu cột và ràng buộc mỗi 業務日 (ngày nghiệp vụ) chỉ có một dòng khoá (P-06, G-FG08-09).
+  mo_ta: 'Viết migration bảng business_day_locks, chỉ thêm dòng; chốt kiểu cột và ràng buộc mỗi 業務日 (ngày nghiệp vụ) chỉ có một dòng khoá (P-06, G-FG08-09).
+
+
+    Ràng buộc đặc thù: Mỗi 業務日 chỉ có một dòng khoá; người khoá, thời điểm và lý do bắt buộc có giá trị để tra lại được ai đã quyết khoá.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -478,7 +490,10 @@ items:
   - P-12
   gap_refs:
   - G-FG08-06
-  mo_ta: '照合事務 (nhóm đối soát) xem một tranh chấp, gán người phụ trách, đặt ngày hẹn và ghi diễn biến xử lý tới khi đóng bằng kết quả cuối. Máy không tự đóng tranh chấp: người đóng phải ghi kết quả, hệ thống lưu ai đóng, lúc nào, và mọi lần cập nhật đều tra lại được. Spec màn mới có nhãn và nút Quay lại, chưa có ô ghi xử lý (G-FG08-06).'
+  mo_ta: '照合事務 (nhóm đối soát) xem một tranh chấp, gán người phụ trách, đặt ngày hẹn và ghi diễn biến xử lý tới khi đóng bằng kết quả cuối. Máy không tự đóng tranh chấp: người đóng phải ghi kết quả, hệ thống lưu ai đóng, lúc nào, và mọi lần cập nhật đều tra lại được. Spec màn mới có nhãn và nút Quay lại, chưa có ô ghi xử lý (G-FG08-06).
+
+
+    Ràng buộc đặc thù: Chỉ người đối soát đóng được tranh chấp và phải ghi kết quả cuối; hệ thống ghi người đóng từ phiên và giờ máy chủ, mỗi lần đổi người phụ trách, ngày hẹn hay trạng thái có một dòng audit_log.'
   pham_vi: Màn SC-073 (SPEC-SKM-137) ở văn phòng; cập nhật `disputes` (migration thuộc DATA-FG08, bảng sửa được), lịch sử cập nhật đọc từ `audit_log`; API ghi chưa có spec, SC-073/BE viết rồi làm (P-01).
   luong_chinh:
   - Người đối soát mở tranh chấp từ SC-072.
@@ -515,7 +530,10 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG08-06
-  mo_ta: 'Dựng màn chi tiết tranh chấp: ngày và nguyên nhân, ô người phụ trách, ngày hẹn, ghi chú xử lý, kết quả cuối, nút Lưu, Đóng và bảng lịch sử cập nhật.'
+  mo_ta: 'Dựng màn chi tiết tranh chấp: ngày và nguyên nhân, ô người phụ trách, ngày hẹn, ghi chú xử lý, kết quả cuối, nút Lưu, Đóng và bảng lịch sử cập nhật.
+
+
+    Ràng buộc đặc thù: Nút Đóng chỉ bấm được khi đã có kết quả cuối; người đóng và thời điểm chỉ hiển thị, tranh chấp đã đóng mở ở dạng chỉ đọc.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -546,7 +564,10 @@ items:
   - P-01
   gap_refs:
   - G-FG08-06
-  mo_ta: Viết spec rồi làm API cập nhật và đóng tranh chấp trên module settle (P-01); mỗi lần cập nhật ghi audit_log có giá trị trước và sau qua hàm dùng chung của SC-130/BE.
+  mo_ta: 'Viết spec rồi làm API cập nhật và đóng tranh chấp trên module settle (P-01); mỗi lần cập nhật ghi audit_log có giá trị trước và sau qua hàm dùng chung của SC-130/BE.
+
+
+    Ràng buộc đặc thù: API đóng lấy người đóng từ phiên và giờ máy chủ, bỏ qua giá trị trong body; không có đường nào tự đóng tranh chấp.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -774,7 +795,7 @@ items:
   cha: FG-08
   tracker: investigation
   title_vi: Thời gian chờ và số lần thử lại của batch đối soát ngày
-  han: Checkpoint BTC 2026-10-19
+  han: 19/10/2026 (checkpoint BTC)
   nguoi_tra_loi: Tech Lead
   nguon: system-design.yaml › cau_hoi_mo[Q-SD2]
   spec_refs:
@@ -805,7 +826,7 @@ items:
   cha: FG-08
   tracker: investigation
   title_vi: Người khoá 業務日, việc mở lại ngày đã khoá và thứ tự với chốt hoá đơn tháng
-  han: Checkpoint BTC 2026-10-19
+  han: 19/10/2026 (checkpoint BTC)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_SYSTEM_DESIGN.md EV3, A7 (LAB-4)
   spec_refs:
