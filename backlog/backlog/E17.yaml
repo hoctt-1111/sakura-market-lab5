@@ -1,0 +1,557 @@
+# Seed epic E17 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E17
+  tracker: epic
+  title_vi: Kiểm thử tích hợp và nghiệm thu
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-10
+  - P-16
+  gap_refs: []
+  mo_ta: Nhóm việc này nghiệm thu bảy kịch bản AC1–AC7 của thiết kế tầng hệ thống trên staging, mỗi kịch bản chạy xuyên nhiều module như người dùng thật làm. Các kịch bản phủ việc chặn bên mua không đủ tư cách hoặc đã 失効 (mất hiệu lực) lúc chốt 相対取引 (giao dịch thỏa thuận), trần 再せり (đấu lại) với lô せり (đấu giá) ế chỉ còn đường 相対 hoặc 直販 (bán trực tiếp), tách người lập với người duyệt bản quy tắc, kết quả 判定 (xét) phải chờ người 確定 (xác nhận cuối), sửa sau khoá bằng bút toán đảo và thử lại thông báo. Khách nghiệm thu qua BrSE, bằng chứng ghi vào từng story.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E17 đã đóng.
+  - Khi chạy đủ bảy kịch bản trên staging thì mỗi story có kết quả, người nghiệm thu phía khách, ngày chạy và bằng chứng đã nêu trong tiêu chí.
+  - Khi chữ của kịch bản lệch thiết kế của epic nghiệp vụ (AC3, AC4, AC7) thì kịch bản đã được sửa hoặc khách xác nhận cách đọc trước khi nghiệm thu.
+  - Không kịch bản nào được đánh đạt nhờ dữ liệu sửa tay trong CSDL trong lúc chạy.
+  dinh_nghia_xong: []
+items:
+- key: AC-1
+  cha: E17
+  tracker: story
+  title_vi: Bên mua không có quyền 相対 bị chặn, có dòng audit denied
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC1
+    sd:
+    - A1
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-E17-01
+  mo_ta: Kịch bản AC1 chứng minh lúc chốt 相対取引 (giao dịch thỏa thuận), máy chủ kiểm tư cách của bên mua chứ không tin giao diện. Bên mua chưa có 許可 (giấy phép) hay 承認 (chấp thuận) hợp lệ thì lần chốt bị từ chối, không có dòng giao dịch nào, và vết kiểm toán có một dòng bị từ chối. Kịch bản đi xuyên SC-030, API-208 và TECH-301 của FG-04.
+  pham_vi: Màn SC-030, API-208, luồng TECH-301; bảng `participants` (đọc), `transactions` (không được thêm dòng), `audit_log` (một dòng kết quả denied); quy tắc A1 của thiết kế hệ thống.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo trên staging một bên mua không có giấy hợp lệ cho 相対, một lô còn hàng và một tài khoản của 取引運用 (nhóm vận hành giao dịch).'
+  - 'Thực hiện: người vận hành nhập giao dịch 相対 cho bên mua đó ở SC-030 rồi bấm chốt.'
+  - 'Kiểm: API-208 trả 403 M_01 và màn hiện lý do ở SC-033.'
+  - QA đếm dòng transactions của lô và tìm dòng audit_log của lần chốt bị từ chối.
+  - Khách xem lại kết quả cùng BrSE và ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi bên mua không có giấy hợp lệ thì API-208 trả 403 M_01 và số dòng transactions của lô không đổi.
+  - Khi lần chốt bị từ chối thì audit_log có đúng một dòng kết quả denied, ghi người bấm của phiên, vai và giờ máy chủ.
+  - Khi gọi thẳng API-208 không qua màn thì kết quả vẫn như trên.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm ảnh màn lý do, dòng audit_log, số dòng giao dịch trước và sau, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-1/TEST
+  cha: AC-1
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bên mua không có quyền 相対 bị chặn, có dòng audit denied'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC1
+    sd:
+    - A1
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC1 trên staging với dữ liệu đã che.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Bên mua không có giấy hợp lệ: 403 M_01, không thêm dòng transactions, có một dòng audit_log kết quả denied.'
+  - 'Gọi thẳng API-208 không qua SC-030: cùng kết quả như ca trên.'
+  - 'Cùng lô với một bên mua có giấy hợp lệ: chốt được, chứng minh ca đầu bị chặn vì tư cách chứ không vì lô hay quyền người nhập.'
+  dinh_nghia_xong: []
+- key: AC-2
+  cha: E17
+  tracker: story
+  title_vi: Tư cách 失効 bị chặn lúc chốt
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC2
+    sd:
+    - A2
+    - A3
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-E17-01
+  - G-FG04-02
+  mo_ta: 'Kịch bản AC2 chứng minh hạn giấy được so với ngày chốt chứ không đọc cờ trạng thái: bên mua có giấy đã quá hạn mà trạng thái vẫn active thì vẫn bị từ chối. Hạn lấy đúng cột của tầng giấy: 仲卸 (trung gian bán buôn) theo hạn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) theo hạn 承認 (chấp thuận), nên 失効 (mất hiệu lực) không lọt qua chỉ vì tác vụ đổi trạng thái chưa chạy.'
+  pham_vi: SC-030, API-208, TECH-301; bảng `participants` với hai bộ cột hạn của thiết kế đích; quy tắc A2, A3; đường phục hồi qua SC-013.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo hai bên mua đang active, một 仲卸 có hạn 許可 đã qua và một 売買参加者 có hạn 承認 đã qua so với 業務日 (ngày nghiệp vụ) của lần chạy.'
+  - 'Thực hiện: người vận hành chốt một giao dịch 相対取引 (giao dịch thỏa thuận) với từng bên mua ở SC-030.'
+  - 'Kiểm: API-208 trả 422 M_21 cho cả hai, không có dòng transactions nào.'
+  - QA dời hạn của một bên sang sau 業務日 rồi chốt lại, để thấy lần từ chối trước là do hạn.
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi hạn của đúng tầng giấy đã qua tại 業務日 thì trả 422 M_21, bất kể cờ active.
+  - Khi dữ liệu của bên mua điền cả hai bộ cột 許可 và 承認 thì CSDL từ chối ghi, vì mỗi tầng chỉ có một bộ cột (A2).
+  - Khi so hạn thì mốc là 業務日 theo giờ Nhật, không phải ngày theo giờ UTC của máy chủ (G-FG04-02).
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm hạn giấy của hai bên mua, mã lỗi trả về và số dòng giao dịch, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-2/TEST
+  cha: AC-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tư cách 失効 bị chặn lúc chốt'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC2
+    sd:
+    - A2
+    - A3
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC2, nhắm vào việc kiểm hạn theo đúng tầng giấy và đúng 業務日 (ngày nghiệp vụ).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - '仲卸 (trung gian bán buôn) hết hạn 許可 (giấy phép), trạng thái active: 422 M_21, không thêm dòng giao dịch.'
+  - '売買参加者 (người tham gia mua bán) hết hạn 承認 (chấp thuận), trạng thái active: 422 M_21.'
+  - 'Chạy sau nửa đêm giờ Nhật khi ngày UTC còn là hôm trước: mốc so hạn là 業務日 giờ Nhật.'
+  dinh_nghia_xong: []
+- key: AC-3
+  cha: E17
+  tracker: story
+  title_vi: Lô せり ế chỉ mở lại 相対 hoặc 直販
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC3
+    sd:
+    - A4
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-18
+  gap_refs:
+  - G-E17-02
+  - G-FG05-07
+  mo_ta: 'Kịch bản AC3 chứng minh lô せり (đấu giá) ế không bị đấu lại quá trần và không kẹt ở せり: vượt trần 再せり (đấu lại) thì bị từ chối, lô chỉ đi tiếp qua 相対取引 (giao dịch thỏa thuận) hoặc 直販 (bán trực tiếp). Kịch bản kiểm theo thiết kế TECH-302 của FG-05, vì chữ của AC3 lệch với quy tắc A4 và mã M_23 về số lần được đấu lại (G-E17-02).'
+  pham_vi: SC-040, API-212, TECH-302; bảng `auction_results` (cột lần thử), `lots` (trạng thái); quy tắc A4; đường đi tiếp qua SC-030 hoặc API-209, mặc định tắt (P-18).
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo một lô đã qua lần thử 1 và một lần 再せり (lần thử 2), cả hai lần đều ế.'
+  - 'Thực hiện: người điều hành phiên chọn 再せり thêm một lần ở SC-040.'
+  - 'Kiểm: API-212 trả 409 M_23 và không thêm dòng auction_results.'
+  - Người điều hành chọn chuyển lô sang 相対; lô sang trạng thái chờ 相対 và chọn được ở SC-030.
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi lô đã có lần thử 2 mà chọn 再せり nữa thì trả 409 M_23 và số dòng auction_results không đổi.
+  - Khi lô mới qua lần thử 1 và ế thì lần 再せり đầu vẫn được phép; chặn ở lần này là lỗi.
+  - Khi lô ế được chuyển 相対 thì lô hiện ở SC-030; khi quy tắc bán cho bên thứ ba đang tắt thì API-209 từ chối lô đó (P-18).
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm các dòng auction_results của lô, mã lỗi, trạng thái lô trước và sau, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Kịch bản AC3 trong spec hệ thống được sửa cho khớp TECH-302, hoặc khách xác nhận cách đọc (G-E17-02).
+- key: AC-3/TEST
+  cha: AC-3
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Lô せり ế chỉ mở lại 相対 hoặc 直販'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC3
+    sd:
+    - A4
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC3 cho trần 再せり (đấu lại) và đường đi tiếp của lô ế.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô ở lần thử 2 vẫn ế, chọn 再せり: 409 M_23, không thêm dòng.'
+  - 'Lô ở lần thử 1 ế: 再せり được phép và tạo lần thử 2.'
+  - 'Lô ế chuyển 相対取引 (giao dịch thỏa thuận) rồi chốt ở SC-030: giao dịch vẫn qua kiểm tư cách của TECH-301.'
+  dinh_nghia_xong: []
+- key: AC-4
+  cha: E17
+  tracker: story
+  title_vi: Người lập không tự duyệt bản quy tắc; lần đổi thứ 5 trong năm bị chặn
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC4
+    sd:
+    - A5
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E17-03
+  - G-FG10-03
+  mo_ta: 'Kịch bản AC4 chứng minh hai luật của bản 業務規程 (quy chế nghiệp vụ): người lập không tự duyệt bản của mình, và mỗi khoá quy tắc không đổi quá 4 lần trong một năm dương lịch. Cả hai được kiểm ở máy chủ tại bước duyệt theo TECH-303 của FG-10, vì mã vượt trần chỉ trả ở bước duyệt chứ không ở bước lập (G-E17-03).'
+  pham_vi: SC-091, SC-092; API-217 (lập bản), API-218 (duyệt); TECH-303; bảng `business_rules`, `rule_versions`; quy tắc A5.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo một khoá quy tắc đã có 4 lần duyệt trong năm dương lịch đang chạy, cùng hai tài khoản người lập và người duyệt khác nhau.'
+  - 'Thực hiện 1: người lập tạo bản mới ở SC-091 rồi tự bấm duyệt ở SC-092.'
+  - 'Kiểm 1: API-218 trả 422 M_26, bản vẫn ở trạng thái nháp.'
+  - 'Thực hiện 2: người duyệt khác bấm duyệt bản đó, tức lần đổi thứ năm trong năm.'
+  - 'Kiểm 2: API-218 trả 422 M_20, bản không có hiệu lực.'
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi người lập tự duyệt bản của mình thì trả 422 M_26 và trạng thái bản không đổi.
+  - Khi khoá đã có 4 lần duyệt trong năm mà duyệt thêm thì trả 422 M_20, kể cả khi trước đó có lần lùi bản (G-FG10-03).
+  - Khi người duyệt khác người lập và khoá chưa chạm trần thì bản được duyệt, chứng minh hai ca trên bị chặn đúng lý do.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm số lần duyệt của khoá trong năm, hai mã lỗi và trạng thái bản trước, sau, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Chữ «tạo lần đổi thứ năm» của AC4 được sửa thành bước duyệt, hoặc khách xác nhận cách đọc (G-E17-03).
+- key: AC-4/TEST
+  cha: AC-4
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Người lập không tự duyệt bản quy tắc; lần đổi thứ 5 trong năm bị chặn'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC4
+    sd:
+    - A5
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC4 cho tách người lập với người duyệt và trần 4 lần đổi mỗi năm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Người lập tự duyệt bản của mình: 422 M_26.'
+  - 'Khoá đã có 4 lần duyệt trong năm, người khác duyệt bản thứ năm: 422 M_20.'
+  - 'Lùi một bản rồi duyệt bản khác trong cùng năm: vẫn 422 M_20.'
+  dinh_nghia_xong: []
+- key: AC-5
+  cha: E17
+  tracker: story
+  title_vi: Kết quả 判定 chưa thành tiền khi chưa có người 確定; audit ghi người + thời điểm
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC5
+    sd:
+    - A6
+    - A9
+  labels:
+  - type:story
+  - constraint:hitl
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-10
+  - P-12
+  gap_refs:
+  - G-E17-01
+  - G-FG09-01
+  mo_ta: 'Kịch bản AC5 chứng minh 完納奨励金 (thưởng thanh toán đủ hạn) chỉ thành tiền khi có người 確定 (xác nhận cuối): máy 判定 (xét) và tính số tiền, nhưng không đường nào tự chuyển khoản thưởng sang đã xác nhận. Số tiền nhân hệ số thuế 110/100 trước rồi mới cắt lẻ về yên.
+
+    Ràng buộc đặc thù: Khoản thưởng chỉ thành tiền khi một người 確定, nên ca kiểm phải chứng minh không đường máy nào tự xác nhận.'
+  pham_vi: SC-080, SC-081; API-215 (判定), API-216 (確定); TECH-304; bảng `incentives` (cột người và thời điểm xác nhận), `audit_log`; quy tắc A6, A9.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo một hoá đơn trả đủ trong hạn và một bản suất đang hiệu lực, rồi chạy 判定 để có khoản thưởng chưa xác nhận.'
+  - 'Thực hiện 1: QA thử mọi đường không có thao tác người: chạy lại 判定, gọi các API khác, chờ tác vụ nền.'
+  - 'Kiểm 1: khoản thưởng vẫn chưa xác nhận, cột người xác nhận còn rỗng.'
+  - 'Thực hiện 2: một người của 照合事務 (nhóm đối soát) bấm 確定 ở SC-080.'
+  - 'Kiểm 2: có người của phiên, giờ máy chủ và dòng audit_log; số tiền khớp số tính tay theo công thức.'
+  - Khách và BrSE đối chiếu số tiền với cách tính của chợ, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi chưa có thao tác 確定 thì không đường gọi nào làm khoản thưởng sang đã xác nhận.
+  - Khi người dùng 確定 thì hệ thống ghi người của phiên, giờ máy chủ và một dòng audit_log; người và giờ gửi từ trình duyệt bị bỏ qua.
+  - Khi tính số tiền thì nhân hệ số thuế 110/100 trước, cắt lẻ về yên sau; hoá đơn trả quá hạn có thưởng bằng 0.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm số tính tay, số của hệ thống, người và giờ 確定, dòng audit_log, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Cách ghi bước 確定 trên bảng chỉ-thêm đã chốt ở SC-080/DB trước khi chạy (G-FG09-01).
+- key: AC-5/TEST
+  cha: AC-5
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Kết quả 判定 chưa thành tiền khi chưa có người 確定; audit ghi người + thời điểm'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC5
+    sd:
+    - A6
+    - A9
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC5, chứng minh kết quả 判定 (xét) luôn đi qua người 確定 (xác nhận cuối).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Khoản thưởng đã 判定, không ai 確定: chạy lại 判定 và chờ tác vụ nền, trạng thái vẫn chưa xác nhận.'
+  - 'Gửi 確定 kèm người và giờ giả: hệ thống lưu người của phiên và giờ máy chủ.'
+  - 'Hoá đơn cho số lẻ sau khi nhân hệ số thuế 110/100: số tiền là phần nguyên, khớp số tính tay.'
+  dinh_nghia_xong: []
+- key: AC-6
+  cha: E17
+  tracker: story
+  title_vi: Sửa sau khoá đi bằng bút toán đảo
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC6
+    sd:
+    - A10
+    - A7
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-16
+  - P-24
+  gap_refs:
+  - G-E17-01
+  - G-FG06-04
+  - G-FG08-09
+  mo_ta: 'Kịch bản AC6 chứng minh 業務日 (ngày nghiệp vụ) đã khoá thì không sửa thẳng được: sai sót chỉ sửa qua yêu cầu điều chỉnh có duyệt, sinh dòng đảo hoặc dòng chênh lệch, dòng gốc giữ nguyên. Kịch bản đi xuyên FG-08 khoá ngày và FG-06 sửa bằng 赤伝 (bút toán đảo).
+
+    Ràng buộc đặc thù: Khoá ngày và duyệt điều chỉnh là hai bước người quyết; ca kiểm ghi ai khoá, ai duyệt và lúc nào.'
+  pham_vi: SC-071 (khoá ngày), API-223 (huỷ, bị chặn sau khoá), SC-050 và SC-052 (lập và duyệt điều chỉnh); bảng `business_day_locks`, `transactions`, `adjustment_requests`, `adjustment_entries`; quy tắc A7, A10.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo giao dịch trong một 業務日, rồi người đối soát khoá ngày đó ở SC-071.'
+  - 'Thực hiện 1: người dùng thử sửa thẳng: huỷ giao dịch qua API-223 và ghi một lần giao hàng mới vào ngày đó.'
+  - 'Kiểm 1: cả hai bị chặn bằng mã ngày đã khoá (P-24) và có dòng audit_log.'
+  - 'Thực hiện 2: người dùng lập yêu cầu điều chỉnh ở SC-050, một người khác duyệt ở SC-052.'
+  - 'Kiểm 2: có dòng đảo hoặc dòng chênh lệch, dòng gốc không đổi, số đọc qua khung nhìn đã tính điều chỉnh.'
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi ghi thẳng vào ngày đã khoá thì bị chặn bằng mã ngày đã khoá, có dòng audit_log và dữ liệu không đổi.
+  - Khi yêu cầu điều chỉnh được duyệt thì có dòng adjustment_entries loại reverse hoặc delta, dòng gốc giữ nguyên giá trị.
+  - Khi người lập yêu cầu tự duyệt thì bị từ chối; người đề nghị và người duyệt là hai tài khoản khác nhau (P-16).
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm dòng khoá ngày, hai lần bị chặn, dòng gốc trước và sau, dòng điều chỉnh, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Nơi giữ dòng đảo (G-FG06-04) và cách bảng khoá ngày phân biệt khoá với mở lại (G-FG08-09) đã chốt trước khi chạy.
+- key: AC-6/TEST
+  cha: AC-6
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Sửa sau khoá đi bằng bút toán đảo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC6
+    sd:
+    - A10
+    - A7
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC6 cho đường sửa sau khoá 業務日 (ngày nghiệp vụ).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Huỷ giao dịch của ngày đã khoá qua API-223: bị chặn bằng mã ngày đã khoá, có dòng audit_log.'
+  - 'Điều chỉnh có duyệt: thêm dòng reverse hoặc delta, số dòng và giá trị của dòng gốc không đổi.'
+  - 'Người lập tự duyệt yêu cầu: bị từ chối, không sinh dòng điều chỉnh, chứng minh kết quả luôn đi qua người duyệt.'
+  dinh_nghia_xong: []
+- key: AC-7
+  cha: E17
+  tracker: story
+  title_vi: Thông báo thất bại thử lại đúng 3 lần rồi vào hàng đợi cảnh báo
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC7
+    sd:
+    - EV2
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E17-04
+  - G-FG12-01
+  - G-FG12-02
+  - G-FG14-06
+  mo_ta: 'Kịch bản AC7 chứng minh lỗi gửi thông báo không bị nuốt: khi kênh email hỏng, hệ thống gửi đúng số lần cho phép, ghi trạng thái cuối thất bại vào nhật ký gửi, và sự kiện mức Critical quá 5 phút thì người vận hành thấy cảnh báo. Thông báo trong ứng dụng vẫn hiện dù email lỗi, và nghiệp vụ sinh ra sự kiện không dừng lại.'
+  pham_vi: Module notify (FG-12) theo sự kiện EV2; SC-121 (nhật ký gửi), SC-122 (hàng đợi cảnh báo), SC-150 (bảng giám sát); bảng `notification_log`, `alert_queue`.
+  luong_chinh:
+  - 'Chuẩn bị: Infra làm hỏng kênh email trên staging; QA tạo một bên tham gia có tư cách sắp hết hạn và một sự kiện mà INV-FG12-MUC-KHAN xếp mức Critical (G-FG12-01).'
+  - 'Thực hiện: hệ thống gửi lần đầu rồi thử lại theo khoảng cách cấu hình (chưa có số); lần đầu và cả ba lần thử lại đều thất bại.'
+  - 'Kiểm 1: notification_log có trạng thái cuối thất bại, số lần thử lại bằng 3; thông báo trong ứng dụng vẫn hiện.'
+  - 'Kiểm 2: sau 5 phút, sự kiện Critical có một dòng alert_queue hiện ở SC-122 và được đếm ở SC-150.'
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi lần gửi đầu và cả ba lần thử lại đều thất bại thì notification_log có một dòng trạng thái cuối thất bại, số lần thử bằng 3, không có lần gửi thứ năm.
+  - Khi sự kiện mức Critical chưa gửi được sau 5 phút thì có cảnh báo ở hàng đợi cảnh báo vận hành, không mất im lặng.
+  - Khi email lỗi thì thông báo trong ứng dụng vẫn hiện và nghiệp vụ sinh sự kiện vẫn hoàn tất.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm các dòng notification_log, dòng cảnh báo, giờ sự kiện và giờ cảnh báo, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Tech Lead chốt cách đếm lần thử (G-FG12-02) và nơi hiện cảnh báo, kịch bản AC7 sửa theo đó (G-E17-04).
+- key: AC-7/TEST
+  cha: AC-7
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Thông báo thất bại thử lại đúng 3 lần rồi vào hàng đợi cảnh báo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC7
+    sd:
+    - EV2
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca nghiệm thu AC7 cho việc gửi lại thông báo và cảnh báo khi email hỏng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Email hỏng, sự kiện thường: một lần gửi đầu và đúng 3 lần thử lại, một dòng nhật ký trạng thái cuối thất bại.'
+  - 'Email hỏng, sự kiện mức Critical: sau 5 phút có cảnh báo ở SC-122.'
+  - 'Email hỏng: thông báo trong ứng dụng vẫn hiện, giao dịch sinh sự kiện vẫn được ghi.'
+  dinh_nghia_xong: []

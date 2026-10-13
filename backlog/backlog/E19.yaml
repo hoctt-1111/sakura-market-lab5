@@ -1,0 +1,415 @@
+# Seed epic E19 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E19
+  tracker: epic
+  title_vi: Phát hành production
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-17
+  gap_refs: []
+  mo_ta: 'Nhóm việc này đưa hệ đích lên production: dựng môi trường và quy trình phát hành, viết kế hoạch hoàn nguyên có đường bù riêng cho hai bước không hoàn tác được, diễn tập phát hành trên staging rồi bàn giao vận hành cho khách. Mọi lần phát hành đặt ngoài cửa sổ dịch vụ 02:00–10:00 giờ Nhật, vì hệ chỉ có một khối triển khai nên lần triển khai nào cũng dừng cả khối (ADR-009).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E19 đã đóng.
+  - Khi diễn tập phát hành trên staging thì mọi bước chạy hết, các đường lùi được thử và có biên bản.
+  - Khi khoá 業務日 (ngày nghiệp vụ) hoặc gửi tệp xuất kế toán đã chạy thật thì kế hoạch hoàn nguyên không có bước xoá nào, chỉ có đường bù.
+  - Khách nhận tài liệu vận hành và ký biên bản bàn giao.
+  dinh_nghia_xong: []
+items:
+- key: REL-01
+  cha: E19
+  tracker: story
+  title_vi: Môi trường production và quy trình phát hành
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.thu_tu
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-E19-01
+  - G-E19-02
+  - G-A-DB-d2-chi-27-bang
+  mo_ta: Infra dựng production từ cùng bộ cấu hình với staging, chỉ khác tham số, và viết quy trình phát hành một bản dựng đã qua staging. Thứ tự ở mục triển khai của LAB-4 là thứ tự làm tài liệu (G-E19-01), nên story này viết lại thứ tự cho hệ viết mới; lần phát hành nào cũng đặt ngoài cửa sổ dịch vụ và báo trước người dùng (G-E19-02).
+  pham_vi: 'Production ở ap-northeast-1 theo ADR-015 (nhiều máy ứng dụng, CSDL có bản dự phòng đồng bộ, sao lưu, giám sát). Thứ tự phát hành: migration cả 45 bảng (P-04), bản ứng dụng, dữ liệu di trú của E16, rồi mới mở cho người dùng; không bước nào coi 18 bảng của prototype là đã có.'
+  luong_chinh:
+  - Infra dựng production bằng cấu hình trong repo, bật bản dự phòng, sao lưu, giám sát và chặn dữ liệu ra ngoài vùng Nhật.
+  - PM chốt lịch phát hành ngoài cửa sổ dịch vụ và báo trước người dùng của chợ.
+  - Infra đưa đúng bản dựng đã diễn tập ở REL-03 lên, chạy migration rồi triển khai ứng dụng; BE nạp dữ liệu di trú theo kết quả MIG-03.
+  - QA chạy kiểm khói gồm API-220 và một lượt mỗi luồng lõi; PM quyết mở cho người dùng.
+  tieu_chi_nghiem_thu:
+  - Khi so cấu hình production với staging thì chỉ khác các tham số đã khai, không có tài nguyên dựng tay.
+  - Khi phát hành thì thời điểm nằm ngoài cửa sổ dịch vụ và người dùng đã được báo trước.
+  - Khi triển khai thì bản chạy trên production đúng là bản đã diễn tập trên staging.
+  - Khi kiểm khói sau phát hành đỏ thì hệ chưa mở cho người dùng và kế hoạch hoàn nguyên của REL-02 được chạy.
+  dinh_nghia_xong:
+  - Quy trình và thứ tự phát hành ghi trong README vận hành, có Tech Lead duyệt.
+- key: REL-01/TEST
+  cha: REL-01
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Môi trường production và quy trình phát hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.thu_tu
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế bộ kiểm khói sau phát hành và các ca kiểm quy trình phát hành.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Kiểm khói: API-220 trả 200, đăng nhập được, chạy trọn một lượt nhập lô, chốt 相対取引 (giao dịch thỏa thuận) và ghi giao hàng.'
+  - 'So mã bản dựng đang chạy trên production với bản đã diễn tập: khớp.'
+  - 'Đặt lịch phát hành rơi vào cửa sổ dịch vụ: luồng triển khai chặn, chờ người duyệt riêng.'
+  dinh_nghia_xong: []
+- key: REL-01/INFRA
+  cha: REL-01
+  tracker: devtask
+  title_vi: 'Hạ tầng: Môi trường production và quy trình phát hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.thu_tu
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng production và bước triển khai production trong luồng CI, dùng cùng bộ cấu hình với staging.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Production dựng được từ cấu hình trong repo, chỉ khác tham số so với staging.
+  - Bước triển khai production cần người duyệt và chỉ nhận bản dựng đã qua staging.
+  - Sau khi triển khai, API-220 trả 200 trên mọi máy ứng dụng.
+  dinh_nghia_xong: []
+- key: REL-02
+  cha: E19
+  tracker: story
+  title_vi: Kế hoạch hoàn nguyên và hai bước không hoàn tác
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.hoan_nguyen
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-17
+  gap_refs:
+  - G-E19-03
+  mo_ta: 'PM và Tech Lead viết kế hoạch hoàn nguyên cho từng bước phát hành: bản ứng dụng lùi về bản trước, migration đã có dữ liệu thật thì sửa tiến bằng migration mới, lô di trú thì đảo bằng bút toán đảo. Khi đã vận hành thật, khoá 業務日 (ngày nghiệp vụ) và tệp xuất kế toán đã gửi là hai bước không quay lại được, nên kế hoạch chỉ có đường bù cho hai bước này (G-E19-03).'
+  pham_vi:
+  - Mọi bước của REL-01; lô di trú của E16 (ADR-016); bảng business_day_locks; lô xuất export_batches (ADR-014, P-17).
+  - 'Đường bù: sai sót sau khoá đi qua điều chỉnh có duyệt của FG-06; tệp xuất sai thì chạy lại cùng mã lô để bên nhận đối chiếu.'
+  luong_chinh:
+  - Tech Lead liệt kê từng bước phát hành, ghi bước đó hoàn tác được không và bằng cách nào.
+  - 'PM đặt mốc không quay lại trên lịch: sau lần khoá ngày hoặc lần xuất kế toán thật đầu tiên chỉ còn đường bù.'
+  - BE giữ migration ở dạng chỉ thêm bảng, thêm cột, để bản ứng dụng trước vẫn chạy được trên lược đồ mới.
+  - QA chạy thử từng đường lùi trên staging trong buổi diễn tập của REL-03.
+  - Khách duyệt kế hoạch qua BrSE trước ngày phát hành.
+  tieu_chi_nghiem_thu:
+  - Khi lùi bản ứng dụng thì bản trước chạy được trên lược đồ CSDL hiện tại và không mất dữ liệu đã ghi.
+  - Khi cần bỏ một lô di trú thì dữ liệu được đảo bằng bút toán đảo, không dòng nào bị xoá.
+  - Khi ngày đã khoá có sai sót thì kế hoạch dẫn sang điều chỉnh có duyệt, không có bước xoá bản khoá.
+  - Khi tệp xuất đã gửi bị sai thì kế hoạch chạy lại cùng mã lô, không sinh lô mới (ADR-014).
+  dinh_nghia_xong:
+  - Kế hoạch hoàn nguyên có ngày khách duyệt, và mốc không quay lại được ghi trên lịch phát hành (G-E19-03).
+- key: REL-02/TEST
+  cha: REL-02
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Kế hoạch hoàn nguyên và hai bước không hoàn tác'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.hoan_nguyen
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho từng đường lùi và hai bước không hoàn tác.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lùi bản ứng dụng sau một migration chỉ thêm: bản trước chạy, dữ liệu ghi sau phát hành còn nguyên.'
+  - 'Hoàn tác một lô di trú: có dòng đảo, không dòng nào bị xoá.'
+  - 'Ngày đã khoá có sai: không có đường xoá bản khoá, sửa qua điều chỉnh có duyệt.'
+  dinh_nghia_xong: []
+- key: REL-02/INFRA
+  cha: REL-02
+  tracker: devtask
+  title_vi: 'Hạ tầng: Kế hoạch hoàn nguyên và hai bước không hoàn tác'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.hoan_nguyen
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Làm bước lùi bản ứng dụng trong luồng triển khai và điểm khôi phục CSDL ngay trước mỗi lần phát hành.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lùi về bản trước bằng một lệnh có ghi vết, không dựng lại bản.
+  - Trước mỗi lần phát hành có điểm khôi phục CSDL và đã thử khôi phục trên staging.
+  - Bước lùi không chạy lệnh xoá nào trên bảng chỉ-thêm.
+  dinh_nghia_xong: []
+- key: REL-03
+  cha: E19
+  tracker: story
+  title_vi: Diễn tập phát hành trên staging
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.cach_biet_hong
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E19-04
+  mo_ta: 'Đội chạy toàn bộ quy trình phát hành của REL-01 trên staging với dữ liệu đã che, gồm cả nạp dữ liệu di trú và thử các đường lùi của REL-02. Mục «cách biết là hỏng» của LAB-4 chỉ nói về cổng kiểm của bộ tài liệu (G-E19-04), nên story này đặt dấu hiệu hỏng cho hệ đang chạy: API-220, kiểm khói các luồng lõi và cảnh báo của bốn nhóm giám sát.'
+  pham_vi: Staging của PLT-02; bản dựng ứng viên; kế hoạch của REL-01, REL-02; diễn tập di trú MIG-03; cảnh báo của NFR-OPS; thời gian từng bước so với 16 giờ ngoài cửa sổ dịch vụ mỗi ngày (ADR-009).
+  luong_chinh:
+  - PM lên lịch diễn tập như một lần phát hành thật, kể cả báo trước.
+  - Infra triển khai bản dựng ứng viên lên staging theo đúng quy trình REL-01 và đo thời gian từng bước.
+  - BE nạp dữ liệu di trú đã che; QA chạy kiểm khói và theo dõi cảnh báo.
+  - Infra thử lùi bản ứng dụng và khôi phục CSDL theo REL-02.
+  - 'PM ghi biên bản: các bước, thời gian, dấu hiệu hỏng gặp phải, quyết định đi tiếp hay sửa.'
+  tieu_chi_nghiem_thu:
+  - Khi diễn tập xong thì tổng thời gian các bước nằm gọn trong khoảng ngoài cửa sổ dịch vụ.
+  - Khi API-220 trả 500, kiểm khói đỏ hoặc có cảnh báo ở nhóm nào thì diễn tập dừng và ghi là hỏng.
+  - Khi thử lùi bản và khôi phục thì hệ trở về trạng thái trước diễn tập, có số đo thời gian.
+  - Khi lưu biên bản thì có người chạy, ngày chạy và bản dựng đã dùng.
+  dinh_nghia_xong:
+  - Danh sách dấu hiệu hỏng cho hệ đang chạy được Tech Lead duyệt, thay cho mục «cách biết là hỏng» của LAB-4 (G-E19-04).
+- key: REL-03/TEST
+  cha: REL-03
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Diễn tập phát hành trên staging'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.cach_biet_hong
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho buổi diễn tập phát hành và dấu hiệu hỏng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Kiểm khói sau triển khai trên staging: đạt, hoặc diễn tập dừng và ghi hỏng.'
+  - 'Gây lỗi API-220 giữa chừng: diễn tập ghi hỏng và chạy đường lùi.'
+  - 'So số đọc qua khung nhìn trước và sau khi lùi bản: không đổi.'
+  dinh_nghia_xong: []
+- key: REL-03/INFRA
+  cha: REL-03
+  tracker: devtask
+  title_vi: 'Hạ tầng: Diễn tập phát hành trên staging'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.cach_biet_hong
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Chạy quy trình phát hành và các đường lùi trên staging như một lần thật, đo thời gian từng bước.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi bước chạy từ luồng triển khai, không có thao tác tay ngoài kế hoạch.
+  - Thời gian từng bước ghi vào biên bản diễn tập.
+  - Lùi bản và khôi phục CSDL thành công trên staging.
+  dinh_nghia_xong: []
+- key: REL-04
+  cha: E19
+  tracker: story
+  title_vi: Bàn giao vận hành
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E19-05
+  - G-FG01-04
+  mo_ta: 'PM và Infra bàn giao cho đội vận hành của khách những gì cần để chạy hệ hằng ngày: tài liệu vận hành, lịch sao lưu và diễn tập khôi phục, cách đọc bảng giám sát và hàng đợi cảnh báo, người xem nhật ký hành vi bất thường, quyền hạ tầng và tài khoản quản trị đầu tiên. Danh sách D1–D6 của LAB-4 chỉ gồm sản phẩm tài liệu, chưa có mục bàn giao vận hành nào (G-E19-05).'
+  pham_vi: Tài liệu vận hành (khởi động, dừng, phát hành, lùi bản, khôi phục); bàn giao bí mật và quyền hạ tầng; tài khoản quản trị đầu tiên (G-FG01-04); một câu trả lời thống nhất rằng nền tảng là lựa chọn của giai đoạn thiết kế, chưa phải điều khoản hợp đồng (ADR-008); buổi huấn luyện cho đội vận hành.
+  luong_chinh:
+  - Infra viết tài liệu vận hành từ quy trình đã diễn tập ở REL-03.
+  - PM cùng khách chỉ định người xem nhật ký hành vi bất thường và người nhận cảnh báo.
+  - Infra bàn giao quyền hạ tầng và cách xoay vòng bí mật; đội dự án rút các quyền không còn cần.
+  - 'PM tổ chức buổi huấn luyện: đọc SC-150, SC-122 và chạy một lần khôi phục thử.'
+  - Khách ký biên bản bàn giao qua BrSE.
+  tieu_chi_nghiem_thu:
+  - Khi người vận hành của khách làm theo tài liệu thì tự chạy được một lần khôi phục thử trên staging.
+  - Khi có cảnh báo ở SC-122 thì người nhận đã có tên trong danh sách bàn giao.
+  - Khi bàn giao xong thì tài khoản và quyền của đội dự án trên production đã rút hoặc chuyển cho khách, có danh sách đối chiếu.
+  - Khi ký bàn giao thì biên bản có người nhận phía khách và ngày ký.
+  dinh_nghia_xong:
+  - Tài liệu vận hành nằm trong repo hệ đích và có bản tiếng Nhật cho đội của khách.
+- key: REL-04/TEST
+  cha: REL-04
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bàn giao vận hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho việc bàn giao vận hành.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Người vận hành của khách chạy khôi phục thử theo tài liệu, không cần đội dự án: đạt.'
+  - Sau bàn giao, tài khoản của đội dự án không đăng nhập được production.
+  - 'Gây một cảnh báo thử: người nhận đã chỉ định thấy cảnh báo ở SC-122.'
+  dinh_nghia_xong: []
+- key: REL-04/INFRA
+  cha: REL-04
+  tracker: devtask
+  title_vi: 'Hạ tầng: Bàn giao vận hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Viết tài liệu vận hành hạ tầng và chuyển quyền hạ tầng, bí mật cho đội vận hành của khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu có các bước khởi động, dừng, phát hành, lùi bản và khôi phục đã chạy thật ở REL-03.
+  - Có danh sách quyền trước và sau bàn giao.
+  - Người của khách tự xoay vòng được một bí mật theo tài liệu.
+  dinh_nghia_xong: []

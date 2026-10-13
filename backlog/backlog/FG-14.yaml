@@ -1,0 +1,972 @@
+# Seed epic FG-14 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-14
+  tracker: epic
+  title_vi: Chất lượng dữ liệu, chứng từ và ảnh
+  feature: data-quality
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-06
+  - P-12
+  - P-19
+  gap_refs: []
+  mo_ta: Nhóm chức năng này giữ chứng từ và ảnh làm bằng chứng cho lô, giao hàng và tranh chấp, đặt thời hạn lưu trữ rồi chuyển sang lưu lạnh, phát hiện trùng khoá nghiệp vụ trước khi nhận dữ liệu, và gom các thao tác chờ đồng bộ từ thiết bị hiện trường. Máy chỉ phát hiện và xếp hàng; chọn bản đúng khi trùng khoá hay khi đồng bộ xung đột luôn là việc của người (ADR-010). Bảng giám sát SC-150 cho người vận hành thấy sớm lệch đối soát và lỗi vận hành mà không cần kênh thời gian thực (ADR-013).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-14 đã đóng.
+  - Khi một thao tác ghi tạm đồng bộ lại mà xung đột thì không bản nào bị ghi đè; thao tác chờ ở SC-151 tới khi có người chọn, và hệ thống ghi ai chọn, lúc nào.
+  - Khi chứng từ hay ảnh đã lưu thì không đường nào sửa hay xoá được; tới hạn thì chỉ chuyển sang lưu lạnh, không xoá (P-19).
+  - Khi một lần nạp hay một thao tác chốt mang khoá nghiệp vụ đã có thì bản ghi đó không vào bảng và SC-143 có một dòng phát hiện.
+  dinh_nghia_xong: []
+items:
+- key: SC-140
+  cha: FG-14
+  tracker: story
+  title_vi: Quản lý chứng từ đính kèm
+  ten_ja: 添付・証憑管理
+  spec_refs:
+    sc:
+    - SC-140
+    api: []
+    tech: []
+    bang:
+    - attachments
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG14-01
+  - G-FG14-03
+  mo_ta: 照合事務 (nhóm đối soát) tra chứng từ đã đính kèm theo loại đối tượng, đối tượng và thời điểm tải, để lấy bằng chứng khi đối soát ngày hay khi có tranh chấp. Chứng từ do nơi khác tải lên, như phiếu nhận ở SC-025 hay bằng chứng của yêu cầu điều chỉnh ở SC-050; màn này chỉ xem và mở tệp, không sửa hay xoá vì bảng chỉ thêm dòng.
+  pham_vi: Màn SC-140 (SPEC-SKM-167) ở văn phòng, chỉ đọc `attachments` (migration thuộc SC-025/DB); tệp nằm ở kho tệp do SC-025/BE dựng. API đọc và đường mở tệp chưa có spec, SC-140/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người đối soát mở SC-140; máy chủ kiểm vai của phiên.
+  - Người đối soát lọc theo 業務日 (ngày nghiệp vụ), loại đối tượng hoặc mã đối tượng rồi bấm Lọc (G-FG14-01).
+  - Màn hiện loại đối tượng, đối tượng, tệp, thời điểm tải, người tải; bấm một dòng để mở tệp.
+  - Máy chủ cấp đường mở tệp có hạn ngắn cho đúng người đang xem, không lộ đường dẫn kho.
+  tieu_chi_nghiem_thu:
+  - Khi một lô có phiếu nhận thay thế thì danh sách hiện cả bản cũ và bản mới, bản mới đứng trước.
+  - Khi đường mở tệp quá thời hạn cấu hình thì không dùng được nữa, người xem phải mở lại từ màn.
+  - Khi tệp đã chuyển sang lưu lạnh thì màn hiện nhãn đang lưu lạnh và thời gian khôi phục tối đa 2 ngày, không báo lỗi.
+  - Khi người gọi không mang vai được phép thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  - Màn và API không có lệnh nào sửa hay xoá chứng từ.
+  dinh_nghia_xong:
+  - Spec SC-140 có ô lọc theo loại và mã đối tượng, cách mở tệp và nhãn lưu lạnh (G-FG14-01).
+- key: SC-140/FE
+  cha: SC-140
+  tracker: devtask
+  title_vi: 'Giao diện: Quản lý chứng từ đính kèm'
+  spec_refs:
+    sc:
+    - SC-140
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-01
+  mo_ta: 'Dựng màn danh sách chứng từ ở văn phòng: lọc 業務日 (ngày nghiệp vụ), loại và mã đối tượng, bảng năm cột, phân trang, mở tệp từ dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bấm một dòng mở tệp ở thẻ mới bằng đường mở do máy chủ cấp.
+  - Dòng có tệp đang lưu lạnh hiện nhãn có chữ thay cho nút mở.
+  - Khi không có chứng từ nào khớp thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-140/BE
+  cha: SC-140
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Quản lý chứng từ đính kèm'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - attachments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG14-01
+  mo_ta: Viết spec rồi làm API đọc danh sách chứng từ và cấp đường mở tệp trên module quality (P-01); API không thêm, sửa hay xoá dòng attachments.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lọc theo loại và mã đối tượng dùng hai cột target_type, target_id đã có (G-FG14-01).
+  - Đường mở tệp gắn với người của phiên và hết hạn theo tham số cấu hình.
+  - Tài khoản CSDL của API chỉ có quyền đọc trên attachments; tệp đã lưu lạnh trả trạng thái lưu lạnh thay vì lỗi.
+  dinh_nghia_xong: []
+- key: SC-140/TEST
+  cha: SC-140
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Quản lý chứng từ đính kèm'
+  spec_refs:
+    sc:
+    - SC-140
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tra chứng từ và đường mở tệp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô có phiếu nhận và một bản thay thế: danh sách hiện cả hai, bản mới trước.'
+  - 'Dùng lại đường mở tệp sau khi hết hạn: bị từ chối.'
+  - 'Gọi API bằng vai không được phép: 403 M_05, không trả dòng nào.'
+  dinh_nghia_xong: []
+- key: SC-141
+  cha: FG-14
+  tracker: story
+  title_vi: Tải và xem ảnh chứng cứ
+  spec_refs:
+    sc:
+    - SC-141
+    api: []
+    tech: []
+    bang:
+    - evidence_images
+    fr:
+    - FR-LOT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG14-02
+  mo_ta: 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) tải ảnh làm bằng chứng cho ngoại lệ giao hàng, tranh chấp hay đối soát, rồi xem lại ảnh kèm thời điểm chụp, thiết bị và giá trị băm để chứng minh ảnh chưa bị thay. Ảnh là bằng chứng cho người quyết, máy không tự chấm chất lượng từ ảnh. Giá trị băm do máy chủ tính, không gõ tay (G-FG14-02).
+  pham_vi: Màn SC-141 (SPEC-SKM-168) trên thiết bị hiện trường; bảng `evidence_images` (chủ migration, chỉ thêm dòng), mỗi ảnh trỏ một dòng `attachments` (migration thuộc SC-025/DB). API tải và đọc ảnh chưa có spec, SC-141/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng chọn đối tượng cần bằng chứng rồi chụp hoặc chọn ảnh.
+  - Người dùng bấm Lưu; máy chủ kiểm loại và cỡ tệp theo cấu hình, lưu tệp, tính giá trị băm.
+  - Máy chủ thêm một dòng attachments và một dòng evidence_images với người tải của phiên, thời điểm chụp, thiết bị và giá trị băm.
+  - Người xem mở ảnh; máy chủ tính lại giá trị băm và báo nếu không khớp.
+  tieu_chi_nghiem_thu:
+  - Khi bấm Lưu thì giá trị băm do máy chủ tính từ tệp nhận được; giá trị gửi từ trình duyệt bị bỏ qua.
+  - Khi tệp sai loại hoặc vượt cỡ theo tham số cấu hình (P-03) thì máy chủ từ chối, không ghi dòng nào.
+  - Khi lưu thành công thì có dòng mới chính thức, không có bản nháp; thay ảnh là thêm ảnh mới, ảnh cũ giữ nguyên.
+  - Khi giá trị băm tính lại không khớp lúc xem thì màn báo ảnh không còn nguyên vẹn.
+  - Khi mất kết nối lúc Lưu thì màn giữ ảnh và báo chưa gửi được; tải ảnh không thuộc ba thao tác ghi tạm (ADR-010).
+  dinh_nghia_xong:
+  - Spec SC-141 bỏ ô nhập tay giá trị băm và đổi nút Lưu thành ghi chính thức theo G-FG14-02.
+- key: SC-141/FE
+  cha: SC-141
+  tracker: devtask
+  title_vi: 'Giao diện: Tải và xem ảnh chứng cứ'
+  spec_refs:
+    sc:
+    - SC-141
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  - P-11
+  gap_refs:
+  - G-FG14-02
+  mo_ta: 'Dựng màn tải và xem ảnh trên tablet hiện trường: chọn đối tượng, chụp hoặc chọn ảnh, nút Lưu và Huỷ, khung xem ảnh kèm thời điểm chụp, thiết bị, giá trị băm.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giá trị băm chỉ hiển thị sau khi máy chủ lưu, không có ô nhập (G-FG14-02).
+  - Vùng chạm tối thiểu 64 px, tương phản 7 trên 1 theo chuẩn tablet của P-11.
+  - Mất kết nối lúc Lưu thì ảnh vẫn ở trên màn với nhãn chưa gửi được, ảnh vừa chụp không mất.
+  dinh_nghia_xong: []
+- key: SC-141/BE
+  cha: SC-141
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tải và xem ảnh chứng cứ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - evidence_images
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-03
+  gap_refs:
+  - G-FG14-02
+  mo_ta: Viết spec rồi làm API nhận ảnh, lưu vào kho tệp, tính giá trị băm và thêm dòng attachments, evidence_images trên module quality (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Máy chủ kiểm lại loại và cỡ tệp theo cấu hình, không dựa vào kiểm tra phía màn (P-03).
+  - Lưu tệp lỗi thì không ghi dòng nào; ghi dòng lỗi thì tệp vừa lưu được dọn đi.
+  - Tệp ảnh lưu ở chế độ khoá ghi của kho tệp, không ghi đè được.
+  dinh_nghia_xong: []
+- key: SC-141/DB
+  cha: SC-141
+  tracker: devtask
+  title_vi: Tạo bảng evidence_images
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - evidence_images
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-18
+  mo_ta: Viết migration bảng evidence_images, chỉ thêm dòng; chốt kiểu của thiết bị, giá trị băm và quan hệ của attachment_id (P-06, G-18).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - attachment_id là khoá ngoại tới attachments; thiết bị là nhãn chữ vì hệ không có bảng thiết bị (ADR-012).
+  - Thuật toán băm được chọn, độ dài cột băm khớp thuật toán đó và ghi vào SKM_DB.
+  dinh_nghia_xong: []
+- key: SC-141/TEST
+  cha: SC-141
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tải và xem ảnh chứng cứ'
+  spec_refs:
+    sc:
+    - SC-141
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-08
+  mo_ta: Thiết kế ca kiểm thử tải ảnh bằng chứng và giá trị băm; ca lấy theo DR-IMAGE-01, không theo FR của seed (G-FG14-08).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi ảnh kèm giá trị băm giả: dòng lưu giá trị máy chủ tự tính.'
+  - 'Thay tệp trong kho rồi mở ảnh: màn báo ảnh không còn nguyên vẹn.'
+  - 'Ngắt kết nối lúc Lưu trên tablet: ảnh còn trên màn, máy chủ không có dòng nào.'
+  dinh_nghia_xong: []
+- key: SC-142
+  cha: FG-14
+  tracker: story
+  title_vi: Thời hạn lưu trữ và kho lạnh
+  spec_refs:
+    sc:
+    - SC-142
+    api: []
+    tech: []
+    bang:
+    - retention_policies
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  - P-19
+  gap_refs:
+  - G-FG14-03
+  - G-FG14-04
+  mo_ta: システム管理者 (quản trị hệ thống) đặt thời hạn lưu trực tuyến và lưu lạnh cho từng loại tài liệu, 内部監査 (kiểm toán nội bộ) xem lại. Dữ liệu nghiệp vụ giữ 7 năm trực tuyến, ảnh và chứng từ bổ trợ 3 năm trực tuyến rồi sang lưu lạnh, khôi phục tối đa 2 ngày. Tới hạn chỉ chuyển lớp, không xoá, vì chưa ai được giao duyệt xoá vật lý (P-19).
+  pham_vi: Màn SC-142 (SPEC-SKM-169) ở văn phòng; bảng `retention_policies` (migration thuộc DATA-FG14/DB, sửa được, đổi là ghi `audit_log`); API, tác vụ chuyển lớp và bước duyệt xoá chưa có spec, SC-142/BE viết rồi làm (P-01); kho lưu lạnh dựng ở PLT-02.
+  luong_chinh:
+  - Người quản trị mở SC-142, xem số năm trực tuyến, số năm lưu lạnh và thời gian khôi phục của từng loại.
+  - Người quản trị sửa thời hạn một loại rồi bấm Lưu; máy chủ ghi giá trị mới kèm dòng audit_log.
+  - Tác vụ nền chạy theo lịch, chuyển tệp quá hạn trực tuyến sang lưu lạnh, ghi kết quả từng lần.
+  - Dữ liệu hết mọi hạn được đánh dấu chờ duyệt xoá.
+  tieu_chi_nghiem_thu:
+  - Khi đổi số năm của một loại thì lần chạy kế tiếp dùng giá trị mới, không phải phát hành lại.
+  - Khi tệp quá hạn trực tuyến thì tác vụ chuyển nó sang lưu lạnh, dòng attachments giữ nguyên, tệp khôi phục được trong 2 ngày.
+  - Khi giao dịch hay đối soát đã vào báo cáo chính thức thì không lệnh nào xoá cứng được, kể cả khi có người duyệt.
+  - Khi chưa ai được giao duyệt xoá thì lệnh xoá vật lý bị từ chối, không dữ liệu nào mất (P-19).
+  - Khi người gọi chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-142 có ô sửa, hạn theo loại tài liệu của RFP và bước duyệt xoá (G-FG14-03, G-FG14-04).
+- key: SC-142/FE
+  cha: SC-142
+  tracker: devtask
+  title_vi: 'Giao diện: Thời hạn lưu trữ và kho lạnh'
+  spec_refs:
+    sc:
+    - SC-142
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-04
+  mo_ta: 'Dựng màn thời hạn lưu trữ ở văn phòng: bảng loại tài liệu, số năm trực tuyến, số năm lưu lạnh, thời gian khôi phục, ô sửa và nút Lưu ở từng dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô số năm chỉ nhận số nguyên dương; ô số năm lưu lạnh để trống nghĩa là giữ tới khi có người duyệt xoá.
+  - Vai chỉ xem, tức 内部監査 (kiểm toán nội bộ), không thấy ô sửa và nút Lưu.
+  - Khi lưu thành công thì màn hiện giá trị mới cùng người sửa và thời điểm do máy chủ trả.
+  dinh_nghia_xong: []
+- key: SC-142/BE
+  cha: SC-142
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Thời hạn lưu trữ và kho lạnh'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - retention_policies
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-19
+  gap_refs:
+  - G-FG14-03
+  - G-FG14-04
+  mo_ta: Viết spec rồi làm API đọc, sửa thời hạn và tác vụ chuyển lớp lưu trữ trên module quality (P-01); bước duyệt xoá có sẵn nhưng chưa gán người duyệt (P-19).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Sửa thời hạn ghi audit_log có trước, sau trong cùng giao dịch CSDL; người sửa lấy từ phiên.
+  - 'Tác vụ chuyển lớp chạy lại được: lần chạy thứ hai trên cùng dữ liệu không chuyển lặp, không mất tệp.'
+  - Lệnh xoá vật lý trả 403 M_05 khi ma trận quyền chưa có vai duyệt xoá; không có đường vòng nào xoá tệp hay dòng.
+  dinh_nghia_xong: []
+- key: SC-142/TEST
+  cha: SC-142
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Thời hạn lưu trữ và kho lạnh'
+  spec_refs:
+    sc:
+    - SC-142
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-08
+  mo_ta: Thiết kế ca kiểm thử thời hạn lưu trữ, chuyển lưu lạnh và bước duyệt xoá; ca lấy theo DR-RET-01, không theo FR của seed (G-FG14-08).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đặt một tệp quá hạn trực tuyến rồi chạy tác vụ: tệp chuyển sang lưu lạnh; diễn tập khôi phục xong trong 2 ngày.'
+  - 'Gọi lệnh xoá vật lý khi chưa có người duyệt: bị từ chối, không dữ liệu nào mất.'
+  - 'Gọi xoá cứng một giao dịch đã vào báo cáo chính thức đã hết hạn: bị từ chối.'
+  dinh_nghia_xong: []
+- key: SC-143
+  cha: FG-14
+  tracker: story
+  title_vi: Trùng khoá nghiệp vụ đã phát hiện
+  ten_ja: 重複キー検出結果
+  spec_refs:
+    sc:
+    - SC-143
+    api: []
+    tech: []
+    bang:
+    - duplicate_key_findings
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG14-05
+  mo_ta: 照合事務 (nhóm đối soát) xem các khoá nghiệp vụ bị trùng mà hệ thống phát hiện, như mã lô hay mã giao dịch, và xử lý chúng trước khi chốt sổ. Hệ thống chặn bản trùng trước khi nhận một lần nạp hay một thao tác chốt và ghi một dòng phát hiện, còn chọn bản đúng là việc của người. Spec chưa nói nơi phát hiện và chưa có đường ghi kết quả xử lý (G-FG14-05).
+  pham_vi: Màn SC-143 (SPEC-SKM-170) ở văn phòng; bảng `duplicate_key_findings` (migration thuộc DATA-FG14/DB, chỉ thêm dòng). Nơi phát hiện là bước nạp qua bảng đệm của MIG-02, bước đồng bộ lại của SC-151 và các API chốt; API đọc và lệnh ghi kết quả chưa có spec, SC-143/BE viết rồi làm (P-01).
+  luong_chinh:
+  - 'Một lần nạp, một lần đồng bộ lại hay một thao tác chốt mang khoá đã có: máy chủ từ chối bản ghi đó và thêm dòng phát hiện gồm bảng, khoá, giờ, nguồn.'
+  - Người đối soát mở SC-143, lọc theo 業務日 (ngày nghiệp vụ) và trạng thái; dòng chưa xử lý đứng trước.
+  - Người đối soát so hai bản, sửa ở màn nghiệp vụ tương ứng nếu cần, rồi ghi kết quả xử lý.
+  - Máy chủ thêm một dòng kết quả trỏ về dòng phát hiện với người của phiên và giờ máy chủ.
+  tieu_chi_nghiem_thu:
+  - Khi một lần nạp chứa mã lô đã có thì bản trùng không vào bảng lots và SC-143 có đúng một dòng phát hiện.
+  - Khi người đối soát ghi kết quả thì hệ thống thêm dòng ghi người của phiên, giờ máy chủ và kết quả; dòng phát hiện gốc giữ nguyên.
+  - Khi còn dòng chưa xử lý của một 業務日 thì màn đánh dấu ngày đó là cần xử lý trước khi khoá.
+  - Máy không tự gộp hay tự xoá bản trùng nào.
+  - Khi người gọi không mang vai được phép thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  dinh_nghia_xong:
+  - Spec SC-143 đổi nhãn cột khoá, ghi nơi phát hiện và đường ghi kết quả theo G-FG14-05.
+- key: SC-143/FE
+  cha: SC-143
+  tracker: devtask
+  title_vi: 'Giao diện: Trùng khoá nghiệp vụ đã phát hiện'
+  spec_refs:
+    sc:
+    - SC-143
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG14-05
+  mo_ta: 'Dựng màn danh sách trùng khoá ở văn phòng: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng gồm tên bảng, khoá bị trùng, giờ phát hiện, huy hiệu trạng thái, khung ghi kết quả cho dòng chưa xử lý.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột khoá mang nhãn khoá nghiệp vụ bị trùng, không dùng chữ ロック (khoá theo nghĩa chốt) (G-FG14-05).
+  - Người ghi kết quả và thời điểm chỉ hiển thị sau khi máy chủ ghi.
+  - Khi không có dòng nào khớp thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-143/BE
+  cha: SC-143
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Trùng khoá nghiệp vụ đã phát hiện'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - duplicate_key_findings
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG14-05
+  mo_ta: Viết spec rồi làm hàm kiểm trùng khoá dùng chung cho bước nạp, bước đồng bộ lại và các API chốt, cùng API đọc và lệnh ghi kết quả trên module quality (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Hàm kiểm chạy trước khi ghi; trùng thì từ chối bản ghi và thêm dòng phát hiện trong giao dịch riêng, để dòng này không bị hoàn tác cùng bản bị từ chối.
+  - Lệnh ghi kết quả thêm dòng mới, không sửa cột trạng thái của dòng phát hiện; trạng thái hiện hành suy từ dòng kết quả mới nhất.
+  - MIG-02 và SC-151/BE gọi cùng hàm này, không tự viết lại luật trùng.
+  dinh_nghia_xong: []
+- key: SC-143/TEST
+  cha: SC-143
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Trùng khoá nghiệp vụ đã phát hiện'
+  spec_refs:
+    sc:
+    - SC-143
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử phát hiện trùng khoá và bước người ghi kết quả.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Nạp một tệp có hai dòng cùng mã lô: một dòng vào bảng, dòng còn lại bị từ chối và có một dòng phát hiện.'
+  - 'Ghi kết quả kèm người và giờ giả: dòng lưu người của phiên và giờ máy chủ.'
+  - 'Bản ghi bị từ chối được hoàn tác: dòng phát hiện vẫn còn.'
+  dinh_nghia_xong: []
+- key: SC-150
+  cha: FG-14
+  tracker: story
+  title_vi: Bảng giám sát hệ thống
+  spec_refs:
+    sc:
+    - SC-150
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG14-06
+  mo_ta: '運用管理者 (quản lý vận hành) và システム管理者 (quản trị hệ thống) theo dõi số đối soát của từng 業務日 (ngày nghiệp vụ) cùng bốn nhóm giám sát vận hành: sức khoẻ dịch vụ, lỗi tác vụ nền và lô xuất, lỗi gửi thông báo, sự kiện bảo mật (N11). Thông báo mức Critical (khẩn nhất) gửi chậm quá 5 phút phải hiện ở đây, không bị bỏ qua (EV2). Màn tự làm mới theo chu kỳ, không dùng kênh đẩy (ADR-013); story bổ sung các ô mà spec còn thiếu (G-FG14-06).'
+  pham_vi: Màn SC-150 (SPEC-SKM-171) ở văn phòng, chỉ đọc `daily_reconciliations` (migration thuộc DATA-FG08), `alert_queue`, `notification_log` (DATA-FG12), `report_runs`, dòng bị từ chối trong `audit_log` và kết quả của API-220. API đọc gộp chưa có spec, SC-150/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người vận hành mở SC-150; máy chủ kiểm vai rồi trả số đối soát các ngày gần nhất và bốn ô giám sát.
+  - Màn tự tải lại theo chu kỳ cấu hình và luôn hiện dữ liệu lấy lúc mấy giờ.
+  - Ô có lỗi hiện số việc và mở được danh sách cần xác nhận.
+  - Người vận hành bấm một việc để sang SC-122, SC-121 hoặc SC-070 xử lý; màn này không sửa dữ liệu.
+  tieu_chi_nghiem_thu:
+  - Khi một thông báo Critical gửi xong sau hơn 5 phút kể từ lúc sự kiện phát sinh thì ô lỗi gửi thông báo đếm nó và danh sách cần xác nhận có dòng đó.
+  - Khi API-220 báo dịch vụ không khoẻ thì ô sức khoẻ chuyển sang trạng thái lỗi có chữ, không chỉ đổi màu.
+  - Khi một lô xuất hay tác vụ nền ghi trạng thái lỗi thì ô lỗi tác vụ tăng một và mở được đúng dòng đó.
+  - Khi tới chu kỳ làm mới thì màn tải lại số liệu và cập nhật mốc giờ; chu kỳ là tham số cấu hình, chưa có số.
+  - Khi người gọi chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-150 có bốn ô giám sát, nguồn của danh sách cần xác nhận và chu kỳ làm mới theo G-FG14-06.
+- key: SC-150/FE
+  cha: SC-150
+  tracker: devtask
+  title_vi: 'Giao diện: Bảng giám sát hệ thống'
+  spec_refs:
+    sc:
+    - SC-150
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-06
+  mo_ta: 'Dựng bảng giám sát ở văn phòng: bảng số đối soát theo ngày, bốn ô giám sát, danh sách cần xác nhận, mốc giờ dữ liệu và tự làm mới theo chu kỳ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi ô giám sát hiện trạng thái bằng chữ và hình, không chỉ bằng màu.
+  - Mốc giờ dữ liệu luôn hiện; tải lại lỗi thì giữ số cũ kèm nhãn dữ liệu cũ.
+  - Bấm một việc trong danh sách cần xác nhận thì mở đúng màn xử lý của việc đó.
+  dinh_nghia_xong: []
+- key: SC-150/BE
+  cha: SC-150
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bảng giám sát hệ thống'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG14-06
+  mo_ta: 'Viết spec rồi làm API đọc gộp cho bảng giám sát (P-01): số đối soát theo ngày, số cảnh báo mở, số thông báo lỗi và Critical (khẩn nhất) quá hạn, lỗi tác vụ, kết quả API-220.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Độ trễ của thông báo Critical tính từ giờ phát sinh sự kiện tới giờ gửi xong trong notification_log (G-FG12-02).
+  - API chỉ đọc; tài khoản CSDL của API không có quyền ghi trên các bảng nguồn.
+  - Một nguồn lỗi khi đọc thì ô đó báo không lấy được, các ô còn lại vẫn trả.
+  dinh_nghia_xong: []
+- key: SC-150/TEST
+  cha: SC-150
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng giám sát hệ thống'
+  spec_refs:
+    sc:
+    - SC-150
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-08
+  mo_ta: Thiết kế ca kiểm thử bốn nhóm giám sát và mốc 5 phút của thông báo Critical (khẩn nhất); ca lấy theo NFR-OPS-01, không theo FR của seed (G-FG14-08).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giả lập một thông báo Critical gửi xong quá mốc 5 phút: ô lỗi gửi thông báo đếm nó, danh sách cần xác nhận có dòng đó.'
+  - 'Tắt một thành phần để API-220 báo lỗi: ô sức khoẻ chuyển sang lỗi ở chu kỳ làm mới kế tiếp.'
+  - 'Cho một lô xuất ghi trạng thái lỗi: ô lỗi tác vụ tăng một và mở được đúng dòng.'
+  dinh_nghia_xong: []
+- key: SC-151
+  cha: FG-14
+  tracker: story
+  title_vi: Hàng đợi chờ đồng bộ và điều giải
+  ten_ja: 同期待ちキュー・調停
+  spec_refs:
+    sc:
+    - SC-151
+    api: []
+    tech: []
+    bang:
+    - sync_queue
+    fr:
+    - FR-LOT-04
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG14-07
+  mo_ta: '受入担当者 (người nhận lô), 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) xử lý các thao tác ghi tạm lúc mất kết nối bị xung đột với dữ liệu máy chủ khi đồng bộ lại. Chỉ ba thao tác được ghi tạm; chốt giao dịch và khoá ngày luôn đòi kết nối (ADR-010). Khi xung đột, máy không tự trộn: người chọn bản giữ, hệ thống ghi ai chọn, lúc nào (G-FG14-07).'
+  pham_vi: Màn SC-151 (SPEC-SKM-172) ở văn phòng và tablet; bảng `sync_queue` (migration thuộc DATA-FG14/DB, sửa được). Ba thao tác ghi tạm là nhập lô SC-020, ghi 目利き (thẩm định bằng mắt của người) SC-023 và ghi lần giao SC-060. Các API và lệnh xử lý chưa có spec, SC-151/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Thiết bị mất kết nối lúc làm một trong ba thao tác; màn giữ dữ liệu cục bộ và hiện số việc chờ gửi.
+  - Có kết nối lại, thiết bị gửi lại mọi thao tác chờ; máy chủ ghi từng thao tác vào sync_queue, áp nếu không xung đột, còn thao tác xung đột hay trùng khoá (SC-143) thì chờ người xử.
+  - Người xử mở SC-151, so bản trên thiết bị với bản trên máy chủ, chọn bản giữ rồi bấm Xử lý.
+  - Máy chủ áp bản được chọn qua API của thao tác đó, ghi người của phiên, giờ máy chủ và audit_log.
+  tieu_chi_nghiem_thu:
+  - Khi thiết bị gửi thao tác ngoài ba thao tác ghi tạm thì máy chủ từ chối, không đưa vào hàng đợi.
+  - Khi thao tác đồng bộ lại xung đột thì không bản nào bị ghi đè; dòng chờ người xử tới khi có người chọn.
+  - Khi người xử chọn bản giữ thì hệ thống ghi người của phiên, giờ máy chủ, bản đã chọn; bản bỏ vẫn tra lại được.
+  - Khi đồng bộ lại kết quả 目利き thì người xác nhận và thời điểm gốc trên thiết bị được giữ nguyên.
+  - Khi người gọi không mang vai được phép thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  dinh_nghia_xong:
+  - Spec SC-151 có nút Xử lý, khung so hai bản và tên ba thao tác ghi tạm (G-FG14-07).
+- key: SC-151/FE
+  cha: SC-151
+  tracker: devtask
+  title_vi: 'Giao diện: Hàng đợi chờ đồng bộ và điều giải'
+  spec_refs:
+    sc:
+    - SC-151
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-2
+  priority: 2
+  premise_refs:
+  - P-11
+  gap_refs:
+  - G-FG14-07
+  mo_ta: 'Dựng màn hàng đợi đồng bộ cho văn phòng và tablet: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng thiết bị, thao tác, giờ tạo, giờ đồng bộ, khung so bản thiết bị với bản máy chủ, nút Xử lý.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khung so hiện hai bản cạnh nhau, tô trường khác nhau; người xử phải chọn một bản thì nút Xử lý mới bấm được.
+  - Trên tablet, vùng chạm tối thiểu 64 px và tương phản 7 trên 1 theo P-11.
+  - Khi không còn thao tác chờ thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-151/BE
+  cha: SC-151
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Hàng đợi chờ đồng bộ và điều giải'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - sync_queue
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG14-07
+  mo_ta: Viết spec rồi làm API nhận đồng bộ lại, API đọc hàng đợi và lệnh xử lý trên module quality (P-01); thao tác được áp qua đúng API của SC-020, SC-023, SC-060, không ghi thẳng bảng nghiệp vụ.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Danh sách ba thao tác nằm trong định nghĩa bảng sync_queue, không viết cứng trong mã (ADR-010).
+  - Gửi lại cùng một thao tác hai lần thì chỉ áp một lần; lần sau được ghi là trùng.
+  - Không tác vụ nào tự giải xung đột; trạng thái chờ người xử chỉ đổi bằng lệnh xử lý mang người của phiên.
+  dinh_nghia_xong: []
+- key: SC-151/TEST
+  cha: SC-151
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Hàng đợi chờ đồng bộ và điều giải'
+  spec_refs:
+    sc:
+    - SC-151
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-04
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG14-08
+  mo_ta: Thiết kế ca kiểm thử đồng bộ lại sau mất kết nối và bước người xử xung đột; ca lấy theo NFR-AVL-02, không theo FR của seed (G-FG14-08).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngắt kết nối trên staging lúc ghi lần giao, ghi tiếp ở máy chủ cho cùng giao dịch rồi nối lại: thao tác chờ người xử, không bản nào bị ghi đè.'
+  - 'Gửi thao tác chốt giao dịch từ hàng đợi cục bộ: bị từ chối.'
+  - 'Gửi lệnh xử lý kèm người và giờ giả: hàng đợi lưu người của phiên và giờ máy chủ.'
+  dinh_nghia_xong: []
+- key: DATA-FG14
+  cha: FG-14
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (chưa đặt vùng): retention_policies, duplicate_key_findings, sync_queue'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - duplicate_key_findings
+    - retention_policies
+    - sync_queue
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG14-03
+  - G-FG14-07
+  mo_ta: Ba bảng retention_policies (thời hạn lưu, sửa được), duplicate_key_findings (phát hiện trùng khoá, chỉ thêm dòng) và sync_queue (hàng đợi đồng bộ, sửa được) không có màn nào làm chủ migration; SC-142, SC-143 và SC-151 đọc, ghi qua API của mình. Story này dựng ba bảng trên kho mã hệ đích, thêm các cột mà bước người xử cần, và nạp sẵn thời hạn lưu theo bảng của RFP trước khi ba story kia chạy (P-06).
+  pham_vi: Bảng `retention_policies`, `duplicate_key_findings`, `sync_queue` (chủ migration, chưa thuộc vùng nào trong SKM_DB); chốt ba ô kiểu «—» của retention_policies và ô thiết bị của sync_queue (P-06); thêm cột loại tài liệu (G-FG14-03), dòng kết quả xử lý trùng (G-FG14-05), người xử và bản được chọn của sync_queue (G-FG14-07).
+  luong_chinh:
+  - BE chốt kiểu các ô còn mở và cột thêm với Tech Lead, ghi vào SKM_DB trước khi viết migration (P-06).
+  - BE viết migration ba bảng; duplicate_key_findings bị chặn sửa và xoá ở mức quyền CSDL.
+  - BE nạp dữ liệu ban đầu của retention_policies theo bảng thời hạn của RFP, mỗi loại tài liệu một dòng.
+  - SC-142/BE, SC-143/BE và SC-151/BE chạy thử trên dữ liệu mẫu trước khi dựng màn.
+  tieu_chi_nghiem_thu:
+  - Khi migration chạy xong thì retention_policies có dòng cho dữ liệu nghiệp vụ 7 năm trực tuyến và dòng cho ảnh, chứng từ bổ trợ 3 năm trực tuyến, khôi phục tối đa 2 ngày (G-FG14-03).
+  - Khi sửa hay xoá một dòng duplicate_key_findings thì CSDL từ chối.
+  - Khi ghi vào sync_queue một thao tác ngoài ba thao tác được ghi tạm thì CSDL từ chối.
+  dinh_nghia_xong:
+  - SKM_DB ghi kiểu và cột thêm của ba bảng, không còn ô «—» (P-06).
+- key: DATA-FG14/DB
+  cha: DATA-FG14
+  tracker: devtask
+  title_vi: Tạo bảng retention_policies, duplicate_key_findings, sync_queue
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - duplicate_key_findings
+    - retention_policies
+    - sync_queue
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG14-03
+  - G-FG14-05
+  - G-FG14-07
+  mo_ta: Viết migration retention_policies, duplicate_key_findings, sync_queue kèm cột thêm theo G-FG14-03, G-FG14-05, G-FG14-07; chốt kiểu cột và nạp dữ liệu ban đầu của thời hạn lưu (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu của online_nam, cold_nam, khoi_phuc_trong và thiet_bi được chốt, có người duyệt và ghi vào SKM_DB.
+  - Cột thao tác của sync_queue chỉ nhận ba giá trị của ADR-010; thêm giá trị mới phải đổi migration có duyệt.
+  - duplicate_key_findings và dòng kết quả xử lý trùng chỉ thêm dòng.
+  dinh_nghia_xong: []
+- key: DATA-FG14/TEST
+  cha: DATA-FG14
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (chưa đặt vùng): retention_policies, duplicate_key_findings, sync_queue'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc và dữ liệu ban đầu của ba bảng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đọc retention_policies sau migration: có đủ các loại tài liệu với đúng số năm theo bảng của RFP.'
+  - 'Ghi vào sync_queue một thao tác ngoài danh sách: CSDL từ chối.'
+  - 'Gửi lệnh sửa một dòng duplicate_key_findings: CSDL từ chối.'
+  dinh_nghia_xong: []
+- key: INV-Q-19
+  cha: FG-14
+  tracker: investigation
+  title_vi: Quy trình duyệt xoá cứng và kho lưu lạnh
+  han: Trước LAB-5
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-19]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - retention_policies
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - Q-19
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-19
+  gap_refs: []
+  mo_ta: Ai ở phía chợ được duyệt lệnh xoá vật lý dữ liệu đã hết hạn lưu trữ, và dữ liệu đến hạn được chuyển sang lưu lạnh ở đâu? RFP chỉ đòi việc xoá vật lý phải có người duyệt mà không nói người đó là ai; nơi lưu lạnh cũng chưa có câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

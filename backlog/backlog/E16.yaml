@@ -1,0 +1,434 @@
+# Seed epic E16 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E16
+  tracker: epic
+  title_vi: Di trú dữ liệu
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs: []
+  mo_ta: Nhóm việc này chuyển dữ liệu chợ đang vận hành trên file số (bảng đối soát, danh sách người tham gia, tổng hợp giao hàng) sang hệ đích theo ADR-016. Dòng gốc được giữ trong bảng đệm, số bản ghi và số tiền được so trước và sau khi nạp, còn mỗi chênh lệch phải có người của chợ quyết; máy không tự chọn bên đúng. Trước ngày chạy thật phải có ít nhất một buổi diễn tập trên staging.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E16 đã đóng.
+  - Khi buổi diễn tập trên staging kết thúc thì số bản ghi và tổng tiền của từng nguồn khớp với đích, hoặc mỗi chênh lệch đều có người quyết và giờ quyết.
+  - Khi một lô nạp phải hoàn tác thì dữ liệu được đảo bằng bút toán đảo, không dòng nào bị xoá.
+  - Câu hỏi về danh sách nguồn, độ sâu lịch sử và người quyết chênh lệch (G-E16-01) đã có đáp, hoặc khách xác nhận giữ biên giả định.
+  dinh_nghia_xong: []
+items:
+- key: MIG-01
+  cha: E16
+  tracker: story
+  title_vi: Kiểm kê nguồn và ánh xạ file số cũ sang bảng
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-E16-01
+  mo_ta: BE cùng người phụ trách dữ liệu phía chợ lập bảng kiểm kê cho từng nguồn di trú (người chịu trách nhiệm, khoảng ngày, khoá định danh, số dòng) rồi viết quy tắc ánh xạ và làm sạch từ cột của file sang bảng của hệ đích. Bảng kiểm kê và ánh xạ là đầu vào của MIG-02; chưa có kiểm kê thì chưa khoá được ánh xạ (ADR-016).
+  pham_vi:
+  - Ba loại nguồn rc7 nêu tên, tối đa 5 nguồn theo giả định GD-02 chờ khách xác nhận (G-E16-01).
+  - Bảng đích thuộc 45 bảng của hệ đích (P-04); mỗi dòng ánh xạ ghi bảng, cột đích và module chủ.
+  - 'Quy tắc cho ba lỗi mẫu DS-DIRTY-01: mã người tham gia lệch giữa hai nguồn, khoá lô trùng trong cùng 業務日 (ngày nghiệp vụ), ô trống ở trường trọng yếu.'
+  luong_chinh:
+  - BrSE gửi khách mẫu bảng kiểm kê; người phụ trách dữ liệu của chợ điền nguồn, khoảng ngày và số dòng.
+  - BE đọc mẫu file từng nguồn, ghi cột nguồn sang bảng và cột đích nào.
+  - BE viết quy tắc làm sạch; quy tắc nào cũng nói dòng không đạt sẽ đi đâu.
+  - Tech Lead duyệt bảng ánh xạ, người phụ trách dữ liệu xác nhận cách hiểu cột nghiệp vụ.
+  - Bảng kiểm kê và ánh xạ đã duyệt được khoá làm đầu vào cho MIG-02.
+  tieu_chi_nghiem_thu:
+  - Khi nguồn còn thiếu người chịu trách nhiệm, khoảng ngày hoặc khoá định danh thì nguồn đó chưa vào ánh xạ.
+  - Khi cột của file không có đích thì ánh xạ ghi cột đó bị bỏ, chỉ quét lưu hay ngoài phạm vi, kèm người quyết.
+  - Khi dòng nguồn mắc một trong ba lỗi mẫu thì dòng chuyển sang chờ người quyết, không tự sửa.
+  - Khi kiểm kê vượt 5 nguồn, 200.000 dòng hoặc 3 năm thì PM tính lại công di trú trước khi khoá ánh xạ.
+  dinh_nghia_xong:
+  - Bảng kiểm kê có xác nhận của người phụ trách dữ liệu phía chợ, ghi tên và ngày.
+- key: MIG-01/BE
+  cha: MIG-01
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Kiểm kê nguồn và ánh xạ file số cũ sang bảng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Viết quy tắc ánh xạ và làm sạch thành cấu hình đọc được bằng máy cho từng nguồn, để công cụ của MIG-02 chạy theo mà không phải sửa mã.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Mỗi cột nguồn có đúng một dòng ánh xạ: bảng và cột đích, hoặc lý do bỏ.'
+  - Ba lỗi mẫu DS-DIRTY-01 có quy tắc và trạng thái đích riêng.
+  - Chạy lại cùng quy tắc trên cùng bảng đệm cho cùng kết quả.
+  dinh_nghia_xong: []
+- key: MIG-01/DB
+  cha: MIG-01
+  tracker: devtask
+  title_vi: 'Dữ liệu: Kiểm kê nguồn và ánh xạ file số cũ sang bảng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs: []
+  mo_ta: 'Đối chiếu bảng ánh xạ với 45 bảng của hệ đích: kiểu cột, khoá ngoại và thứ tự nạp ba đợt của FIG-022, trước hết người tham gia và quyền, sau đó lô và giao dịch, cuối cùng tất toán và báo cáo.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột đích nào cũng có kiểu đã chốt ở SKM_DB trước khi ánh xạ được khoá (P-06).
+  - Thứ tự nạp bảo đảm bảng được trỏ tới có dữ liệu trước bảng trỏ.
+  - Dòng nạp vào bảng chỉ-thêm mang dấu nguồn migrated và mã lô.
+  dinh_nghia_xong: []
+- key: MIG-01/TEST
+  cha: MIG-01
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Kiểm kê nguồn và ánh xạ file số cũ sang bảng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho bảng ánh xạ và quy tắc làm sạch, chạy trên mẫu file đã che.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Mỗi lỗi mẫu DS-DIRTY-01: dòng sang trạng thái chờ người quyết, không bị sửa tự động.'
+  - 'Cột nguồn chưa có dòng ánh xạ: công cụ dừng và báo tên cột.'
+  - 'Chạy hai lần cùng quy tắc trên cùng mẫu: hai kết quả giống nhau.'
+  dinh_nghia_xong: []
+- key: MIG-02
+  cha: E16
+  tracker: story
+  title_vi: Công cụ nạp qua bảng đệm có đối chiếu
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-E16-02
+  - G-E16-04
+  - G-E16-05
+  mo_ta: 'BE làm module migration trong khối triển khai duy nhất (ADR-009): đọc file vào bảng đệm giữ dòng gốc, áp quy tắc của MIG-01, rồi ghi qua hàm công khai của module chủ, không ghi thẳng vào bảng đích. Mỗi lần nạp là một lô chỉ thêm; lô chỉ hoàn tất khi số bản ghi và tổng tiền khớp, hoặc mọi lệch đã có người quyết.'
+  pham_vi:
+  - Bảng đệm, bảng lô nạp và cột dấu nguồn, chưa có trong 45 thực thể (G-E16-02).
+  - Hàm ghi công khai của module chủ từng bảng và khung ghi chỉ-thêm của PLT-03.
+  - Danh sách dòng xung đột và lệnh ghi quyết định cho người của chợ (G-E16-05).
+  luong_chinh:
+  - Người vận hành di trú chọn nguồn và khoảng ngày; module tạo một lô mới.
+  - Module đọc file vào bảng đệm, giữ nguyên dòng gốc, mã nguồn và số dòng.
+  - Module áp quy tắc; dòng đạt được ghi qua hàm của module chủ kèm dấu nguồn migrated và mã lô, dòng xung đột chờ người quyết.
+  - Module so số bản ghi và tổng tiền giữa nguồn và đích; còn lệch thì lô ở trạng thái chờ.
+  - Người của chợ quyết từng dòng xung đột; hệ thống ghi quyết định, người của phiên và giờ máy chủ.
+  tieu_chi_nghiem_thu:
+  - Khi số bản ghi hoặc tổng tiền nguồn khác đích mà còn dòng chưa quyết thì lô không sang hoàn tất.
+  - Khi người của chợ quyết một dòng xung đột thì bản ghi lưu quyết định, người của phiên và giờ máy chủ; máy không tự chọn bên đúng.
+  - Khi nạp lại cùng nguồn thì có lô mới, lô cũ và dòng đệm cũ giữ nguyên.
+  - Khi module migration gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ.
+  dinh_nghia_xong:
+  - SKM_DB có bảng lô nạp, bảng đệm và cột dấu nguồn mang nhãn thiết kế-chưa-build trước khi viết migration (G-E16-02).
+- key: MIG-02/BE
+  cha: MIG-02
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Công cụ nạp qua bảng đệm có đối chiếu'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E16-04
+  - G-E16-05
+  mo_ta: 'Làm module migration: đọc file vào bảng đệm, áp quy tắc MIG-01, ghi qua hàm công khai của module chủ, so số trước–sau và ghi quyết định của người cho dòng xung đột.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không có lệnh ghi thẳng vào bảng nghiệp vụ; mọi lần ghi đi qua hàm của module chủ.
+  - Phép so chạy theo tổng lô, theo 業務日 (ngày nghiệp vụ) và theo người tham gia; lô chỉ hoàn tất khi khớp hoặc mọi lệch đã có người quyết (G-E16-04).
+  - Lệnh ghi quyết định lấy người từ phiên và giờ từ máy chủ, bỏ qua giá trị gửi lên (G-E16-05).
+  dinh_nghia_xong: []
+- key: MIG-02/DB
+  cha: MIG-02
+  tracker: devtask
+  title_vi: 'Dữ liệu: Công cụ nạp qua bảng đệm có đối chiếu'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E16-02
+  mo_ta: Viết migration cho bảng đệm và bảng lô nạp, thêm cột dấu nguồn và mã lô vào các bảng đích chỉ-thêm (G-E16-02).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bảng lô nạp chỉ thêm dòng; bảng đệm không cho xoá và giữ nguyên dòng gốc.
+  - Cột dấu nguồn chỉ nhận system hoặc migrated, mặc định là system.
+  - Bảng đệm chịu cùng thời hạn lưu và quyền truy cập như bảng nghiệp vụ vì có dữ liệu cá nhân (DR-RET-01).
+  dinh_nghia_xong: []
+- key: MIG-02/TEST
+  cha: MIG-02
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Công cụ nạp qua bảng đệm có đối chiếu'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho công cụ nạp, nhắm vào bước người quyết chênh lệch và việc nạp lại.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Mẫu có một dòng xung đột: lô ở trạng thái chờ cho tới khi một người quyết, bản ghi có người và giờ của phiên, chứng minh kết quả luôn đi qua người xác nhận.'
+  - 'Gửi quyết định kèm người và giờ giả: hệ thống lưu người của phiên và giờ máy chủ.'
+  - 'Nạp lại cùng nguồn: có lô mới, lô cũ và dòng đệm cũ không đổi.'
+  dinh_nghia_xong: []
+- key: MIG-03
+  cha: E16
+  tracker: story
+  title_vi: Diễn tập di trú và đối chiếu số liệu trước–sau
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E16-03
+  mo_ta: Đội dự án chạy ít nhất một buổi diễn tập di trú đầy đủ trên staging với dữ liệu đã che, theo đúng ba đợt nạp, rồi lập biên bản đối chiếu số bản ghi và số tiền trước–sau. Tiêu chí cho chạy thật hay dừng và cách hoàn tác phải được viết và duyệt trước buổi diễn tập đầu (G-E16-03).
+  pham_vi: Staging của PLT-02 với dữ liệu đã che (G-E15-03); công cụ của MIG-02; ba đợt nạp theo FIG-022 (người tham gia, quyền; rồi lô, giao dịch; rồi tất toán, báo cáo); thời điểm đóng băng dữ liệu nguồn, biên bản đối chiếu và tiêu chí dừng.
+  luong_chinh:
+  - PM và Tech Lead viết tiêu chí chạy thật hay dừng và cách hoàn tác; khách duyệt qua BrSE.
+  - Infra nạp bản che của file nguồn vào staging và đóng băng bản dùng cho buổi diễn tập.
+  - BE chạy ba đợt nạp theo thứ tự và đo thời gian từng đợt.
+  - BE lập biên bản đối chiếu theo nguồn; người của chợ quyết các chênh lệch.
+  - BE hoàn tác thử một lô bằng bút toán đảo và đối chiếu số trên khung nhìn.
+  - PM ghi kết quả và quyết chạy thật hay diễn tập lại theo tiêu chí đã duyệt.
+  tieu_chi_nghiem_thu:
+  - Khi buổi diễn tập xong thì biên bản có số bản ghi, tổng tiền nguồn và đích của từng nguồn, mỗi chênh lệch có người quyết và giờ quyết.
+  - Khi hoàn tác một lô thì không dòng nào bị xoá và số đọc qua khung nhìn bằng số trước khi nạp lô đó.
+  - Khi chạm một tiêu chí dừng thì ngày chạy thật không được chốt, kể cả khi lịch đã đặt.
+  - Khi đo thời gian nạp thì số đo thật ghi vào biên bản; lô lớn đặt ngoài cửa sổ dịch vụ 02:00–10:00 giờ Nhật.
+  dinh_nghia_xong:
+  - Tiêu chí chạy thật hay dừng và cách hoàn tác có người duyệt phía khách và ngày duyệt, có trước buổi diễn tập đầu (G-E16-03).
+- key: MIG-03/BE
+  cha: MIG-03
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Diễn tập di trú và đối chiếu số liệu trước–sau'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E16-03
+  mo_ta: Làm lệnh hoàn tác một lô nạp bằng bút toán đảo và báo cáo đối chiếu trước–sau dùng cho buổi diễn tập.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Hoàn tác sinh dòng đảo cho mọi dòng của lô, không xoá dòng nào.
+  - Báo cáo đối chiếu cho số bản ghi và tổng tiền theo nguồn và theo 業務日 (ngày nghiệp vụ).
+  - Lô đã hoàn tác thì không hoàn tác lần nữa được.
+  dinh_nghia_xong: []
+- key: MIG-03/DB
+  cha: MIG-03
+  tracker: devtask
+  title_vi: 'Dữ liệu: Diễn tập di trú và đối chiếu số liệu trước–sau'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs: []
+  mo_ta: 'Chuẩn bị CSDL staging cho buổi diễn tập: điểm khôi phục trước diễn tập, migration đủ 45 bảng và bản đóng băng của dữ liệu nguồn đã che.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trước buổi diễn tập có điểm khôi phục của staging và đã thử khôi phục được.
+  - Migration của 45 bảng chạy trên CSDL trống không lỗi trước khi nạp (P-04).
+  - Dữ liệu nguồn dùng cho diễn tập là bản đã che, không còn trường cá nhân thật.
+  dinh_nghia_xong: []
+- key: MIG-03/TEST
+  cha: MIG-03
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Diễn tập di trú và đối chiếu số liệu trước–sau'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử cho buổi diễn tập di trú: đối chiếu, bước người quyết chênh lệch và hoàn tác lô.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Một nguồn lệch tổng tiền: lô không hoàn tất cho tới khi người của chợ quyết, biên bản ghi người và giờ.'
+  - 'Hoàn tác một lô: tổng trên khung nhìn về số trước lô, số dòng bảng thô tăng thêm đúng số dòng đảo.'
+  - Sau buổi diễn tập, dữ liệu staging không có trường cá nhân chưa che.
+  dinh_nghia_xong: []
+- key: INV-Q-01
+  cha: E16
+  tracker: investigation
+  title_vi: Danh sách nguồn di trú, độ sâu lịch sử cần nạp và người quyết chênh lệch
+  han: Trước khi khoá quy tắc ánh xạ ở MIG-01
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: ADR-016 §1 (LAB-4) · Q-01 (LAB-01)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+    hoi:
+    - Q-01
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-E16-01
+  mo_ta: Chợ sẽ chuyển những nguồn dữ liệu nào sang hệ mới, mỗi nguồn bao nhiêu dòng, từ ngày nào đến ngày nào, và ai bên chợ chịu trách nhiệm từng nguồn cùng việc quyết dòng chênh lệch? Câu Q-01 mức chặn của LAB-01 chưa có đáp nên ADR-016 đang ước theo giả định GD-02; nhãn 履歴7年 (lịch sử 7 năm) trên hình di trú của RFP cũng chưa rõ là thời hạn lưu hay độ sâu cần nạp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

@@ -1,0 +1,1485 @@
+# Seed epic FG-04 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-04
+  tracker: epic
+  title_vi: Giao dịch thỏa thuận 相対取引
+  feature: negotiated-trade
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  - constraint:aitai
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này ghi và chốt 相対取引 (giao dịch thỏa thuận) giữa bán buôn đầu mối và bên mua, kênh mang khoảng 90% giá trị giao dịch của chợ, khác hẳn せり (đấu giá). Lúc chốt, hệ thống kiểm lại tư cách bên mua theo đúng loại giấy, từ chối kèm lý do khi không đạt, và cho huỷ giao dịch khi ngày nghiệp vụ chưa khoá.
+
+    Ràng buộc đặc thù: Luồng 相対 là luồng chính, nên dữ liệu, màn và kiểm thử của epic đi từ giao dịch thỏa thuận; せり chỉ ghi chung bảng transactions qua kênh riêng.'
+  pham_vi: Các màn SC-030 đến SC-034, API-207 đến API-210, API-221 đến API-223, luồng TECH-301 và các bảng transactions, transaction_cancellations, reservations; bán trực tiếp và đặt trước giữ ở mức có điều kiện theo P-18 và P-20.
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-04 đã đóng.
+  - Khi chốt một giao dịch 相対 với bên mua có giấy hết hạn tại ngày chốt thì hệ thống từ chối, hiện lý do và không tạo dòng giao dịch nào.
+  - Khi huỷ một giao dịch 相対 chưa khoá ngày thì có đúng một dòng huỷ, lượng của lô được hoàn, dòng giao dịch gốc không bị sửa.
+  - Các issue điều tra của FG-04 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-030
+  cha: FG-04
+  tracker: story
+  title_vi: Tạo giao dịch thỏa thuận 相対
+  ten_ja: 相対取引登録
+  spec_refs:
+    sc:
+    - SC-030
+    api:
+    - API-208
+    tech: []
+    bang:
+    - transactions
+    fr:
+    - FR-AITAI-01
+    - FR-AITAI-02
+    - FR-PARTY-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-01
+  - G-FG04-03
+  mo_ta: '取引運用 (nhóm vận hành giao dịch) ghi một 相対取引 (giao dịch thỏa thuận) khi hai bên đã thương lượng xong; giá do người quyết, màn chỉ hiện giá tham chiếu trung bình 3 ngày gần nhất. Lúc chốt, máy chủ kiểm tư cách của bên mua chứ không phải người nhập.
+
+    Ràng buộc đặc thù: 仲卸 (trung gian bán buôn) phải còn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) phải còn 承認 (chấp thuận) tại ngày chốt; kiểm ở máy chủ.'
+  pham_vi: Màn SC-030 (SPEC-SKM-118); API-208 theo luồng TECH-301; bảng `transactions` (chủ migration), đổi trạng thái `lots`.
+  luong_chinh:
+  - Người vận hành chọn lô kênh 相対 hoặc lô せり (đấu giá) ế đã chuyển sang 相対, chọn bên mua, nhập đơn giá, số lượng.
+  - Máy chủ kiểm lô, số lượng, trạng thái lô, quyền 相対 và hạn giấy của bên mua theo TECH-301.
+  - Máy chủ ghi giao dịch kênh aitai, ngày là 業務日 (ngày nghiệp vụ), và đổi trạng thái lô trong cùng giao dịch CSDL.
+  - Bị từ chối thì màn chuyển sang SC-033.
+  tieu_chi_nghiem_thu:
+  - Khi số lượng vượt phần còn lại của lô thì trả 422 M_09, không ghi gì.
+  - Khi bên mua không có quyền 相対 thì trả 403 M_01; giấy tạm dừng, 失効 (mất hiệu lực) hoặc quá hạn tại ngày chốt thì trả 422 M_21.
+  - Khi chốt thành công thì có đúng một dòng transactions; lỗi ghi thì hoàn tác cả hai, trả 500 M_25.
+  - Khi mất kết nối lúc chốt thì màn báo không chốt được (ADR-010); vai được phép ghi lấy theo P-12.
+  dinh_nghia_xong:
+  - Spec SC-030, TECH-301 cập nhật theo đáp của G-FG04-03, G-FG04-01.
+- key: SC-030/FE
+  cha: SC-030
+  tracker: devtask
+  title_vi: 'Giao diện: Tạo giao dịch thỏa thuận 相対'
+  spec_refs:
+    sc:
+    - SC-030
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs:
+  - P-20
+  gap_refs: []
+  mo_ta: 'Dựng màn ghi giao dịch 相対 (giao dịch thỏa thuận) cho văn phòng và tablet: chọn lô, bên mua, ô đơn giá, số lượng, giá tham chiếu và số tiền tạm tính.
+
+    Ràng buộc đặc thù: Danh sách bên mua chỉ lọc sơ bộ; kết quả chốt luôn theo lần kiểm tư cách ở máy chủ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi đơn giá không phải số nguyên từ 1 đến 12 chữ số, hoặc số lượng ≤ 0, quá 2 chữ số lẻ hay vượt khối lượng lô thì màn chặn gửi.
+  - Khi API trả 403, 409 hoặc 422 thì màn chuyển sang SC-033 và giữ dữ liệu đã nhập.
+  - Ô đặt trước ẩn khi bảng đặt trước chưa có (P-20).
+  dinh_nghia_xong: []
+- key: SC-030/BE
+  cha: SC-030
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tạo giao dịch thỏa thuận 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    tech: []
+    bang:
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG04-01
+  - G-FG04-03
+  mo_ta: 'Làm API-208 trên module trade: kiểm đầu vào, kiểm lô và số lượng, gọi dịch vụ kiểm tư cách của TECH-301/BE, rồi ghi giao dịch và đổi trạng thái lô trong một giao dịch CSDL.
+
+    Ràng buộc đặc thù: API không tự kiểm giấy mà gọi dịch vụ của TECH-301/BE, để mọi đường chốt dùng chung một luật hai tầng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi transactions trước, đổi trạng thái lô sau, cùng một giao dịch CSDL; lỗi ở lệnh nào cũng hoàn tác cả hai.
+  - Ngày giao dịch lấy theo 業務日 (ngày nghiệp vụ) giờ Nhật, không theo UTC như prototype.
+  - Bên bán do máy chủ gán theo câu trả lời của G-FG04-03; API không nhận tham số bên bán.
+  dinh_nghia_xong: []
+- key: SC-030/DB
+  cha: SC-030
+  tracker: devtask
+  title_vi: Tạo bảng transactions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG04-07
+  mo_ta: 'Viết migration bảng transactions trên kho mã hệ đích, dùng chung cho mọi kênh và chỉ thêm dòng.
+
+    Ràng buộc đặc thù: Cột kênh phân biệt 相対 (giao dịch thỏa thuận) và せり (đấu giá) trong cùng một bảng, không tách bảng theo kênh.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đơn giá có ràng buộc > 0, số lượng lưu hai chữ số lẻ, số tiền là cột dẫn xuất.
+  - Cột reservation_id để trống được; khoá ngoại tới reservations chỉ thêm khi DATA-FG04/DB chạy (G-FG04-07).
+  dinh_nghia_xong: []
+- key: SC-030/TEST
+  cha: SC-030
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo giao dịch thỏa thuận 相対'
+  spec_refs:
+    sc:
+    - SC-030
+    api:
+    - API-208
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-01
+    - FR-AITAI-02
+    - FR-PARTY-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử chốt giao dịch 相対 (giao dịch thỏa thuận) qua màn và API-208.
+
+    Ràng buộc đặc thù: Có ca riêng cho từng loại giấy, vì 許可 và 承認 hết hạn theo hai cột khác nhau.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Bên mua 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn trước ngày chốt và 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) hết hạn trước ngày chốt: cả hai bị từ chối 422 M_21, transactions không thêm dòng.'
+  - Số lượng vượt phần còn lại của lô bị từ chối 422 M_09; bằng đúng phần còn lại thì chốt được.
+  - 'Gây lỗi ở bước đổi trạng thái lô: giao dịch cũng không được ghi.'
+  dinh_nghia_xong: []
+- key: SC-031
+  cha: FG-04
+  tracker: story
+  title_vi: Danh sách giao dịch 相対 và せり
+  ten_ja: 取引一覧
+  spec_refs:
+    sc:
+    - SC-031
+    api:
+    - API-221
+    tech: []
+    bang:
+    - transactions
+    fr:
+    - FR-AITAI-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-04
+  - G-19
+  mo_ta: '取引運用 (nhóm vận hành giao dịch) và 照合事務 (nhóm đối soát) tra giao dịch theo khoảng 業務日 (ngày nghiệp vụ). Danh sách gồm cả 相対取引 (giao dịch thỏa thuận) và せり (đấu giá) vì hai kênh ghi chung một bảng, kèm cờ đã huỷ.
+
+    Ràng buộc đặc thù: Nút huỷ chỉ có ở dòng 相対 chưa huỷ (P-21); dòng せり không huỷ được.'
+  pham_vi: Màn SC-031 (SPEC-SKM-119); API-221 SKM_TRADE_LIST_READ (thiết kế đích); đọc `transactions`, `transaction_cancellations`.
+  luong_chinh:
+  - Người dùng nhập khoảng 業務日 (không bắt buộc) và bấm Lọc.
+  - Máy chủ trả giao dịch hai kênh trong khoảng ngày, theo trang, kèm cờ đã huỷ.
+  - Ở dòng 相対 chưa huỷ, người dùng bấm huỷ để mở SC-034.
+  tieu_chi_nghiem_thu:
+  - Khi lọc theo khoảng ngày thì trả đủ giao dịch aitai lẫn seri có ngày trong khoảng.
+  - Khi ngày sai định dạng, ngày bắt đầu sau ngày kết thúc hay số trang sai thì trả 400.
+  - Khi giao dịch đã huỷ thì dòng mang cờ đã huỷ, không còn nút huỷ.
+  - Khi đọc lỗi thì trả 500 M_11; người ngoài hai vai (P-12) nhận 403.
+  dinh_nghia_xong:
+  - Spec SC-031 có nút huỷ theo dòng và quy ước cỡ trang đã chốt (G-FG04-04, G-19).
+- key: SC-031/FE
+  cha: SC-031
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách giao dịch 相対 và せり'
+  spec_refs:
+    sc:
+    - SC-031
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:aitai
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-04
+  mo_ta: 'Dựng màn danh sách giao dịch có lọc khoảng ngày, phân trang và nút huỷ theo dòng.
+
+    Ràng buộc đặc thù: Nút huỷ chỉ hiện ở dòng kênh 相対 (giao dịch thỏa thuận) chưa huỷ; dòng せり (đấu giá) không có nút, ngày đã khoá thì SC-034 báo lỗi từ API-223.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dòng kênh seri và dòng đã huỷ không có nút huỷ.
+  - Điều kiện lọc được giữ khi chuyển trang.
+  dinh_nghia_xong: []
+- key: SC-031/BE
+  cha: SC-031
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách giao dịch 相対 và せり'
+  spec_refs:
+    sc: []
+    api:
+    - API-221
+    tech: []
+    bang:
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-19
+  mo_ta: 'Làm API-221 trên module trade: đọc giao dịch của cả hai kênh theo khoảng ngày, suy cờ đã huỷ từ transaction_cancellations.
+
+    Ràng buộc đặc thù: Không tách danh sách theo kênh; giao dịch 相対 (giao dịch thỏa thuận) và せり (đấu giá) trả chung một danh sách.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trả đúng 10 cột của SC-031 cộng mã giao dịch và cờ đã huỷ.
+  - Cỡ trang, thứ tự sắp xếp và khoảng ngày mặc định theo quy ước chung của dự án (G-19).
+  - Vai được đọc là 取引運用 (nhóm vận hành giao dịch) và 照合事務 (nhóm đối soát) theo giả định P-12.
+  dinh_nghia_xong: []
+- key: SC-031/TEST
+  cha: SC-031
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách giao dịch 相対 và せり'
+  spec_refs:
+    sc:
+    - SC-031
+    api:
+    - API-221
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử lọc, phân trang, cờ đã huỷ và phân quyền của danh sách giao dịch.
+
+    Ràng buộc đặc thù: Dữ liệu mẫu có cả giao dịch 相対 và せり để chứng minh hai kênh nằm chung một danh sách.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Khoảng ngày có cả giao dịch aitai và seri: trả đủ hai kênh, không sót dòng nào.'
+  - Giao dịch đã huỷ mang cờ đã huỷ; ngày bắt đầu sau ngày kết thúc trả 400.
+  - Tài khoản ngoài hai vai được phép nhận 403.
+  dinh_nghia_xong: []
+- key: SC-032
+  cha: FG-04
+  tracker: story
+  title_vi: Chi tiết giao dịch 相対
+  ten_ja: 取引詳細
+  spec_refs:
+    sc:
+    - SC-032
+    api:
+    - API-222
+    tech: []
+    bang:
+    - transactions
+    fr:
+    - FR-AITAI-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: '取引運用 (nhóm vận hành giao dịch), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) xem một giao dịch: kênh, lô, hai bên, giá, lượng, ngày, nguồn gốc, khối huỷ nếu có và cờ ngày đã khoá. Màn chỉ đọc, phục vụ tra cứu và kiểm toán.
+
+    Ràng buộc đặc thù: Chi tiết phải cho biết giao dịch là 相対取引 (giao dịch thỏa thuận) hay せり (đấu giá) và đã huỷ hay chưa, vì hai kênh dùng chung một bảng.'
+  pham_vi:
+  - Màn SC-032 (SPEC-SKM-120), dùng ở văn phòng.
+  - API-222 SKM_TRADE_DETAIL_READ (thiết kế đích), thêm trạng thái 更正 (sửa sau xác nhận) và bản quy tắc đã áp theo P-25.
+  - Đọc `transactions`, `transaction_cancellations`, `business_day_locks`.
+  luong_chinh:
+  - Người dùng mở chi tiết một giao dịch từ SC-031.
+  - Máy chủ trả giao dịch, thông tin huỷ nếu có (vì sao, ai huỷ, lúc nào, hoàn bao nhiêu) và cờ ngày đã khoá.
+  - Người dùng xem rồi bấm Quay lại.
+  tieu_chi_nghiem_thu:
+  - Khi giao dịch chưa huỷ thì không có khối huỷ; đã huỷ thì hiện lý do huỷ, ai huỷ, lúc huỷ và lượng đã hoàn.
+  - Khi mã giao dịch không tồn tại thì trả 404 M_14; đọc lỗi thì trả 500 M_11.
+  - Khi API của FG-06 và FG-10 đã có thì chi tiết hiện thêm trạng thái 更正 và bản quy tắc đã áp (P-25).
+  - Khi người dùng mang vai 内部監査 mà ma trận quyền chưa có dòng (P-12) thì bị chặn 403.
+  dinh_nghia_xong:
+  - SC-032/BE chỉ xếp vào sprint sau khi API của FG-06 và FG-10 đã xong (P-25).
+- key: SC-032/FE
+  cha: SC-032
+  tracker: devtask
+  title_vi: 'Giao diện: Chi tiết giao dịch 相対'
+  spec_refs:
+    sc:
+    - SC-032
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:aitai
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn chi tiết giao dịch chỉ đọc, có khối huỷ và nhãn kênh.
+
+    Ràng buộc đặc thù: Nhãn kênh cho biết rõ giao dịch là 相対 (giao dịch thỏa thuận) hay せり (đấu giá) ngay đầu màn.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khối huỷ chỉ hiện khi API trả dữ liệu huỷ.
+  - Hai trường bổ sung của P-25 chỉ hiện khi API có giá trị, không để nhãn rỗng.
+  dinh_nghia_xong: []
+- key: SC-032/BE
+  cha: SC-032
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chi tiết giao dịch 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-222
+    tech: []
+    bang:
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Làm API-222 trên module trade: đọc giao dịch, dòng huỷ nếu có, cờ ngày đã khoá từ business_day_locks và hai trường bổ sung của P-25.
+
+    Ràng buộc đặc thù: Cờ ngày đã khoá chỉ để màn hiển thị; quyền huỷ vẫn kiểm ở API-223.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trả 404 khi không có giao dịch, 500 M_11 khi đọc lỗi.
+  - Vai được đọc gồm 取引運用 (nhóm vận hành giao dịch), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) theo ma trận quyền (P-12).
+  dinh_nghia_xong: []
+- key: SC-032/TEST
+  cha: SC-032
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chi tiết giao dịch 相対'
+  spec_refs:
+    sc:
+    - SC-032
+    api:
+    - API-222
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử chi tiết của giao dịch đã huỷ, chưa huỷ và thuộc ngày đã khoá.
+
+    Ràng buộc đặc thù: Có ca cho cả giao dịch 相対 và せり.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giao dịch đã huỷ hiện đủ bốn giá trị của dòng huỷ, khớp cơ sở dữ liệu.
+  - Giao dịch thuộc ngày đã khoá trả cờ ngày đã khoá; mã không tồn tại trả 404.
+  dinh_nghia_xong: []
+- key: SC-033
+  cha: FG-04
+  tracker: story
+  title_vi: Màn hiển thị lý do từ chối chốt 相対
+  ten_ja: 取引確定拒否理由表示
+  spec_refs:
+    sc:
+    - SC-033
+    api:
+    - API-208
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-02
+    - FR-PARTY-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-A-SC-033-thuc-the-rong
+  mo_ta: 'Khi máy chủ từ chối chốt một 相対取引 (giao dịch thỏa thuận), 取引運用 (nhóm vận hành giao dịch) thấy mã lỗi, lý do và bước kiểm không đạt để sửa đúng chỗ. Màn không gọi API, không đọc bảng.
+
+    Ràng buộc đặc thù: Lý do phải tách bên mua thiếu quyền 相対 với giấy 許可 (giấy phép) hay 承認 (chấp thuận) hết hiệu lực tại ngày chốt.'
+  pham_vi: Màn SC-033 (SPEC-SKM-121); dữ liệu là phản hồi lỗi API-208 mà SC-030 đã nhận (P-07).
+  luong_chinh:
+  - SC-030 nhận phản hồi 403, 409 hoặc 422 từ API-208 và mở màn này kèm phản hồi.
+  - Màn tra mã M_nn, hiện lý do và bước kiểm không đạt.
+  - Người vận hành bấm Quay lại sửa; SC-030 hiện lại dữ liệu đã nhập.
+  tieu_chi_nghiem_thu:
+  - Khi nhận 403 thì màn hiện M_01 và bước quyền 相対 của bên mua; nhận 422 QUALIFICATION_INVALID thì hiện M_21 và bước hạn giấy.
+  - Khi nhận 422 M_09 hoặc 409 M_10 thì màn hiện bước kiểm số lượng hoặc trạng thái lô.
+  - Khi quay lại thì dữ liệu còn nguyên và transactions không có dòng nào của lần bị từ chối.
+  dinh_nghia_xong:
+  - Mục xử lý lỗi của spec SC-033 bỏ nhãn «đang gọi API» (G-09).
+- key: SC-033/FE
+  cha: SC-033
+  tracker: devtask
+  title_vi: 'Giao diện: Màn hiển thị lý do từ chối chốt 相対'
+  spec_refs:
+    sc:
+    - SC-033
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn lý do từ chối từ phản hồi lỗi mà SC-030 chuyển sang, giữ dữ liệu biểu mẫu ở phía trình duyệt.
+
+    Ràng buộc đặc thù: Màn tách rõ lý do thuộc tư cách bên mua (M_01, M_21) với lý do thuộc lô (M_09, M_10).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mở màn không phát sinh lời gọi API nào (P-07).
+  - Bấm Quay lại sửa trả về SC-030 với đủ lô, bên mua, đơn giá, số lượng đã nhập.
+  dinh_nghia_xong: []
+- key: SC-033/BE
+  cha: SC-033
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Màn hiển thị lý do từ chối chốt 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-A-SC-033-thuc-the-rong
+  mo_ta: 'Bảo đảm phản hồi từ chối của API-208 mang đủ mã trạng thái, mã lỗi và câu báo có tên bên mua để SC-033 hiện lý do; không thêm API mới.
+
+    Ràng buộc đặc thù: Hai ca từ chối của tầng tư cách (403 M_01, 422 M_21) phải phân biệt được chỉ bằng phản hồi.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi ca từ chối nghiệp vụ trả đúng một cặp mã trạng thái và mã lỗi như bảng mã lỗi chung.
+  - Phản hồi từ chối không lộ thông tin giấy tờ nào ngoài tên bên mua.
+  dinh_nghia_xong: []
+- key: SC-033/TEST
+  cha: SC-033
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Màn hiển thị lý do từ chối chốt 相対'
+  spec_refs:
+    sc:
+    - SC-033
+    api:
+    - API-208
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-02
+    - FR-PARTY-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử bốn ca từ chối nghiệp vụ hiện trên SC-033.
+
+    Ràng buộc đặc thù: Có ca riêng cho bên mua thiếu quyền 相対 và cho giấy hết hiệu lực tại ngày chốt.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi ca 403 M_01, 422 M_21, 422 M_09, 409 M_10 hiện đúng mã, lý do và bước kiểm không đạt.
+  - Sau mỗi ca từ chối, transactions không thêm dòng nào và quay lại vẫn giữ dữ liệu đã nhập.
+  dinh_nghia_xong: []
+- key: SC-034
+  cha: FG-04
+  tracker: story
+  title_vi: Huỷ giao dịch chưa khoá 相対
+  ten_ja: 取引取消
+  spec_refs:
+    sc:
+    - SC-034
+    api:
+    - API-222
+    - API-223
+    tech: []
+    bang:
+    - transaction_cancellations
+    fr:
+    - FR-AITAI-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: '取引運用 (nhóm vận hành giao dịch) hoặc 承認者 (người duyệt) huỷ giao dịch khi ngày chưa khoá, kèm lý do; hệ thống thêm dòng huỷ, hoàn lượng về lô.
+
+    Ràng buộc đặc thù: Chỉ huỷ giao dịch 相対取引 (giao dịch thỏa thuận), theo P-21.'
+  pham_vi: SC-034 (SPEC-SKM-122); API-222, API-223; bảng `transaction_cancellations`.
+  luong_chinh:
+  - Người dùng mở huỷ từ dòng 相対 ở SC-031, nhập lý do.
+  - Máy chủ kiểm ngày chưa khoá và chưa huỷ.
+  - Máy chủ ghi dòng huỷ và hoàn lượng về lô trong cùng giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi lý do trống thì trả 400.
+  - Khi ngày đã khoá hoặc đã huỷ trước thì trả 409 với mã riêng (P-24).
+  - Khi huỷ thành công thì có đúng một dòng huỷ, lô nhận lại đủ số lượng (P-21).
+  dinh_nghia_xong:
+  - Độ dài tối đa của lý do đặt ở cấu hình (P-03).
+- key: SC-034/FE
+  cha: SC-034
+  tracker: devtask
+  title_vi: 'Giao diện: Huỷ giao dịch chưa khoá 相対'
+  spec_refs:
+    sc:
+    - SC-034
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:aitai
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn huỷ: hiện giao dịch đọc qua API-222, ô lý do, nhãn người huỷ, thời điểm và số lượng hoàn.
+
+    Ràng buộc đặc thù: Màn chỉ mở được cho giao dịch kênh 相対 (giao dịch thỏa thuận); dòng せり (đấu giá) không có đường vào.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn đọc giao dịch qua API-222, không đọc bảng trực tiếp (P-07).
+  - Người huỷ, thời điểm và số lượng hoàn chỉ hiện sau khi API-223 trả kết quả.
+  dinh_nghia_xong: []
+- key: SC-034/BE
+  cha: SC-034
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Huỷ giao dịch chưa khoá 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-222
+    - API-223
+    tech: []
+    bang:
+    - transaction_cancellations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-01
+  mo_ta: 'Làm API-223 trên module trade: kiểm khoá ngày, kiểm đã huỷ, ghi dòng huỷ rồi gọi module lot hoàn lượng, cùng một giao dịch CSDL.
+
+    Ràng buộc đặc thù: Chỉ nhận giao dịch kênh aitai; người huỷ lấy từ phiên, không nhận từ body.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày đã khoá và giao dịch đã huỷ trả 409 với hai mã mới trong bảng mã lỗi chung (P-24).
+  - Lỗi ở bước hoàn lượng thì dòng huỷ cũng không được ghi, trả 500 M_25.
+  - Lượng hoàn khớp cách giữ lượng khả dụng đã chốt (G-FG04-01).
+  dinh_nghia_xong: []
+- key: SC-034/DB
+  cha: SC-034
+  tracker: devtask
+  title_vi: Tạo bảng transaction_cancellations
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - transaction_cancellations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs: []
+  mo_ta: 'Viết migration bảng transaction_cancellations; chốt kiểu các cột còn ghi «chốt ở LAB-5» (P-06).
+
+    Ràng buộc đặc thù: Mỗi giao dịch 相対 (giao dịch thỏa thuận) có tối đa một dòng huỷ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có ràng buộc duy nhất trên transaction_id để không ghi được dòng huỷ thứ hai.
+  - Lý do, người huỷ, thời điểm và số lượng hoàn là cột bắt buộc.
+  dinh_nghia_xong: []
+- key: SC-034/TEST
+  cha: SC-034
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Huỷ giao dịch chưa khoá 相対'
+  spec_refs:
+    sc:
+    - SC-034
+    api:
+    - API-222
+    - API-223
+    tech: []
+    bang: []
+    fr:
+    - FR-AITAI-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử huỷ giao dịch 相対 (giao dịch thỏa thuận) chưa khoá ngày.
+
+    Ràng buộc đặc thù: Có ca chứng minh giao dịch せり không huỷ được qua API-223.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Huỷ giao dịch aitai ngày chưa khoá: một dòng huỷ, lô nhận lại đúng số lượng, dòng giao dịch gốc không đổi.'
+  - 'Huỷ lần hai và huỷ giao dịch thuộc ngày đã khoá: trả 409 với đúng mã mới của P-24, lượng lô không đổi.'
+  - 'Huỷ giao dịch kênh seri: bị từ chối.'
+  dinh_nghia_xong: []
+- key: API-207
+  cha: FG-04
+  tracker: story
+  title_vi: API đưa lô lên kênh bán
+  spec_refs:
+    sc: []
+    api:
+    - API-207
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-05
+  - G-FG03-02
+  mo_ta: 'API đưa một lô từ trạng thái chưa lên kênh sang lên kênh bán, chọn せり (đấu giá) hoặc 相対取引 (giao dịch thỏa thuận); đấu thầu bị từ chối vì ngoài phạm vi. Không có lô lên kênh thì SC-030 không có lô nào để chọn, nên đây là cửa vào của cả FG-04.
+
+    Ràng buộc đặc thù: Kênh aitai là đường vào chính của luồng 相対; phải chốt module chủ và màn gọi trước khi FG-04 chạy thử đầu cuối.'
+  pham_vi: API-207 SKM_LOT_LISTING đổi `lots.status` và `lots.listing_channel`; spec chưa gắn màn nào và chưa có module chủ (G-FG04-05).
+  luong_chinh:
+  - Màn gọi (chốt theo G-FG04-05) gửi mã lô và kênh bán.
+  - Máy chủ kiểm lô tồn tại và đang ở trạng thái unlisted.
+  - Máy chủ đổi lô sang listed, ghi kênh bán và ghi nhật ký kiểm toán.
+  tieu_chi_nghiem_thu:
+  - Khi kênh không phải seri hoặc aitai, kể cả tender, thì trả 400.
+  - Khi lô không ở trạng thái unlisted thì trả 409 M_10; lô không tồn tại trả 404.
+  - Khi thành công thì lô ở trạng thái listed với đúng kênh đã chọn và có dòng nhật ký kiểm toán.
+  dinh_nghia_xong:
+  - Spec API-207 ghi module chủ và màn gọi đã chốt (G-FG04-05).
+- key: API-207/BE
+  cha: API-207
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API đưa lô lên kênh bán'
+  spec_refs:
+    sc: []
+    api:
+    - API-207
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-05
+  mo_ta: 'Làm API-207: gọi hàm mà module chủ của lô mở ra để đổi trạng thái, theo bảng chuyển trạng thái của lô.
+
+    Ràng buộc đặc thù: Lô lên kênh aitai phải chọn được ngay ở SC-030.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đổi trạng thái chỉ theo bảng chuyển trạng thái đã chốt ở SC-020/DB, không so chuỗi trực tiếp.
+  - Mọi nhánh thành công và bị từ chối đều có dòng nhật ký kiểm toán.
+  dinh_nghia_xong: []
+- key: API-207/TEST
+  cha: API-207
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API đưa lô lên kênh bán'
+  spec_refs:
+    sc: []
+    api:
+    - API-207
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử chuyển trạng thái khi đưa lô lên kênh bán.
+
+    Ràng buộc đặc thù: Có ca nối tiếp: lô lên kênh aitai rồi chốt được ở SC-030.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô unlisted lên kênh aitai: trạng thái listed, kênh aitai, SC-030 chọn được lô.'
+  - Gửi kênh tender trả 400; lô đã listed gửi lại trả 409.
+  dinh_nghia_xong: []
+- key: API-209
+  cha: FG-04
+  tracker: story
+  title_vi: API ghi bán trực tiếp 直販
+  spec_refs:
+    sc: []
+    api:
+    - API-209
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-06
+  mo_ta: 'API ghi giao dịch 直販 (bán trực tiếp) hàng tồn cho 買出人 (người mua lẻ tại chợ), trả tiền ngay, không sinh hoá đơn (P-08). Việc bán này là 第三者販売 (bán cho bên thứ ba) nên chỉ chạy khi quy tắc bật; mặc định tắt cho tới khi khách đáp Q-11 (P-18).
+
+    Ràng buộc đặc thù: Bán trực tiếp ghi chung bảng transactions với 相対 (giao dịch thỏa thuận) nhưng không đi qua ma trận quyền 相対, để không mở nhầm quyền giao dịch thỏa thuận cho người mua lẻ.'
+  pham_vi: API-209 SKM_DIRECT_SALE_CREATE ghi `transactions` và đổi trạng thái `lots`; đọc quy tắc bán cho bên thứ ba (bật, tắt, trần tiền mỗi lần) và `participants`.
+  luong_chinh:
+  - Người vận hành gửi lô, người mua lẻ, đơn giá và số lượng.
+  - Máy chủ kiểm quy tắc bán cho bên thứ ba trước mọi bước khác; đang tắt thì từ chối.
+  - Máy chủ kiểm lô, số lượng, loại người mua, trần tiền và tư cách người mua lẻ.
+  - Máy chủ ghi giao dịch và đổi lô sang sold_direct trong cùng giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi quy tắc đang tắt thì mọi yêu cầu trả 403 M_28 trước khi kiểm bất cứ điều gì khác.
+  - Khi người mua không phải 買出人 thì trả 422 M_07; số tiền vượt trần cấu hình thì trả 422 M_19.
+  - Khi thành công thì có một dòng transactions, lô ở sold_direct, không sinh hoá đơn hay công nợ.
+  dinh_nghia_xong:
+  - API-209 xếp ưu tiên thấp và chỉ làm khi INV-Q-11 có đáp khác «không cho phép» (P-18).
+- key: API-209/BE
+  cha: API-209
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API ghi bán trực tiếp 直販'
+  spec_refs:
+    sc: []
+    api:
+    - API-209
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG04-06
+  mo_ta: 'Làm API-209 trên module trade theo cùng khuôn ghi giao dịch của API-208, đọc quy tắc bán cho bên thứ ba ở mỗi lần gọi.
+
+    Ràng buộc đặc thù: Không dùng ma trận quyền 相対 (giao dịch thỏa thuận) cho người mua lẻ; chỉ kiểm theo quy tắc riêng của kênh này.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểm quy tắc chạy đầu tiên; quy tắc tắt thì không đọc lô hay người mua.
+  - Tư cách người mua lẻ chỉ kiểm trạng thái vì không có cột hạn (G-FG04-06).
+  - Trần tiền đọc từ cấu hình, không viết cứng.
+  dinh_nghia_xong: []
+- key: API-209/TEST
+  cha: API-209
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API ghi bán trực tiếp 直販'
+  spec_refs:
+    sc: []
+    api:
+    - API-209
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử bán trực tiếp khi quy tắc bật và khi tắt.
+
+    Ràng buộc đặc thù: Có ca chứng minh bên mua 仲卸 hay 売買参加者 không đi được đường này.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Quy tắc tắt: yêu cầu hợp lệ vẫn trả 403 M_28, không có dòng giao dịch.'
+  - 'Quy tắc bật: người mua không phải 買出人 (người mua lẻ) trả 422 M_07; vượt trần trả 422 M_19.'
+  dinh_nghia_xong: []
+- key: API-210
+  cha: FG-04
+  tracker: story
+  title_vi: API ghi đặt trước 予約
+  spec_refs:
+    sc: []
+    api:
+    - API-210
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'API cho 仲卸 (trung gian bán buôn) hoặc 売買参加者 (người tham gia mua bán) đặt trước loài, cỡ, số lượng cho một ngày trong vòng 3 ngày; giá chốt sau qua 相対取引 (giao dịch thỏa thuận). RFP không nhắc 事前予約 (đặt trước) nên issue giữ ở mức thiết kế, không xếp sprint cho tới khi khách đáp Q-21 (P-20).
+
+    Ràng buộc đặc thù: Đặt trước chỉ là bước chuẩn bị cho 相対; khách xác nhận có tập quán này thì giao dịch 相対 mới gắn được đặt trước.'
+  pham_vi: API-210 SKM_RESERVATION_CREATE ghi bảng `reservations` (migration ở DATA-FG04); người gọi là người tham gia, thuộc hạng mục tuỳ chọn ngoài phạm vi nền.
+  luong_chinh:
+  - Người tham gia gửi loài, cỡ, số lượng, ngày mong muốn và ghi chú.
+  - Máy chủ kiểm tài khoản đã gắn với một người tham gia và ngày nằm trong khoảng cho phép.
+  - Máy chủ ghi một dòng đặt trước ở trạng thái open.
+  tieu_chi_nghiem_thu:
+  - Khi ngày mong muốn ngoài khoảng từ hôm nay đến hôm nay cộng 3 ngày thì trả 422.
+  - Khi tài khoản chưa gắn người tham gia thì trả 400; vai 卸売業者 (bán buôn đầu mối) hay 買出人 (người mua lẻ) gọi thì trả 403.
+  - Khi thành công thì có một dòng reservations ở trạng thái open, chọn được ở ô đặt trước của SC-030.
+  dinh_nghia_xong:
+  - Issue chỉ vào sprint khi INV-Q-21 có đáp «có tập quán đặt trước» (P-20).
+- key: API-210/BE
+  cha: API-210
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API ghi đặt trước 予約'
+  spec_refs:
+    sc: []
+    api:
+    - API-210
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Làm API-210 khi INV-Q-21 có đáp «có»; kiểm khoảng ngày và vai người gọi phía máy chủ.
+
+    Ràng buộc đặc thù: Đặt trước không chốt giá; giá chỉ chốt ở giao dịch 相対 (giao dịch thỏa thuận).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khoảng ngày cho phép kiểm ở máy chủ, không tin ngày từ trình duyệt.
+  - Chỉ vai 仲卸 (trung gian bán buôn) và 売買参加者 (người tham gia mua bán) gọi được.
+  dinh_nghia_xong: []
+- key: API-210/TEST
+  cha: API-210
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API ghi đặt trước 予約'
+  spec_refs:
+    sc: []
+    api:
+    - API-210
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử khoảng ngày và vai gọi của đặt trước.
+
+    Ràng buộc đặc thù: Có ca nối đặt trước với một giao dịch 相対 để kiểm trạng thái chuyển sang fulfilled.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày mong muốn ở biên trên của khoảng 3 ngày được nhận; qua biên một ngày trả 422.
+  - 'Gắn đặt trước vào giao dịch 相対 (giao dịch thỏa thuận) ở SC-030: đặt trước chuyển fulfilled cùng lượt ghi.'
+  dinh_nghia_xong: []
+- key: TECH-301
+  cha: FG-04
+  tracker: story
+  title_vi: Luồng kiểm tư cách bên mua khi chốt 相対
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    tech:
+    - TECH-301
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG04-02
+  mo_ta: 'Luồng này là lõi của việc chốt 相対取引 (giao dịch thỏa thuận): xác định bên mua có quyền giao dịch thỏa thuận theo ma trận quyền và còn hiệu lực giấy tại ngày chốt. Làm thành một dịch vụ dùng chung để SC-030 và mọi đường chốt khác áp cùng một luật.
+
+    Ràng buộc đặc thù: 仲卸 (trung gian bán buôn) xét theo hạn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) xét theo hạn 承認 (chấp thuận); hai cột riêng, không dùng cột gộp, và chặn cả ca còn hoạt động nhưng đã quá hạn.'
+  pham_vi: TECH-301 (SPEC-SKM-301) phục vụ API-208; đọc `participants` (hai bộ cột 許可, 承認) và `permission_matrix` mỗi lần gọi, không lưu đệm.
+  luong_chinh:
+  - Dịch vụ nhận bên mua và ngày chốt từ API-208.
+  - Dịch vụ ánh xạ loại người tham gia sang vai giao dịch; loại không có vai (bán buôn đầu mối, người mua lẻ) bị từ chối.
+  - Dịch vụ đọc ma trận quyền của vai đó; không có quyền 相対 thì từ chối 403.
+  - Dịch vụ chọn cột hạn theo loại giấy và so với 業務日 (ngày nghiệp vụ) của ngày chốt; tạm dừng, mất hiệu lực hay quá hạn thì từ chối 422.
+  - Dịch vụ ghi nhật ký kiểm toán cho ca bị từ chối và trả kết quả cho API-208.
+  tieu_chi_nghiem_thu:
+  - Khi bên mua là 卸売業者 (bán buôn đầu mối) hay 買出人 (người mua lẻ) thì trả 403 M_01, kể cả khi người gọi có đủ quyền.
+  - Khi trạng thái tư cách còn hoạt động nhưng hạn của đúng loại giấy đã qua trước ngày chốt thì trả 422 M_21.
+  - Khi ma trận quyền vừa đổi thì lần gọi kế tiếp áp ngay giá trị mới.
+  - Ngày so hạn là 業務日 giờ Nhật, cùng hàm với ngày giao dịch (G-FG04-02).
+  dinh_nghia_xong:
+  - Spec TECH-301 sửa mốc so hạn từ «hôm nay» sang 業務日 (G-FG04-02).
+- key: TECH-301/BE
+  cha: TECH-301
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Luồng kiểm tư cách bên mua khi chốt 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    tech:
+    - TECH-301
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG04-02
+  mo_ta: 'Làm dịch vụ kiểm tư cách bên mua trên module party để API-208 của SC-030/BE gọi trước khi ghi giao dịch.
+
+    Ràng buộc đặc thù: Hai nhánh hạn 許可 (giấy phép) và 承認 (chấp thuận) là hai đường mã riêng, mỗi đường có kiểm thử đơn vị.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đọc ma trận quyền mỗi lần gọi, không lưu đệm.
+  - Ca bị từ chối có dòng nhật ký kiểm toán gắn bên mua.
+  - Ràng buộc mỗi người tham gia chỉ có một bộ cột giấy theo loại được giữ đúng.
+  dinh_nghia_xong: []
+- key: TECH-301/TEST
+  cha: TECH-301
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Luồng kiểm tư cách bên mua khi chốt 相対'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    tech:
+    - TECH-301
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử bảng quyết định của luồng kiểm tư cách: loại người tham gia, quyền, trạng thái và hạn giấy.
+
+    Ràng buộc đặc thù: Phải có ca cho từng tầng 許可 và 承認, kể cả ca còn hoạt động nhưng đã quá hạn.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn ngày trước ngày chốt bị từ chối; hạn đúng bằng ngày chốt thì được.
+  - 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) đang tạm dừng bị từ chối 422; bên mua 買出人 (người mua lẻ) bị từ chối 403.
+  - 'Đổi ma trận quyền rồi gọi lại: kết quả theo giá trị mới.'
+  dinh_nghia_xong: []
+- key: DATA-FG04
+  cha: FG-04
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-TRADE): reservations'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - reservations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-20
+  gap_refs:
+  - G-FG04-07
+  mo_ta: 'Bảng reservations (đặt trước) không có màn ghi riêng và chỉ cần khi khách xác nhận tập quán 事前予約 (đặt trước, Q-21). Story giữ chỗ cho migration này, không xếp sprint cho tới khi có đáp (P-20).
+
+    Ràng buộc đặc thù: Bảng chỉ phục vụ 相対取引 (giao dịch thỏa thuận); khi tạo bảng phải nối lại khoá ngoại từ transactions.reservation_id (G-FG04-07).'
+  pham_vi: Bảng `reservations` theo SKM_DB (bên mua, loài, cỡ, số lượng, khoảng ngày, trạng thái), khoá ngoại tới `participants`, `species`; nối khoá ngoại từ `transactions`.
+  luong_chinh:
+  - PM chờ đáp của INV-Q-21; chưa có đáp thì story đứng ngoài sprint.
+  - Có đáp «có» thì người làm DB viết migration reservations kèm khoá ngoại.
+  - Người làm DB thêm khoá ngoại từ transactions.reservation_id sang bảng mới.
+  tieu_chi_nghiem_thu:
+  - Khi INV-Q-21 đáp «không» thì story đóng không làm và cột reservation_id của transactions được xem lại.
+  - Khi tạo bảng thì trạng thái mặc định là open và khoá ngoại tới participants, species chạy đúng.
+  dinh_nghia_xong:
+  - Story ghi rõ ngày nhận đáp INV-Q-21 và quyết định làm hay đóng.
+- key: DATA-FG04/DB
+  cha: DATA-FG04
+  tracker: devtask
+  title_vi: Tạo bảng reservations
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - reservations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-20
+  gap_refs:
+  - G-FG04-07
+  mo_ta: 'Viết migration bảng reservations và khoá ngoại từ transactions khi INV-Q-21 đáp «có».
+
+    Ràng buộc đặc thù: Bảng chỉ dùng cho luồng 相対 (giao dịch thỏa thuận); không thêm cột phục vụ せり (đấu giá).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Migration chạy được trên cơ sở dữ liệu đã có giao dịch mà cột reservation_id đều trống.
+  - Trạng thái mặc định open; khoá ngoại tới participants và species có trong migration.
+  dinh_nghia_xong: []
+- key: DATA-FG04/TEST
+  cha: DATA-FG04
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-TRADE): reservations'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử migration bảng đặt trước trên cơ sở dữ liệu đã có giao dịch.
+
+    Ràng buộc đặc thù: Có ca chứng minh giao dịch 相対 cũ không bị ảnh hưởng khi thêm khoá ngoại.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Chạy migration trên cơ sở dữ liệu có sẵn giao dịch: không lỗi, giao dịch cũ giữ nguyên.'
+  - Gắn reservation_id không tồn tại vào giao dịch mới bị cơ sở dữ liệu từ chối.
+  dinh_nghia_xong: []
+- key: INV-Q-11
+  cha: FG-04
+  tracker: investigation
+  title_vi: Điều kiện và hạn mức bán cho bên thứ ba 第三者販売
+  han: Trước LAB-5
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-11]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - Q-11
+  labels:
+  - type:investigation
+  - constraint:aitai
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-18
+  gap_refs: []
+  mo_ta: Quy chế của chợ có cho bán hàng cho bên thứ ba ngoài người tham gia (第三者販売) không? Nếu cho thì kèm điều kiện nào và trần tiền mỗi lần bán là bao nhiêu? Câu trả lời quyết API-209 được làm đủ, làm có trần hay đóng hẳn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi khách trả lời thì giá trị bật, tắt và trần tiền của quy tắc bán cho bên thứ ba được ghi vào cấu hình và P-18.
+  dinh_nghia_xong: []
+- key: INV-Q-21
+  cha: FG-04
+  tracker: investigation
+  title_vi: Chợ có tập quán đặt trước 事前予約 hay không
+  han: Trước LAB-5
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-21]
+  spec_refs:
+    sc: []
+    api:
+    - API-210
+    tech: []
+    bang:
+    - reservations
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - Q-21
+  labels:
+  - type:investigation
+  - constraint:aitai
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-20
+  gap_refs: []
+  mo_ta: Bên mua ở chợ có thói quen giữ trước hàng theo loài, cỡ và số lượng, chưa chốt giá, rồi mới vào 相対取引 (giao dịch thỏa thuận) không? Nếu có, việc giữ trước hiệu lực bao lâu, huỷ khi nào và xếp thứ tự ra sao khi nhiều người cùng giữ một loại hàng?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi khách trả lời thì P-20 cập nhật và API-210, DATA-FG04 được xếp sprint hoặc đóng.
+  dinh_nghia_xong: []
+- key: INV-GD-01
+  cha: FG-04
+  tracker: investigation
+  title_vi: 買出人 có luôn trả ngay khi mua trực tiếp không
+  han: Trước LAB-5 (đề xuất)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: PREMISE.md (LAB-4) §4.1 dòng 1
+  spec_refs:
+    sc: []
+    api:
+    - API-209
+    tech: []
+    bang:
+    - invoices
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-08
+  gap_refs: []
+  mo_ta: Khi 買出人 (người mua lẻ tại chợ) mua trực tiếp, họ luôn trả tiền ngay hay có lúc mua chịu rồi trả theo kỳ? Nếu có mua chịu thì hoá đơn và công nợ của họ chốt theo kỳ nào?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi khách trả lời thì P-08 cập nhật và API-209 thêm hoặc bỏ nhánh sinh hoá đơn.
+  dinh_nghia_xong: []
+- key: INV-LOT-HUY
+  cha: FG-04
+  tracker: investigation
+  title_vi: Trạng thái lô và phạm vi huỷ giao dịch 相対 (huỷ một phần, kênh せり)
+  han: Trước LAB-5
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: HANDOFF.md mục Next Steps 3 (đầu vào còn treo cho LAB-5)
+  spec_refs:
+    sc:
+    - SC-034
+    api:
+    - API-223
+    tech: []
+    bang:
+    - lots
+    - transaction_cancellations
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-21
+  gap_refs:
+  - G-13
+  mo_ta: Khi huỷ một giao dịch 相対 (giao dịch thỏa thuận) chưa khoá ngày, lô trở về trạng thái nào? Có cho huỷ một phần số lượng không, và giao dịch せり (đấu giá) có được huỷ bằng cùng đường đó không?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi khách trả lời thì P-21 và bảng chuyển trạng thái lô của SC-020/DB cập nhật, SC-034 sửa tiêu chí theo đáp.
+  dinh_nghia_xong: []
+- key: INV-LOT-KHA-DUNG
+  cha: FG-04
+  tracker: investigation
+  title_vi: Lượng khả dụng của lô khi bán một phần 相対
+  han: Trước sprint của SC-030/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_AITAI_BUYER_ELIGIBILITY_TECH.md §4.2 (LAB-4)
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    - API-223
+    tech: []
+    bang:
+    - lots
+    fr:
+    - FR-AITAI-01
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG04-01
+  mo_ta: Một lô có được bán một phần cho nhiều bên mua qua 相対 (giao dịch thỏa thuận) không, và phần còn lại bán tiếp trên kênh nào? Thiết kế LAB-4 so số lượng với toàn bộ khối lượng lô rồi chuyển cả lô sang đã bán, bảng lots không có chỗ giữ phần còn lại, nên chưa trừ được lượng khả dụng như FR-AITAI-01 đòi. Câu trả lời quyết cách SC-030/BE ghi giao dịch và cách SC-034/BE hoàn lượng khi huỷ.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG04-BEN-BAN
+  cha: FG-04
+  tracker: investigation
+  title_vi: Cách gán bên bán 売り手 cho giao dịch 相対 ở hệ đích
+  han: Trước sprint của SC-030/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_AITAI_TRADE_ENTRY_SPEC.md §6.3 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-030
+    api:
+    - API-208
+    tech: []
+    bang:
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG04-03
+  mo_ta: Ở hệ đích, bên bán 売り手 của một giao dịch 相対 (giao dịch thỏa thuận) được xác định thế nào khi chợ có hơn một 卸売業者 (bán buôn đầu mối), người nhập chọn hay hệ thống suy ra từ lô? Prototype gán người tham gia bán buôn đầu tiên tìm thấy, còn spec SC-030 để việc này cho LAB-5.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

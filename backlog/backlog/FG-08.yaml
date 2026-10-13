@@ -1,0 +1,935 @@
+# Seed epic FG-08 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-08
+  tracker: epic
+  title_vi: Đối soát ngày và khoá ngày nghiệp vụ
+  feature: daily-reconciliation
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  - P-14
+  gap_refs: []
+  mo_ta: Nhóm chức năng này gom giao dịch, giao hàng và ngoại lệ của mỗi 業務日 (ngày nghiệp vụ) thành bảng 日次照合 (đối soát ngày), mở tranh chấp cho chỗ lệch, rồi để người của bộ phận đối soát khoá ngày. Sau khi khoá, mọi sửa đổi đi đường điều chỉnh có duyệt của FG-06, còn lần sửa thẳng bị chặn và ghi nhật ký. Hai API chốt hoá đơn tháng và ghi tiền về chỉ hỗ trợ việc tính 完納奨励金 (thưởng thanh toán đủ hạn) ở FG-09.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-08 đã đóng.
+  - Khi một 業務日 còn tranh chấp chưa đóng hoặc ngoại lệ giao hàng chờ xác nhận thì lệnh khoá ngày bị từ chối.
+  - Khi ngày đã khoá thì mọi đường ghi thẳng vào dữ liệu của ngày đó (huỷ giao dịch, ghi giao hàng, ghi ngoại lệ) bị chặn bằng mã ngày đã khoá và có dòng audit_log.
+  - Các issue điều tra của FG-08 đã có câu trả lời, hoặc người trả lời xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-070
+  cha: FG-08
+  tracker: story
+  title_vi: Bảng đối soát ngày
+  ten_ja: 日次照合表
+  spec_refs:
+    sc:
+    - SC-070
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG08-04
+  mo_ta: '照合事務 (nhóm đối soát) xem bảng 日次照合 (đối soát ngày): mỗi 業務日 (ngày nghiệp vụ) có số giao dịch, số lần giao, số ngoại lệ, tổng tiền và giờ lập. Bảng do tác vụ nền EV3 lập sau khi hết ngày; chỗ lệch giữa ba nguồn được mở thành tranh chấp chứ không tự sửa số.'
+  pham_vi: Màn SC-070 (SPEC-SKM-134) ở văn phòng, chỉ xem; tác vụ EV3 thêm dòng `daily_reconciliations` (migration thuộc DATA-FG08) và mở `disputes`; đọc `transactions`, `transaction_cancellations`, `deliveries`, `delivery_exceptions`; API đọc chưa có spec, SC-070/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Hết 業務日, tác vụ EV3 đếm giao dịch còn hiệu lực, lần giao và ngoại lệ của ngày, cộng tổng tiền rồi thêm một dòng đối soát.
+  - Khi ba nguồn lệch nhau, tác vụ mở tranh chấp cho ngày đó; ngày chưa khoá được tới khi tranh chấp đóng.
+  - Lỗi thì tác vụ thử lại theo tham số; hết lượt thì dừng và đẩy cảnh báo vào SC-122 (P-14).
+  - Người đối soát lọc theo khoảng ngày và xem dòng mới nhất của từng ngày.
+  tieu_chi_nghiem_thu:
+  - Khi EV3 chạy lại cho cùng 業務日 thì có thêm dòng mới, dòng cũ giữ nguyên và màn hiện dòng có giờ lập mới nhất.
+  - Khi giao dịch đã có dòng huỷ thì không được tính vào số giao dịch và tổng tiền của ngày (G-FG08-04).
+  - Khi ba nguồn lệch thì có một tranh chấp đang mở cho ngày đó.
+  - Khi tác vụ hết số lần thử thì không có dòng đối soát mới, ngày không bị khoá và SC-122 có một cảnh báo (P-14).
+  - Khi người gọi không mang vai 照合事務 thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  dinh_nghia_xong:
+  - Spec SC-070 ghi cách đếm giao dịch còn hiệu lực và luật lệch của EV3 theo G-FG08-04.
+- key: SC-070/FE
+  cha: SC-070
+  tracker: devtask
+  title_vi: 'Giao diện: Bảng đối soát ngày'
+  spec_refs:
+    sc:
+    - SC-070
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-04
+  mo_ta: 'Dựng màn bảng đối soát ngày ở văn phòng: bộ lọc khoảng 業務日 (ngày nghiệp vụ), bảng sáu cột, phân trang.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi 業務日 chỉ hiện dòng có giờ lập mới nhất; ngày có tranh chấp đang mở hiện nhãn lệch và đường mở SC-072.
+  - Tổng tiền hiện số nguyên yên, không có phần lẻ.
+  - Khi khoảng ngày đã chọn chưa có dòng nào thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-070/BE
+  cha: SC-070
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bảng đối soát ngày'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-14
+  gap_refs:
+  - G-FG08-04
+  mo_ta: Làm tác vụ EV3 lập bảng đối soát ngày và mở tranh chấp trên module settle, cùng API đọc cho SC-070 (P-01); thời gian chờ và số lần thử là tham số cấu hình (P-14).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Thời gian chờ và số lần thử đọc từ cấu hình, chưa có số; hết lượt thì dừng, đẩy cảnh báo và không khoá ngày (P-14).
+  - Mỗi lần chạy chỉ thêm dòng daily_reconciliations; chạy lại cùng ngày khi dữ liệu nguồn không đổi cho cùng kết quả; mở tranh chấp thì gọi dịch vụ thông báo của SC-121/BE (G-FG12-06).
+  - Giao dịch đã huỷ bị loại khỏi số giao dịch và tổng tiền (G-FG08-04).
+  dinh_nghia_xong: []
+- key: SC-070/TEST
+  cha: SC-070
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng đối soát ngày'
+  spec_refs:
+    sc:
+    - SC-070
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tác vụ EV3 và bảng đối soát ngày.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngày có giao dịch đã huỷ: số giao dịch và tổng tiền không tính giao dịch đó.'
+  - 'Giả lập lỗi tới khi hết lượt thử: không có dòng mới, ngày không khoá, SC-122 có cảnh báo.'
+  - 'Chạy lại cho cùng ngày: thêm dòng mới, dòng cũ giữ nguyên, màn hiện dòng mới nhất.'
+  dinh_nghia_xong: []
+- key: SC-071
+  cha: FG-08
+  tracker: story
+  title_vi: Khoá ngày nghiệp vụ
+  ten_ja: 業務日ロック
+  spec_refs:
+    sc:
+    - SC-071
+    api: []
+    tech: []
+    bang:
+    - business_day_locks
+    fr:
+    - FR-CORR-03
+    - FR-SETTLE-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG08-01
+  - G-FG08-03
+  mo_ta: 照合事務 (nhóm đối soát) hoặc 照合部門長 (trưởng bộ phận đối soát) khoá một 業務日 (ngày nghiệp vụ) sau khi xem bảng đối soát; khoá rồi thì chỉ còn đường điều chỉnh có duyệt của FG-06. Khoá là quyết định của người; máy kiểm điều kiện rồi ghi ai khoá, lúc nào, vì sao.
+  pham_vi:
+  - Màn SC-071 (SPEC-SKM-135) ở văn phòng; bảng `business_day_locks` (chủ migration, chỉ thêm dòng).
+  - Lệnh khoá ngày và dịch vụ kiểm ngày đã khoá chưa có spec, SC-071/BE viết rồi làm; chốt hoá đơn tháng cho FG-09 tách thành story API-213, gọi riêng (G-FG08-01).
+  luong_chinh:
+  - Người đối soát chọn 業務日, nhập lý do rồi bấm Khoá.
+  - Máy chủ kiểm ngày đã có bảng đối soát, không còn tranh chấp mở hay ngoại lệ giao hàng chờ xác nhận, và chưa bị khoá.
+  - Máy chủ thêm một dòng business_day_locks với người khoá lấy từ phiên, giờ máy chủ, và ghi audit_log.
+  tieu_chi_nghiem_thu:
+  - Khi người đối soát bấm Khoá thì hệ thống ghi người khoá của phiên, giờ máy chủ và lý do; người và giờ gửi từ trình duyệt bị bỏ qua.
+  - Khi ngày còn tranh chấp mở, ngoại lệ chờ xác nhận, chưa có bảng đối soát hoặc đã khoá thì lệnh khoá bị từ chối, không ghi dòng nào.
+  - Khi mất kết nối thì màn báo không khoá được và không lưu cục bộ (ADR-010).
+  - Khi API-223, SC-060 hay SC-063 ghi vào ngày đã khoá thì bị chặn bằng mã ngày đã khoá (P-24) và có dòng audit_log.
+  dinh_nghia_xong:
+  - Spec SC-071, API-213 cập nhật theo G-FG08-01, G-FG08-02 và đáp của INV-FG08-KHOA-NGAY.
+- key: SC-071/FE
+  cha: SC-071
+  tracker: devtask
+  title_vi: 'Giao diện: Khoá ngày nghiệp vụ'
+  spec_refs:
+    sc:
+    - SC-071
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-02
+  mo_ta: 'Dựng màn khoá ngày ở văn phòng: chọn 業務日 (ngày nghiệp vụ), ô lý do, nút Khoá; người khoá và thời điểm chỉ hiển thị sau khi khoá.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn không có ô nhập người khoá hay thời điểm khoá (G-FG08-02).
+  - Khi máy chủ từ chối vì còn tranh chấp hay ngoại lệ chờ thì màn hiện lý do và đường mở SC-072.
+  - Khi mất kết nối thì nút Khoá không bấm được và màn báo rõ đang mất kết nối (ADR-010).
+  dinh_nghia_xong: []
+- key: SC-071/BE
+  cha: SC-071
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khoá ngày nghiệp vụ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - business_day_locks
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-24
+  gap_refs:
+  - G-FG08-01
+  - G-FG08-02
+  - G-FG08-08
+  mo_ta: Viết spec rồi làm lệnh khoá ngày trên module settle và dịch vụ kiểm ngày đã khoá cho module khác gọi; lệnh chốt hoá đơn tháng tách sang story API-213 (G-FG08-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người khoá và giờ khoá lấy từ phiên và giờ máy chủ; 業務日 (ngày nghiệp vụ) tính theo giờ Nhật bằng hàm dùng chung (G-FG04-02).
+  - Dịch vụ kiểm khoá trả mã ngày đã khoá (P-24), ghi audit_log mỗi lần chặn qua hàm dùng chung của SC-130/BE (G-FG13-02); API-223, SC-060/BE, SC-063/BE gọi dịch vụ này (G-FG08-08).
+  - Lệnh khoá chỉ ghi business_day_locks và audit_log, không chạy kèm lệnh chốt hoá đơn tháng của API-213 (G-FG08-01).
+  dinh_nghia_xong: []
+- key: SC-071/DB
+  cha: SC-071
+  tracker: devtask
+  title_vi: Tạo bảng business_day_locks
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - business_day_locks
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG08-09
+  mo_ta: Viết migration bảng business_day_locks, chỉ thêm dòng; chốt kiểu cột và ràng buộc mỗi 業務日 (ngày nghiệp vụ) chỉ có một dòng khoá (P-06, G-FG08-09).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có khoá duy nhất theo business_day; người khoá có khoá ngoại tới profiles.
+  - Người khoá, thời điểm khoá và lý do bắt buộc có giá trị.
+  dinh_nghia_xong: []
+- key: SC-071/TEST
+  cha: SC-071
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khoá ngày nghiệp vụ'
+  spec_refs:
+    sc:
+    - SC-071
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-CORR-03
+    - FR-SETTLE-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bước người khoá ngày và việc chặn sửa sau khoá.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi lệnh khoá kèm người khoá và giờ giả: dòng khoá lưu người của phiên và giờ máy chủ.'
+  - 'Khoá ngày còn tranh chấp mở: bị từ chối; đóng tranh chấp rồi khoá: thành công và có dòng audit_log.'
+  - 'Sau khi khoá, gọi API huỷ giao dịch của ngày đó: bị chặn bằng mã ngày đã khoá, audit_log ghi lần chặn.'
+  dinh_nghia_xong: []
+- key: SC-072
+  cha: FG-08
+  tracker: story
+  title_vi: Danh sách tranh chấp
+  ten_ja: 紛争一覧
+  spec_refs:
+    sc:
+    - SC-072
+    api: []
+    tech: []
+    bang:
+    - disputes
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG08-05
+  - G-FG08-06
+  mo_ta: 照合事務 (nhóm đối soát) và 照合部門長 (trưởng bộ phận đối soát) tra các tranh chấp còn mở cùng ngày hẹn xử lý, để biết 業務日 (ngày nghiệp vụ) nào còn vướng trước khi khoá. Bảng disputes chưa có cột ngày hẹn, nên story bổ sung cột đó cùng DATA-FG08 (G-FG08-05).
+  pham_vi: Màn SC-072 (SPEC-SKM-136) ở văn phòng; đọc `disputes` (migration thuộc DATA-FG08); API đọc chưa có spec, SC-072/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng lọc theo khoảng 業務日 và trạng thái rồi bấm Lọc.
+  - Máy chủ trả tranh chấp kèm nguyên nhân, người phụ trách, ngày hẹn xử lý và kết quả; mặc định chỉ tranh chấp đang mở.
+  - Người dùng bấm một dòng để mở SC-073.
+  tieu_chi_nghiem_thu:
+  - Khi không chọn trạng thái thì danh sách chỉ có tranh chấp đang mở; chọn nhiều trạng thái thì hiện đủ các trạng thái đã chọn.
+  - Khi tranh chấp quá ngày hẹn xử lý mà chưa đóng thì dòng có nhãn quá hạn.
+  - Cột kết quả hiện kết quả xử lý tranh chấp, không mang nhãn kết quả 目利き (thẩm định bằng mắt) như spec (G-FG08-06).
+  - Khi người gọi không mang một trong hai vai của màn thì máy chủ trả 403 M_05.
+  dinh_nghia_xong:
+  - Spec SC-072 thêm cột ngày hẹn xử lý và sửa nhãn cột kết quả theo G-FG08-05, G-FG08-06.
+- key: SC-072/FE
+  cha: SC-072
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách tranh chấp'
+  spec_refs:
+    sc:
+    - SC-072
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-05
+  mo_ta: 'Dựng màn danh sách tranh chấp: bộ lọc khoảng 業務日 (ngày nghiệp vụ) và nhiều trạng thái, huy hiệu trạng thái, cột ngày hẹn xử lý, mở SC-073 từ dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mở màn lần đầu thì bộ lọc trạng thái đặt sẵn là đang mở.
+  - Dòng quá ngày hẹn mà chưa đóng có nhãn quá hạn.
+  - Danh sách rỗng hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-072/BE
+  cha: SC-072
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách tranh chấp'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - disputes
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG08-05
+  mo_ta: Viết spec rồi làm API đọc danh sách tranh chấp trên module settle (P-01), lọc theo khoảng 業務日 (ngày nghiệp vụ) và nhiều trạng thái, có phân trang.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lọc trạng thái nhận nhiều giá trị; không truyền thì chỉ trả tranh chấp đang mở.
+  - Mỗi dòng trả ngày hẹn xử lý và người phụ trách; dòng chưa có người phụ trách vẫn hiện để không lọt việc.
+  dinh_nghia_xong: []
+- key: SC-072/TEST
+  cha: SC-072
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách tranh chấp'
+  spec_refs:
+    sc:
+    - SC-072
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bộ lọc và nhãn quá hạn của danh sách tranh chấp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Có tranh chấp đang mở và đã đóng: mở màn mặc định chỉ thấy tranh chấp đang mở.'
+  - Tranh chấp quá ngày hẹn mà chưa đóng có nhãn quá hạn; tranh chấp đã đóng thì không.
+  - Tài khoản ngoài 照合事務 (nhóm đối soát) và 照合部門長 (trưởng bộ phận đối soát) gọi API nhận 403.
+  dinh_nghia_xong: []
+- key: SC-073
+  cha: FG-08
+  tracker: story
+  title_vi: Chi tiết và xử lý tranh chấp
+  ten_ja: 紛争詳細・対応記録
+  spec_refs:
+    sc:
+    - SC-073
+    api: []
+    tech: []
+    bang:
+    - disputes
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG08-06
+  mo_ta: '照合事務 (nhóm đối soát) xem một tranh chấp, gán người phụ trách, đặt ngày hẹn và ghi diễn biến xử lý tới khi đóng bằng kết quả cuối. Máy không tự đóng tranh chấp: người đóng phải ghi kết quả, hệ thống lưu ai đóng, lúc nào, và mọi lần cập nhật đều tra lại được. Spec màn mới có nhãn và nút Quay lại, chưa có ô ghi xử lý (G-FG08-06).'
+  pham_vi: Màn SC-073 (SPEC-SKM-137) ở văn phòng; cập nhật `disputes` (migration thuộc DATA-FG08, bảng sửa được), lịch sử cập nhật đọc từ `audit_log`; API ghi chưa có spec, SC-073/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người đối soát mở tranh chấp từ SC-072.
+  - Người đối soát gán người phụ trách và ngày hẹn xử lý, rồi ghi từng bước xử lý.
+  - Người đối soát đóng tranh chấp bằng kết quả cuối; máy chủ ghi người đóng từ phiên và giờ máy chủ.
+  - Mỗi lần cập nhật có một dòng audit_log giữ giá trị trước và sau; màn hiện lịch sử đó.
+  tieu_chi_nghiem_thu:
+  - Khi người đối soát đóng tranh chấp thì hệ thống ghi kết quả cuối, người đóng lấy từ phiên và giờ máy chủ; thiếu kết quả thì không đóng được.
+  - Khi đổi người phụ trách, ngày hẹn hay trạng thái thì có một dòng audit_log với giá trị trước và sau.
+  - Khi tranh chấp đã đóng thì màn chỉ cho xem, không cho sửa.
+  - Khi mọi tranh chấp của một 業務日 (ngày nghiệp vụ) đã đóng thì SC-071 cho khoá ngày đó.
+  - Khi người gọi không mang vai 照合事務 thì máy chủ trả 403 M_05.
+  dinh_nghia_xong:
+  - Spec SC-073 thêm ô người phụ trách, ngày hẹn, kết quả và nút Đóng theo G-FG08-06.
+- key: SC-073/FE
+  cha: SC-073
+  tracker: devtask
+  title_vi: 'Giao diện: Chi tiết và xử lý tranh chấp'
+  spec_refs:
+    sc:
+    - SC-073
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-06
+  mo_ta: 'Dựng màn chi tiết tranh chấp: ngày và nguyên nhân, ô người phụ trách, ngày hẹn, ghi chú xử lý, kết quả cuối, nút Lưu, Đóng và bảng lịch sử cập nhật.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nút Đóng chỉ bấm được khi đã nhập kết quả cuối.
+  - Người đóng và thời điểm đóng chỉ hiển thị, không có ô nhập.
+  - Tranh chấp đã đóng mở ra ở dạng chỉ đọc.
+  dinh_nghia_xong: []
+- key: SC-073/BE
+  cha: SC-073
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chi tiết và xử lý tranh chấp'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - disputes
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG08-06
+  mo_ta: Viết spec rồi làm API cập nhật và đóng tranh chấp trên module settle (P-01); mỗi lần cập nhật ghi audit_log có giá trị trước và sau qua hàm dùng chung của SC-130/BE.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đóng tranh chấp ghi người đóng của phiên và giờ máy chủ, bỏ qua giá trị trong body; thiếu kết quả cuối thì từ chối.
+  - Cập nhật một tranh chấp đã đóng bị từ chối.
+  - Lịch sử cập nhật đọc từ audit_log theo mã tranh chấp, không lập bảng lịch sử riêng.
+  dinh_nghia_xong: []
+- key: SC-073/TEST
+  cha: SC-073
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chi tiết và xử lý tranh chấp'
+  spec_refs:
+    sc:
+    - SC-073
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bước người đóng tranh chấp và lịch sử cập nhật.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu đóng kèm người đóng và giờ giả: bản ghi lưu người của phiên và giờ máy chủ.'
+  - 'Đóng khi chưa có kết quả cuối: bị từ chối, tranh chấp vẫn mở.'
+  - 'Đổi người phụ trách rồi đổi lại: lịch sử có đủ từng lần đổi với giá trị trước và sau.'
+  dinh_nghia_xong: []
+- key: API-214
+  cha: FG-08
+  tracker: story
+  title_vi: API ghi nhận thanh toán
+  spec_refs:
+    sc: []
+    api:
+    - API-214
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-07
+  mo_ta: 'API ghi một khoản 入金 (tiền về) cho một hoá đơn rồi trả trạng thái chưa trả, trả một phần hay đã trả đủ theo tổng đã nhận. Số này là đầu vào của 完納奨励金 (thưởng thanh toán đủ hạn) ở FG-09: trả sau hạn hoặc chưa đủ thì không được thưởng. API chưa gắn màn nào, nên màn gọi và vai được ghi phải chốt trước khi làm (G-FG08-07).'
+  pham_vi: API-214 SKM_PAYMENT_CREATE trên module settle; thêm dòng `payments`, đọc `invoices` (migration của hai bảng thuộc FG-09); trạng thái hoá đơn tính từ tổng các dòng payments theo ADR-003.
+  luong_chinh:
+  - Người được giao việc ghi tiền về gửi mã hoá đơn, số tiền, ngày trả và cách trả.
+  - Máy chủ kiểm hoá đơn tồn tại, số tiền dương và ngày trả không ở tương lai theo giờ Nhật.
+  - Máy chủ thêm một dòng payments với người ghi lấy từ phiên.
+  - Máy chủ tính lại trạng thái hoá đơn từ tổng đã trả và trả về.
+  tieu_chi_nghiem_thu:
+  - Khi thiếu trường, số tiền không dương, ngày trả sai định dạng hoặc ở tương lai thì trả 400, không ghi gì.
+  - Khi hoá đơn không tồn tại thì trả 404 M_14.
+  - Khi ghi thành công thì có đúng một dòng payments mang người ghi của phiên; trạng thái trả về khớp tổng đã trả.
+  - Khi lỗi ghi thì không có dòng nào được thêm, trả 500 M_25.
+  dinh_nghia_xong:
+  - Spec API-214 ghi màn gọi, vai được ghi và cách tính trạng thái hoá đơn theo G-FG08-07.
+- key: API-214/BE
+  cha: API-214
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API ghi nhận thanh toán'
+  spec_refs:
+    sc: []
+    api:
+    - API-214
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG08-07
+  mo_ta: 'Làm API-214 trên module settle: kiểm đầu vào, thêm dòng payments, tính trạng thái hoá đơn lúc đọc thay vì sửa cột của bảng chỉ thêm dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người ghi lấy từ phiên; quyền gọi theo vai hệ đích, chốt cùng PM (P-05, G-FG08-07).
+  - Ngày trả so với hôm nay theo giờ Nhật, không theo UTC.
+  - Không có lệnh UPDATE nào lên invoices; trạng thái tính từ tổng payments (ADR-003).
+  dinh_nghia_xong: []
+- key: API-214/TEST
+  cha: API-214
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API ghi nhận thanh toán'
+  spec_refs:
+    sc: []
+    api:
+    - API-214
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử API ghi tiền về.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Trả một phần rồi trả nốt: trạng thái lần lượt là trả một phần rồi đã trả.'
+  - 'Ngày trả ở tương lai hoặc số tiền không dương: trả 400, không có dòng payments mới.'
+  - 'Mã hoá đơn không tồn tại: trả 404.'
+  dinh_nghia_xong: []
+- key: DATA-FG08
+  cha: FG-08
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-SETTLE): daily_reconciliations, disputes, monthly_closings'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    - disputes
+    - monthly_closings
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG08-05
+  mo_ta: 'Ba bảng daily_reconciliations (đối soát ngày), disputes (tranh chấp) và monthly_closings (chốt hoá đơn tháng) không có màn nào làm chủ: tác vụ EV3 ghi hai bảng đầu, SC-073 cập nhật tranh chấp, API-213 ghi bảng cuối. Story này dựng ba bảng trên kho mã hệ đích và chốt cột còn thiếu trước khi SC-070, SC-073 và SC-071/BE chạy (P-04, P-06).'
+  pham_vi: Bảng `daily_reconciliations` (chỉ thêm dòng), `disputes` (sửa được, lịch sử ở audit_log) và `monthly_closings` (chỉ thêm dòng, mỗi kỳ một dòng) theo SKM_DB; thêm cho disputes cột ngày hẹn xử lý, cột trỏ tới ngày đối soát và cột người đóng (G-FG08-05).
+  luong_chinh:
+  - Người làm DB chốt kiểu các ô còn «—» của disputes và quan hệ của người phụ trách tới profiles.
+  - Người làm DB viết migration ba bảng, kèm ràng buộc duy nhất cho kỳ của monthly_closings.
+  - Người làm DB nạp dữ liệu mẫu một ngày có lệch để SC-070 và SC-072 chạy thử.
+  tieu_chi_nghiem_thu:
+  - Khi chạy migration trên cơ sở dữ liệu trống thì ba bảng được tạo đủ, không còn ô kiểu «—» (P-06).
+  - Khi ghi trùng kỳ vào monthly_closings thì cơ sở dữ liệu từ chối.
+  - Khi sửa hoặc xoá dòng daily_reconciliations, monthly_closings thì bị chặn ở mức quyền cơ sở dữ liệu.
+  dinh_nghia_xong:
+  - SKM_DB ghi lại cột mới của disputes theo G-FG08-05.
+- key: DATA-FG08/DB
+  cha: DATA-FG08
+  tracker: devtask
+  title_vi: Tạo bảng daily_reconciliations, disputes, monthly_closings
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    - disputes
+    - monthly_closings
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG08-05
+  mo_ta: Viết migration daily_reconciliations, disputes, monthly_closings trên kho mã hệ đích, chốt kiểu và cột thêm của disputes trước khi tạo bảng (P-06, G-FG08-05).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - disputes có cột ngày hẹn xử lý, cột trỏ tới ngày đối soát, cột người đóng và thời điểm đóng.
+  - monthly_closings có khoá duy nhất theo kỳ; tổng tiền của daily_reconciliations và monthly_closings lưu số nguyên yên như SKM_DB.
+  dinh_nghia_xong: []
+- key: DATA-FG08/TEST
+  cha: DATA-FG08
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-SETTLE): daily_reconciliations, disputes, monthly_closings'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của ba bảng đối soát ngày, tranh chấp và chốt hoá đơn tháng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi trùng kỳ vào monthly_closings bị cơ sở dữ liệu từ chối.
+  - Sửa hoặc xoá một dòng daily_reconciliations bị chặn ở mức quyền cơ sở dữ liệu.
+  - Gán người phụ trách là tài khoản không tồn tại trong profiles bị khoá ngoại từ chối.
+  dinh_nghia_xong: []
+- key: INV-Q-SD2
+  cha: FG-08
+  tracker: investigation
+  title_vi: Thời gian chờ và số lần thử lại của batch đối soát ngày
+  han: Checkpoint BTC 2026-10-19
+  nguoi_tra_loi: Tech Lead
+  nguon: system-design.yaml › cau_hoi_mo[Q-SD2]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - EV3
+    hoi:
+    - Q-SD2
+  labels:
+  - type:investigation
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-14
+  gap_refs: []
+  mo_ta: Tác vụ EV3 lập bảng 日次照合 (đối soát ngày) được chờ tối đa bao lâu mỗi lần chạy, và thử lại bao nhiêu lần trước khi dừng rồi đẩy cảnh báo? RFP không có mã yêu cầu nào cho hai số vận hành nội bộ này; Tech Lead chốt dựa trên số đo tải thật trước lần chạy thử trước phát hành.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG08-KHOA-NGAY
+  cha: FG-08
+  tracker: investigation
+  title_vi: Người khoá 業務日, việc mở lại ngày đã khoá và thứ tự với chốt hoá đơn tháng
+  han: Checkpoint BTC 2026-10-19
+  nguoi_tra_loi: Tech Lead
+  nguon: SKM_SYSTEM_DESIGN.md EV3, A7 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-070
+    - SC-071
+    api:
+    - API-213
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - A7
+    - EV3
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG08-03
+  mo_ta: 業務日 (ngày nghiệp vụ) do người bấm khoá ở SC-071 hay do tác vụ nền EV3 tự khoá sau khi đối soát khớp? Ngày đã khoá có được mở lại không, nếu có thì ai mở và hệ thống ghi gì? Chốt hoá đơn tháng (API-213) có phải chờ mọi ngày trong tháng khoá xong mới chạy không?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: API-213
+  cha: FG-08
+  tracker: story
+  title_vi: Chốt hoá đơn tháng (API-213) tách khỏi khoá ngày
+  spec_refs:
+    sc: []
+    api:
+    - API-213
+    tech: []
+    bang:
+    - invoices
+    - monthly_closings
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG08-01
+  mo_ta: Lệnh chốt hoá đơn tháng gom giao dịch せり (đấu giá) và 相対 (giao dịch thỏa thuận) của một tháng thành hoá đơn theo bên mua, loại 直販 (bán trực tiếp) vì đã trả tiền ngay. Spec LAB-4 gắn lệnh này vào nút Lưu của SC-071 nên mỗi lần khoá một 業務日 (ngày nghiệp vụ) sẽ chốt cả tháng; story này tách nó thành việc riêng, gọi độc lập với khoá ngày (G-FG08-01). Hoá đơn là đầu vào của 完納奨励金 (thưởng thanh toán đủ hạn) ở FG-09.
+  pham_vi: API-213 SKM_BILLING_CLOSE trên module settle; ghi `monthly_closings` (migration thuộc DATA-FG08) và `invoices` (migration thuộc DATA-FG09). Màn gọi và vai được chạy chốt sổ chốt cùng PM; thứ tự với khoá ngày chờ INV-FG08-KHOA-NGAY.
+  luong_chinh:
+  - Người được giao việc chốt sổ chọn tháng áp dụng rồi gửi lệnh chốt.
+  - Máy chủ kiểm định dạng tháng, tháng chưa chốt và quy tắc hạn thanh toán đã có.
+  - Máy chủ gom giao dịch せり và 相対 còn hiệu lực của tháng theo bên mua, bỏ 直販 và giao dịch có dòng huỷ.
+  - Máy chủ ghi một dòng chốt tháng và các hoá đơn trong cùng giao dịch CSDL; FG-09 dùng mã kỳ của lần chốt này.
+  tieu_chi_nghiem_thu:
+  - Khi tháng đã chốt thì trả 409 ALREADY_CLOSED; khi tháng không có giao dịch thì trả 422 NO_TRANSACTIONS; cả hai không ghi gì.
+  - Khi chốt thành công thì mỗi bên mua có đúng một hoá đơn và tổng hoá đơn bằng tổng giao dịch còn hiệu lực của tháng.
+  - Khi lỗi ghi ở bất kỳ bước nào thì không còn dòng chốt hay hoá đơn nào, trả 500 M_25.
+  - Khi người đối soát khoá một 業務日 ở SC-071 thì không có lệnh chốt tháng nào chạy kèm.
+  dinh_nghia_xong:
+  - Spec API-213 ghi lệnh gọi độc lập với khoá ngày, màn gọi, vai được chạy và thứ tự với khoá ngày theo đáp của INV-FG08-KHOA-NGAY.
+- key: API-213/BE
+  cha: API-213
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt hoá đơn tháng (API-213) tách khỏi khoá ngày'
+  spec_refs:
+    sc: []
+    api:
+    - API-213
+    tech: []
+    bang:
+    - invoices
+    - monthly_closings
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-05
+  - P-08
+  gap_refs:
+  - G-FG08-01
+  mo_ta: 'Làm lại API-213 trên module settle theo vai hệ đích (P-05): kiểm tháng, gom giao dịch còn hiệu lực theo bên mua, ghi dòng chốt tháng và hoá đơn trong một giao dịch CSDL.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giao dịch 直販 (bán trực tiếp) và giao dịch có dòng huỷ không vào hoá đơn (P-08, cùng luật đếm của SC-070/BE).
+  - Hạn thanh toán của hoá đơn đọc từ bản quy tắc có hiệu lực; chưa có quy tắc thì trả 500 RULE_MISSING, không ghi gì.
+  - Lỗi ghi ở bước nào cũng hoàn tác cả lần chốt, trả 500 M_25; người chạy lấy từ phiên.
+  dinh_nghia_xong: []
+- key: API-213/TEST
+  cha: API-213
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chốt hoá đơn tháng (API-213) tách khỏi khoá ngày'
+  spec_refs:
+    sc: []
+    api:
+    - API-213
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lệnh chốt hoá đơn tháng và việc tách nó khỏi khoá ngày.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Chốt một tháng có giao dịch せり, 相対, 直販 và một giao dịch đã huỷ: hoá đơn chỉ gồm giao dịch せり, 相対 còn hiệu lực, mỗi bên mua một hoá đơn.'
+  - 'Chốt lại tháng đã chốt: trả 409, số hoá đơn không đổi.'
+  - 'Khoá một 業務日 ở SC-071: không có dòng chốt tháng hay hoá đơn mới nào.'
+  dinh_nghia_xong: []

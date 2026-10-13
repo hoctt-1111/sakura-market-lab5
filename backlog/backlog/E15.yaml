@@ -1,0 +1,363 @@
+# Seed epic E15 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E15
+  tracker: epic
+  title_vi: Nền tảng và hạ tầng
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-02
+  - P-04
+  gap_refs: []
+  mo_ta: 'Nhóm việc này dựng nền kỹ thuật cho hệ đích Java 21, Spring Boot 3 chạy thành một khối triển khai trên AWS vùng Tokyo: kho mã cùng CI, hai môi trường dev và staging, khung ghi chỉ-thêm dùng chung và API kiểm sống. Mọi sub-issue BE, DB của FG-01…FG-14 đặt mã và migration vào kho này, nên PLT-01 và PLT-02 phải xong trước các sub-issue đó. Nền tảng là lựa chọn của giai đoạn thiết kế (ADR-008, ADR-015), chưa phải điều khoản hợp đồng với khách.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E15 đã đóng.
+  - Khi một pull request làm đỏ kiểm thử hoặc vi phạm luật mỗi bảng chỉ một module được ghi thì CI chặn gộp.
+  - Khi dựng lại dev hoặc staging từ cấu hình trong repo thì môi trường lên đủ thành phần và API-220 trả 200.
+  - Khi ứng dụng chạy lệnh sửa hay xoá trực tiếp trên một bảng chỉ-thêm thì CSDL từ chối.
+  dinh_nghia_xong: []
+items:
+- key: PLT-01
+  cha: E15
+  tracker: story
+  title_vi: Khung repo mã hệ đích và CI
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-02
+  - P-04
+  gap_refs:
+  - G-E15-01
+  mo_ta: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, một khối triển khai chia module theo vùng dữ liệu (ADR-008, ADR-009), cùng luồng CI chạy ở mỗi pull request. Mọi sub-issue BE và DB đặt mã, migration vào kho này (P-02); prototype LAB-3 chỉ còn là tài liệu tham chiếu nghiệp vụ.
+  pham_vi:
+  - Kho mã tách khỏi kho spec LAB-4, README hai kho trỏ nhau (P-02).
+  - Các module theo mục thành phần của thiết kế hệ thống, lớp api-gateway và module migration của ADR-016 (G-E15-01); không có module cho cân hay máy in (ADR-012).
+  - Công cụ migration với khung trống; script của 45 bảng do leaf DB từng story viết (P-04).
+  luong_chinh:
+  - Infra tạo repo, bảo vệ nhánh chính, cấp quyền đẩy mã cho đội.
+  - Infra dựng khung dự án, mỗi module một gói, module chỉ gọi nhau qua hàm công khai.
+  - 'Infra thêm luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc, quét bí mật.'
+  - Một thành viên mở một pull request có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
+  tieu_chi_nghiem_thu:
+  - Khi pull request có kiểm thử đỏ thì CI đỏ và nhánh chính không nhận gộp.
+  - Khi module gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ (ADR-009).
+  - Khi mã chứa bí mật hay chuỗi kết nối thì bước quét làm CI đỏ (NFR-SEC-04).
+  - Khi người mới làm theo README thì chạy được kiểm thử và một migration rỗng trên máy mình.
+  dinh_nghia_xong:
+  - README hai kho trỏ nhau và ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).
+- key: PLT-01/INFRA
+  cha: PLT-01
+  tracker: devtask
+  title_vi: Dựng khung dự án và luồng CI
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs:
+  - P-02
+  gap_refs: []
+  mo_ta: Dựng khung dự án Java 21, Spring Boot 3 theo danh sách module của thiết kế hệ thống và luồng CI chạy ở mỗi pull request.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Luồng CI chạy biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc và quét bí mật; một bước đỏ thì chặn gộp.
+  - Mỗi module trong danh sách có gói riêng và một kiểm thử mẫu chạy xanh.
+  - Công cụ migration chạy được một migration rỗng trên CSDL trống, chạy lại không lỗi.
+  dinh_nghia_xong: []
+- key: PLT-02
+  cha: E15
+  tracker: story
+  title_vi: Môi trường AWS dev và staging
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-19
+  gap_refs:
+  - G-E15-03
+  mo_ta: Infra dựng dev và staging trên AWS, chỉ ở vùng ap-northeast-1 (ADR-015). Dev chỉ chứa dữ liệu giả cho lập trình và kiểm thử tự động; staging giống production ở quy mô nhỏ, chỉ nhận dữ liệu đã che, dùng cho nghiệm thu và các buổi diễn tập.
+  pham_vi:
+  - 'Thành phần theo bảng dịch vụ của ADR-015: máy ứng dụng sau cân bằng tải có TLS, PostgreSQL có bản dự phòng đồng bộ, Cognito, S3, Secrets Manager, CloudWatch, CloudTrail.'
+  - Một bộ cấu hình hạ tầng dạng mã cho cả hai môi trường, chỉ khác tham số.
+  - Quy trình che dữ liệu cho staging (G-E15-03); nơi lưu lạnh thêm khi INV-Q-19 có đáp (P-19).
+  luong_chinh:
+  - Infra viết cấu hình hạ tầng cho dev và staging trong repo.
+  - Infra đặt khoá và bí mật trong Secrets Manager, không để trong mã hay bản dựng (NFR-SEC-04).
+  - 'Infra nối CI của PLT-01: bản đã gộp tự lên dev, lên staging khi có người duyệt.'
+  - Infra nạp dữ liệu giả vào dev và dữ liệu đã che vào staging.
+  tieu_chi_nghiem_thu:
+  - Khi dựng lại staging từ cấu hình trong repo trên tài khoản trống thì môi trường lên đủ, không có bước tay ngoài README.
+  - Khi rà tài nguyên thì máy chạy, CSDL, sao lưu và nhật ký đều ở ap-northeast-1.
+  - Khi kiểm dữ liệu thì dev không có bản ghi thật, staging không còn trường cá nhân chưa che.
+  - Khi gọi API-220 trên hai môi trường sau lần triển khai đầu thì đều trả 200.
+  dinh_nghia_xong:
+  - Quy trình che dữ liệu có Tech Lead duyệt và ghi trong README hạ tầng (G-E15-03).
+- key: PLT-02/INFRA
+  cha: PLT-02
+  tracker: devtask
+  title_vi: 'Hạ tầng: Môi trường AWS dev và staging'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-03
+  mo_ta: Viết cấu hình hạ tầng và dựng dev, staging theo bảng dịch vụ của ADR-015, chỉ ở vùng Tokyo, cùng quy trình nạp dữ liệu giả và dữ liệu đã che.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Một bộ cấu hình dựng được cả hai môi trường từ tài khoản trống, chỉ khác tham số.
+  - 'CSDL staging dùng cùng kiểu cấu hình với production: bản dự phòng đồng bộ và khôi phục theo thời điểm.'
+  - Script che dữ liệu chạy lại được và cho cùng kết quả trên cùng bản nguồn.
+  dinh_nghia_xong: []
+- key: PLT-03
+  cha: E15
+  tracker: story
+  title_vi: Khung ghi chỉ-thêm và bút toán đảo
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG06-04
+  - G-E15-01
+  - G-E15-04
+  mo_ta: 'BE làm khung dùng chung để 27 bảng chỉ-thêm chỉ có ba đường ghi: dòng gốc, dòng sửa trỏ về dòng cũ và dòng đảo, không có lệnh sửa hay xoá (ADR-003). Khung chặn ở ba lớp: luật kiểm kiến trúc trong CI, tầng dịch vụ không có hàm sửa, xoá, và quyền CSDL. Báo cáo đọc số hiện tại qua khung nhìn chuẩn nên không cộng nhầm dòng đảo.'
+  pham_vi: Thư viện ghi và mẫu khung nhìn chuẩn ở phần dùng chung; danh sách bảng và module chủ ghi (G-E15-01); vai CSDL của ứng dụng không có quyền sửa, xoá. Migration của từng bảng thuộc leaf DB của story làm chủ bảng.
+  luong_chinh:
+  - BE cùng Tech Lead chốt nơi giữ dòng đảo (G-FG06-04) và module chủ ghi của từng bảng (G-E15-01).
+  - BE làm ba hàm ghi; người ghi lấy từ phiên, giờ ghi lấy từ máy chủ.
+  - BE làm mẫu khung nhìn và ca kiểm so tổng trên bảng thô với tổng trên khung nhìn (G-E15-04).
+  - Infra thu hồi quyền sửa, xoá của vai ứng dụng và đưa luật kiểm kiến trúc vào CI.
+  tieu_chi_nghiem_thu:
+  - Khi module không phải chủ bảng ghi vào bảng chỉ-thêm thì CI đỏ.
+  - Khi ứng dụng sửa hay xoá trực tiếp dòng của bảng chỉ-thêm thì CSDL từ chối.
+  - Khi ghi một dòng đảo thì dòng gốc giữ nguyên và khung nhìn trả số đã trừ dòng đảo.
+  - Khi bảng có dòng đảo thì tổng trên bảng thô khác tổng trên khung nhìn; ca kiểm này chạy trong CI.
+  dinh_nghia_xong:
+  - SKM_DB ghi nơi giữ dòng đảo, danh sách chủ ghi và khung nhìn chuẩn đã chốt.
+- key: PLT-03/BE
+  cha: PLT-03
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khung ghi chỉ-thêm và bút toán đảo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-01
+  - G-E15-04
+  mo_ta: Làm thư viện ghi chỉ-thêm với ba hàm ghi gốc, ghi sửa, ghi đảo và mẫu khung nhìn chuẩn, đặt ở phần dùng chung cho mọi module.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kho ghi của bảng chỉ-thêm không có hàm sửa hay xoá nào.
+  - Người ghi và giờ ghi lấy từ phiên và giờ máy chủ; giá trị phía gọi gửi lên bị bỏ qua.
+  - Có ca kiểm đơn vị cho thấy tổng trên bảng thô khác tổng trên khung nhìn khi có dòng đảo.
+  dinh_nghia_xong: []
+- key: PLT-03/INFRA
+  cha: PLT-03
+  tracker: devtask
+  title_vi: 'Hạ tầng: Khung ghi chỉ-thêm và bút toán đảo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Đặt vai CSDL của ứng dụng không có quyền sửa, xoá trên bảng chỉ-thêm và đưa luật mỗi bảng một module được ghi vào CI.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trên staging, vai của ứng dụng chạy UPDATE hay DELETE vào bảng chỉ-thêm thì bị từ chối.
+  - Pull request vi phạm luật kiểm kiến trúc bị CI chặn gộp.
+  - Quyền được cấp bằng script trong repo, chạy lại không lỗi.
+  dinh_nghia_xong: []
+- key: API-220
+  cha: E15
+  tracker: story
+  title_vi: API kiểm tra sức khoẻ hệ thống
+  spec_refs:
+    sc: []
+    api:
+    - API-220
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-02
+  mo_ta: Cân bằng tải và đồng hồ đo khả dụng gọi API-220 để biết một máy ứng dụng còn nối được CSDL hay không. Route công khai, không kiểm phiên hay vai; lỗi bên trong chỉ ghi vào nhật ký máy chủ, phía gọi chỉ nhận trạng thái ok hoặc error. Kết quả của API này là đầu vào của nhóm giám sát sống ở NFR-OPS-01 và của cách đo khả dụng ở NFR-AVL-01.
+  pham_vi: 'API-220 (SPEC-SKM-220): chỉ thử kết nối CSDL, không đọc bảng nghiệp vụ nào; bên gọi là cân bằng tải và đồng hồ đo của PLT-02, cảnh báo của NFR-OPS.'
+  luong_chinh:
+  - Cân bằng tải gọi API-220 trên từng máy ứng dụng theo chu kỳ cấu hình.
+  - Máy chủ chạy một truy vấn nhẹ tới CSDL.
+  - Truy vấn thành công thì máy chủ trả 200 với status ok; lỗi thì trả 500 với status error, chi tiết chỉ vào nhật ký máy chủ.
+  - Máy trả 500 bị cân bằng tải đưa ra khỏi vòng phục vụ; đồng hồ đo ghi lần hỏng nếu rơi vào cửa sổ dịch vụ.
+  tieu_chi_nghiem_thu:
+  - Khi CSDL nối được thì trả 200 và thân chỉ có status ok, không mang trường locale của prototype (G-E15-02).
+  - Khi CSDL mất kết nối thì trả 500 với status error; thân không có mã lỗi, tên máy hay chuỗi kết nối.
+  - Khi gọi không có phiên đăng nhập thì vẫn trả kết quả kiểm sống, không có 401 hay 403.
+  - Khi CSDL lỗi thì nhật ký máy chủ có một dòng ghi chi tiết lỗi.
+  dinh_nghia_xong:
+  - Spec API-220 bỏ trường locale khỏi mẫu trả về (G-E15-02).
+- key: API-220/BE
+  cha: API-220
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API kiểm tra sức khoẻ hệ thống'
+  spec_refs:
+    sc: []
+    api:
+    - API-220
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-02
+  mo_ta: 'Làm route kiểm sống ở lớp api-gateway: thử kết nối CSDL bằng một truy vấn nhẹ, trả status ok hoặc error.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - CSDL nối được thì trả 200 status ok; lỗi hoặc ngoại lệ bất ngờ thì trả 500 status error.
+  - Route không kiểm phiên, không đọc bảng nghiệp vụ.
+  - Chi tiết lỗi chỉ ghi vào nhật ký máy chủ.
+  dinh_nghia_xong: []
+- key: API-220/TEST
+  cha: API-220
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API kiểm tra sức khoẻ hệ thống'
+  spec_refs:
+    sc: []
+    api:
+    - API-220
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử API kiểm sống, nhắm vào hình dạng trả về và việc không lộ lỗi hạ tầng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'CSDL bình thường: trả 200, thân chỉ có status ok.'
+  - 'Ngắt CSDL trên staging: trả 500 status error, thân không có chi tiết lỗi; nhật ký máy chủ có dòng lỗi.'
+  - 'Gọi không có phiên: vẫn trả kết quả kiểm sống, không bị 401.'
+  dinh_nghia_xong: []

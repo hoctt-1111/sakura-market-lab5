@@ -1,0 +1,1021 @@
+# Seed epic FG-03 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-03
+  tracker: epic
+  title_vi: Tiếp nhận lô và thẩm định 目利き
+  feature: lot-intake
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-04
+  - P-06
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này đưa hàng từ tàu cá vào sổ của chợ: ghi chuyến cập bến, tách thành lô có mã riêng, lưu kết quả 目利き (thẩm định bằng mắt) do người làm và giữ vết mọi lần sửa thuộc tính lô. Lô là đầu vào của cả 相対取引 (giao dịch thỏa thuận) lẫn せり (đấu giá), nên sai mã lô hay sai khối lượng ở đây sẽ lan sang giao dịch, đối soát và hoá đơn.'
+  pham_vi: Các màn SC-020 đến SC-025, hai API ghi chuyến và tách lô (API-205, API-206), các bảng của vùng D-LOT cùng bảng attachments; không gồm cân điện tử và bước đưa lô lên kênh bán (API-207 thuộc FG-04).
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-03 đã đóng.
+  - Khi một chuyến cập bến được tách thành lô thì mỗi lô có mã không trùng, truy ngược được về chuyến và tàu, và nằm ở trạng thái chưa lên kênh bán.
+  - Khi mở chi tiết một lô thì thấy người đã xác nhận 目利き, thời điểm xác nhận và đủ lịch sử điều chỉnh kèm lý do.
+  - Các bảng lots, lot_evaluations, lot_adjustments, attachments, arrivals, species, vessels có migration chạy được trên kho mã hệ đích.
+  dinh_nghia_xong: []
+items:
+- key: SC-020
+  cha: FG-03
+  tracker: story
+  title_vi: Đăng ký tiếp nhận lô
+  ten_ja: ロット受付登録
+  spec_refs:
+    sc:
+    - SC-020
+    api:
+    - API-205
+    - API-206
+    tech: []
+    bang:
+    - lots
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG03-01
+  mo_ta: 受入担当者 (người tiếp nhận lô) ghi chuyến cập bến của tàu cá rồi tách thành nhiều lô có loài, cỡ, hạng độ tươi, khối lượng, số lượng. Mã lô sinh ra ở đây, mọi giao dịch về sau dựa vào nó.
+  pham_vi: Màn SC-020 (SPEC-SKM-112) ở hiện trường; API-205 ghi `arrivals`, API-206 tách lô vào `lots` (chủ migration); đọc `vessels`, `species`.
+  luong_chinh:
+  - Người tiếp nhận chọn tàu, nhập giờ cập bến, tổng trọng lượng; API-205 ghi chuyến.
+  - Người tiếp nhận nhập các dòng lô, hạng độ tươi theo 目利き (thẩm định bằng mắt); API-206 tách lô.
+  - Tổng lô lệch quá 5% so với chuyến thì màn cảnh báo, người nhận tự quyết.
+  tieu_chi_nghiem_thu:
+  - Khi cỡ ngoài L/M/S, hạng ngoài A/B/C, khối lượng ≤ 0 hoặc số lượng < 1 thì API-206 từ chối cả lần tách.
+  - Khi tàu không tồn tại thì API-205 trả 404 (P-24), không ghi chuyến.
+  - Khi tách xong thì mỗi lô có mã không trùng, trạng thái unlisted; màn không cho nhập kênh bán (G-FG03-02).
+  - Khi người gọi không mang vai 受入担当者 thì API trả 403.
+  dinh_nghia_xong:
+  - Spec SC-020 thêm ô theo tham số API-205, API-206 (G-FG03-01).
+- key: SC-020/FE
+  cha: SC-020
+  tracker: devtask
+  title_vi: 'Giao diện: Đăng ký tiếp nhận lô'
+  spec_refs:
+    sc:
+    - SC-020
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG03-01
+  - G-FG03-02
+  mo_ta: Dựng biểu mẫu nhận chuyến và bảng nhập nhiều dòng lô của SC-020 cho tablet hiện trường, gọi API-205 rồi API-206 theo thứ tự.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi một ô bắt buộc trống hoặc sai kiểu (cỡ, hạng độ tươi chọn từ danh sách; khối lượng > 0; số lượng nguyên ≥ 1) thì màn chặn gửi và chỉ đúng ô lỗi.
+  - Khi API-206 trả cảnh báo lệch trọng lượng thì màn hiện cảnh báo nhưng vẫn mở danh sách lô vừa tạo.
+  - Trạng thái và kênh bán của lô chỉ hiện ở dạng chỉ đọc; khi mất mạng thì phiếu nhận và dòng lô được lưu tạm trên thiết bị, đồng bộ qua hàng đợi của SC-151 khi có mạng lại, màn hiện rõ thao tác đang chờ (ADR-010, G-E18-01).
+  dinh_nghia_xong: []
+- key: SC-020/BE
+  cha: SC-020
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Đăng ký tiếp nhận lô'
+  spec_refs:
+    sc: []
+    api:
+    - API-205
+    - API-206
+    tech: []
+    bang:
+    - lots
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG03-03
+  mo_ta: Làm API-205 và API-206 trên module lot của hệ đích, kiểm quyền theo vai đích thay cho vai wholesaler của prototype.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi tàu, chuyến hoặc loài không tồn tại thì trả cùng một mã trạng thái theo P-24 (G-FG03-03).
+  - Khi tách lô thì mọi dòng lô ghi trong một giao dịch CSDL; một dòng lỗi thì không dòng nào được ghi.
+  - Nhật ký kiểm toán ghi sau khi biết kết quả ghi chuyến, không ghi trước như prototype.
+  dinh_nghia_xong: []
+- key: SC-020/DB
+  cha: SC-020
+  tracker: devtask
+  title_vi: Tạo bảng lots
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lots
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG03-04
+  - G-FG03-05
+  mo_ta: Viết migration bảng lots trên kho mã hệ đích theo SKM_DB, kèm khoá ngoại tới arrivals và species.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có ràng buộc duy nhất cho mã lô khớp cách đánh số theo từng chuyến, có ca thử với hai chuyến khác nhau (G-FG03-04).
+  - Hạng độ tươi chỉ nhận A, B, C; số lượng mặc định 1; trạng thái mặc định unlisted.
+  - Danh sách giá trị LOT_STATUS, LISTING_CHANNEL và bảng chuyển trạng thái được chốt, ghi lại vào SKM_DB (G-FG03-05).
+  dinh_nghia_xong: []
+- key: SC-020/TEST
+  cha: SC-020
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Đăng ký tiếp nhận lô'
+  spec_refs:
+    sc:
+    - SC-020
+    api:
+    - API-205
+    - API-206
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-03
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử luồng nhận chuyến và tách lô của SC-020, gồm cả hai API và phần kiểm phía màn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tách một chuyến thành nhiều lô hợp lệ: mỗi lô có mã không trùng, trạng thái unlisted, số lô tạo ra bằng số dòng gửi lên.'
+  - Một dòng lô có cỡ ngoài L/M/S hoặc hạng ngoài A/B/C làm cả lần tách bị từ chối, bảng lots không thêm dòng nào.
+  - Tổng khối lượng lệch quá 5% vẫn tạo lô và trả cảnh báo; lệch đúng 5% thì không có cảnh báo.
+  dinh_nghia_xong: []
+- key: SC-021
+  cha: FG-03
+  tracker: story
+  title_vi: Danh sách lô
+  ten_ja: ロット一覧
+  spec_refs:
+    sc:
+    - SC-021
+    api: []
+    tech: []
+    bang:
+    - lots
+    fr:
+    - FR-LOT-01
+    - FR-LOT-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs: []
+  mo_ta: 受入担当者 (người tiếp nhận lô), 取引運用 (nhóm vận hành giao dịch) và 照合事務 (nhóm đối soát) dùng màn này để tra các lô đang có ở chợ theo ngày nghiệp vụ, loài, cỡ và trạng thái. Màn chỉ đọc; người vận hành dùng nó để tìm lô trước khi ghi giao dịch hoặc mở chi tiết lô.
+  pham_vi:
+  - 'Màn SC-021 (SPEC-SKM-113): bộ lọc, bảng lô có phân trang, nhãn trạng thái.'
+  - Bảng `lots` (chỉ đọc), tên loài lấy từ `species`.
+  - API đọc danh sách lô chưa có spec; SC-021/BE viết spec theo khuôn BM-2-901-52 rồi làm (P-01).
+  luong_chinh:
+  - 'Người dùng nhập điều kiện lọc: ngày nghiệp vụ, loài, cỡ, trạng thái, đều không bắt buộc.'
+  - Người dùng bấm Lọc; máy chủ trả các lô khớp điều kiện theo trang.
+  - Người dùng xem mã lô, loài, cỡ, độ tươi, khối lượng, số lượng, kênh bán và nhãn trạng thái từng lô.
+  tieu_chi_nghiem_thu:
+  - Khi lọc theo bất kỳ tổ hợp ngày, loài, cỡ, trạng thái thì chỉ các lô khớp mọi điều kiện được trả về, có phân trang.
+  - Khi bỏ trống mọi điều kiện thì màn vẫn trả danh sách; bấm Lọc không làm đổi dữ liệu lô.
+  - Khi người dùng không thuộc ba vai trên thì máy chủ trả 403; vai của 取引運用 và 照合事務 theo giả định P-12.
+  dinh_nghia_xong:
+  - Spec API đọc danh sách lô đã viết và có người duyệt trước khi SC-021/BE làm.
+- key: SC-021/FE
+  cha: SC-021
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách lô'
+  spec_refs:
+    sc:
+    - SC-021
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng màn danh sách lô có bộ lọc, bảng và phân trang, dùng được cả ở văn phòng lẫn tablet.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nhãn trạng thái lô hiện đúng giá trị của danh sách LOT_STATUS đã chốt ở SC-020/DB.
+  - Bấm Lọc gửi đủ bốn điều kiện đang chọn và giữ lại điều kiện khi chuyển trang.
+  dinh_nghia_xong: []
+- key: SC-021/BE
+  cha: SC-021
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách lô'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lots
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs: []
+  mo_ta: Viết spec rồi làm API đọc danh sách lô trên bảng lots, có lọc và phân trang.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi điều kiện lọc hợp lệ thì trả đúng các cột màn cần và thông tin trang; điều kiện sai định dạng trả 400.
+  - Cỡ trang và thứ tự sắp xếp theo quy ước chung của dự án, không đặt riêng cho API này.
+  dinh_nghia_xong: []
+- key: SC-021/TEST
+  cha: SC-021
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách lô'
+  spec_refs:
+    sc:
+    - SC-021
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    - FR-LOT-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bộ lọc và phân quyền của danh sách lô.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lọc theo từng điều kiện riêng và theo tổ hợp cả bốn điều kiện ra đúng tập lô mong đợi trên dữ liệu mẫu.
+  - Tài khoản ngoài ba vai được phép gọi API danh sách nhận 403, không thấy dữ liệu.
+  dinh_nghia_xong: []
+- key: SC-022
+  cha: FG-03
+  tracker: story
+  title_vi: Chi tiết lô
+  ten_ja: ロット詳細
+  spec_refs:
+    sc:
+    - SC-022
+    api: []
+    tech: []
+    bang:
+    - lots
+    fr:
+    - FR-LOT-01
+    - FR-LOT-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG03-06
+  mo_ta: '取引運用 (nhóm vận hành giao dịch) và 照合事務 (nhóm đối soát) mở màn này để xem một lô: thuộc tính, chuyến nhận hàng, kết quả 目利き (thẩm định bằng mắt) kèm người xác nhận và thời điểm, cùng lịch sử điều chỉnh có lý do. Đây là chỗ truy vết khi có tranh chấp về chất lượng hay khối lượng lô.'
+  pham_vi:
+  - 'Màn SC-022 (SPEC-SKM-114): nhãn thuộc tính, khối 目利き, khối lịch sử điều chỉnh, nút Quay lại và Sửa.'
+  - Đọc `lots`, `lot_evaluations`, `lot_adjustments` (G-FG03-06); không ghi bảng nào.
+  - API đọc chi tiết lô chưa có spec; SC-022/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng mở màn với một mã lô.
+  - Máy chủ trả thuộc tính lô, chuyến nhận hàng, kết quả 目利き và lịch sử điều chỉnh.
+  - Người dùng xem; bấm Sửa thì sang SC-024 để điều chỉnh có vết, bấm Quay lại thì về màn trước.
+  tieu_chi_nghiem_thu:
+  - Khi lô có kết quả 目利き thì màn hiện kết quả, người xác nhận và thời điểm đúng như bản ghi ở lot_evaluations.
+  - 'Khi lô đã điều chỉnh nhiều lần thì màn hiện đủ từng lần: trường, giá trị trước, giá trị sau, lý do, người làm, thời điểm.'
+  - Khi mã lô không tồn tại thì máy chủ trả 404 và màn báo không tìm thấy.
+  - Khi người dùng không thuộc hai vai được phép (giả định P-12) thì máy chủ trả 403.
+  dinh_nghia_xong:
+  - Spec màn SC-022 có thêm dòng ánh xạ dữ liệu cho khối 目利き và khối lịch sử điều chỉnh (G-FG03-06).
+- key: SC-022/FE
+  cha: SC-022
+  tracker: devtask
+  title_vi: 'Giao diện: Chi tiết lô'
+  spec_refs:
+    sc:
+    - SC-022
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng màn chi tiết lô gồm hai khối truy vết 目利き (thẩm định bằng mắt) và điều chỉnh, hiển thị được ở văn phòng và tablet.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khối lịch sử điều chỉnh sắp theo thời điểm, mỗi lần hiện đủ trường, giá trị trước, giá trị sau, lý do, người làm, thời điểm.
+  - Nút Sửa mở SC-024 với lô đang xem, không mở chế độ sửa tại chỗ.
+  dinh_nghia_xong: []
+- key: SC-022/BE
+  cha: SC-022
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chi tiết lô'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lots
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG03-06
+  mo_ta: Viết spec rồi làm API đọc chi tiết lô, gộp dữ liệu từ lots, lot_evaluations và lot_adjustments.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi mã lô có thật thì một lần gọi trả đủ thuộc tính, chuyến, kết quả 目利き (thẩm định bằng mắt) và lịch sử điều chỉnh.
+  - Khi mã lô không có thì trả 404; đọc lỗi thì trả 500 kèm mã lỗi chung.
+  dinh_nghia_xong: []
+- key: SC-022/TEST
+  cha: SC-022
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chi tiết lô'
+  spec_refs:
+    sc:
+    - SC-022
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    - FR-LOT-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử màn chi tiết lô, nhắm vào phần truy vết 目利き (thẩm định bằng mắt) và điều chỉnh.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lô có hai lần điều chỉnh và một kết quả 目利き hiện đúng cả ba bản ghi, khớp từng giá trị trong cơ sở dữ liệu.
+  - Mã lô không tồn tại trả 404; tài khoản ngoài hai vai được phép nhận 403.
+  dinh_nghia_xong: []
+- key: SC-023
+  cha: FG-03
+  tracker: story
+  title_vi: Ghi kết quả thẩm định bằng mắt
+  ten_ja: 目視評価結果登録
+  spec_refs:
+    sc:
+    - SC-023
+    api: []
+    tech: []
+    bang:
+    - lot_evaluations
+    fr:
+    - FR-LOT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG03-07
+  - G-FG03-08
+  mo_ta: '評価者 (người thẩm định) xem lô tận mắt rồi ghi kết quả 目利き (thẩm định bằng mắt); hệ thống chỉ lưu, không tự chấm (CAP-HUMAN-01). Mỗi kết quả phải tra ngược được ai xác nhận, lúc nào, vì đó là căn cứ khi có khiếu nại chất lượng.
+
+    Ràng buộc đặc thù: Người thẩm định quyết kết quả; người xác nhận và thời điểm do máy chủ gán từ phiên, không gõ tay (G-FG03-07).'
+  pham_vi: Màn SC-023 (SPEC-SKM-115) ở hiện trường; bảng `lot_evaluations` (chủ migration, chỉ thêm dòng); API ghi kết quả chưa có spec, SC-023/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người thẩm định chọn lô và nhập kết quả 目利き theo điều mình quan sát.
+  - Người thẩm định bấm Đăng ký để xác nhận kết quả là của mình.
+  - Máy chủ thêm một dòng lot_evaluations, gắn người xác nhận từ phiên và thời điểm theo giờ máy chủ.
+  tieu_chi_nghiem_thu:
+  - Khi người thẩm định bấm Đăng ký thì hệ thống ghi lô, kết quả, mã người xác nhận lấy từ phiên và thời điểm theo giờ máy chủ; màn không sửa được hai giá trị sau.
+  - Khi ghi lại kết quả cho cùng lô thì hệ thống thêm dòng mới, dòng cũ giữ nguyên.
+  - Khi người gọi không mang vai 評価者, ở hệ đích là 運営担当者 (nhân viên vận hành), thì máy chủ trả 403.
+  dinh_nghia_xong:
+  - Bản ghi thử trên staging cho thấy mỗi kết quả mang người xác nhận và thời điểm do máy chủ gán.
+- key: SC-023/FE
+  cha: SC-023
+  tracker: devtask
+  title_vi: 'Giao diện: Ghi kết quả thẩm định bằng mắt'
+  spec_refs:
+    sc:
+    - SC-023
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG03-07
+  mo_ta: 'Dựng màn ghi 目利き (thẩm định bằng mắt) cho tablet hiện trường: chọn lô, nhập kết quả, nút Đăng ký; người xác nhận và thời điểm chỉ hiển thị.
+
+    Ràng buộc đặc thù: Màn không gợi ý hay tự điền kết quả; chỉ người thẩm định nhập và bấm xác nhận.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi mở màn thì người xác nhận hiện tên người đang đăng nhập ở dạng chỉ đọc, không có ô nhập thời điểm.
+  - Khi lô hoặc kết quả còn trống thì màn chặn gửi.
+  - Khi mất mạng thì kết quả 目利き được lưu tạm trên thiết bị, đồng bộ qua hàng đợi của SC-151 khi có mạng lại, màn hiện rõ kết quả đang chờ (ADR-010, G-E18-01).
+  dinh_nghia_xong: []
+- key: SC-023/BE
+  cha: SC-023
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Ghi kết quả thẩm định bằng mắt'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lot_evaluations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG03-07
+  - G-FG03-08
+  mo_ta: 'Viết spec rồi làm API ghi kết quả 目利き (thẩm định bằng mắt) vào lot_evaluations, lấy người xác nhận và thời điểm ở phía máy chủ.
+
+    Ràng buộc đặc thù: Kết quả chỉ được ghi qua lời gọi của một người đã đăng nhập; không có tác vụ nền nào ghi lot_evaluations.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi body gửi kèm người xác nhận hay thời điểm khác thì API vẫn ghi người của phiên và giờ máy chủ.
+  - Khi lô không tồn tại thì trả 404, không ghi dòng nào.
+  - Mỗi lần ghi kết quả có một dòng nhật ký kiểm toán.
+  dinh_nghia_xong: []
+- key: SC-023/DB
+  cha: SC-023
+  tracker: devtask
+  title_vi: Tạo bảng lot_evaluations
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lot_evaluations
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs: []
+  mo_ta: 'Viết migration bảng lot_evaluations, chốt kiểu cột kết quả còn để trống ở SKM_DB trước khi tạo bảng (P-06).
+
+    Ràng buộc đặc thù: Bảng chỉ thêm dòng để kết quả đã xác nhận không bị ghi đè.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu của cột kết quả được chốt, có người duyệt và ghi lại vào SKM_DB.
+  - Cột người xác nhận và thời điểm bắt buộc có giá trị; người xác nhận có khoá ngoại tới bảng profiles.
+  dinh_nghia_xong: []
+- key: SC-023/TEST
+  cha: SC-023
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Ghi kết quả thẩm định bằng mắt'
+  spec_refs:
+    sc:
+    - SC-023
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-03
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử bước người xác nhận của SC-023.
+
+    Ràng buộc đặc thù: Có ca chứng minh mọi kết quả 目利き đều đi qua thao tác của người thẩm định.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu ghi kết quả kèm tên người và giờ giả: bản ghi lưu người của phiên và giờ máy chủ, không lưu giá trị giả.'
+  - 'Ghi kết quả lần hai cho cùng lô: có thêm dòng mới, dòng cũ giữ nguyên.'
+  - Tài khoản không mang vai 評価者 (người thẩm định) gọi API ghi kết quả nhận 403.
+  dinh_nghia_xong: []
+- key: SC-024
+  cha: FG-03
+  tracker: story
+  title_vi: Điều chỉnh thuộc tính lô
+  ten_ja: ロット属性調整
+  spec_refs:
+    sc:
+    - SC-024
+    api: []
+    tech: []
+    bang:
+    - lot_adjustments
+    fr:
+    - FR-LOT-04
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG03-09
+  mo_ta: 照合事務 (nhóm đối soát) hoặc 承認者 (người duyệt) sửa một thuộc tính của lô sau khi nhận, bắt buộc nêu lý do. Mỗi lần sửa giữ giá trị trước và sau (変更前/変更後) cùng người làm để đối soát, kiểm toán đọc lại được.
+  pham_vi: Màn SC-024 (SPEC-SKM-116); bảng `lot_adjustments` (chủ migration, chỉ thêm dòng) và cập nhật `lots`; API ghi điều chỉnh chưa có spec, SC-024/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng chọn lô, trường cần sửa; màn lấy giá trị hiện tại làm giá trị trước.
+  - Người dùng nhập giá trị mới, lý do rồi bấm Lưu.
+  - Máy chủ thêm dòng điều chỉnh (người làm từ phiên, thời điểm theo giờ máy chủ) và áp giá trị mới vào lots trong cùng giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi lý do trống thì máy chủ từ chối, không ghi gì.
+  - Khi lưu thành công thì có đúng một dòng điều chỉnh mới và lots mang giá trị mới; lỗi một bước thì không bước nào được ghi.
+  - Khi sửa lại một lần điều chỉnh thì thêm dòng mới, không sửa dòng cũ (G-FG03-09).
+  - Khi người gọi không thuộc 照合事務 hay 承認者 thì trả 403 (vai theo P-12).
+  dinh_nghia_xong:
+  - Spec SC-024 bỏ chữ «bản nháp» ở nút Lưu cho khớp bảng chỉ thêm (G-FG03-09).
+- key: SC-024/FE
+  cha: SC-024
+  tracker: devtask
+  title_vi: 'Giao diện: Điều chỉnh thuộc tính lô'
+  spec_refs:
+    sc:
+    - SC-024
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng biểu mẫu điều chỉnh: chọn lô và trường, tự điền giá trị trước, nhập giá trị sau và lý do.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giá trị trước, người làm và thời điểm chỉ hiển thị, không sửa được.
+  - Lý do trống thì nút Lưu không gửi.
+  dinh_nghia_xong: []
+- key: SC-024/BE
+  cha: SC-024
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Điều chỉnh thuộc tính lô'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lot_adjustments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG03-09
+  mo_ta: 'Viết spec rồi làm API ghi điều chỉnh: thêm dòng lot_adjustments và cập nhật lots trong một giao dịch CSDL.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giá trị trước lấy từ lots tại lúc ghi, không tin giá trị trình duyệt gửi.
+  - Lỗi ở bất kỳ bước nào thì hoàn tác cả hai và trả 500.
+  - Chỉ nhận trường có trong bảng lots; trường lạ trả 400.
+  dinh_nghia_xong: []
+- key: SC-024/DB
+  cha: SC-024
+  tracker: devtask
+  title_vi: Tạo bảng lot_adjustments
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - lot_adjustments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs: []
+  mo_ta: Viết migration bảng lot_adjustments; chốt kiểu hai cột giá trị trước và sau còn để trống ở SKM_DB (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu cột trước và sau được chốt, có người duyệt và ghi vào SKM_DB.
+  - Lý do, người làm và thời điểm là cột bắt buộc.
+  dinh_nghia_xong: []
+- key: SC-024/TEST
+  cha: SC-024
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Điều chỉnh thuộc tính lô'
+  spec_refs:
+    sc:
+    - SC-024
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-04
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-03
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử điều chỉnh thuộc tính lô và vết trước, sau.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Điều chỉnh khối lượng một lô: lot_adjustments có dòng mới với đúng giá trị trước và sau, lots mang giá trị mới.'
+  - 'Gửi lý do trống: bị từ chối, cả hai bảng không đổi.'
+  - 'Gây lỗi ở bước cập nhật lots: dòng điều chỉnh cũng không được ghi.'
+  dinh_nghia_xong: []
+- key: SC-025
+  cha: FG-03
+  tracker: story
+  title_vi: Tải chứng từ nhận hàng
+  ten_ja: 受入証憑アップロード
+  spec_refs:
+    sc:
+    - SC-025
+    api: []
+    tech: []
+    bang:
+    - attachments
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG03-10
+  mo_ta: 受入担当者 (người tiếp nhận lô) đưa phiếu cân và vận đơn của từng lô mới nhận lên hệ thống; FR-LOT-01 đòi mỗi lô có đủ chứng từ bắt buộc. Chứng từ là bằng chứng khi đối soát hay tranh chấp, nên mỗi tệp ghi rõ ai tải, lúc nào.
+  pham_vi: Màn SC-025 (SPEC-SKM-117) ở hiện trường; bảng `attachments` (chủ migration, chỉ thêm dòng); nơi lưu tệp và API tải lên chưa có spec, SC-025/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người tiếp nhận chọn lô cần gắn chứng từ.
+  - Người tiếp nhận chọn tệp phiếu cân hoặc vận đơn rồi bấm Lưu.
+  - Máy chủ kiểm loại, cỡ tệp theo cấu hình, lưu tệp và thêm dòng attachments với người tải từ phiên, thời điểm theo giờ máy chủ.
+  tieu_chi_nghiem_thu:
+  - Khi tệp sai loại hoặc vượt cỡ theo tham số cấu hình (P-03) thì máy chủ từ chối, không ghi dòng nào.
+  - Khi lưu thành công thì có một dòng trỏ đúng lô và tệp mở lại được.
+  - Khi thay chứng từ thì thêm dòng mới, dòng cũ giữ nguyên (G-FG03-10).
+  - Khi xem một lô thì biết lô còn thiếu loại chứng từ bắt buộc nào.
+  dinh_nghia_xong:
+  - Danh sách chứng từ bắt buộc và giới hạn tệp nằm ở cấu hình và trong spec SC-025 (G-FG03-10).
+- key: SC-025/FE
+  cha: SC-025
+  tracker: devtask
+  title_vi: 'Giao diện: Tải chứng từ nhận hàng'
+  spec_refs:
+    sc:
+    - SC-025
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn tải chứng từ trên tablet: chọn lô, chọn tệp, xem tiến độ tải và kết quả.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tệp sai loại hoặc quá cỡ theo cấu hình bị chặn ngay ở màn trước khi tải.
+  - Người tải và thời điểm chỉ hiện sau khi máy chủ trả kết quả.
+  dinh_nghia_xong: []
+- key: SC-025/BE
+  cha: SC-025
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tải chứng từ nhận hàng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - attachments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-03
+  gap_refs:
+  - G-FG03-10
+  mo_ta: Viết spec rồi làm API nhận tệp, lưu vào kho tệp và ghi attachments; danh sách loại bắt buộc và giới hạn tệp đọc từ cấu hình.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Máy chủ kiểm lại loại và cỡ tệp, không dựa vào kiểm tra phía màn.
+  - Lưu tệp lỗi thì không ghi dòng attachments; ghi dòng lỗi thì tệp vừa lưu được dọn đi.
+  - Có cách tra lô còn thiếu chứng từ bắt buộc.
+  dinh_nghia_xong: []
+- key: SC-025/DB
+  cha: SC-025
+  tracker: devtask
+  title_vi: Tạo bảng attachments
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - attachments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-18
+  mo_ta: Viết migration bảng attachments; chốt kiểu cột đối tượng, tham chiếu tệp và quan hệ của target_id (P-06, G-18).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu của target_id và file_ref được chốt, có người duyệt và ghi vào SKM_DB.
+  - Có chỉ mục theo cặp loại đối tượng và đối tượng để tra chứng từ của một lô.
+  - Có cột loại tài liệu để SC-142/BE áp đúng thời hạn lưu theo loại, ghi lại vào SKM_DB (G-FG14-03).
+  dinh_nghia_xong: []
+- key: SC-025/TEST
+  cha: SC-025
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tải chứng từ nhận hàng'
+  spec_refs:
+    sc:
+    - SC-025
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-LOT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-03
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tải chứng từ, nhắm vào kiểm tệp và tính chỉ thêm của attachments.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tải tệp hợp lệ cho một lô: có dòng attachments đúng lô, người tải và thời điểm của máy chủ.'
+  - 'Tải tệp sai loại hoặc quá cỡ: bị từ chối ở cả màn lẫn máy chủ.'
+  - 'Thay chứng từ: dòng cũ còn nguyên, có thêm dòng mới.'
+  dinh_nghia_xong: []
+- key: DATA-FG03
+  cha: FG-03
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-LOT): arrivals, species, vessels'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - arrivals
+    - species
+    - vessels
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG03-11
+  - G-A-DB-d2-chi-27-bang
+  mo_ta: Bảng arrivals (chuyến cập bến), species (loài) và vessels (tàu cá) không có màn quản trị riêng nhưng SC-020 cần chúng để ghi chuyến và tách lô. Story này dựng lại các bảng đó trên kho mã hệ đích, vì migration của prototype chỉ dùng để đối chiếu (P-04).
+  pham_vi: Bảng `arrivals` (chỉ thêm dòng), `species` và `vessels` (bảng tra, sửa được) theo SKM_DB, cùng dữ liệu mẫu tàu và loài để SC-020 chạy thử. Không làm màn quản trị danh mục, vì RFP đã bỏ phần quản lý danh mục.
+  luong_chinh:
+  - Người làm DB viết migration species và vessels kèm ràng buộc mã duy nhất.
+  - Người làm DB viết migration arrivals với khoá ngoại tới vessels và cột người ghi trỏ bảng profiles.
+  - Người làm DB nạp dữ liệu mẫu tàu và loài cho SC-020 và SC-020/TEST.
+  tieu_chi_nghiem_thu:
+  - Khi chạy migration trên cơ sở dữ liệu trống thì các bảng được tạo đủ, mã tàu và mã loài không trùng.
+  - Khi ghi trùng mã tàu hoặc mã loài thì cơ sở dữ liệu từ chối.
+  - Cột người ghi của arrivals trỏ bảng profiles của hệ đích, không trỏ bảng của Supabase (G-FG03-11).
+  dinh_nghia_xong:
+  - Dữ liệu mẫu tàu và loài nằm trong repo và nạp lại được bằng một lệnh.
+- key: DATA-FG03/DB
+  cha: DATA-FG03
+  tracker: devtask
+  title_vi: Tạo bảng arrivals, species, vessels
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - arrivals
+    - species
+    - vessels
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG03-11
+  mo_ta: Viết migration arrivals, species, vessels và dữ liệu mẫu tàu, loài trên kho mã hệ đích.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khoá ngoại arrivals tới vessels và ràng buộc mã duy nhất của species, vessels có trong migration.
+  - Tổng trọng lượng của arrivals lưu số thập phân hai chữ số lẻ như SKM_DB.
+  dinh_nghia_xong: []
+- key: DATA-FG03/TEST
+  cha: DATA-FG03
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-LOT): arrivals, species, vessels'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của bảng arrivals, species và vessels.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi chuyến với tàu không có trong vessels bị cơ sở dữ liệu từ chối.
+  - Ghi trùng mã tàu hoặc mã loài bị từ chối.
+  - Sửa hoặc xoá một dòng arrivals bị chặn ở mức quyền cơ sở dữ liệu.
+  dinh_nghia_xong: []

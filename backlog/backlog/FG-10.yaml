@@ -1,0 +1,722 @@
+# Seed epic FG-10 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-10
+  tracker: epic
+  title_vi: Quy chế và biểu suất theo phiên bản
+  feature: rules-and-rates
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-04
+  - P-06
+  - P-10
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này quản lý 業務規程 (quy chế nghiệp vụ) và 料率 (biểu suất) theo bản: mỗi bản có 発効日 (ngày hiệu lực), người lập khác người duyệt, mỗi khoá đổi tối đa 4 lần một năm và lùi bản luôn để lại dấu vết. Các nhóm khác, nhất là 完納奨励金 (thưởng thanh toán đủ hạn) của FG-09, đọc bản có hiệu lực tại ngày cần dùng chứ không đọc giá trị hiện tại.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-10 đã đóng.
+  - Khi người lập tự duyệt bản của mình thì máy chủ từ chối 422 M_26; không có tham số nào bỏ qua kiểm tra này ở môi trường thật.
+  - Khi một khoá đã có 4 lần duyệt trong năm dương lịch thì lần duyệt kế tiếp bị từ chối 422 M_20, kể cả qua đường lùi bản rồi duyệt lại.
+  - Khi lùi một bản thì bản trước trở lại hiệu lực, và chợ không lúc nào thiếu bản có hiệu lực cho một khoá.
+  dinh_nghia_xong: []
+items:
+- key: SC-090
+  cha: FG-10
+  tracker: story
+  title_vi: Danh sách phiên bản biểu suất
+  ten_ja: 料率版一覧
+  spec_refs:
+    sc:
+    - SC-090
+    api: []
+    tech: []
+    bang:
+    - rule_versions
+    fr:
+    - FR-RULE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG10-01
+  mo_ta: 'ルール管理者 (người quản lý quy tắc và suất) và 照合部門長 (trưởng bộ phận đối soát) tra các bản quy tắc và 料率 (biểu suất) theo trạng thái và 業務日 (ngày nghiệp vụ): khoá nào, bản số mấy, ai lập, ai duyệt, hiệu lực từ ngày nào, có phải bản lùi không. Từ đây người dùng mở bản nháp sang SC-092 để duyệt, hoặc bản đã duyệt sang SC-093 để lùi.'
+  pham_vi: Màn SC-090 (SPEC-SKM-141); API đọc danh sách bản viết mới ở SC-090/BE (P-01); bảng `rule_versions` (chỉ đọc, migration thuộc SC-091/DB).
+  luong_chinh:
+  - Người dùng mở màn; máy chủ trả các bản của mọi khoá, trang đầu.
+  - Người dùng lọc theo trạng thái và ngày; máy chủ trả lại danh sách, không đổi dữ liệu.
+  - Người dùng mở một bản nháp sang SC-092 hoặc một bản đã duyệt sang SC-093.
+  tieu_chi_nghiem_thu:
+  - Khi lọc theo trạng thái nháp thì chỉ còn bản chưa duyệt; bản đã lùi mang nhãn đã lùi.
+  - Khi một bản được lập do lùi bản thì cột Rollback của trỏ đúng bản bị lùi.
+  - Khi người xem ngoài ルール管理者 và 照合部門長 thì máy chủ trả 403.
+  dinh_nghia_xong:
+  - Màn đọc từ một bảng nguồn duy nhất mà SC-091/DB chốt, không ghép hai bảng (G-FG10-01).
+- key: SC-090/FE
+  cha: SC-090
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-090
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn danh sách bản quy tắc chỉ đọc: lọc theo 業務日 (ngày nghiệp vụ) và trạng thái, bảng sáu cột, nhãn trạng thái, phân trang.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bản nháp có đường mở SC-092, bản đã duyệt có đường mở SC-093, theo vai của người xem.
+  - Lọc không đổi dữ liệu; phân trang giữ điều kiện lọc.
+  dinh_nghia_xong: []
+- key: SC-090/BE
+  cha: SC-090
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách phiên bản biểu suất'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG10-01
+  mo_ta: Viết spec rồi làm API đọc danh sách bản quy tắc trên module rules, có lọc theo trạng thái, ngày và phân trang.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trả khoá, số bản, người lập, người duyệt, ngày hiệu lực, trạng thái và bản bị lùi từ một bảng nguồn duy nhất (G-FG10-01).
+  - Vai được đọc là ルール管理者 (người quản lý quy tắc và suất) và 照合部門長 (trưởng bộ phận đối soát); vai khác nhận 403.
+  dinh_nghia_xong: []
+- key: SC-090/TEST
+  cha: SC-090
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-090
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RULE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lọc, nhãn trạng thái và phân quyền của danh sách bản quy tắc.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dữ liệu mẫu có bản nháp, bản đã duyệt và bản đã lùi của cùng một khoá: lọc theo từng trạng thái ra đúng tập.'
+  - Tài khoản ngoài hai vai được đọc nhận 403.
+  dinh_nghia_xong: []
+- key: SC-091
+  cha: FG-10
+  tracker: story
+  title_vi: Tạo và sửa phiên bản biểu suất
+  ten_ja: 料率版作成・編集
+  spec_refs:
+    sc:
+    - SC-091
+    api:
+    - API-217
+    tech: []
+    bang:
+    - business_rules
+    - rule_versions
+    fr:
+    - FR-INC-02
+    - FR-RULE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-10
+  gap_refs:
+  - G-FG10-02
+  - G-FG10-05
+  mo_ta: ルール管理者 (người quản lý quy tắc và suất) lập bản mới cho một trong năm khoá quy tắc kèm 発効日 (ngày hiệu lực) và giá trị, ví dụ 交付率 (tỷ lệ chi thưởng) của 完納奨励金 (thưởng thanh toán đủ hạn). Mỗi lần lưu tạo một bản nháp mới, bản đã lưu không bị sửa tại chỗ, và nháp chỉ có hiệu lực sau khi được duyệt ở SC-092.
+  pham_vi: Màn SC-091 (SPEC-SKM-142); API-217 (lập bản nháp); bảng `business_rules` và `rule_versions` (chủ migration cả hai).
+  luong_chinh:
+  - ルール管理者 chọn khoá, nhập 発効日 và giá trị theo khoá.
+  - Với khoá incentive, màn hiện hệ số thuế 110/100 và cách làm tròn xuống yên ở dạng chỉ đọc; người dùng chỉ nhập suất.
+  - ルール管理者 bấm Lưu; máy chủ kiểm khoá, ngày, hình dạng giá trị và chặn hệ số thuế khác 110/100.
+  - Máy chủ ghi một bản nháp mới, người lập là người của phiên, người duyệt còn trống.
+  - Bản nháp hiện ở SC-090 chờ duyệt.
+  tieu_chi_nghiem_thu:
+  - Khi khoá không thuộc năm khoá, ngày sai định dạng hoặc giá trị sai hình dạng thì trả 400, không ghi gì.
+  - Khi đã có bản cùng khoá và cùng 発効日 thì trả 409.
+  - Khi client gửi hệ số thuế khác 110/100 cho khoá incentive thì máy chủ từ chối, dù giao diện đã khoá ô.
+  - Khi lưu thành công thì bản ở trạng thái nháp và không có hiệu lực dù đã tới 発効日, cho tới khi được duyệt.
+  - Khi lập khoá incentive thì suất do người nhập, không có số mặc định viết sẵn; bảng nhiều bậc chờ đáp của INV-GD-03 (P-10).
+  dinh_nghia_xong:
+  - Spec SC-091 ghi cách chống chồng hiệu lực theo ADR-004 sau khi SC-091/DB chốt (G-FG10-02).
+- key: SC-091/FE
+  cha: SC-091
+  tracker: devtask
+  title_vi: 'Giao diện: Tạo và sửa phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-091
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-10
+  gap_refs: []
+  mo_ta: 'Dựng màn lập bản quy tắc: chọn khoá, ô 発効日 (ngày hiệu lực), ô giá trị đổi theo khoá; số bản, người lập, trạng thái chỉ hiện.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Với khoá incentive, hệ số thuế 110/100 và cách làm tròn là nhãn chỉ đọc; suất là số thập phân không âm, bước 0,01.
+  - Khi API trả 409 vì trùng khoá và ngày thì màn giữ dữ liệu và báo đã có bản cho ngày đó.
+  dinh_nghia_xong: []
+- key: SC-091/BE
+  cha: SC-091
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tạo và sửa phiên bản biểu suất'
+  spec_refs:
+    sc: []
+    api:
+    - API-217
+    tech: []
+    bang:
+    - business_rules
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-05
+  - P-10
+  gap_refs:
+  - G-FG10-05
+  mo_ta: 'Làm API-217 trên module rules: kiểm khoá, ngày, hình dạng giá trị theo khoá, chặn hệ số thuế khác 110/100, rồi ghi bản nháp mới.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi lần gọi chỉ thêm bản mới ở trạng thái nháp; không có đường nào ghi thẳng trạng thái đã duyệt (G-FG10-05).
+  - Trùng khoá và ngày trả 409 chứ không trả 500; lỗi ghi khác trả 500 M_25 kèm mã.
+  - Người lập lấy từ phiên; quyền gọi theo vai đích của ルール管理者 (người quản lý quy tắc và suất).
+  dinh_nghia_xong: []
+- key: SC-091/DB
+  cha: SC-091
+  tracker: devtask
+  title_vi: Tạo bảng business_rules, rule_versions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - business_rules
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG10-01
+  - G-FG10-02
+  - G-FG10-05
+  mo_ta: Viết migration hai bảng bản quy tắc trên kho mã hệ đích; chốt bảng nào giữ trạng thái, người lập, người duyệt, và các ô kiểu còn để trống của rule_versions (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Chống chồng khoảng hiệu lực bằng ràng buộc loại trừ theo ADR-004, kèm ca thử chèn bản chồng bị từ chối (G-FG10-02).
+  - Trạng thái không mặc định là đã duyệt; bản mới luôn là nháp (G-FG10-05).
+  - Một bảng giữ trạng thái và người lập, người duyệt, bảng kia chỉ tham chiếu; quyết định ghi lại vào SKM_DB (G-FG10-01).
+  dinh_nghia_xong: []
+- key: SC-091/TEST
+  cha: SC-091
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo và sửa phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-091
+    api:
+    - API-217
+    tech: []
+    bang: []
+    fr:
+    - FR-INC-02
+    - FR-RULE-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lập bản quy tắc, nhắm vào hệ số thuế cố định và việc bản nháp chưa có hiệu lực.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gọi thẳng API với khoá incentive và hệ số thuế khác 110/100: bị từ chối, không có bản mới.'
+  - 'Lập bản nháp có 発効日 (ngày hiệu lực) là hôm nay: phép tính thưởng của FG-09 vẫn dùng bản đã duyệt trước đó.'
+  - 'Lập trùng khoá và ngày: trả 409.'
+  dinh_nghia_xong: []
+- key: SC-092
+  cha: FG-10
+  tracker: story
+  title_vi: Duyệt phiên bản biểu suất
+  ten_ja: 料率版承認
+  spec_refs:
+    sc:
+    - SC-092
+    api:
+    - API-218
+    tech: []
+    bang:
+    - business_rules
+    - rule_versions
+    fr:
+    - FR-INC-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG10-03
+  - G-FG10-06
+  mo_ta: 照合部門長 (trưởng bộ phận đối soát) hoặc 承認者 (người duyệt) xem bản nháp và duyệt kèm lý do; bản được duyệt có hiệu lực từ 発効日 (ngày hiệu lực). Người duyệt phải khác người lập, không có ngoại lệ theo vai, và mỗi khoá chỉ được duyệt tối đa 4 lần mỗi năm dương lịch.
+  pham_vi: Màn SC-092 (SPEC-SKM-143); API-218 theo luồng TECH-303; đổi trạng thái bản trong `business_rules`, `rule_versions`; lý do vào nhật ký kiểm toán.
+  luong_chinh:
+  - Người duyệt mở bản nháp từ SC-090; màn hiện khoá, bản, ngày hiệu lực, giá trị, người lập, mọi ô chỉ đọc.
+  - Người duyệt nhập lý do 5–500 ký tự rồi bấm duyệt.
+  - Máy chủ kiểm bản còn là nháp, người bấm khác người lập và khoá chưa đủ 4 lần duyệt trong năm.
+  - Máy chủ đổi bản sang đã duyệt, ghi người duyệt, thời điểm và nhật ký có giá trị trước, sau cùng lý do.
+  tieu_chi_nghiem_thu:
+  - Khi người bấm duyệt là người lập thì trả 422 M_26, bản giữ nguyên.
+  - Khi khoá đã có 4 lần duyệt trong cùng năm dương lịch của 発効日 thì trả 422 M_20.
+  - Khi bản không còn là nháp thì trả 409 M_15; không tìm thấy bản thì trả 404 M_14.
+  - Khi duyệt thành công thì nhật ký ghi giá trị đang hiệu lực trước khi đổi, giá trị mới và lý do.
+  dinh_nghia_xong:
+  - Câu hỏi về số người giữ vai lập và vai duyệt (G-FG10-06) có đáp, hoặc khách xác nhận có ít nhất hai người.
+- key: SC-092/FE
+  cha: SC-092
+  tracker: devtask
+  title_vi: 'Giao diện: Duyệt phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-092
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng màn duyệt bản quy tắc chỉ đọc, chỉ có ô lý do và hai nút Duyệt, Quay lại.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lý do trống hoặc ngoài 5–500 ký tự thì không gọi API.
+  - Nút Duyệt vô hiệu khi bản không còn là nháp; người đăng nhập là người lập thì nút ẩn nhưng máy chủ vẫn kiểm.
+  - API trả 409 M_15, 422 M_20 hoặc 422 M_26 thì màn hiện đúng câu báo của mã.
+  dinh_nghia_xong: []
+- key: SC-092/BE
+  cha: SC-092
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Duyệt phiên bản biểu suất'
+  spec_refs:
+    sc: []
+    api:
+    - API-218
+    tech: []
+    bang:
+    - business_rules
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG10-03
+  - G-FG09-09
+  mo_ta: 'Làm API-218 trên module rules: kiểm lý do, tìm bản, gọi hàm kiểm của TECH-303/BE rồi đổi trạng thái và ghi nhật ký trong một giao dịch CSDL.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giá trị đang hiệu lực đọc ngay trước khi đổi để ghi vào phần trước của nhật ký.
+  - Đếm số lần duyệt trong năm và đổi trạng thái trong cùng giao dịch, để hai lần duyệt đồng thời không vượt trần.
+  - Lỗi lý do dùng mã chung thêm theo G-FG09-09; người duyệt lấy từ phiên, quyền gọi theo vai đích của 照合部門長 (trưởng bộ phận đối soát) và 承認者 (người duyệt).
+  dinh_nghia_xong: []
+- key: SC-092/TEST
+  cha: SC-092
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Duyệt phiên bản biểu suất'
+  spec_refs:
+    sc:
+    - SC-092
+    api:
+    - API-218
+    tech: []
+    bang: []
+    fr:
+    - FR-INC-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bước duyệt, nhắm vào tách người lập với người duyệt và trần 4 lần mỗi năm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Người lập tự duyệt, kể cả với tài khoản có vai duyệt: 422 M_26, bản vẫn là nháp.'
+  - 'Khoá đã có 4 lần duyệt trong năm: lần thứ năm bị 422 M_20; bản có 発効日 (ngày hiệu lực) sang năm sau thì duyệt được.'
+  - 'Duyệt một bản, lùi nó rồi lập và duyệt lại trong cùng năm: lần duyệt đầu vẫn được tính vào trần (G-FG10-03).'
+  dinh_nghia_xong: []
+- key: SC-093
+  cha: FG-10
+  tracker: story
+  title_vi: Quay lại phiên bản trước
+  ten_ja: 料率版ロールバック
+  spec_refs:
+    sc:
+    - SC-093
+    api:
+    - API-219
+    tech: []
+    bang:
+    - rule_versions
+    fr:
+    - FR-INC-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG10-04
+  - G-FG10-07
+  mo_ta: ルール管理者 (người quản lý quy tắc và suất) hoặc 照合部門長 (trưởng bộ phận đối soát) lùi một bản đã duyệt khi phát hiện sai, kèm lý do; dòng của bản không bị xoá mà đổi sang đã lùi, và bản đã duyệt liền trước trở lại hiệu lực. Không còn bản nào để quay về thì hệ thống từ chối, để chợ không bao giờ thiếu bản có hiệu lực.
+  pham_vi: Màn SC-093 (SPEC-SKM-144); API-219 theo luồng TECH-303; đổi trạng thái trong `rule_versions`, `business_rules`; lý do vào nhật ký kiểm toán.
+  luong_chinh:
+  - Người dùng mở một bản đã duyệt từ SC-090; màn hiện thông tin bản, mọi ô chỉ đọc.
+  - Người dùng nhập lý do 5–500 ký tự rồi bấm lùi bản.
+  - Máy chủ kiểm bản đang ở trạng thái đã duyệt và tìm bản đã duyệt khác của cùng khoá có hiệu lực tới 業務日 (ngày nghiệp vụ) hiện tại.
+  - Máy chủ đổi bản sang đã lùi, ghi người lùi, thời điểm và nhật ký có giá trị trước, sau cùng lý do.
+  tieu_chi_nghiem_thu:
+  - Khi bản không ở trạng thái đã duyệt thì trả 409 M_16.
+  - Khi không còn bản đã duyệt nào khác của cùng khoá có hiệu lực tới 業務日 hiện tại thì trả 422 M_17, bản giữ nguyên.
+  - Khi lùi thành công thì dòng cũ còn nguyên với trạng thái đã lùi, và lần đọc kế tiếp dùng bản trước.
+  - Khi lùi một bản incentive mà FG-09 đã 確定 (xác nhận cuối) thưởng theo bản đó thì dòng thưởng giữ nguyên ngày hiệu lực của bản cũ.
+  dinh_nghia_xong:
+  - Spec SC-093 thay bảy ô nhập bắt buộc bằng nhãn chỉ đọc và thêm ô lý do (G-FG10-04).
+- key: SC-093/FE
+  cha: SC-093
+  tracker: devtask
+  title_vi: 'Giao diện: Quay lại phiên bản trước'
+  spec_refs:
+    sc:
+    - SC-093
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs:
+  - G-FG10-04
+  mo_ta: 'Dựng màn lùi bản: thông tin bản là nhãn chỉ đọc, có ô lý do và nút lùi bản thay cho nút Lưu bản nháp của spec hiện tại (G-FG10-04).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lý do trống hoặc ngoài 5–500 ký tự thì không gọi API.
+  - API trả 409 M_16 hoặc 422 M_17 thì màn hiện đúng câu báo và bản giữ nguyên.
+  dinh_nghia_xong: []
+- key: SC-093/BE
+  cha: SC-093
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Quay lại phiên bản trước'
+  spec_refs:
+    sc: []
+    api:
+    - API-219
+    tech: []
+    bang:
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG10-07
+  - G-FG09-09
+  mo_ta: 'Làm API-219 trên module rules: kiểm lý do, tìm bản, gọi hàm tìm bản kế tiếp của TECH-303/BE, đổi trạng thái và ghi nhật ký trong một giao dịch CSDL.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Danh sách ứng viên loại chính bản đang lùi trước khi tìm; mốc so là 業務日 (ngày nghiệp vụ) giờ Nhật thay cho hôm nay (G-FG10-07).
+  - Không có lệnh xoá dòng nào; phần trước của nhật ký là giá trị đang hiệu lực, phần sau là bản trở lại hiệu lực.
+  dinh_nghia_xong: []
+- key: SC-093/TEST
+  cha: SC-093
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Quay lại phiên bản trước'
+  spec_refs:
+    sc:
+    - SC-093
+    api:
+    - API-219
+    tech: []
+    bang: []
+    fr:
+    - FR-INC-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lùi bản, nhắm vào việc chợ không lúc nào thiếu bản có hiệu lực.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Khoá có hai bản đã duyệt: lùi bản mới thì bản cũ có hiệu lực lại, dòng bản mới còn với trạng thái đã lùi.'
+  - 'Khoá chỉ có một bản đã duyệt: lùi bị 422 M_17, bản giữ nguyên.'
+  - 'Lùi bản incentive đã dùng cho thưởng đã 確定 (xác nhận cuối) ở FG-09: dòng thưởng giữ nguyên ngày hiệu lực của bản cũ.'
+  dinh_nghia_xong: []
+- key: TECH-303
+  cha: FG-10
+  tracker: story
+  title_vi: Luồng duyệt và quay lại bản quy tắc
+  spec_refs:
+    sc: []
+    api:
+    - API-218
+    - API-219
+    tech:
+    - TECH-303
+    bang: []
+    fr: []
+    adr:
+    - ADR-004
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG10-03
+  - G-FG10-07
+  mo_ta: 'TECH-303 gom luật dùng chung của hai thao tác duyệt và lùi bản quy tắc: lý do bắt buộc, kiểm đúng trạng thái, tách người lập với người duyệt, trần 4 lần duyệt mỗi khoá mỗi năm dương lịch và tìm bản trở lại hiệu lực khi lùi. Hai điều kiện kiểm viết thành hàm không đọc ghi dữ liệu để kiểm thử đơn vị; việc đếm và ghi nằm ở dịch vụ của module rules.'
+  pham_vi: TECH-303 (SPEC-SKM-303) phục vụ API-218, API-219; đọc và đổi trạng thái `business_rules`, `rule_versions`; ghi nhật ký kiểm toán; giữ khoảng hiệu lực theo ADR-004.
+  luong_chinh:
+  - Dịch vụ kiểm lý do 5–500 ký tự, khoá thuộc năm khoá và ngày đúng định dạng.
+  - Dịch vụ tìm bản theo khoá và ngày hiệu lực, kiểm trạng thái đúng với thao tác.
+  - Với duyệt, dịch vụ đếm số lần duyệt của khoá trong năm rồi gọi hàm kiểm người duyệt khác người lập và trần 4 lần.
+  - Với lùi, dịch vụ loại bản đang lùi khỏi ứng viên rồi tìm bản đã duyệt còn hiệu lực.
+  - Dịch vụ đổi trạng thái và ghi nhật ký trước, sau cùng lý do.
+  tieu_chi_nghiem_thu:
+  - Khi người duyệt trùng người lập thì luôn bị chặn; không có cờ cấu hình nào bỏ qua ở môi trường thật.
+  - Khi đếm trần thì tính theo năm dương lịch của 発効日 (ngày hiệu lực) giờ Nhật, không theo năm tài chính hay 12 tháng gần nhất.
+  - Khi một bản bị lùi thì lần duyệt của nó vẫn được tính vào trần của năm (G-FG10-03).
+  - Khi lùi mà không còn bản nào để quay về thì luồng dừng ở 422 M_17.
+  - Khi ghi trạng thái thất bại thì trả 500 M_25 và không còn dòng nhật ký nửa chừng.
+  dinh_nghia_xong:
+  - ADR-004 và SKM_DB dùng chung một khoá bản quy tắc sau khi SC-091/DB chốt (G-FG10-02).
+- key: TECH-303/BE
+  cha: TECH-303
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Luồng duyệt và quay lại bản quy tắc'
+  spec_refs:
+    sc: []
+    api:
+    - API-218
+    - API-219
+    tech:
+    - TECH-303
+    bang: []
+    fr: []
+    adr:
+    - ADR-004
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG10-03
+  - G-FG10-07
+  - G-FG04-02
+  mo_ta: 'Làm dịch vụ của module rules cho duyệt và lùi bản: hai hàm kiểm thuần (được duyệt hay không, bản nào trở lại hiệu lực) và phần đếm, đổi trạng thái, ghi nhật ký.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đếm lần duyệt từ lịch sử duyệt, không từ trạng thái hiện tại, để lùi rồi duyệt lại không vượt trần (G-FG10-03).
+  - Mốc ngày khi tìm bản kế tiếp là 業務日 (ngày nghiệp vụ) giờ Nhật, dùng chung hàm 業務日 với FG-04 (G-FG10-07, G-FG04-02).
+  - Năm đếm trần lấy từ 発効日 (ngày hiệu lực) của bản, không viết cứng năm như prototype.
+  dinh_nghia_xong: []
+- key: TECH-303/TEST
+  cha: TECH-303
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Luồng duyệt và quay lại bản quy tắc'
+  spec_refs:
+    sc: []
+    api:
+    - API-218
+    - API-219
+    tech:
+    - TECH-303
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bảng quyết định của hai hàm kiểm và ca biên của trần 4 lần mỗi năm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai bản có 発効日 (ngày hiệu lực) ngày cuối năm và ngày đầu năm sau: được tính vào hai năm khác nhau.'
+  - Lùi bản duy nhất còn hiệu lực bị từ chối; lùi bản mới nhất khi có hai bản thì bản cũ trở lại.
+  - Hàm kiểm được duyệt trả từ chối khi người duyệt trùng người lập, với mọi vai.
+  dinh_nghia_xong: []
+- key: INV-Q-09
+  cha: FG-10
+  tracker: investigation
+  title_vi: Số người giữ vai lập và vai duyệt bản quy tắc
+  han: Trước sprint của SC-092/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md §6.2 Q-09 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-092
+    api: []
+    tech:
+    - TECH-303
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - Q-09
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG10-06
+  mo_ta: Vai ルール管理者 (người quản lý quy tắc) và 照合部門長 (trưởng bộ phận đối soát) hiện có bao nhiêu người, có ai kiêm cả hai không? Máy chủ chặn người lập tự duyệt bản quy tắc, nên chợ cần ít nhất hai người; nếu chỉ có một người thì phải thống nhất quy trình thay thế với khách (câu Q-09 của LAB-4).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

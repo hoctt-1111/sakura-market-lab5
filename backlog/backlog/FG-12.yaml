@@ -1,0 +1,592 @@
+# Seed epic FG-12 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-12
+  tracker: epic
+  title_vi: Thông báo và cảnh báo vận hành
+  feature: notification
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-06
+  - P-12
+  - P-14
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này gửi 通知 (thông báo) trong ứng dụng và qua email khi có bốn sự kiện nền: tư cách sắp hết hạn, tranh chấp đang mở, lỗi xuất dữ liệu và giao hàng tồn đọng; SMS và FAX nằm ngoài phạm vi. Mỗi lần gửi để lại một dòng nhật ký không sửa được; email lỗi thì thử lại tối đa 3 lần, vẫn hỏng thì thông báo chuyển vào hàng đợi cảnh báo để 運用管理者 (quản lý vận hành) xử lý. Hệ thống không dùng kênh đẩy thời gian thực (ADR-013), và thông báo mức Critical (khẩn nhất) phải gửi xong trong 5 phút.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-12 đã đóng.
+  - Khi email của một thông báo lỗi ở mọi lần gửi thì hệ thống thử lại đúng 3 lần, ghi trạng thái cuối vào nhật ký gửi và đẩy một cảnh báo vào SC-122; thông báo trong ứng dụng vẫn hiện (AC-7).
+  - Khi đổi người nhận hoặc ngưỡng ở SC-120 thì các dòng nhật ký của những lần gửi trước giữ nguyên người nhận lúc gửi.
+  - Các issue điều tra của FG-12 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-120
+  cha: FG-12
+  tracker: story
+  title_vi: Cấu hình thông báo
+  ten_ja: 通知設定
+  spec_refs:
+    sc:
+    - SC-120
+    api: []
+    tech: []
+    bang:
+    - notification_settings
+    fr:
+    - FR-NOTIFY-03
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  - P-09
+  gap_refs:
+  - G-FG12-01
+  - G-FG12-05
+  mo_ta: '運用管理者 (quản lý vận hành) đặt cho từng sự kiện thông báo: ai nhận, ngưỡng nào thì gửi, giờ nào gửi. Đổi cấu hình chỉ áp cho lần gửi sau, nhật ký các lần đã gửi giữ người nhận lúc đó (FR-NOTIFY-03). Vai 運用管理者 chưa gán vai nội bộ nên màn chưa dùng được tới khi khách trả lời Q-SD4 (P-12).'
+  pham_vi: Màn SC-120 (SPEC-SKM-160) ở văn phòng; bảng `notification_settings` (chủ migration, sửa được, mỗi lần đổi ghi `audit_log` có trước và sau); API đọc và lưu chưa có spec, SC-120/BE viết rồi làm (P-01). Việc gửi thuộc SC-121/BE.
+  luong_chinh:
+  - 運用管理者 mở SC-120; máy chủ kiểm vai rồi trả cấu hình hiện hành của từng sự kiện.
+  - Người dùng chọn sự kiện, sửa người nhận, ngưỡng hoặc giờ gửi rồi bấm Lưu.
+  - Máy chủ kiểm bốn ô bắt buộc, ghi cấu hình mới và một dòng `audit_log` có trước, sau, người sửa của phiên, giờ máy chủ.
+  - Lần gửi kế tiếp của sự kiện đó đọc cấu hình mới; nhật ký cũ không đổi.
+  tieu_chi_nghiem_thu:
+  - Khi bấm Lưu thì cấu hình mới có hiệu lực ngay, không phải bản nháp, và `audit_log` có một dòng trước, sau (G-FG12-05).
+  - Khi sự kiện là tư cách sắp hết hạn thì ngưỡng chính là tham số 失効間近 (sắp hết hạn) mà SC-014 và SC-103 cùng đọc, khởi tạo 30 ngày (P-09); hệ thống không giữ hai số khác nhau.
+  - Khi sự kiện mang mức Critical (khẩn nhất) thì giờ gửi không làm chậm việc gửi; mức khẩn của từng sự kiện chờ đáp của G-FG12-01.
+  - Khi 運用管理者 chưa có dòng trong ma trận quyền thì mọi lời gọi bị trả 403 M_05; khách gán vai thì chỉ thêm dòng ma trận (P-12).
+  dinh_nghia_xong:
+  - Spec SC-120 ghi nghĩa của ngưỡng và giờ gửi theo từng sự kiện, bỏ chữ «bản nháp» ở nút Lưu (G-FG12-05).
+- key: SC-120/FE
+  cha: SC-120
+  tracker: devtask
+  title_vi: 'Giao diện: Cấu hình thông báo'
+  spec_refs:
+    sc:
+    - SC-120
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs: []
+  mo_ta: 'Dựng biểu mẫu cấu hình thông báo ở văn phòng: chọn sự kiện, ô người nhận, ngưỡng, giờ gửi, nút Lưu và Huỷ; kiểm bốn ô bắt buộc trước khi gửi (P-03).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi còn ô bắt buộc trống thì màn báo lỗi ngay tại ô đó và không gửi yêu cầu.
+  - Khi chọn sự kiện tư cách sắp hết hạn thì ô ngưỡng hiện đơn vị ngày và giá trị hiện hành của tham số P-09.
+  - Khi bấm Huỷ thì màn quay lại màn trước, không gửi yêu cầu nào.
+  dinh_nghia_xong: []
+- key: SC-120/BE
+  cha: SC-120
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Cấu hình thông báo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - notification_settings
+    fr: []
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-03
+  - P-09
+  gap_refs:
+  - G-FG12-05
+  mo_ta: Viết spec API đọc và lưu cấu hình thông báo rồi làm trên module notify (P-01); kiểu của ngưỡng theo từng sự kiện chốt cùng SC-120/DB.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Máy chủ kiểm lại bốn ô bắt buộc, không dựa vào kiểm tra phía màn (P-03).
+  - Cấu hình và dòng `audit_log` cùng ghi trong một giao dịch CSDL; người sửa lấy từ phiên, giờ lấy từ máy chủ.
+  - Ngưỡng của sự kiện tư cách sắp hết hạn đọc và ghi đúng tham số của P-09, không giữ bản sao riêng (G-FG12-05).
+  dinh_nghia_xong: []
+- key: SC-120/DB
+  cha: SC-120
+  tracker: devtask
+  title_vi: Tạo bảng notification_settings
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - notification_settings
+    fr: []
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG12-01
+  mo_ta: Viết migration bảng notification_settings; chốt kiểu của người nhận và ngưỡng, hai ô còn để «—» (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu của nguoi_nhan (tài khoản, vai hay địa chỉ nhận) và nguong được chốt, có người duyệt và ghi vào SKM_DB.
+  - Bảng có cột mức khẩn cho từng sự kiện, giá trị để trống tới khi có đáp của G-FG12-01.
+  dinh_nghia_xong: []
+- key: SC-120/TEST
+  cha: SC-120
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Cấu hình thông báo'
+  spec_refs:
+    sc:
+    - SC-120
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-NOTIFY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lưu cấu hình thông báo và việc giữ lịch sử gửi.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đổi người nhận của một sự kiện rồi phát sự kiện đó: lần gửi mới tới người mới, dòng nhật ký cũ vẫn mang người cũ.'
+  - 'Đổi ngưỡng tư cách sắp hết hạn ở SC-120: SC-014 và SC-103 đổi theo cùng giá trị.'
+  - 'Gửi lệnh lưu bằng tài khoản chưa có dòng trong ma trận quyền: 403 M_05, cấu hình không đổi.'
+  dinh_nghia_xong: []
+- key: SC-121
+  cha: FG-12
+  tracker: story
+  title_vi: Danh sách log gửi thông báo
+  ten_ja: 送信ログ一覧
+  spec_refs:
+    sc:
+    - SC-121
+    api: []
+    tech: []
+    bang:
+    - notification_log
+    fr:
+    - FR-NOTIFY-02
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG12-02
+  - G-FG12-03
+  - G-FG12-06
+  mo_ta: 運用管理者 (quản lý vận hành) tra nhật ký từng lần gửi thông báo để biết hệ thống đã báo cho ai, lúc nào, có tới nơi không. Nhật ký chỉ thêm dòng, mỗi dòng mang sự kiện, kênh gửi, giờ gửi, số lần thử lại và trạng thái cuối. Bảng còn thiếu người nhận và giờ phát sinh sự kiện, nên DATA-FG12 bổ sung (G-FG12-02).
+  pham_vi:
+  - Màn SC-121 (SPEC-SKM-161) ở văn phòng, chỉ đọc `notification_log` (migration thuộc DATA-FG12/DB); API đọc chưa có spec, SC-121/BE viết rồi làm (P-01).
+  - Hàm gửi EV2 của module notify (thử lại, ghi nhật ký) cũng làm ở SC-121/BE (G-FG12-06).
+  luong_chinh:
+  - Module party, settle hoặc delivery gọi hàm gửi khi có sự kiện; notify gửi trong ứng dụng và qua email.
+  - Email lỗi thì notify thử lại tối đa 3 lần, rồi thêm một dòng nhật ký cho mỗi người nhận và mỗi kênh với trạng thái cuối.
+  - Hết lượt mà vẫn lỗi thì notify đẩy một cảnh báo vào SC-122.
+  - 運用管理者 mở SC-121, lọc theo 業務日 (ngày nghiệp vụ) và trạng thái; dòng mới nhất đứng trước.
+  tieu_chi_nghiem_thu:
+  - Khi email lỗi ở mọi lần gửi thì dòng nhật ký có trạng thái cuối là lỗi, số lần thử lại là 3, và SC-122 có một cảnh báo; thông báo trong ứng dụng vẫn hiện (AC-7).
+  - Khi lọc theo 業務日 thì chỉ hiện dòng có giờ gửi thuộc ngày đó theo giờ Nhật.
+  - Khi xem một dòng thì biết người nhận và độ trễ từ lúc sự kiện phát sinh tới lúc gửi xong (G-FG12-02).
+  - Khi 運用管理者 chưa có dòng trong ma trận quyền thì API đọc trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-121 đổi nhãn cột kênh thành kênh gửi và thêm cột người nhận (G-FG12-03, G-FG12-02).
+- key: SC-121/FE
+  cha: SC-121
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách log gửi thông báo'
+  spec_refs:
+    sc:
+    - SC-121
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG12-03
+  mo_ta: 'Dựng màn nhật ký gửi ở văn phòng: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng sự kiện, kênh gửi, người nhận, giờ gửi, số lần thử lại, huy hiệu trạng thái cuối, phân trang.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột kênh mang nhãn kênh gửi (trong ứng dụng, email), không phải kênh giao dịch (G-FG12-03).
+  - Dòng có trạng thái cuối là lỗi hiện huy hiệu có chữ, không chỉ đổi màu.
+  - Khi không có dòng nào thì màn hiện trạng thái rỗng, không báo lỗi.
+  dinh_nghia_xong: []
+- key: SC-121/BE
+  cha: SC-121
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách log gửi thông báo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - notification_log
+    fr: []
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG12-02
+  - G-FG12-06
+  mo_ta: Làm hàm gửi dùng chung của module notify (EV2) với thử lại tối đa 3 lần và đường ghi nhật ký, rồi viết spec và làm API đọc nhật ký cho SC-121 (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dòng nhật ký được thêm khi lần gửi kết thúc, thành công hay hết lượt, mang số lần thử lại và trạng thái cuối; bảng không có lệnh UPDATE nào.
+  - Hết 3 lần thử lại vẫn lỗi thì dòng alert_queue được thêm cùng giao dịch CSDL với dòng nhật ký lỗi.
+  - Notify lỗi không làm dừng hay hoàn tác nghiệp vụ phát sinh sự kiện; spec ghi bốn điểm gọi ở SC-014/BE, SC-070/BE, KH-182/BE, SC-064/BE (G-FG12-06).
+  dinh_nghia_xong: []
+- key: SC-121/TEST
+  cha: SC-121
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách log gửi thông báo'
+  spec_refs:
+    sc:
+    - SC-121
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-NOTIFY-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử nhật ký gửi thông báo và đường thử lại của email.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giả lập máy gửi email lỗi liên tục: có đúng 3 lần thử lại, một dòng nhật ký trạng thái lỗi và một cảnh báo ở SC-122.'
+  - 'Gửi thành công một thông báo cho hai người nhận: có hai dòng, mỗi dòng đúng người nhận và kênh.'
+  - 'Gửi lệnh sửa hoặc xoá một dòng nhật ký qua API: không có đường nào làm được, dòng giữ nguyên.'
+  dinh_nghia_xong: []
+- key: SC-122
+  cha: FG-12
+  tracker: story
+  title_vi: Hàng đợi cảnh báo vận hành
+  ten_ja: 運用アラートキュー
+  spec_refs:
+    sc:
+    - SC-122
+    api: []
+    tech: []
+    bang:
+    - alert_queue
+    fr:
+    - FR-NOTIFY-01
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-14
+  gap_refs:
+  - G-FG12-04
+  mo_ta: '運用管理者 (quản lý vận hành) xử lý các cảnh báo vận hành theo mức khẩn: thông báo vẫn lỗi sau 3 lần thử lại (FR-NOTIFY-02) và tác vụ đối soát ngày EV3 hết lượt thử (P-14). Máy chỉ đưa cảnh báo vào hàng đợi; người xử lý rồi đánh dấu đã xử lý, hệ thống ghi ai làm, lúc nào. Spec màn mới có bộ lọc và bảng, chưa có nút xử lý nên story bổ sung (G-FG12-04).'
+  pham_vi: Màn SC-122 (SPEC-SKM-162) ở văn phòng; bảng `alert_queue` (migration thuộc DATA-FG12/DB, sửa được, mỗi lần đổi ghi `audit_log`); nơi thêm dòng là SC-121/BE (thông báo hỏng) và SC-070/BE (EV3 hết lượt). API đọc và lệnh đánh dấu đã xử lý chưa có spec, SC-122/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Module notify hoặc tác vụ nền thêm một dòng alert_queue mang loại, mức khẩn, nguồn và giờ tạo.
+  - 運用管理者 mở SC-122, lọc theo 業務日 (ngày nghiệp vụ) và trạng thái; dòng chưa xử lý đứng trước, mức khẩn cao hơn ở trên.
+  - Người dùng xử lý xong ngoài màn (gửi lại, chạy lại tác vụ) rồi bấm Đã xử lý kèm ghi chú.
+  - Máy chủ ghi người của phiên và giờ máy chủ vào dòng cảnh báo, thêm một dòng `audit_log`.
+  tieu_chi_nghiem_thu:
+  - Khi bấm Đã xử lý thì hệ thống ghi người xử lý của phiên, giờ máy chủ và ghi chú; người và giờ gửi từ trình duyệt bị bỏ qua.
+  - Khi một thông báo hỏng sau 3 lần thử lại thì có đúng một cảnh báo mới trỏ về dòng nhật ký đó (AC-7).
+  - Khi EV3 hết lượt thử thì có một cảnh báo và ngày nghiệp vụ không bị khoá (P-14).
+  - Khi cảnh báo đã xử lý thì không đánh dấu lại được; máy không tự đóng cảnh báo nào.
+  - Khi 運用管理者 chưa có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-122 có nút Đã xử lý, cột nguồn và cách suy trạng thái theo G-FG12-04.
+- key: SC-122/FE
+  cha: SC-122
+  tracker: devtask
+  title_vi: 'Giao diện: Hàng đợi cảnh báo vận hành'
+  spec_refs:
+    sc:
+    - SC-122
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG12-04
+  mo_ta: 'Dựng màn hàng đợi cảnh báo ở văn phòng: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng có huy hiệu mức khẩn, nút Đã xử lý kèm ô ghi chú ở từng dòng chưa xử lý.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dòng chưa xử lý đứng trước; trong nhóm đó mức khẩn cao hơn ở trên.
+  - Người xử lý và giờ xử lý chỉ hiển thị sau khi máy chủ ghi, không có ô nhập.
+  - Khi không còn cảnh báo nào khớp bộ lọc thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-122/BE
+  cha: SC-122
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Hàng đợi cảnh báo vận hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - alert_queue
+    fr: []
+    adr:
+    - ADR-013
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-14
+  gap_refs:
+  - G-FG12-04
+  mo_ta: Viết spec rồi làm API đọc hàng đợi, lệnh đánh dấu đã xử lý trên module notify (P-01), cùng hàm thêm cảnh báo cho module khác gọi khi hết lượt thử (P-14).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lệnh đánh dấu chỉ nhận dòng còn mở, ghi người của phiên, giờ máy chủ và `audit_log` trong cùng giao dịch CSDL.
+  - Hàm thêm cảnh báo nhận loại, mức khẩn và mã dòng nguồn; gọi hai lần cho cùng nguồn chỉ sinh một cảnh báo.
+  - Trạng thái mở hay đã xử lý suy từ giờ xử lý; ô lọc trạng thái dùng đúng quy tắc đó (G-FG12-04).
+  dinh_nghia_xong: []
+- key: SC-122/TEST
+  cha: SC-122
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Hàng đợi cảnh báo vận hành'
+  spec_refs:
+    sc:
+    - SC-122
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-NOTIFY-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử nguồn vào hàng đợi cảnh báo và bước người đánh dấu đã xử lý.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giả lập email lỗi ở mọi lần: sau đúng 3 lần thử lại có một cảnh báo trỏ về dòng nhật ký, thông báo trong ứng dụng vẫn còn.'
+  - 'Gửi lệnh đánh dấu kèm người và giờ giả: dòng cảnh báo lưu người của phiên và giờ máy chủ.'
+  - 'Gửi lệnh đánh dấu cho cảnh báo đã xử lý: bị từ chối, dòng không đổi.'
+  dinh_nghia_xong: []
+- key: DATA-FG12
+  cha: FG-12
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (chưa đặt vùng): notification_log, alert_queue'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - alert_queue
+    - notification_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG12-02
+  - G-FG12-04
+  mo_ta: 'Hai bảng notification_log (nhật ký gửi, chỉ thêm dòng) và alert_queue (hàng đợi cảnh báo, sửa được) không có màn nào ghi: module notify và tác vụ nền thêm dòng, SC-121 chỉ đọc, SC-122 chỉ đánh dấu đã xử lý. Story này dựng hai bảng trên kho mã hệ đích và bổ sung các cột mà FR-NOTIFY-01, FR-NOTIFY-02 cần nhưng SKM_DB chưa có (P-06).'
+  pham_vi: Bảng `notification_log` và `alert_queue` (chủ migration, chưa thuộc vùng dữ liệu nào trong SKM_DB); thêm người nhận, giờ phát sinh sự kiện, mức khẩn cho notification_log (G-FG12-02) và nguồn, ghi chú xử lý cho alert_queue (G-FG12-04).
+  luong_chinh:
+  - BE chốt cột thêm và kiểu từng cột với Tech Lead, ghi vào SKM_DB trước khi viết migration (P-06).
+  - BE viết migration hai bảng; notification_log bị chặn sửa và xoá ở mức quyền CSDL.
+  - SC-121/BE và SC-122/BE ghi thử dữ liệu mẫu để kiểm ràng buộc trước khi dựng màn.
+  tieu_chi_nghiem_thu:
+  - Khi sửa hay xoá một dòng notification_log thì CSDL từ chối.
+  - Khi thêm một dòng notification_log thì dòng có đủ sự kiện, kênh, người nhận, giờ phát sinh, giờ gửi, số lần thử lại và trạng thái cuối.
+  - Khi một cảnh báo sinh từ thông báo hỏng thì dòng alert_queue trỏ được về dòng nhật ký gốc.
+  dinh_nghia_xong:
+  - SKM_DB ghi cột thêm của hai bảng và không còn ô kiểu «—» (P-06).
+- key: DATA-FG12/DB
+  cha: DATA-FG12
+  tracker: devtask
+  title_vi: Tạo bảng notification_log, alert_queue
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - alert_queue
+    - notification_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG12-02
+  - G-FG12-04
+  mo_ta: Viết migration notification_log và alert_queue kèm cột thêm theo G-FG12-02, G-FG12-04; chốt kiểu từng cột trước khi tạo bảng (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài khoản CSDL của ứng dụng không có quyền sửa, xoá trên notification_log.
+  - Có chỉ mục theo giờ gửi và trạng thái cuối để SC-121 lọc theo ngày.
+  - alert_queue có ràng buộc duy nhất theo dòng nguồn, nên một nguồn chỉ sinh một cảnh báo.
+  dinh_nghia_xong: []
+- key: DATA-FG12/TEST
+  cha: DATA-FG12
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (chưa đặt vùng): notification_log, alert_queue'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của hai bảng nhật ký gửi và hàng đợi cảnh báo.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi lệnh sửa và lệnh xoá một dòng notification_log: CSDL từ chối cả hai.'
+  - 'Thêm hai cảnh báo cho cùng một dòng nguồn: chỉ dòng đầu được ghi.'
+  - 'Thêm một dòng nhật ký thiếu người nhận: CSDL từ chối.'
+  dinh_nghia_xong: []
+- key: INV-FG12-MUC-KHAN
+  cha: FG-12
+  tracker: investigation
+  title_vi: Danh mục sự kiện thông báo và sự kiện nào ở mức Critical
+  han: Trước sprint của SC-120/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_SYSTEM_DESIGN.md EV2 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-120
+    - SC-122
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-NOTIFY-02
+    adr: []
+    nfr: []
+    sd:
+    - EV2
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG12-01
+  mo_ta: Hệ thống gửi thông báo cho những sự kiện nào, và sự kiện nào thuộc mức Critical (khẩn nhất) phải gửi xong trong 5 phút? FR-NOTIFY-02 và EV2 đặt mốc 5 phút nhưng không spec nào xếp sự kiện vào mức, bảng cấu hình thông báo cũng chưa có cột mức khẩn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

@@ -1,0 +1,775 @@
+# Seed epic E18 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E18
+  tracker: epic
+  title_vi: Phi chức năng và bảo mật
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-11
+  - P-14
+  - P-15
+  - P-19
+  gap_refs: []
+  mo_ta: 'Nhóm việc này biến 14 yêu cầu phi chức năng N1–N14 của thiết kế hệ thống thành việc đo hoặc kiểm được: khả dụng trong cửa sổ dịch vụ, chạy suy giảm và khôi phục, hiệu năng theo hồ sơ tải, bảo mật, lưu trữ, giám sát vận hành, thao tác bàn phím và tương thích trình duyệt, tablet. Mỗi nhóm có ca đo chạy trên staging trước phát hành; chỗ RFP chưa cho số thì hệ thống đọc từ tham số cấu hình và có issue điều tra đi kèm.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E18 đã đóng.
+  - Khi chạy bộ đo trước phát hành thì mỗi mã NFR-*, DR-RET-01 và SEC-IAM-02 có kết quả đạt, hoặc ghi rõ vì sao chưa đo được.
+  - Khi một ngưỡng chưa có số (phiên và khoá tạm, thời gian chờ của tác vụ đối soát, mã hoá tệp xuất) thì hệ thống đọc giá trị từ cấu hình, không viết cứng trong mã.
+  - Các issue điều tra của E18 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: NFR-AVL
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu khả dụng
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-010
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E18-01
+  - G-FG14-07
+  - G-E18-02
+  mo_ta: 'Story này gom ba yêu cầu khả dụng: đạt 99,5% mỗi tháng tính trong cửa sổ dịch vụ 02:00–10:00 giờ Nhật, làm tiếp được khi mất kết nối ngắn ở hiện trường, và khôi phục sau sự cố trong RTO 4 giờ, RPO 15 phút. Theo ADR-010, chỉ ba thao tác nhập ở hiện trường được lưu cục bộ rồi đồng bộ; chốt giao dịch và khoá ngày luôn cần mạng.'
+  pham_vi:
+  - NFR-AVL-01, NFR-AVL-02, NFR-AVL-03 (N1–N3); sao lưu hằng ngày và bản dự phòng đồng bộ cùng vùng của PLT-02; đồng hồ đo gọi API-220.
+  - 'Ba thao tác lưu cục bộ theo AD-04 của LAB-01: nhập lô ở SC-020, ghi 目利き (thẩm định bằng mắt) ở SC-023, ghi lần giao ở SC-060 (G-FG14-07); điều giải xung đột ở SC-151.'
+  luong_chinh:
+  - Infra cấu hình đồng hồ đo chỉ tính trong cửa sổ dịch vụ; bảo trì đặt ngoài cửa sổ.
+  - Infra bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ.
+  - QA ngắt kết nối thiết bị hiện trường trên staging, làm ba thao tác ghi tạm rồi thử chốt giao dịch và khoá ngày.
+  - Infra diễn tập khôi phục trên staging, đo thời gian và lượng dữ liệu mất; PM ghi số đo vào story.
+  tieu_chi_nghiem_thu:
+  - Khi tính khả dụng thì chỉ các phút trong cửa sổ dịch vụ được tính, bảo trì ngoài cửa sổ không bị trừ.
+  - Khi mất kết nối thì ba thao tác nhập được lưu tạm và đồng bộ lại khi có mạng; chốt 相対取引 (giao dịch thỏa thuận) và khoá ngày bị chặn, màn báo rõ đang mất kết nối.
+  - Khi đồng bộ gặp xung đột thì dòng đó chờ người xử ở SC-151, không tự trộn.
+  - Khi diễn tập khôi phục thì thời gian không quá 4 giờ, dữ liệu mất không quá 15 phút, và số đo thật ghi vào story.
+  dinh_nghia_xong:
+  - Danh sách ba thao tác nằm ở ràng buộc của bảng sync_queue và ở PREMISE, không chỉ trong mã (G-FG14-07); tiêu chí lưu tạm đã có ở FE của ba màn (G-E18-01).
+- key: NFR-AVL/TEST
+  cha: NFR-AVL
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu khả dụng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử chạy suy giảm và khôi phục trên staging.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngắt kết nối khi đang nhập lô ở SC-020: dữ liệu giữ cục bộ và đồng bộ lại khi có mạng.'
+  - 'Ngắt kết nối lúc chốt giao dịch hoặc khoá ngày: thao tác bị chặn, màn báo mất kết nối, không lưu cục bộ.'
+  - 'Hai thiết bị đồng bộ cùng một bản ghi: dòng xung đột chờ người xử ở SC-151.'
+  dinh_nghia_xong: []
+- key: NFR-AVL/INFRA
+  cha: NFR-AVL
+  tracker: devtask
+  title_vi: 'Hạ tầng: Yêu cầu khả dụng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-010
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E18-02
+  mo_ta: Cấu hình đồng hồ đo khả dụng trong cửa sổ dịch vụ, sao lưu và bản dự phòng đồng bộ, rồi diễn tập khôi phục trên staging để đo RTO, RPO thật.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đồng hồ đo dùng API-220 và chỉ tính trong 02:00–10:00 giờ Nhật.
+  - Diễn tập khôi phục ít nhất một lần trên staging trước phát hành, ghi thời gian và lượng dữ liệu mất vào story (G-E18-02).
+  - Sao lưu, nhật ký và bản dự phòng chỉ nằm trong vùng Nhật.
+  dinh_nghia_xong: []
+- key: NFR-PERF
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu hiệu năng
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-PERF-01
+    - NFR-PERF-02
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E18-03
+  mo_ta: 'Story này đo hai yêu cầu hiệu năng: thao tác tra cứu thông thường có p95 không quá 2 giây ở tải thiết kế, và hệ thống chịu được hồ sơ tải FIG-LOAD-01 (350 lô và 700 giao dịch ngày thường, 600 lô và 1.200 giao dịch ngày cao điểm) mà tác vụ lõi không chậm đi. Khung nhìn của bảng chỉ-thêm (ADR-003) và nền tảng đã chọn (ADR-008) chưa từng được đo tải.'
+  pham_vi:
+  - NFR-PERF-01 (N4), NFR-PERF-02 (N5); hồ sơ tải 180 tài khoản, 60 người đồng thời.
+  - Danh sách thao tác tra cứu và tác vụ lõi cần đo do Tech Lead duyệt (G-E18-03); đề xuất tác vụ lõi là nhập lô, chốt giao dịch và ghi giao hàng.
+  - Staging của PLT-02; công cụ tạo tải k6 hoặc tương đương.
+  luong_chinh:
+  - Tech Lead chốt danh sách thao tác tra cứu và tác vụ lõi cần đo.
+  - QA dựng kịch bản tải theo FIG-LOAD-01 cho mức ngày thường và mức cao điểm.
+  - QA chạy tải trên staging trước mỗi lần phát hành, ghi p95 từng thao tác và độ trễ tác vụ lõi.
+  - BE xem truy vấn chậm, nhất là khung nhìn tổng hợp của bảng chỉ-thêm, sửa rồi đo lại.
+  - PM ghi kết quả vào story và giữ lại bản phát hành khi chưa đạt.
+  tieu_chi_nghiem_thu:
+  - Khi chạy tải mức thiết kế thì p95 của mỗi thao tác tra cứu trong danh sách không quá 2 giây.
+  - Khi chạy tải cao điểm thì độ trễ tác vụ lõi được so với mức ngày thường và Tech Lead xác nhận không chậm đi; mức tăng chấp nhận được chưa có số (G-E18-03).
+  - Khi đọc số dư qua khung nhìn của bảng chỉ-thêm thì đã có số đo trên lượng dữ liệu ngày cao điểm.
+  - Khi ghi kết quả đo thì có môi trường, ngày chạy và phiên bản bản dựng.
+  dinh_nghia_xong:
+  - Danh sách thao tác cần đo và kịch bản tải được Tech Lead duyệt và lưu trong repo (G-E18-03).
+- key: NFR-PERF/BE
+  cha: NFR-PERF
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Yêu cầu hiệu năng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-PERF-01
+    - NFR-PERF-02
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Rà và sửa truy vấn của các thao tác tra cứu và khung nhìn tổng hợp của bảng chỉ-thêm theo kết quả đo tải.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Thao tác nào vượt p95 2 giây đều có phân tích truy vấn và cách sửa ghi lại.
+  - Mọi truy vấn báo cáo có thời gian chờ tối đa theo cấu hình, để một báo cáo nặng không kéo cả khối (ADR-009).
+  - Khung nhìn số dư có chỉ mục và số đo trước, sau khi sửa.
+  dinh_nghia_xong: []
+- key: NFR-PERF/TEST
+  cha: NFR-PERF
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu hiệu năng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-PERF-01
+    - NFR-PERF-02
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế kịch bản đo tải theo hồ sơ FIG-LOAD-01 và danh sách thao tác đã duyệt.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tải mức ngày thường: p95 từng thao tác tra cứu không quá 2 giây.'
+  - 'Tải cao điểm 600 lô, 1.200 giao dịch mỗi ngày với 60 người đồng thời: ghi độ trễ tác vụ lõi so với mức ngày thường.'
+  - 'Thao tác đọc số dư qua khung nhìn của bảng chỉ-thêm trên lượng dữ liệu ngày cao điểm: ghi p95 riêng cho thao tác này.'
+  dinh_nghia_xong: []
+- key: NFR-SEC
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu bảo mật
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-SEC-01
+    - NFR-SEC-03
+    - NFR-SEC-04
+    - SEC-IAM-02
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-15
+  gap_refs:
+  - G-FG01-01
+  - G-FG01-10
+  mo_ta: 'Story này kiểm bảo mật ở mức toàn hệ thống: tài khoản quản trị và vai duyệt phải qua MFA, người tham gia không bị đòi MFA vì họ không dùng màn hình ở phạm vi nền, phiên có thời hạn và khoá tạm sau nhiều lần sai, TLS trên mọi đường truyền và bí mật tách khỏi mã nguồn. Ngưỡng phiên và khoá tạm chưa có số nên đọc từ cấu hình (P-15).'
+  pham_vi: NFR-SEC-01, SEC-IAM-02, NFR-SEC-03, NFR-SEC-04 (N6–N9); Cognito user pool, SC-001 đăng nhập và SC-006 thiết lập MFA của FG-01; ngưỡng phiên chờ INV-Q-SD3; quét bảo mật tự động trong CI.
+  luong_chinh:
+  - BE bật MFA bắt buộc cho vai 市場管理者 (quản lý chợ) và 承認者 (người duyệt); vai hiện trường không bị đòi MFA (ADR-011).
+  - BE đọc thời hạn phiên, số lần sai và thời gian khoá từ cấu hình, ghi nhật ký khi khoá tạm.
+  - Infra bật TLS ở mọi điểm vào và giữa các thành phần, giữ bí mật trong Secrets Manager.
+  - QA chạy ca đăng nhập không MFA, nhập sai liên tiếp và quét bí mật; Tech Lead rà chỗ lưu bí mật trước mỗi lần phát hành.
+  tieu_chi_nghiem_thu:
+  - Khi tài khoản 市場管理者 hoặc 承認者 đăng nhập không có mã MFA thì bị chặn.
+  - Khi nhập sai quá số lần cấu hình thì tài khoản bị khoá tạm trong thời gian cấu hình và có dòng nhật ký; hai giá trị chưa có số (P-15).
+  - Khi gọi một điểm vào bằng kết nối không mã hoá thì không có dữ liệu nghiệp vụ nào trả về.
+  - Khi quét repo và bản dựng thì không có bí mật, khoá hay chuỗi kết nối.
+  - Khi tìm tài khoản đăng nhập của 仲卸 (trung gian bán buôn) hay 売買参加者 (người tham gia mua bán) thì không có, vì người tham gia chỉ là dữ liệu (SEC-IAM-02).
+  dinh_nghia_xong:
+  - Kết quả quét bảo mật và rà bí mật của lần phát hành đầu ghi vào story.
+- key: NFR-SEC/BE
+  cha: NFR-SEC
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Yêu cầu bảo mật'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-SEC-01
+    - NFR-SEC-03
+    - NFR-SEC-04
+    - SEC-IAM-02
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-15
+  gap_refs: []
+  mo_ta: 'Làm phần máy chủ của bảo mật toàn hệ: bắt MFA theo vai, đọc ngưỡng phiên và khoá tạm từ cấu hình, ghi nhật ký hành vi bất thường.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài khoản vai quản trị hoặc vai duyệt chưa qua MFA thì không tạo được phiên.
+  - Ba ngưỡng phiên và khoá tạm đọc từ cấu hình; đổi giá trị không phải sửa mã (P-15).
+  - Nhật ký kiểm toán không chứa mật khẩu, token hay chuỗi kết nối.
+  dinh_nghia_xong: []
+- key: NFR-SEC/TEST
+  cha: NFR-SEC
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu bảo mật'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-SEC-01
+    - NFR-SEC-03
+    - NFR-SEC-04
+    - SEC-IAM-02
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bảo mật mức toàn hệ thống trên staging.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tài khoản 承認者 (người duyệt) đăng nhập không có mã MFA: bị chặn; tài khoản hiện trường không bị đòi MFA.'
+  - 'Nhập sai tới ngưỡng cấu hình: tài khoản bị khoá tạm, có dòng nhật ký, mở lại sau thời gian cấu hình.'
+  - 'Gọi điểm vào bằng kết nối không mã hoá: không có dữ liệu nghiệp vụ trả về.'
+  dinh_nghia_xong: []
+- key: NFR-DR
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu lưu trữ
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - DR-RET-01
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-19
+  gap_refs:
+  - G-FG14-03
+  mo_ta: 'Story này làm yêu cầu lưu trữ DR-RET-01: dữ liệu nghiệp vụ giữ trực tuyến 7 năm, ảnh và chứng từ bổ trợ giữ trực tuyến 3 năm rồi chuyển sang lớp lưu lạnh. Hệ thống chỉ chuyển lớp theo lịch, không xoá vật lý dữ liệu đến hạn vì chưa có người duyệt xoá cứng (P-19); dòng giao dịch và đối soát đã vào báo cáo chính thức không bao giờ bị xoá cứng.'
+  pham_vi:
+  - DR-RET-01 (N10); bảng retention_policies và màn SC-142 của FG-14, mỗi loại tài liệu một dòng thời hạn (G-FG14-03); S3 có khoá đối tượng và vòng đời theo thời hạn (ADR-015).
+  - Tác vụ chuyển lớp chạy theo lịch ngoài cửa sổ dịch vụ; nơi lưu lạnh chờ INV-Q-19, số năm ở lớp lạnh để trống vì chưa có nguồn số.
+  - Không có lệnh xoá vật lý dữ liệu quá hạn.
+  luong_chinh:
+  - Infra cấu hình vòng đời lưu trữ của ảnh và chứng từ theo số năm đọc từ retention_policies.
+  - Infra đặt khoá đối tượng cho chứng từ để không ai ghi đè hay xoá trước hạn.
+  - Tác vụ nền chuyển dữ liệu đến hạn sang lớp lạnh theo lịch và ghi vết mỗi lần chạy.
+  - QA lấy lại thử một chứng từ từ lớp lạnh và đo thời gian.
+  tieu_chi_nghiem_thu:
+  - Khi ảnh hay chứng từ bổ trợ đủ 3 năm trực tuyến thì tác vụ chuyển nó sang lớp lạnh, bản ghi nghiệp vụ trỏ tới vẫn tra được; phiếu và bảng chính vẫn ở trực tuyến đủ 7 năm.
+  - Khi thử xoá hay ghi đè chứng từ còn trong hạn thì kho lưu từ chối.
+  - Khi lấy lại một chứng từ ở lớp lạnh thì xong trong 2 ngày, đúng mức của retention_policies.
+  - Khi dữ liệu đến hạn mà chưa có người duyệt xoá thì không có lệnh xoá vật lý nào chạy (P-19).
+  dinh_nghia_xong:
+  - Số năm lưu của từng loại dữ liệu nằm trong retention_policies, đổi được mà không sửa mã.
+- key: NFR-DR/TEST
+  cha: NFR-DR
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu lưu trữ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - DR-RET-01
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử chuyển lớp lưu trữ, chặn xoá và lấy lại từ lớp lạnh.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Chứng từ đủ hạn trực tuyến: chuyển sang lớp lạnh, bản ghi trỏ tới vẫn mở được sau khi lấy lại.'
+  - 'Xoá chứng từ còn trong hạn: bị từ chối.'
+  - 'Dữ liệu đến hạn, chưa có người duyệt xoá: không dòng nào bị xoá vật lý.'
+  dinh_nghia_xong: []
+- key: NFR-DR/INFRA
+  cha: NFR-DR
+  tracker: devtask
+  title_vi: 'Hạ tầng: Yêu cầu lưu trữ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - DR-RET-01
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Cấu hình kho lưu ảnh và chứng từ có khoá đối tượng, vòng đời chuyển lớp lạnh theo số năm cấu hình, và lịch chạy tác vụ chuyển lớp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Số năm lưu đọc từ cấu hình, không viết cứng trong hạ tầng hay mã.
+  - Chứng từ còn trong hạn không xoá được và không ghi đè được.
+  - Lấy lại thử một chứng từ từ lớp lạnh, đo thời gian và ghi vào story.
+  dinh_nghia_xong: []
+- key: NFR-OPS
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu vận hành
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+    - NFR-OPS-02
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-14
+  gap_refs:
+  - G-FG14-06
+  mo_ta: 'Story này dựng phần giám sát của NFR-OPS-01: tình trạng sống, lỗi tác vụ nền và xuất dữ liệu, lỗi gửi thông báo, sự kiện bảo mật đều phải tới được người vận hành. Story kiểm thêm NFR-OPS-02: đổi quy tắc hay suất bằng thay đổi cấu hình có duyệt, không sửa dữ liệu lịch sử. Thời gian chờ và số lần thử của tác vụ đối soát ngày là tham số chưa có số (P-14).'
+  pham_vi: NFR-OPS-01, NFR-OPS-02 (N11, N12); SC-150 bảng giám sát của FG-14, SC-122 hàng đợi cảnh báo của FG-12 và bảng alert_queue; CloudWatch, CloudTrail của PLT-02; API-220; luồng đổi bản quy tắc của FG-10.
+  luong_chinh:
+  - 'Infra đặt cảnh báo cho bốn nhóm: API-220 hỏng, tác vụ nền hoặc lô xuất thất bại, gửi thông báo thất bại, sự kiện bảo mật.'
+  - Mỗi cảnh báo thêm một dòng alert_queue để người vận hành thấy ở SC-122; SC-150 hiện số đếm theo nhóm (G-FG14-06).
+  - QA gây lỗi từng nhóm trên staging và xem cảnh báo có tới không.
+  - Tech Lead rà một lần đổi bản quy tắc ở FG-10, xác nhận bản cũ và giao dịch đã chốt không đổi.
+  tieu_chi_nghiem_thu:
+  - Khi API-220 trả 500 trên một máy ứng dụng thì có cảnh báo nhóm tình trạng sống ở SC-122.
+  - Khi tác vụ đối soát ngày hết số lần thử cấu hình thì có cảnh báo và ngày không bị tự khoá (P-14).
+  - Khi lô xuất kế toán hoặc lần gửi thông báo thất bại thì có cảnh báo đúng nhóm, không mất im lặng.
+  - Khi tài khoản bị khoá tạm vì nhập sai thì có cảnh báo nhóm bảo mật.
+  - Khi một bản quy tắc mới có hiệu lực thì bản cũ và mọi giao dịch đã chốt theo bản cũ giữ nguyên giá trị.
+  dinh_nghia_xong:
+  - SC-150 hiện được bốn nhóm giám sát theo G-FG14-06 trước khi đóng story.
+- key: NFR-OPS/TEST
+  cha: NFR-OPS
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu vận hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+    - NFR-OPS-02
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho bốn nhóm giám sát và cho việc đổi bản quy tắc không đụng dữ liệu lịch sử.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gây lỗi API-220, lỗi lô xuất, lỗi gửi email và khoá tạm tài khoản: mỗi lỗi sinh đúng một cảnh báo đúng nhóm ở SC-122.'
+  - 'Tác vụ đối soát ngày hết số lần thử: có cảnh báo, ngày không bị khoá.'
+  - 'Đổi bản quy tắc: bản cũ và giao dịch đã chốt không đổi.'
+  dinh_nghia_xong: []
+- key: NFR-OPS/INFRA
+  cha: NFR-OPS
+  tracker: devtask
+  title_vi: 'Hạ tầng: Yêu cầu vận hành'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-OPS-01
+    - NFR-OPS-02
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG14-06
+  mo_ta: Đặt cảnh báo cho bốn nhóm giám sát trên CloudWatch và đẩy mỗi cảnh báo thành một dòng của hàng đợi cảnh báo vận hành.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi nhóm có ít nhất một cảnh báo đã được gây thử trên staging.
+  - Ngưỡng của từng cảnh báo là tham số cấu hình; giá trị khởi tạo do Tech Lead duyệt và ghi trong README vận hành.
+  - Nhật ký giám sát và vết thao tác hạ tầng chỉ nằm trong vùng Nhật.
+  dinh_nghia_xong: []
+- key: NFR-USE
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu khả dụng sử dụng
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-USE-01
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-11
+  gap_refs: []
+  mo_ta: 'Story này kiểm NFR-USE-01: ba luồng nhập lô, chốt giao dịch và ghi nhận giao hàng làm trọn được bằng bàn phím, và lỗi được báo rõ tại đúng ô. Trên tablet hiện trường, vùng chạm và độ tương phản theo giả định của P-11, chờ khách xác nhận qua INV-GD-04.'
+  pham_vi:
+  - NFR-USE-01 (N13); màn SC-020, SC-030, SC-060.
+  - Mã lỗi chung M_nn; vùng chạm tối thiểu 64 px và tương phản 7 trên 1 ở lớp tablet (P-11, giả định).
+  luong_chinh:
+  - 'QA lập kịch bản đi hết ba luồng chỉ bằng bàn phím: di chuyển giữa các ô, chọn, gửi, sửa lỗi.'
+  - BE bảo đảm mọi lỗi kiểm dữ liệu trả mã M_nn kèm tên ô bị sai để giao diện chỉ đúng chỗ.
+  - QA chạy kịch bản trên PC văn phòng và tablet hiện trường, đo vùng chạm và độ tương phản ở lớp tablet.
+  - PM ghi kết quả; chỗ chưa đạt mở việc ở sub-issue FE của màn liên quan.
+  tieu_chi_nghiem_thu:
+  - Khi người dùng chỉ dùng bàn phím thì làm trọn được nhập lô ở SC-020, chốt giao dịch ở SC-030 và ghi lần giao ở SC-060.
+  - Khi gửi dữ liệu sai thì màn chỉ ra đúng ô sai, câu báo theo mã lỗi chung và không lộ chi tiết lỗi máy chủ.
+  - Khi đo ở lớp tablet thì vùng chạm và độ tương phản đạt giá trị của P-11; khách đổi giá trị thì chỉ soát lại FE.
+  dinh_nghia_xong:
+  - Kết quả chạy kịch bản bàn phím của ba màn ghi vào story kèm thiết bị và trình duyệt đã dùng.
+- key: NFR-USE/BE
+  cha: NFR-USE
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Yêu cầu khả dụng sử dụng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-USE-01
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Bảo đảm phản hồi lỗi của các API phục vụ SC-020, SC-030, SC-060 mang mã M_nn và tên trường bị sai, để giao diện báo đúng ô.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi lỗi kiểm dữ liệu của các API đó trả mã M_nn kèm tên trường.
+  - Lỗi máy chủ chỉ trả mã lỗi chung, chi tiết ghi vào nhật ký máy chủ.
+  - Câu báo lấy theo mã từ bảng mã lỗi chung, không viết cứng trong từng API.
+  dinh_nghia_xong: []
+- key: NFR-USE/TEST
+  cha: NFR-USE
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu khả dụng sử dụng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-USE-01
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử thao tác bàn phím cho ba luồng lõi và đo chuẩn giao diện ở lớp tablet.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đi hết SC-020 chỉ bằng bàn phím, có một ô sai rồi sửa: làm trọn được, lỗi chỉ đúng ô.'
+  - Làm tương tự với SC-030 và SC-060.
+  - Đo vùng chạm và độ tương phản trên tablet theo giá trị của P-11.
+  dinh_nghia_xong: []
+- key: NFR-COMP
+  cha: E18
+  tracker: story
+  title_vi: Yêu cầu tương thích
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-COMP-01
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-11
+  gap_refs:
+  - G-E18-04
+  mo_ta: 'Story này kiểm NFR-COMP-01: hệ thống chạy trên trình duyệt đã duyệt ở PC văn phòng và trên tablet tại hiện trường. RFP và LAB-4 chưa nêu danh sách trình duyệt, phiên bản hay mẫu tablet, nên ma trận kiểm chờ câu trả lời của khách (G-E18-04). Mã hoá ký tự của tệp xuất kế toán thuộc cùng nhóm tương thích và theo giả định của P-11.'
+  pham_vi:
+  - NFR-COMP-01 (N14); các màn dùng ở hiện trường hoặc ở cả hai nơi, ví dụ SC-020, SC-023, SC-030, SC-060, SC-151.
+  - 'Tệp xuất của SC-113: mã hoá đọc từ cấu hình, Shift-JIS là giá trị khởi tạo (P-11).'
+  - Ma trận trình duyệt và thiết bị chạy trước mỗi lần phát hành lớn.
+  luong_chinh:
+  - BrSE hỏi khách danh sách trình duyệt, phiên bản và mẫu tablet (G-E18-04).
+  - QA lập ma trận kiểm từ danh sách đó; khi chưa có đáp thì ma trận dùng giả định của đội và ghi nhãn chờ xác nhận.
+  - QA chạy các luồng chính trên từng ô của ma trận, ghi lỗi hiển thị và lỗi thao tác.
+  - BE kiểm tệp xuất mở đúng ở phía nhận với mã hoá đang cấu hình.
+  - PM ghi kết quả ma trận vào story trước phát hành.
+  tieu_chi_nghiem_thu:
+  - Khi chạy ma trận thì mỗi cặp trình duyệt và thiết bị trong danh sách có kết quả đạt hoặc lỗi được ghi lại.
+  - Khi mở màn hiện trường trên tablet thì đủ item và thao tác như trên PC.
+  - Khi đổi mã hoá tệp xuất trong cấu hình thì tệp ra đúng mã hoá mới mà không sửa mã (P-11).
+  dinh_nghia_xong:
+  - Ma trận trình duyệt và thiết bị có nguồn là câu trả lời của khách, hoặc ghi rõ giả định đang dùng (G-E18-04).
+- key: NFR-COMP/BE
+  cha: NFR-COMP
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Yêu cầu tương thích'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-COMP-01
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-11
+  gap_refs: []
+  mo_ta: 'Làm phần máy chủ cho tương thích: mã hoá tệp xuất đọc từ cấu hình, và API trả cùng dữ liệu cho PC và tablet.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mã hoá tệp xuất là tham số, giá trị khởi tạo Shift-JIS (P-11).
+  - Đổi mã hoá thì tệp xuất ra đúng mã hoá mới, không lỗi ký tự ở tên tiếng Nhật.
+  - API không rẽ nhánh theo loại trình duyệt hay thiết bị gọi.
+  dinh_nghia_xong: []
+- key: NFR-COMP/TEST
+  cha: NFR-COMP
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Yêu cầu tương thích'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-COMP-01
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ma trận kiểm thử trình duyệt, thiết bị và tệp xuất.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Chạy luồng nhập lô và ghi giao hàng trên từng tablet của ma trận.
+  - Mở các màn văn phòng trên từng trình duyệt PC của ma trận.
+  - 'Mở tệp xuất với mã hoá đang cấu hình: không lỗi ký tự ở tên người tham gia tiếng Nhật.'
+  dinh_nghia_xong: []
+- key: INV-GD-04
+  cha: E18
+  tracker: investigation
+  title_vi: Mã hoá tệp xuất, mức thuế, vùng chạm và độ tương phản tablet
+  han: Trước LAB-5 (đề xuất)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: PREMISE.md (LAB-4) §4.1 dòng 4
+  spec_refs:
+    sc:
+    - SC-113
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-COMP-01
+    - NFR-USE-01
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-11
+  gap_refs: []
+  mo_ta: Tệp xuất kế toán dùng mã hoá ký tự nào, hệ thống cần những mức thuế nào, mức nào áp cho từng dòng giao dịch và số tiền đã gồm thuế hay chưa, và màn trên tablet hiện trường phải đạt cỡ vùng chạm và độ tương phản bao nhiêu? RFP không nêu các giá trị này; LAB-4 tự đặt mã hoá, mức thuế, vùng chạm và độ tương phản làm giả định của bên thiết kế, chưa ai phía khách xác nhận, còn cách áp thuế theo dòng chưa có giả định nào (G-FG11-08).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-Q-12
+  cha: E18
+  tracker: investigation
+  title_vi: Mẫu tablet hiện trường và danh sách trình duyệt đã duyệt
+  han: Trước lần chạy ma trận tương thích đầu tiên ở NFR-COMP/TEST
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_SYSTEM_DESIGN.md N14 (LAB-4) · Q-12 (LAB-01)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-012
+    nfr:
+    - NFR-COMP-01
+    hoi:
+    - Q-12
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-E18-04
+  mo_ta: Tablet ở hiện trường là mẫu nào, chạy hệ điều hành nào, và danh sách trình duyệt cùng phiên bản đã duyệt cho PC văn phòng là gì? Yêu cầu tương thích N14 chỉ ghi chạy theo danh sách trình duyệt đã duyệt mà không có danh sách, còn câu Q-12 của LAB-01 chưa có đáp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

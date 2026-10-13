@@ -1,0 +1,710 @@
+# Seed epic FG-13 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-13
+  tracker: epic
+  title_vi: Vết kiểm toán và dữ liệu cá nhân
+  feature: audit-privacy
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-04
+  - P-06
+  - P-12
+  - P-19
+  gap_refs: []
+  mo_ta: Nhóm chức năng này giữ 監査証跡 (vết kiểm toán) cho mọi thao tác tạo, sửa, duyệt, khoá và đổi quyền, kèm giá trị trước, sau và lý do, để kiểm toán nội bộ tra lại theo giao dịch, ngày, người tham gia và loại thao tác. Phần 個人情報 (dữ liệu cá nhân) nhận và theo dõi yêu cầu xem, sửa, xoá của người tham gia theo luật bảo vệ thông tin cá nhân, đồng thời ghi người dùng nội bộ nào đã đọc dữ liệu cá nhân của ai. Ba bảng vết đều chỉ thêm dòng, và chỉ module audit được thêm dòng vào audit_log.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-13 đã đóng.
+  - Khi một thao tác nhạy cảm ở bất kỳ module nào chạy xong thì audit_log có một dòng ghi người làm, giờ máy chủ, giá trị trước, sau và lý do; không đường nào sửa hay xoá dòng đó.
+  - Khi một yêu cầu dữ liệu cá nhân được nhận thì mọi lần đổi trạng thái tới khi đóng đều tra lại được người làm và thời điểm.
+  - Các issue điều tra của FG-13 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-130
+  cha: FG-13
+  tracker: story
+  title_vi: Tra cứu vết kiểm toán
+  ten_ja: 監査ログ検索
+  spec_refs:
+    sc:
+    - SC-130
+    api: []
+    tech: []
+    bang:
+    - audit_log
+    fr:
+    - FR-AUDIT-01
+    - FR-AUDIT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG13-01
+  - G-FG13-02
+  mo_ta: '内部監査 (kiểm toán nội bộ) và 事務部門 (bộ phận hành chính) tra vết kiểm toán của cả hệ thống: ai làm thao tác gì, trên bản ghi nào, giá trị trước và sau, lý do, kết quả. Màn chỉ đọc audit_log và là bằng chứng cho FR-AUDIT-02, nên phải lọc được theo mã giao dịch, ngày nghiệp vụ, người tham gia và loại thao tác (G-FG13-01). Cả hai vai chưa gán vai nội bộ (P-12).'
+  pham_vi: Màn SC-130 (SPEC-SKM-163) ở văn phòng, chỉ đọc `audit_log` (migration thuộc DATA-FG13/DB); mọi module ghi qua hàm của module audit (G-FG13-02). API đọc chưa có spec, SC-130/BE viết rồi làm (P-01); SC-004 của FG-01 là lát cắt đổi quyền của cùng nguồn.
+  luong_chinh:
+  - Người xem mở SC-130; máy chủ kiểm vai của phiên theo ma trận quyền trước khi đọc.
+  - Người xem lọc theo 業務日 (ngày nghiệp vụ), mã giao dịch, người tham gia hoặc loại thao tác rồi bấm Lọc.
+  - Màn hiện người làm, vai, thao tác, bảng và mã đối tượng, lý do, kết quả, thời điểm.
+  - Người xem mở một dòng để xem đủ giá trị trước và sau; màn không có nút sửa hay xoá.
+  tieu_chi_nghiem_thu:
+  - Khi lọc theo mã giao dịch thì hiện mọi dòng audit_log của giao dịch đó, kể cả lần chốt bị từ chối và lần huỷ.
+  - Khi lọc theo 業務日 thì chỉ hiện dòng tạo trong ngày đó theo giờ Nhật.
+  - Khi mở một dòng thì màn hiện giá trị trước và sau; hai khối này không chứa dữ liệu cá nhân thô, mật khẩu hay mã bí mật.
+  - Khi người xem chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  - Màn và API không có lệnh nào sửa hay xoá dòng audit_log.
+  dinh_nghia_xong:
+  - Spec SC-130 có bốn ô lọc và khung giá trị trước, sau theo G-FG13-01.
+- key: SC-130/FE
+  cha: SC-130
+  tracker: devtask
+  title_vi: 'Giao diện: Tra cứu vết kiểm toán'
+  spec_refs:
+    sc:
+    - SC-130
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG13-01
+  mo_ta: 'Dựng màn tra vết kiểm toán ở văn phòng: bốn ô lọc, bảng tám cột, phân trang và khung xem giá trị trước, sau của một dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bốn ô lọc dùng riêng hoặc cùng lúc; ô nào bỏ trống thì không lọc theo ô đó.
+  - Khung trước, sau tô các trường đã đổi.
+  - Khi không có dòng nào khớp thì màn hiện trạng thái rỗng, không báo lỗi.
+  dinh_nghia_xong: []
+- key: SC-130/BE
+  cha: SC-130
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tra cứu vết kiểm toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - audit_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-06
+  gap_refs:
+  - G-FG13-01
+  - G-FG13-02
+  mo_ta: Viết spec rồi làm API tra audit_log trên module audit (P-01), cùng hàm ghi dùng chung mà mọi module gọi thay cho tự thêm dòng (G-FG13-02).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lọc theo người tham gia và mã giao dịch dựa trên cột đối tượng và mã đối tượng; cách nối với bảng nghiệp vụ chốt cùng câu Q5 của SKM_DB (P-06).
+  - Hàm ghi nhận người làm, vai, thao tác, đối tượng, lý do, trước, sau từ bên gọi, tự lấy giờ máy chủ và chạy trong giao dịch CSDL của bên gọi.
+  - Kiểm thử kiến trúc trong CI báo lỗi khi một module khác thêm dòng audit_log mà không qua hàm này.
+  dinh_nghia_xong: []
+- key: SC-130/TEST
+  cha: SC-130
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tra cứu vết kiểm toán'
+  spec_refs:
+    sc:
+    - SC-130
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-01
+    - FR-AUDIT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bốn trục tra cứu và tính chỉ đọc của vết kiểm toán.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Một giao dịch có một lần chốt bị từ chối và một lần huỷ: lọc theo mã giao dịch hiện đủ hai dòng.'
+  - 'Một module cố thêm thẳng dòng audit_log không qua hàm ghi: kiểm thử kiến trúc trong CI báo lỗi.'
+  - 'Gọi API tra bằng tài khoản chưa có dòng trong ma trận quyền: 403 M_05, không trả dòng nào.'
+  dinh_nghia_xong: []
+- key: SC-131
+  cha: FG-13
+  tracker: story
+  title_vi: Nhận yêu cầu dữ liệu cá nhân
+  ten_ja: 個人情報請求受付
+  spec_refs:
+    sc:
+    - SC-131
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG13-03
+  - G-FG13-05
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) hoặc 事務部門 (bộ phận hành chính) ghi một yêu cầu về 個人情報 (dữ liệu cá nhân) do người tham gia gửi tới: 開示 (xin xem), 訂正 (xin sửa) hay 削除 (xin xoá). Mỗi yêu cầu có hạn xử lý và người phụ trách để không yêu cầu nào bị bỏ quên. Giờ nhận và trạng thái đầu do máy chủ gán, không gõ tay (G-FG13-03).'
+  pham_vi: 'Màn SC-131 (SPEC-SKM-164) ở văn phòng; bảng `personal_data_requests` (chủ migration, chỉ thêm dòng), ghi `audit_log`; API ghi chưa có spec, SC-131/BE viết rồi làm (P-01). Không gồm việc trả lời yêu cầu: bước xử lý ghi ở SC-132, cách xử lý yêu cầu xoá chờ G-FG13-05.'
+  luong_chinh:
+  - Người nhận yêu cầu chọn người yêu cầu và loại yêu cầu, nhập hạn xử lý, chọn người phụ trách.
+  - Người nhận bấm Đăng ký; máy chủ kiểm các ô bắt buộc và loại yêu cầu.
+  - Máy chủ thêm một dòng personal_data_requests với giờ nhận theo giờ máy chủ, trạng thái đã tiếp nhận, người ghi của phiên, và ghi audit_log.
+  tieu_chi_nghiem_thu:
+  - Khi bấm Đăng ký thì giờ nhận là giờ máy chủ và trạng thái là đã tiếp nhận; giờ và trạng thái gửi từ trình duyệt bị bỏ qua.
+  - Khi loại yêu cầu không phải xem, sửa hay xoá thì cả màn và máy chủ từ chối (P-03).
+  - Khi hạn xử lý sớm hơn giờ nhận thì máy chủ từ chối; hạn mặc định chưa có số, để cấu hình.
+  - Khi người gọi chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-131 bỏ hai ô nhập tay giờ nhận và trạng thái, ghi ba loại yêu cầu (G-FG13-03).
+- key: SC-131/FE
+  cha: SC-131
+  tracker: devtask
+  title_vi: 'Giao diện: Nhận yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-131
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs:
+  - G-FG13-03
+  mo_ta: 'Dựng biểu mẫu nhận yêu cầu dữ liệu cá nhân ở văn phòng: người yêu cầu, loại xem, sửa hay xoá, hạn xử lý, người phụ trách, nút Đăng ký và Huỷ (P-03).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giờ nhận và trạng thái chỉ hiển thị sau khi đăng ký, không có ô nhập (G-FG13-03).
+  - Khi còn ô bắt buộc trống thì màn báo lỗi tại ô đó và không gửi yêu cầu.
+  - Khi bấm Huỷ thì màn quay lại màn trước, không ghi gì.
+  dinh_nghia_xong: []
+- key: SC-131/BE
+  cha: SC-131
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Nhận yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-03
+  gap_refs:
+  - G-FG13-03
+  mo_ta: 'Viết spec rồi làm API ghi yêu cầu dữ liệu cá nhân trên module audit (P-01): kiểm đầu vào, gán giờ nhận và trạng thái đầu ở máy chủ, thêm dòng và ghi audit_log trong một giao dịch.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Máy chủ kiểm lại mọi ô bắt buộc và ba loại yêu cầu, không dựa vào kiểm tra phía màn (P-03).
+  - Người ghi, giờ nhận và trạng thái đầu do máy chủ gán; tham số cùng tên gửi lên bị bỏ qua.
+  - Lỗi ghi ở bảng nào thì hoàn tác cả dòng yêu cầu lẫn dòng audit_log và trả 500 M_25.
+  dinh_nghia_xong: []
+- key: SC-131/DB
+  cha: SC-131
+  tracker: devtask
+  title_vi: Tạo bảng personal_data_requests
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG13-04
+  mo_ta: Viết migration bảng personal_data_requests, chỉ thêm dòng; chốt kiểu của người yêu cầu, hạn xử lý và người phụ trách, ba ô còn để «—» (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu của nguoi_yeu_cau (có tài khoản hay không), han_xu_ly (ngày hay giờ) và nguoi_phu_trach được chốt, có người duyệt và ghi vào SKM_DB.
+  - Cột loại chỉ nhận ba giá trị xem, sửa, xoá; mỗi lần đổi trạng thái là một dòng mới trỏ về yêu cầu gốc, không sửa dòng cũ (G-FG13-04).
+  dinh_nghia_xong: []
+- key: SC-131/TEST
+  cha: SC-131
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Nhận yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-131
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử nhận yêu cầu dữ liệu cá nhân và việc gán giờ nhận ở máy chủ.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi đăng ký kèm giờ nhận và trạng thái giả: dòng lưu giờ máy chủ và trạng thái đã tiếp nhận.'
+  - 'Gửi loại yêu cầu ngoài ba loại: màn và máy chủ cùng từ chối, không ghi dòng nào.'
+  - 'Gửi hạn xử lý sớm hơn giờ nhận: máy chủ từ chối.'
+  dinh_nghia_xong: []
+- key: SC-132
+  cha: FG-13
+  tracker: story
+  title_vi: Theo dõi yêu cầu dữ liệu cá nhân
+  ten_ja: 個人情報請求処理状況
+  spec_refs:
+    sc:
+    - SC-132
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-19
+  gap_refs:
+  - G-FG13-04
+  - G-FG13-05
+  mo_ta: 運用担当者 (người phụ trách vận hành tư cách) và 事務部門 (bộ phận hành chính) theo dõi yêu cầu về dữ liệu cá nhân còn mở, nhất là yêu cầu sắp tới hạn, rồi ghi từng bước xử lý tới khi đóng. Cho xem, sửa hay xoá là việc người phụ trách quyết; hệ thống ghi ai đổi trạng thái, lúc nào, kết quả gì. Spec màn mới có danh sách nên story bổ sung đường ghi bước xử lý (G-FG13-04).
+  pham_vi: Màn SC-132 (SPEC-SKM-165) ở văn phòng; đọc và thêm dòng trạng thái cho `personal_data_requests` (migration thuộc SC-131/DB), ghi `audit_log`. API đọc và lệnh đổi trạng thái chưa có spec, SC-132/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người theo dõi mở SC-132, lọc theo 業務日 (ngày nghiệp vụ) nhận và trạng thái; yêu cầu còn mở xếp theo hạn gần nhất.
+  - Yêu cầu chạm mốc sắp tới hạn thì hiện nhãn; mốc chưa có số, để cấu hình.
+  - Người phụ trách chọn một yêu cầu, chọn trạng thái mới, ghi kết quả rồi bấm Lưu.
+  - Máy chủ thêm một dòng trạng thái trỏ về yêu cầu gốc với người của phiên, giờ máy chủ, và ghi audit_log.
+  tieu_chi_nghiem_thu:
+  - Khi người phụ trách đổi trạng thái thì hệ thống thêm dòng mới ghi người của phiên, giờ máy chủ và kết quả; dòng cũ giữ nguyên.
+  - Khi yêu cầu quá hạn mà chưa đóng thì danh sách hiện nhãn quá hạn.
+  - Khi đóng một yêu cầu xoá thì máy không chạy lệnh xoá hay sửa dữ liệu nghiệp vụ nào; kết quả do người ghi (G-FG13-05, P-19).
+  - Khi người gọi chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-132 có ô đổi trạng thái, ô kết quả, nhãn sắp tới hạn và quá hạn theo G-FG13-04.
+- key: SC-132/FE
+  cha: SC-132
+  tracker: devtask
+  title_vi: 'Giao diện: Theo dõi yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-132
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG13-04
+  mo_ta: 'Dựng màn theo dõi yêu cầu ở văn phòng: lọc ngày nhận và trạng thái, bảng có nhãn sắp tới hạn và quá hạn, khung đổi trạng thái kèm ô kết quả cho yêu cầu còn mở.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nhãn sắp tới hạn và quá hạn có chữ, không chỉ đổi màu.
+  - Khung đổi trạng thái không hiện với yêu cầu đã đóng.
+  - Khi không có yêu cầu nào khớp bộ lọc thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-132/BE
+  cha: SC-132
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Theo dõi yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG13-04
+  mo_ta: Viết spec rồi làm API đọc danh sách và lệnh đổi trạng thái trên module audit (P-01); trạng thái hiện hành của mỗi yêu cầu là dòng mới nhất.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lệnh đổi trạng thái thêm dòng mới và ghi audit_log trong cùng giao dịch CSDL; bảng không có lệnh UPDATE nào.
+  - Mốc sắp tới hạn đọc từ cấu hình, chưa có số (G-FG13-04).
+  - Yêu cầu đã đóng thì lệnh đổi trạng thái bị từ chối, không thêm dòng nào.
+  dinh_nghia_xong: []
+- key: SC-132/TEST
+  cha: SC-132
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Theo dõi yêu cầu dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-132
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bước người đổi trạng thái yêu cầu và nhãn tới hạn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đổi trạng thái hai lần rồi đóng: có ba dòng mới, dòng gốc giữ nguyên, danh sách hiện trạng thái của dòng mới nhất.'
+  - 'Gửi lệnh đổi trạng thái kèm người và giờ giả: dòng lưu người của phiên và giờ máy chủ.'
+  - 'Đóng một yêu cầu xoá: không bảng nghiệp vụ nào bị sửa hay mất dòng.'
+  dinh_nghia_xong: []
+- key: SC-133
+  cha: FG-13
+  tracker: story
+  title_vi: Log truy cập dữ liệu cá nhân
+  ten_ja: アクセスログ照会
+  spec_refs:
+    sc:
+    - SC-133
+    api: []
+    tech: []
+    bang:
+    - access_log
+    fr:
+    - FR-AUDIT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG13-06
+  mo_ta: 内部監査 (kiểm toán nội bộ) tra xem người dùng nội bộ nào đã mở dữ liệu cá nhân của người tham gia nào, vào lúc nào và từ địa chỉ IP nào. Nhật ký truy cập chỉ thêm dòng và là một phần cơ chế bảo vệ dữ liệu cá nhân mà RFP đòi; spec chưa nói thao tác đọc nào phải ghi và ai ghi, nên story chốt cả hai (G-FG13-06). Vai 内部監査 chưa gán vai nội bộ (P-12).
+  pham_vi: Màn SC-133 (SPEC-SKM-166) ở văn phòng, chỉ đọc `access_log` (migration thuộc DATA-FG13/DB). SC-133/BE viết spec rồi làm API đọc (P-01) và bộ ghi access_log gắn vào các API trả dữ liệu cá nhân của người tham gia (G-FG13-06).
+  luong_chinh:
+  - 'Khi một API trả dữ liệu cá nhân của người tham gia, máy chủ thêm một dòng access_log: người dùng của phiên, người tham gia bị xem, giờ máy chủ, địa chỉ IP.'
+  - 内部監査 mở SC-133, lọc theo 業務日 (ngày nghiệp vụ), người dùng hoặc người tham gia rồi bấm Lọc.
+  - Màn hiện người dùng, đối tượng, giờ xem, địa chỉ IP; không có nút sửa hay xoá.
+  tieu_chi_nghiem_thu:
+  - Khi người dùng mở hồ sơ một người tham gia thì access_log có đúng một dòng ghi người dùng của phiên, mã người tham gia và giờ máy chủ.
+  - Khi lọc theo người tham gia thì hiện mọi lần người đó bị xem trong khoảng ngày đã chọn.
+  - Nhật ký chỉ ghi mã đối tượng, không ghi nội dung dữ liệu đã trả.
+  - Khi người gọi chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-133 có danh sách API phải ghi access_log, nghĩa của cột đối tượng và hai ô lọc thêm (G-FG13-06).
+- key: SC-133/FE
+  cha: SC-133
+  tracker: devtask
+  title_vi: 'Giao diện: Log truy cập dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-133
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG13-06
+  mo_ta: 'Dựng màn tra nhật ký truy cập ở văn phòng: lọc 業務日 (ngày nghiệp vụ), người dùng và người tham gia, bảng bốn cột, phân trang.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ba ô lọc dùng riêng hoặc cùng lúc; ô nào bỏ trống thì không lọc theo ô đó.
+  - Khi không có dòng nào khớp thì màn hiện trạng thái rỗng, không báo lỗi.
+  dinh_nghia_xong: []
+- key: SC-133/BE
+  cha: SC-133
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Log truy cập dữ liệu cá nhân'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - access_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG13-06
+  mo_ta: Viết spec rồi làm API đọc access_log (P-01) và bộ ghi dùng chung gắn vào các API trả dữ liệu cá nhân của người tham gia; danh sách API ghi trong spec (G-FG13-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người dùng lấy từ phiên, giờ lấy từ máy chủ, địa chỉ IP lấy từ yêu cầu đã qua cổng vào; bên gọi không truyền được ba giá trị này.
+  - Mỗi API trong danh sách có kiểm thử chứng minh một lần gọi sinh đúng một dòng access_log.
+  - Tài khoản CSDL của API đọc chỉ có quyền đọc trên access_log.
+  dinh_nghia_xong: []
+- key: SC-133/TEST
+  cha: SC-133
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Log truy cập dữ liệu cá nhân'
+  spec_refs:
+    sc:
+    - SC-133
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ghi và tra nhật ký truy cập dữ liệu cá nhân.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Mở hồ sơ một người tham gia: có một dòng access_log đúng người dùng, đúng người tham gia, giờ máy chủ.'
+  - 'Gửi lệnh sửa và xoá một dòng access_log ở mức CSDL: bị từ chối cả hai.'
+  - 'Lọc theo một người tham gia đã bị xem ba lần trong khoảng ngày: hiện đủ ba dòng.'
+  dinh_nghia_xong: []
+- key: DATA-FG13
+  cha: FG-13
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-AUDIT): audit_log, access_log'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - access_log
+    - audit_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-18
+  - G-FG13-02
+  mo_ta: 'Hai bảng vết audit_log và access_log không có màn nào ghi: mọi module ghi audit_log qua hàm của module audit, còn access_log do bộ ghi của SC-133/BE thêm dòng. audit_log đã có ở prototype LAB-3 nhưng vẫn phải viết lại migration trên kho mã hệ đích (P-04). Story này dựng hai bảng và chặn sửa, xoá ở mức quyền CSDL trước khi các module khác bắt đầu ghi.'
+  pham_vi: Bảng `audit_log` và `access_log` (chủ migration, vùng D-AUDIT, chỉ thêm dòng); chốt quan hệ của actor_user_id, entity_id, user_id theo câu Q4–Q6 của SKM_DB (P-06, G-18). Không gồm hàm ghi (SC-130/BE) và bộ ghi truy cập (SC-133/BE).
+  luong_chinh:
+  - BE chốt kiểu và quan hệ các cột còn mở với Tech Lead rồi ghi vào SKM_DB (P-06).
+  - BE viết migration hai bảng, giữ đủ cột của audit_log đã build, kể cả lý do, trước và sau.
+  - 'BE cấp quyền CSDL: tài khoản của module audit chỉ được thêm và đọc dòng, tài khoản khác không thêm được.'
+  - SC-130/BE và SC-133/BE chạy thử đường ghi trên hai bảng trước khi module khác dùng.
+  tieu_chi_nghiem_thu:
+  - Khi sửa hay xoá một dòng ở một trong hai bảng thì CSDL từ chối, kể cả với tài khoản của module audit.
+  - Khi tài khoản của module khác thêm thẳng dòng vào audit_log thì CSDL từ chối.
+  - Khi migration chạy trên CSDL trống thì audit_log có đủ cột đã build ở prototype và khoá chính tự tăng.
+  dinh_nghia_xong:
+  - SKM_DB đóng câu Q4, Q5, Q6 và ghi kiểu cột ip của access_log (P-06).
+- key: DATA-FG13/DB
+  cha: DATA-FG13
+  tracker: devtask
+  title_vi: Tạo bảng audit_log, access_log
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - access_log
+    - audit_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-18
+  mo_ta: Viết migration audit_log và access_log trên kho mã hệ đích; chốt quan hệ ba cột mã người, mã đối tượng và kiểu cột ip trước khi tạo bảng (P-04, P-06, G-18).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài khoản CSDL của module audit chỉ có quyền thêm và đọc; tài khoản khác không thêm được dòng.
+  - audit_log có chỉ mục theo thời điểm tạo, theo cặp đối tượng và mã đối tượng, theo người làm, để SC-130 tra trong mức p95 không quá 2 giây (N4).
+  - access_log có chỉ mục theo người dùng và theo đối tượng.
+  dinh_nghia_xong: []
+- key: DATA-FG13/TEST
+  cha: DATA-FG13
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-AUDIT): audit_log, access_log'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử quyền ghi và ràng buộc chỉ thêm của hai bảng vết.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dùng tài khoản của module audit gửi lệnh sửa và xoá: CSDL từ chối cả hai.'
+  - 'Dùng tài khoản của module trade thêm thẳng một dòng audit_log: CSDL từ chối.'
+  - 'Tra theo mã giao dịch trên dữ liệu mẫu theo hồ sơ tải FIG-LOAD-01: p95 không quá 2 giây.'
+  dinh_nghia_xong: []
+- key: INV-FG13-YEU-CAU-XOA
+  cha: FG-13
+  tracker: investigation
+  title_vi: Cách xử lý yêu cầu xoá dữ liệu cá nhân khi dữ liệu nằm ở bảng chỉ thêm
+  han: Trước sprint của SC-132/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_DB.md §4.39 personal_data_requests (LAB-4) · rfp p.54
+  spec_refs:
+    sc:
+    - SC-131
+    - SC-132
+    api: []
+    tech: []
+    bang:
+    - personal_data_requests
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG13-05
+  mo_ta: Khi người tham gia xin 削除 (xoá) dữ liệu cá nhân mà dữ liệu nằm ở bảng chỉ thêm hoặc đã vào báo cáo chính thức, chợ xử lý thế nào, xoá, ẩn danh hay từ chối kèm lý do, và ai quyết? Xoá thật phá vết kiểm toán và luật chỉ thêm của ADR-003, còn từ chối mọi yêu cầu có thể trái luật bảo vệ dữ liệu cá nhân.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

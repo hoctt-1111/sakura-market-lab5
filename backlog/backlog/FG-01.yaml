@@ -1,0 +1,1146 @@
+# Seed epic FG-01 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-01
+  tracker: epic
+  title_vi: Tài khoản và quyền nội bộ
+  feature: account-access
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-15
+  gap_refs: []
+  mo_ta: Nhóm chức năng này cho người dùng nội bộ của chợ đăng nhập bằng tài khoản cá nhân, nhận đúng vai ngay lúc vào hệ thống, và cho quản trị cấp, dừng, mở lại quyền kèm lịch sử trước và sau. Vì tablet hiện trường dùng chung theo ca, epic còn lo phiên ngắn, khoá tạm khi nhập sai, bàn giao ca tường minh và MFA cho vai quản trị, vai duyệt (ADR-011). Ma trận quyền mà API-203 cập nhật là nơi mọi epic khác đọc khi kiểm quyền.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-01 đã đóng.
+  - Khi một người đăng nhập trên tablet dùng chung rồi bàn giao ca thì thao tác sau đó ghi dưới tài khoản người nhận, và lần bàn giao có bản ghi ai giao, ai nhận, thiết bị nào, lúc nào.
+  - Khi quản trị đổi vai hoặc dừng một tài khoản thì SC-004 hiện lần đổi đó với giá trị trước, sau, người làm và thời điểm.
+  - Hai issue điều tra INV-Q-SD3 và INV-Q-SD4 đã có câu trả lời, hoặc khách xác nhận giữ giả định P-15, P-12.
+  dinh_nghia_xong: []
+items:
+- key: SC-001
+  cha: FG-01
+  tracker: story
+  title_vi: Đăng nhập
+  ten_ja: ログイン
+  spec_refs:
+    sc:
+    - SC-001
+    api:
+    - API-201
+    tech: []
+    bang:
+    - profiles
+    - sessions
+    fr:
+    - FR-IAM-01
+    - NFR-SEC-01
+    adr:
+    - ADR-011
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-01
+  - G-FG01-02
+  mo_ta: Mọi người dùng nội bộ đăng nhập bằng tài khoản cá nhân và nhận vai ngay lúc vào hệ thống. Vai quản trị và vai duyệt phải qua MFA, thao tác hiện trường thì không (ADR-011). Tablet dùng chung theo ca nên phiên ngắn và tài khoản bị khoá tạm khi nhập sai nhiều lần, ngưỡng lấy từ cấu hình (P-15).
+  pham_vi: Màn SC-001 (SPEC-SKM-101); API-201; bảng `sessions` (chủ migration), đọc `profiles`, ghi `audit_log`; định danh người dùng ở Cognito user pool.
+  luong_chinh:
+  - Người dùng nhập tên đăng nhập, mật khẩu rồi bấm Đăng nhập.
+  - Máy chủ chuyển cho Cognito xác thực; vai quản trị hoặc vai duyệt phải nhập thêm mã MFA 6 chữ số.
+  - Máy chủ tạo phiên qua cookie HttpOnly, đọc vai trong `profiles`, đưa người dùng tới vùng làm việc của vai đó.
+  - Máy chủ ghi nhật ký đăng nhập; sai liên tiếp tới ngưỡng cấu hình thì khoá tạm tài khoản (P-15).
+  tieu_chi_nghiem_thu:
+  - Khi thiếu trường, sai email hoặc sai mật khẩu thì API-201 trả cùng một câu báo, không lộ email nào có thật.
+  - Khi tài khoản vai quản trị hoặc vai duyệt chưa qua MFA thì không có phiên; tài khoản hiện trường không bị hỏi mã.
+  - Khi số lần sai chạm ngưỡng thì lần sau bị từ chối kể cả đúng mật khẩu, tới hết thời gian khoá.
+  - Khi phiên hết hạn thì lời gọi API kế tiếp trả 401 M_29 và người dùng quay về SC-001.
+  dinh_nghia_xong:
+  - Spec SC-001 và API-201 cập nhật theo G-FG01-01, G-FG01-02.
+- key: SC-001/FE
+  cha: SC-001
+  tracker: devtask
+  title_vi: 'Giao diện: Đăng nhập'
+  spec_refs:
+    sc:
+    - SC-001
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-01
+  mo_ta: 'Dựng màn đăng nhập cho văn phòng và tablet: ô tên đăng nhập, mật khẩu, mã MFA, vùng báo lỗi và nút Đăng nhập.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô mã MFA chỉ hiện khi máy chủ đòi bước thứ hai, và chỉ gửi khi đủ 6 chữ số (G-FG01-01).
+  - Tên đăng nhập bỏ khoảng trắng hai đầu trước khi gửi; lỗi 400, 401 hiện đúng câu chung của API.
+  - Phiên hết hạn giữa thao tác thì đăng nhập lại xong trở về màn đang dở, giữ dữ liệu đã nhập (ADR-011).
+  dinh_nghia_xong: []
+- key: SC-001/BE
+  cha: SC-001
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Đăng nhập'
+  spec_refs:
+    sc: []
+    api:
+    - API-201
+    tech: []
+    bang:
+    - profiles
+    - sessions
+    fr: []
+    adr:
+    - ADR-011
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-15
+  gap_refs:
+  - G-FG01-01
+  - G-FG01-02
+  mo_ta: 'Làm API-201 trên kho mã hệ đích: chuyển thông tin cho Cognito, thêm bước mã MFA cho vai phải MFA, tạo phiên qua cookie HttpOnly, đếm lần sai và khoá tạm.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Thiếu trường, sai email, sai mật khẩu trả cùng câu báo; dòng nhật ký bị từ chối ghi trước khi trả lỗi.
+  - Thời hạn phiên, số lần sai và thời gian khoá đọc từ cấu hình (P-15), không viết cứng.
+  - Ghi `audit_log` qua hàm dùng chung của SC-130/BE, đúng tên bảng của SKM_DB (G-FG01-02, G-FG13-02); phản hồi 200 không trả thông tin người dùng hay token.
+  dinh_nghia_xong: []
+- key: SC-001/DB
+  cha: SC-001
+  tracker: devtask
+  title_vi: Tạo bảng sessions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - sessions
+    fr: []
+    adr:
+    - ADR-011
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  - P-15
+  gap_refs:
+  - G-18
+  mo_ta: Viết migration bảng `sessions` trên kho mã hệ đích cho phiên ngắn ở thiết bị dùng chung, có cột đếm lần sai và cột hạn khoá.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu cột locked_until (đang để «—» ở SKM_DB) được chốt và ghi lại vào SKM_DB trước khi chạy migration (P-06).
+  - Cột user_id có quan hệ được chốt theo câu hỏi Q1 cuối SKM_DB (G-18).
+  - Bảng không có cột mật khẩu hay token; định danh vẫn ở Cognito.
+  dinh_nghia_xong: []
+- key: SC-001/TEST
+  cha: SC-001
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Đăng nhập'
+  spec_refs:
+    sc:
+    - SC-001
+    api:
+    - API-201
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-01
+    - NFR-SEC-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử đăng nhập, bước MFA, khoá tạm và hết phiên của SC-001.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Thiếu trường, sai email, sai mật khẩu: cùng một câu báo; hai ca sai thông tin có dòng nhật ký bị từ chối.'
+  - 'Vai duyệt đúng mật khẩu nhưng bỏ bước MFA: không có phiên; vai hiện trường không bị hỏi mã.'
+  - 'Sai tới ngưỡng đặt ở cấu hình thử nghiệm: bị khoá dù đúng mật khẩu; hết thời gian khoá thì vào lại được.'
+  dinh_nghia_xong: []
+- key: SC-002
+  cha: FG-01
+  tracker: story
+  title_vi: Danh sách tài khoản
+  ten_ja: アカウント一覧
+  spec_refs:
+    sc:
+    - SC-002
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr:
+    - FR-IAM-01
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG01-03
+  - G-FG01-04
+  mo_ta: システム管理者 (quản trị hệ thống) xem các tài khoản nội bộ, lọc theo vai và theo người tham gia gắn kèm, để biết ai đang giữ quyền gì trước khi cấp hay dừng. Màn chỉ đọc; mọi thay đổi đi qua SC-003. Vai システム管理者 chưa gán vai nội bộ (P-12), nên tới khi INV-Q-SD4 có đáp màn chỉ dùng được nhờ dòng ma trận tạm của G-FG01-04.
+  pham_vi: Màn SC-002 (SPEC-SKM-102), chỉ đọc `profiles` (migration thuộc SC-003/DB). LAB-4 để màn đọc thẳng bảng, nên SC-002/BE viết spec API đọc rồi làm theo P-01.
+  luong_chinh:
+  - Quản trị mở SC-002; máy chủ kiểm vai của phiên trước khi đọc `profiles`.
+  - Quản trị lọc theo điều kiện phía trên bảng; lọc không đổi dữ liệu.
+  - Màn hiện người dùng, vai, người tham gia và tên hiển thị, có phân trang.
+  tieu_chi_nghiem_thu:
+  - Khi tài khoản không mang vai được phép gọi API đọc thì nhận 403 M_05, phản hồi không có dòng nào.
+  - Khi quản trị lọc theo một vai thì chỉ hiện tài khoản mang đúng vai đó (G-FG01-03).
+  - Khi tài khoản không gắn người tham gia thì ô người tham gia để trống, vì cột này được phép rỗng.
+  dinh_nghia_xong:
+  - Spec SC-002 có thêm ô lọc theo vai và người tham gia (G-FG01-03).
+- key: SC-002/FE
+  cha: SC-002
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách tài khoản'
+  spec_refs:
+    sc:
+    - SC-002
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-03
+  mo_ta: 'Dựng màn danh sách tài khoản cho văn phòng: ô lọc, bảng bốn cột người dùng, vai, người tham gia, tên hiển thị, phân trang và nút Lọc.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bấm Lọc chỉ tải lại danh sách, không gửi lệnh ghi nào.
+  - Có ô lọc theo vai và người tham gia cạnh ô ngày nghiệp vụ (G-FG01-03).
+  - API đọc trả 403 thì màn báo không có quyền và không hiện bảng.
+  dinh_nghia_xong: []
+- key: SC-002/BE
+  cha: SC-002
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách tài khoản'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG01-03
+  mo_ta: Viết spec API đọc danh sách tài khoản theo khuôn BM-2-901-52 rồi làm API đó trên module party, thay cho việc màn đọc thẳng `profiles` (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểm vai của phiên ở tầng dịch vụ trước khi đọc; vai chưa có dòng trong ma trận quyền nhận 403 (P-12).
+  - Nhận điều kiện lọc theo vai và người tham gia, trả kết quả có phân trang.
+  - Phiên hết hạn thì trả 401 M_29.
+  dinh_nghia_xong: []
+- key: SC-002/TEST
+  cha: SC-002
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách tài khoản'
+  spec_refs:
+    sc:
+    - SC-002
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-01
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử quyền xem và bộ lọc của SC-002.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tài khoản không mang vai quản trị gọi API đọc danh sách: nhận 403, phản hồi không có dòng nào.'
+  - 'Lọc theo một vai: mọi dòng trả về mang đúng vai đó; `profiles` không đổi sau khi lọc.'
+  - Tài khoản không gắn người tham gia vẫn có trong danh sách, ô người tham gia để trống.
+  dinh_nghia_xong: []
+- key: SC-003
+  cha: FG-01
+  tracker: story
+  title_vi: Tạo và sửa tài khoản
+  ten_ja: アカウント登録・編集
+  spec_refs:
+    sc:
+    - SC-003
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr:
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-04
+  - G-FG01-05
+  - G-FG01-06
+  mo_ta: システム管理者 (quản trị hệ thống) tạo tài khoản nội bộ, đổi vai, gắn người tham gia, dừng hoặc mở lại quyền. Mỗi tài khoản thuộc đúng một người, không dùng chung (ADR-011). Mỗi lần đổi quyền để lại giá trị trước, sau, người làm và thời điểm, vì SC-004 và kiểm toán đọc lại các dòng đó (FR-IAM-02).
+  pham_vi: Màn SC-003 (SPEC-SKM-103); bảng `profiles` (chủ migration), ghi `audit_log`; người dùng tạo ở Cognito. SC-003/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Quản trị mở SC-003 cho tài khoản mới hoặc có sẵn, nhập người dùng, vai, người tham gia, tên hiển thị và trạng thái (G-FG01-05).
+  - Máy chủ kiểm vai của phiên và đầu vào.
+  - Máy chủ tạo hoặc cập nhật người dùng ở Cognito và dòng `profiles` (G-FG01-06).
+  - Máy chủ ghi một dòng `audit_log` có trước, sau, người làm và thời điểm trong cùng giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi đổi vai, dừng hoặc mở lại quyền thì `audit_log` có đúng một dòng mới, người làm và giờ lấy theo phiên và máy chủ.
+  - Khi tài khoản bị dừng thì lần đăng nhập và lời gọi API kế tiếp của nó bị từ chối.
+  - Khi người gọi không mang vai được phép thì nhận 403 M_05, không đổi gì.
+  - Khi ô bắt buộc trống hoặc vai ngoài danh sách vai đích thì trả 400.
+  - Khi gán vai chưa có dòng trong ma trận quyền thì tài khoản lưu được nhưng chưa thao tác được màn nào (P-12).
+  dinh_nghia_xong:
+  - Spec SC-003 có ô trạng thái và nút Lưu ghi thật, theo G-FG01-05.
+- key: SC-003/FE
+  cha: SC-003
+  tracker: devtask
+  title_vi: 'Giao diện: Tạo và sửa tài khoản'
+  spec_refs:
+    sc:
+    - SC-003
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-05
+  mo_ta: 'Dựng màn tạo và sửa tài khoản cho văn phòng: bốn ô người dùng, vai, người tham gia, tên hiển thị, ô trạng thái theo G-FG01-05, nút Lưu và Huỷ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô vai chỉ cho chọn trong danh sách vai đích, vì vai là dữ liệu của ma trận quyền (P-12).
+  - Còn ô bắt buộc trống thì màn chặn gửi và chỉ ra ô lỗi.
+  - Bấm Huỷ quay lại màn trước, không gửi lệnh ghi nào.
+  dinh_nghia_xong: []
+- key: SC-003/BE
+  cha: SC-003
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tạo và sửa tài khoản'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG01-06
+  mo_ta: 'Viết spec API tạo và sửa tài khoản theo khuôn BM-2-901-52 rồi làm API đó: tạo hoặc cập nhật người dùng ở Cognito, ghi `profiles`, ghi `audit_log` qua hàm dùng chung của SC-130/BE (P-01, G-FG13-02).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đọc dòng `profiles` hiện tại trước khi ghi để có giá trị trước; `audit_log` và `profiles` cùng thành công hoặc cùng hoàn tác.
+  - Lỗi ở Cognito sau khi đã ghi CSDL thì hoàn tác CSDL và trả 500 M_25 (G-FG01-06).
+  - Tài khoản bị dừng thì phiên đang mở của nó bị từ chối ngay ở lời gọi kế tiếp.
+  dinh_nghia_xong: []
+- key: SC-003/DB
+  cha: SC-003
+  tracker: devtask
+  title_vi: Tạo bảng profiles
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG01-04
+  - G-FG01-05
+  - G-FG01-06
+  mo_ta: 'Viết migration bảng `profiles` trên kho mã hệ đích: mỗi người một dòng, khoá ngoại tới `participants` (bảng của SC-011/DB) được phép rỗng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột user_id lưu định danh Cognito, không trỏ auth.users của prototype (G-FG01-06).
+  - Có cột trạng thái tài khoản cho dừng và mở lại quyền, ghi lại vào SKM_DB (G-FG01-05).
+  - Dữ liệu khởi tạo có một tài khoản quản trị đầu tiên, đánh dấu tạm tới khi INV-Q-SD4 có đáp (G-FG01-04).
+  dinh_nghia_xong: []
+- key: SC-003/TEST
+  cha: SC-003
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo và sửa tài khoản'
+  spec_refs:
+    sc:
+    - SC-003
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ghi lịch sử đổi quyền, dừng và mở lại tài khoản của SC-003.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đổi vai một tài khoản, gửi kèm người làm và giờ giả: `audit_log` có đúng một dòng mới, người làm và giờ lấy theo phiên và máy chủ.'
+  - 'Dừng một tài khoản đang đăng nhập: lời gọi API kế tiếp của nó bị từ chối; mở lại thì đăng nhập được.'
+  - 'Tài khoản không mang vai quản trị gọi API sửa tài khoản: nhận 403, `profiles` và Cognito không đổi.'
+  dinh_nghia_xong: []
+- key: SC-004
+  cha: FG-01
+  tracker: story
+  title_vi: Lịch sử thay đổi quyền
+  ten_ja: 権限変更履歴
+  spec_refs:
+    sc:
+    - SC-004
+    api: []
+    tech: []
+    bang:
+    - audit_log
+    fr:
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG01-03
+  - G-FG01-07
+  - G-FG01-08
+  mo_ta: システム管理者 (quản trị hệ thống) và 内部監査 (kiểm toán nội bộ) tra lại ai đổi quyền của ai, từ giá trị nào sang giá trị nào, lúc nào. Màn chỉ đọc `audit_log`, không có đường sửa hay xoá, nên là bằng chứng cho FR-IAM-02. Cả hai vai còn chưa gán vai nội bộ (P-12).
+  pham_vi: Màn SC-004 (SPEC-SKM-104), chỉ đọc `audit_log` (migration thuộc DATA-FG13/DB), nguồn là các dòng do SC-003 và API-203 ghi. SC-004/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người xem mở SC-004; máy chủ kiểm vai của phiên trước khi đọc `audit_log`.
+  - Người xem lọc theo ngày nghiệp vụ, người làm hoặc loại thao tác (G-FG01-03).
+  - Màn hiện người làm, vai, thao tác, đối tượng, lý do, kết quả, thời điểm cùng giá trị trước và sau.
+  tieu_chi_nghiem_thu:
+  - Khi có một lần đổi vai ở SC-003 hoặc đổi ma trận qua API-203 thì SC-004 hiện dòng đó kèm trước và sau (G-FG01-07, G-FG01-08).
+  - Khi lọc theo ngày nghiệp vụ thì chỉ hiện dòng tạo trong ngày đó theo giờ Nhật.
+  - Khi người xem không mang vai được phép thì API đọc trả 403 M_05.
+  - Màn và API không có lệnh nào sửa hay xoá dòng `audit_log`.
+  dinh_nghia_xong:
+  - Spec SC-004 có cột trước, sau và ô lọc theo người, loại thao tác (G-FG01-07, G-FG01-03).
+- key: SC-004/FE
+  cha: SC-004
+  tracker: devtask
+  title_vi: 'Giao diện: Lịch sử thay đổi quyền'
+  spec_refs:
+    sc:
+    - SC-004
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-03
+  - G-FG01-07
+  mo_ta: 'Dựng màn lịch sử đổi quyền cho văn phòng: ô lọc, bảng tám cột của LAB-4 thêm hai cột trước và sau, phân trang và nút Lọc.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Hai cột trước, sau hiện được cả khi một bên rỗng, như lần tạo tài khoản không có giá trị trước (G-FG01-07).
+  - Có ô lọc theo người làm và loại thao tác (G-FG01-03); bấm Lọc chỉ tải lại danh sách.
+  - Màn không có nút sửa hay xoá dòng nào.
+  dinh_nghia_xong: []
+- key: SC-004/BE
+  cha: SC-004
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Lịch sử thay đổi quyền'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - audit_log
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG01-07
+  mo_ta: Viết spec API đọc nhật ký đổi quyền theo khuôn BM-2-901-52 rồi làm API đó, chỉ đọc `audit_log` (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài khoản CSDL của API chỉ có quyền đọc trên `audit_log`.
+  - Lọc theo ngày nghiệp vụ tính theo giờ Nhật, lọc thêm theo người làm và loại thao tác.
+  - Mỗi dòng trả kèm before và after; không trả dữ liệu cá nhân thô ngoài các cột của màn (System Design §7).
+  dinh_nghia_xong: []
+- key: SC-004/TEST
+  cha: SC-004
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Lịch sử thay đổi quyền'
+  spec_refs:
+    sc:
+    - SC-004
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-08
+  mo_ta: Thiết kế ca kiểm thử nội dung và quyền xem của nhật ký đổi quyền SC-004.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đổi vai một tài khoản ở SC-003 rồi mở SC-004: thấy đúng một dòng mới với trước, sau, người làm, thời điểm.'
+  - 'Gọi API-203 đổi một dòng ma trận quyền: SC-004 có dòng tương ứng kèm trước và sau (G-FG01-08).'
+  - 'Tài khoản không mang vai được phép gọi API đọc: nhận 403; không lời gọi nào sửa hay xoá được dòng nhật ký.'
+  dinh_nghia_xong: []
+- key: SC-005
+  cha: FG-01
+  tracker: story
+  title_vi: Bàn giao ca ở thiết bị chung
+  ten_ja: シフト引継ぎ
+  spec_refs:
+    sc:
+    - SC-005
+    api: []
+    tech: []
+    bang:
+    - shift_handovers
+    fr:
+    - FR-IAM-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG01-09
+  mo_ta: Người hiện trường như 受入担当者 (người nhận lô), 評価者 (người thẩm định), 配送部門 (bộ phận giao hàng) ghi bàn giao ca trên tablet dùng chung trước khi đổi người. Bàn giao phải tường minh để việc sau đó không bị ghi dưới tên người trước (ADR-011). Vai 配送部門 còn chưa gán vai nội bộ (P-12).
+  pham_vi: Màn SC-005 (SPEC-SKM-105) trên tablet; bảng `shift_handovers` (chủ migration); phiên của SC-001. SC-005/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người đang giữ ca mở SC-005, chọn thiết bị, ghi chú nếu có; người giao lấy từ phiên đang mở.
+  - Người nhận đăng nhập bằng tài khoản của mình trên cùng thiết bị (G-FG01-09).
+  - Máy chủ ghi một dòng `shift_handovers` với người giao, người nhận, thiết bị và giờ máy chủ.
+  - Máy chủ đóng phiên người giao; việc sau đó ghi dưới tài khoản người nhận.
+  tieu_chi_nghiem_thu:
+  - Khi lưu bàn giao thì có đúng một dòng `shift_handovers`; người giao, người nhận và thời điểm do máy chủ ghi.
+  - Khi người nhận chưa đăng nhập bằng tài khoản của mình thì bàn giao không lưu được.
+  - Khi bàn giao xong thì phiên người giao không còn dùng được trên thiết bị đó.
+  dinh_nghia_xong:
+  - Spec SC-005 bỏ hai ô gõ tự do người giao, người nhận (G-FG01-09).
+- key: SC-005/FE
+  cha: SC-005
+  tracker: devtask
+  title_vi: 'Giao diện: Bàn giao ca ở thiết bị chung'
+  spec_refs:
+    sc:
+    - SC-005
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs:
+  - P-11
+  gap_refs: []
+  mo_ta: 'Dựng màn bàn giao ca cho tablet hiện trường: người giao lấy từ phiên, bước người nhận đăng nhập, ô thiết bị, ghi chú, nút Lưu và Huỷ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô người giao và thời điểm chỉ đọc; màn không gửi hai giá trị này lên máy chủ.
+  - Vùng chạm tối thiểu 64 px cho người đeo găng, theo giả định P-11.
+  - Bấm Huỷ quay lại màn trước, không ghi gì.
+  dinh_nghia_xong: []
+- key: SC-005/BE
+  cha: SC-005
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bàn giao ca ở thiết bị chung'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - shift_handovers
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG01-09
+  mo_ta: 'Viết spec API bàn giao ca theo khuôn BM-2-901-52 rồi làm API đó: nhận lần đăng nhập của người nhận, ghi `shift_handovers`, đóng phiên người giao (P-01).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người giao lấy từ phiên cũ, người nhận từ phiên mới, thời điểm từ giờ máy chủ; tham số gửi kèm cho ba giá trị này bị bỏ qua.
+  - Ghi bàn giao và đóng phiên người giao trong cùng giao dịch; lỗi thì không đóng phiên nào, trả 500 M_25.
+  - Vai được ghi bàn giao đọc từ ma trận quyền; vai chưa gán nhận 403 (P-12).
+  dinh_nghia_xong: []
+- key: SC-005/DB
+  cha: SC-005
+  tracker: devtask
+  title_vi: Tạo bảng shift_handovers
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - shift_handovers
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-18
+  - G-FG01-09
+  mo_ta: Viết migration bảng `shift_handovers` trên kho mã hệ đích; bảng chỉ thêm dòng, bàn giao đã ghi không sửa (G-FG01-09).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu cột device_id và bảng nó trỏ tới được chốt theo câu hỏi Q2 cuối SKM_DB trước khi chạy migration (G-18, P-06).
+  - from_user và to_user là khoá ngoại tới `profiles`, không phải chuỗi tự do.
+  - handed_at mặc định lấy giờ máy chủ.
+  dinh_nghia_xong: []
+- key: SC-005/TEST
+  cha: SC-005
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bàn giao ca ở thiết bị chung'
+  spec_refs:
+    sc:
+    - SC-005
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bàn giao ca trên thiết bị dùng chung của SC-005.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu kèm tên người giao và giờ giả: bản ghi lưu người của phiên và giờ máy chủ, không lưu giá trị giả.'
+  - 'Bàn giao xong, dùng lại cookie phiên của người giao trên thiết bị đó: bị từ chối.'
+  - 'Người nhận chưa đăng nhập bằng tài khoản của mình: không có dòng `shift_handovers` nào được ghi.'
+  dinh_nghia_xong: []
+- key: SC-006
+  cha: FG-01
+  tracker: story
+  title_vi: Thiết lập xác thực hai yếu tố
+  ten_ja: MFA設定
+  spec_refs:
+    sc:
+    - SC-006
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr:
+    - FR-IAM-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-10
+  mo_ta: システム管理者 (quản trị hệ thống) và 承認者 (người duyệt) bật MFA cho tài khoản vai quản trị và vai duyệt theo NFR-SEC-01. Thao tác hiện trường không dùng MFA để khỏi làm chậm người đeo găng (ADR-011). Spec LAB-4 của màn chưa có item MFA nào nên phải chốt lại trước khi dựng (G-FG01-10).
+  pham_vi: Màn SC-006 (SPEC-SKM-106), đọc `profiles`; mã MFA đăng ký và kiểm ở Cognito, ghi `audit_log`. SC-006/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người có quyền mở SC-006, chọn một tài khoản vai quản trị hoặc vai duyệt.
+  - Máy chủ kiểm vai rồi yêu cầu Cognito bật MFA; chủ tài khoản đăng ký thiết bị và nhập một mã 6 chữ số.
+  - Máy chủ ghi một dòng `audit_log` cho lần bật hoặc tắt MFA.
+  tieu_chi_nghiem_thu:
+  - Khi tài khoản vai quản trị hoặc vai duyệt chưa bật MFA thì lần đăng nhập kế tiếp buộc đăng ký trước khi có phiên.
+  - Khi có người tắt MFA của các vai đó thì máy chủ từ chối, vì yêu cầu không có ngoại lệ (System Design §8, N6).
+  - Khi 承認者 dùng SC-006 thì không đổi được vai hay người tham gia; việc đó chỉ làm ở SC-003.
+  - Khi bật hoặc tắt MFA thì `audit_log` có dòng ghi người làm, tài khoản đích và thời điểm.
+  dinh_nghia_xong:
+  - Spec SC-006 thay bốn ô chép từ SC-003 bằng item MFA (G-FG01-10).
+- key: SC-006/FE
+  cha: SC-006
+  tracker: devtask
+  title_vi: 'Giao diện: Thiết lập xác thực hai yếu tố'
+  spec_refs:
+    sc:
+    - SC-006
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-10
+  mo_ta: 'Dựng màn thiết lập MFA cho văn phòng theo item chốt ở G-FG01-10: chọn tài khoản, trạng thái MFA, bước đăng ký và ô mã xác minh.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn không có ô sửa vai hay người tham gia.
+  - Ô mã xác minh chỉ gửi khi đủ 6 chữ số.
+  - API trả 403 thì màn báo không có quyền, trạng thái MFA trên màn giữ nguyên.
+  dinh_nghia_xong: []
+- key: SC-006/BE
+  cha: SC-006
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Thiết lập xác thực hai yếu tố'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - profiles
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG01-10
+  mo_ta: Viết spec API bật, tắt MFA theo khuôn BM-2-901-52 rồi làm API đó qua Cognito user pool; hệ đích không tự lưu bí mật MFA (P-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Từ chối mọi yêu cầu tắt MFA của tài khoản vai quản trị hoặc vai duyệt.
+  - Mỗi lần bật, tắt ghi `audit_log` qua hàm dùng chung của SC-130/BE, gồm người làm, tài khoản đích, giờ máy chủ; không ghi mã hay bí mật MFA.
+  - Chỉ vai có dòng cho phép trong ma trận quyền gọi được; vai khác nhận 403 M_05.
+  dinh_nghia_xong: []
+- key: SC-006/TEST
+  cha: SC-006
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Thiết lập xác thực hai yếu tố'
+  spec_refs:
+    sc:
+    - SC-006
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-IAM-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử MFA bắt buộc cho vai quản trị và vai duyệt của SC-006.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tài khoản vai duyệt chưa bật MFA đăng nhập: bị buộc đăng ký MFA, chưa có phiên cho tới khi nhập đúng mã.'
+  - 'Gọi API tắt MFA cho tài khoản vai quản trị: bị từ chối, MFA vẫn bật.'
+  - Sau một lần bật MFA, `audit_log` có dòng ghi người làm và thời điểm, không chứa mã hay bí mật MFA.
+  dinh_nghia_xong: []
+- key: API-202
+  cha: FG-01
+  tracker: story
+  title_vi: API đăng xuất
+  spec_refs:
+    sc: []
+    api:
+    - API-202
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-02
+  mo_ta: 'Người dùng nội bộ đăng xuất để huỷ phiên phía máy chủ, nhất là trên tablet dùng chung khi rời ca. API công khai: chưa đăng nhập vẫn trả thành công, chỉ bỏ qua bước ghi nhật ký. Đây cũng là đường đóng phiên khi đổi người trên thiết bị chung (ADR-011).'
+  pham_vi: API-202 (SKM_AUTH_SIGN_OUT, SPEC-SKM-202), không gắn màn nào; huỷ phiên trong `sessions` (migration thuộc SC-001/DB), ghi `audit_log`.
+  luong_chinh:
+  - Người dùng bấm đăng xuất ở bất kỳ màn nào.
+  - Máy chủ kiểm có phiên hay không; có thì ghi một dòng nhật ký đăng xuất trước.
+  - Máy chủ huỷ phiên, xoá cookie rồi trả thành công.
+  - Có lỗi hệ thống bất ngờ thì máy chủ trả thân JSON lỗi chuẩn, không để lỗi trần lọt ra trình duyệt.
+  tieu_chi_nghiem_thu:
+  - Khi đang có phiên thì nhật ký có đúng một dòng đăng xuất, ghi trước khi phiên bị huỷ.
+  - Khi chưa đăng nhập thì API vẫn trả 200 và không ghi dòng nhật ký nào.
+  - Khi đã đăng xuất thì dùng lại cookie cũ gọi API cần đăng nhập nhận 401 M_29.
+  - Khi có lỗi bất ngờ thì trả 500 với câu chung, chi tiết chỉ nằm ở nhật ký lỗi của máy chủ.
+  dinh_nghia_xong:
+  - Nhật ký ghi vào bảng `audit_log` của SKM_DB, không theo tên của prototype (G-FG01-02).
+- key: API-202/BE
+  cha: API-202
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API đăng xuất'
+  spec_refs:
+    sc: []
+    api:
+    - API-202
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-02
+  mo_ta: 'Làm API-202 trên kho mã hệ đích: ghi nhật ký khi có phiên, huỷ phiên phía máy chủ, bọc toàn thân xử lý trong một nhánh bắt lỗi chung.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi `audit_log` qua hàm dùng chung của SC-130/BE trước rồi mới huỷ phiên, đúng thứ tự của spec API-202.
+  - Không có nhánh 401 hay 403; chưa đăng nhập vẫn trả 200.
+  - Mọi lỗi bất ngờ trả 500 với câu chung M_06; chi tiết chỉ ghi ở nhật ký lỗi của máy chủ.
+  dinh_nghia_xong: []
+- key: API-202/TEST
+  cha: API-202
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API đăng xuất'
+  spec_refs:
+    sc: []
+    api:
+    - API-202
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử đăng xuất có phiên, không có phiên và lỗi bất ngờ của API-202.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đăng xuất khi đang có phiên: có một dòng nhật ký đăng xuất; dùng lại cookie cũ gọi API cần đăng nhập nhận 401.'
+  - 'Đăng xuất khi chưa đăng nhập: trả 200, không có dòng nhật ký mới.'
+  - 'Giả lập lỗi khi đọc người dùng: trả 500 với thân JSON chuẩn, không lộ chi tiết.'
+  dinh_nghia_xong: []
+- key: API-203
+  cha: FG-01
+  tracker: story
+  title_vi: API cập nhật ma trận quyền
+  spec_refs:
+    sc: []
+    api:
+    - API-203
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG01-08
+  - G-FG01-11
+  - G-FG01-12
+  mo_ta: Quản trị ghi đè ma trận quyền vai × thao tác; thay đổi áp ngay ở lời gọi kế tiếp vì kiểm quyền đọc bảng mỗi lần, không lưu đệm. Hệ đích dùng vai đích thay cho bốn vai của prototype (P-05). Vai thiếu dòng là không được phép, nên khi INV-Q-SD4 có đáp chỉ cần thêm dòng, không sửa mã (P-12).
+  pham_vi: API-203 (SPEC-SKM-203), chưa gắn màn nào (G-FG01-11); ghi `permission_matrix` (migration thuộc SC-053/DB của FG-06, G-FG01-12) và `audit_log`.
+  luong_chinh:
+  - Quản trị gửi cả mảng dòng gồm vai, thao tác và cho phép hay không.
+  - Máy chủ kiểm vai của phiên, rồi kiểm cả mảng trước khi ghi.
+  - Máy chủ ghi đè theo khoá vai, thao tác trong một giao dịch, kèm dòng `audit_log` có trước và sau (G-FG01-08).
+  tieu_chi_nghiem_thu:
+  - Khi mảng rỗng hoặc có phần tử sai kiểu, sai giá trị thì trả 400 cho cả mảng, không ghi dòng nào.
+  - Khi người gọi không mang vai được phép thì trả 403 M_05; phiên hết hạn thì 401 M_29.
+  - Khi ghi thành công thì lời gọi kế tiếp của vai vừa bị bỏ quyền nhận 403 ngay, không chờ lưu đệm.
+  - Khi ghi lỗi thì trả 500 M_25, bảng giữ nguyên như trước lời gọi.
+  dinh_nghia_xong:
+  - Spec API-203 đổi giá trị vai, thao tác sang danh sách đích và ghi đường gọi theo G-FG01-11.
+- key: API-203/BE
+  cha: API-203
+  tracker: devtask
+  title_vi: 'Phía máy chủ: API cập nhật ma trận quyền'
+  spec_refs:
+    sc: []
+    api:
+    - API-203
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-05
+  - P-12
+  gap_refs:
+  - G-FG01-08
+  - G-FG01-12
+  mo_ta: 'Làm API-203 trên module party: kiểm cả mảng trước khi ghi, ghi đè theo khoá vai, thao tác trong một giao dịch, ghi kèm `audit_log` qua hàm dùng chung của SC-130/BE; dịch vụ kiểm quyền dùng chung đọc cùng bảng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giá trị vai trong mảng là vai đích ở System Design §7, không nhận enum vai của prototype (P-05).
+  - Dịch vụ kiểm quyền đọc `permission_matrix` mỗi lần gọi, không lưu đệm; vai thiếu dòng bị chặn (P-12).
+  - Lệnh ghi đè và dòng `audit_log` cùng thành công hoặc cùng hoàn tác (G-FG01-08).
+  dinh_nghia_xong: []
+- key: API-203/TEST
+  cha: API-203
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: API cập nhật ma trận quyền'
+  spec_refs:
+    sc: []
+    api:
+    - API-203
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử kiểm cả mảng, hiệu lực tức thì và nhật ký của API-203.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi mảng có một phần tử thiếu trường cho phép: trả 400, không dòng nào của bảng đổi.'
+  - 'Bỏ quyền một thao tác của một vai rồi gọi ngay API của thao tác đó bằng vai ấy: nhận 403 ở lần gọi đầu tiên.'
+  - 'Gọi bằng vai không có dòng nào trong ma trận: nhận 403; lần ghi thành công có dòng tương ứng ở `audit_log`.'
+  dinh_nghia_xong: []
+- key: INV-Q-SD3
+  cha: FG-01
+  tracker: investigation
+  title_vi: Ngưỡng hết phiên và khoá tạm khi đăng nhập sai
+  han: Checkpoint BTC 2026-10-19
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-SD3]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-SEC-03
+    hoi:
+    - Q-SD3
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: NFR-SEC-03 đòi phiên đăng nhập có thời hạn và tài khoản bị khoá tạm khi nhập sai nhiều lần, nhưng RFP không cho con số nào. Phiên hết hạn sau bao lâu, sai mấy lần thì khoá, và khoá trong bao lâu?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-Q-SD4
+  cha: FG-01
+  tracker: investigation
+  title_vi: Vai nội bộ cho nhóm 照合事務 và 取引運用
+  han: Trước khi viết RBAC ở LAB-5
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-SD4]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - Q-SD4
+  labels:
+  - type:investigation
+  - constraint:two-tier
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Nhóm 照合事務 (nhóm đối soát) và nhóm 取引運用 (nhóm vận hành giao dịch) làm việc dưới vai nội bộ nào: dùng 市場管理者 (quản lý chợ) và 運営担当者 (nhân viên vận hành) như LAB-4 đề xuất, hay cần vai riêng? Bảy vai còn chưa gán, trong đó có システム管理者 (quản trị hệ thống) và 内部監査 (kiểm toán nội bộ), thuộc vai nội bộ nào?'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

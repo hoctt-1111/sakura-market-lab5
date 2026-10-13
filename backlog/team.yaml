@@ -1,0 +1,87 @@
+# Đội giả lập và luật gán field của seed backlog LAB-5. P1 viết tay; P4 chốt `rang_buoc[].vi_sao`.
+# Tên field và tên lựa chọn chép nguyên từ plans/261012-2209-lab05-tien-de-va-break-task/evidence/p0-field-list.json
+# (Project #3 nâng theo danh sách field của 148 — nhánh #3, p0-copy.txt). check-board.py --seed đối chiếu lại file đó.
+assignee: hoctt-1111
+status_dau: New
+
+# Priority trừu tượng 3 mức trong seed → tên lựa chọn của field «Priority» trên Project.
+#   1: điều tra có hạn «trước LAB-5» hoặc đã quá hạn so với ngay_xet_qua_han
+#   2: issue mang nhãn ràng buộc đặc thù (constraint:*) hoặc thuộc FG-01, FG-03, FG-04, FG-07, FG-08
+#   3: còn lại
+priority_map: {1: Urgent, 2: High, 3: Normal}
+ngay_xet_qua_han: "2026-10-12"   # ngày lập seed P1; cố định để chạy lại ra cùng byte
+
+# Owner theo vai (field single-select «Owner»). FG lẻ và epic xuyên suốt E15–E19 → người số 1, FG chẵn → người số 2.
+owner_theo_tracker:
+  epic: PM
+  story: PM
+  investigation: {khach: BrSE, tech_lead: BE-1}
+owner_theo_leaf:
+  FE: {le: FE-1, chan: FE-2, xuyen_suot: FE-1}
+  BE: {le: BE-1, chan: BE-2, xuyen_suot: BE-1}
+  DB: {le: BE-1, chan: BE-2, xuyen_suot: BE-1}
+  TEST: QA
+  INFRA: Infra
+
+sprint: {ten: Sprint, bat_dau: "2026-10-20", so_ngay: 14, so_luong: 6}
+
+# Khoá logic → tên field đúng như trên Project (148 viết hoa «Start Date», «Due Date»).
+field_map:
+  Status: Status
+  Priority: Priority
+  Owner: Owner
+  Sprint: Sprint
+  Story Point: Story Point
+  Estimated time: Estimated time
+  Spent time: Spent time
+  Start Date: Start Date
+  Due Date: Due Date
+
+# Định nghĩa xong dùng chung theo loại issue — đặt một lần ở đây, không chép vào từng bản ghi seed.
+# `dinh_nghia_xong` của từng issue chỉ ghi phần thêm ngoài mẫu.
+dinh_nghia_xong_mau:
+  epic:
+    - Mọi story con đã đóng.
+    - Tiêu chí hoàn thành của epic được kiểm lại và ghi kết quả ở issue epic.
+  story:
+    - Mọi sub-issue đã đóng.
+    - Mọi tiêu chí nghiệm thu đã chạy qua và có ghi kết quả.
+  investigation:
+    - Có câu trả lời kèm người trả lời và ngày trả lời.
+    - Giả định trong PREMISE và các issue bị ảnh hưởng đã cập nhật theo câu trả lời.
+  FE:
+    - Màn dựng đủ item, trạng thái rỗng, lỗi và đang tải theo spec màn LAB-4.
+    - Pull request có người thứ hai duyệt và đã gộp vào nhánh chính.
+    - Kiểm thử thành phần chạy xanh trong CI.
+  BE:
+    - Mã trạng thái và mã lỗi trả về đúng spec API LAB-4.
+    - Kiểm thử đơn vị và kiểm thử tích hợp chạy xanh trong CI.
+    - Quyền gọi khai theo vai của hệ đích, không theo vai của prototype.
+  DB:
+    - Script tạo bảng chạy được trên cơ sở dữ liệu trống và chạy lại không lỗi.
+    - Kiểu cột, khoá và ràng buộc khớp đặc tả cơ sở dữ liệu LAB-4.
+    - Bảng chỉ-thêm bị chặn sửa và xoá ở mức quyền cơ sở dữ liệu.
+  TEST:
+    - Bộ ca kiểm thử phủ luồng chính, luồng lỗi và mọi tiêu chí nghiệm thu của story cha.
+    - Ca kiểm thử có người thứ hai duyệt trước khi chạy.
+    - Kết quả chạy ghi kèm môi trường và ngày chạy.
+  INFRA:
+    - Hạ tầng dựng bằng cấu hình nằm trong repo, không có bước làm tay mà không ghi lại.
+    - Bí mật không nằm trong repo mã nguồn.
+    - README có hướng dẫn dựng lại từ đầu.
+
+# Bốn ràng buộc đặc thù của Product A — P4 chốt câu chữ. `vi_sao` hiện ở mục «Ràng buộc đặc thù» của thân issue khi
+# agent không viết câu riêng, và ở bảng «Hạng mục chịu ràng buộc đặc thù» của task-breakdown.md; giữ ngắn vì thân ≤ 2.500 ký tự.
+rang_buoc:
+  - nhan: constraint:incentive
+    ten: 完納奨励金 (thưởng thanh toán đủ hạn)
+    vi_sao: Tiền thưởng chi ra theo quy chế riêng của chợ, sai một yên là tranh chấp, và suất thưởng đổi theo bản quy tắc có hiệu lực nên phải kiểm theo đúng bản. Tách riêng để ước, kiểm và duyệt bước 確定 (xác nhận cuối) riêng, không lẫn vào đối soát ngày.
+  - nhan: constraint:two-tier
+    ten: 許可 / 承認 (hai tầng đặc quyền)
+    vi_sao: Tư cách xét ở hai mức pháp lý khác nhau và kiểm lại lúc chốt giao dịch, khác phân quyền theo vai thông thường.
+  - nhan: constraint:aitai
+    ten: 相対取引 (giao dịch thỏa thuận)
+    vi_sao: Luồng mang phần lớn giá trị giao dịch; tách riêng để không bị thiết kế theo せり (đấu giá).
+  - nhan: constraint:hitl
+    ten: Người quyết, máy chỉ ghi nhận
+    vi_sao: Kết quả chỉ có hiệu lực khi một người xác nhận; issue phải nêu ai xác nhận, lúc nào và hệ thống ghi gì.

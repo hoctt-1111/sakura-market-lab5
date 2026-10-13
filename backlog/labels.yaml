@@ -1,0 +1,20 @@
+# Nhãn của repo nộp LAB-5 (tự viết; không chép từ repo nội bộ công ty). P0 B10 tạo bằng gh label create.
+nhan:
+  - {ten: "type:epic", mau: "5319e7", mo_ta: "Epic: nhóm chức năng hoặc mảng xuyên suốt, gom nhiều story"}
+  - {ten: "type:story", mau: "0e8a16", mo_ta: "Story: một màn, một API, một luồng kỹ thuật hoặc một hạng mục xuyên suốt"}
+  - {ten: "type:devtask", mau: "1d76db", mo_ta: "Dev Task: phần việc của một bộ phận (FE, BE, DB, hạ tầng) trong story"}
+  - {ten: "type:testdesign", mau: "fbca04", mo_ta: "Test: thiết kế và chạy ca kiểm thử cho story"}
+  - {ten: "type:investigation", mau: "d93f0b", mo_ta: "Điều tra: câu hỏi mở hoặc giả định cần khách/Tech Lead chốt"}
+  - {ten: "type:documentation", mau: "c5def5", mo_ta: "Tài liệu: viết hoặc cập nhật tài liệu bàn giao"}
+  - {ten: "team:frontend", mau: "bfd4f2", mo_ta: "Bộ phận giao diện"}
+  - {ten: "team:backend", mau: "c2e0c6", mo_ta: "Bộ phận API, nghiệp vụ, cơ sở dữ liệu"}
+  - {ten: "team:infrastructure", mau: "d4c5f9", mo_ta: "Bộ phận hạ tầng, CI/CD, môi trường"}
+  - {ten: "constraint:incentive", mau: "b60205", mo_ta: "Ràng buộc đặc thù: 完納奨励金 (thưởng thanh toán đủ hạn) — tính, xác nhận, điều chỉnh theo bản quy tắc"}
+  - {ten: "constraint:two-tier", mau: "e99695", mo_ta: "Ràng buộc đặc thù: hai tầng đặc quyền 許可 / 承認, kiểm lại tư cách lúc chốt giao dịch"}
+  - {ten: "constraint:aitai", mau: "f9d0c4", mo_ta: "Ràng buộc đặc thù: 相対取引 (giao dịch thỏa thuận) là luồng chính, không thiết kế theo せり"}
+  - {ten: "constraint:hitl", mau: "fef2c0", mo_ta: "Ràng buộc đặc thù: máy ghi nhận, người xác nhận — phải ghi ai xác nhận, lúc nào"}
+  - {ten: "spec-gap", mau: "000000", mo_ta: "Chỗ hở hoặc mâu thuẫn của spec LAB-4 phát hiện khi chia việc"}
+  - {ten: "severity:low", mau: "c2e0c6", mo_ta: "Mức ảnh hưởng thấp"}
+  - {ten: "severity:medium", mau: "fbca04", mo_ta: "Mức ảnh hưởng trung bình"}
+  - {ten: "severity:high", mau: "d93f0b", mo_ta: "Mức ảnh hưởng cao"}
+  - {ten: "severity:critical", mau: "b60205", mo_ta: "Mức ảnh hưởng nghiêm trọng, chặn mốc"}

@@ -1,0 +1,665 @@
+# Seed epic FG-06 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-06
+  tracker: epic
+  title_vi: Sửa sau xác nhận và bút toán đảo 赤伝
+  feature: correction
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-06
+  - P-16
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này lo việc sửa dữ liệu sau khi đã chốt: người được cấp quyền lập yêu cầu điều chỉnh kèm lý do và bằng chứng, một người khác duyệt hoặc từ chối, và khi duyệt thì hệ thống sinh 赤伝 (bút toán đảo) hoặc dòng chênh lệch thay vì sửa bản ghi gốc. Mọi thay đổi sau khi 業務日 (ngày nghiệp vụ) đã khoá đều phải đi qua luồng này.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-06 đã đóng.
+  - Khi một yêu cầu được duyệt thì bản ghi gốc giữ nguyên, có thêm dòng đảo hoặc dòng chênh lệch trỏ về yêu cầu, và nhật ký ghi người lập, người duyệt, thời điểm.
+  - Khi người lập tự duyệt yêu cầu của mình thì máy chủ từ chối, kể cả khi tài khoản có vai duyệt.
+  - INV-Q-02 đã có câu trả lời, hoặc khách xác nhận giữ giả định hai cấp của P-16.
+  dinh_nghia_xong: []
+items:
+- key: SC-050
+  cha: FG-06
+  tracker: story
+  title_vi: Tạo yêu cầu điều chỉnh sau xác nhận
+  ten_ja: 調整要求登録
+  spec_refs:
+    sc:
+    - SC-050
+    api: []
+    tech: []
+    bang:
+    - adjustment_requests
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG06-03
+  - G-18
+  mo_ta: 権限付与済みユーザー (người dùng được cấp quyền lập ở ma trận của luồng sửa) chọn bản ghi đã chốt cần sửa, khai nội dung sửa, ghi lý do và đính bằng chứng để gửi duyệt. Bản ghi gốc không đổi cho tới khi yêu cầu được duyệt ở SC-052; người lập không tự chọn người duyệt.
+  pham_vi: Màn SC-050 (SPEC-SKM-125); API ghi yêu cầu viết mới ở SC-050/BE, vì FG-06 chưa có API nào (P-01); bảng `adjustment_requests` (chủ migration), bằng chứng lưu qua `attachments`.
+  luong_chinh:
+  - Người có quyền lập chọn loại đối tượng và bản ghi đã chốt cần sửa.
+  - Người lập khai loại sửa (đảo hay chênh lệch), số tiền, kỳ áp dụng, ghi lý do và đính bằng chứng.
+  - Máy chủ kiểm quyền lập theo ma trận của luồng sửa và kiểm bản ghi tồn tại, đã chốt.
+  - Máy chủ ghi yêu cầu ở trạng thái chờ duyệt, người lập là người của phiên.
+  - Yêu cầu hiện ở SC-051 để người duyệt xử lý.
+  tieu_chi_nghiem_thu:
+  - Khi lý do hoặc bằng chứng trống thì không ghi yêu cầu nào.
+  - Khi tài khoản chưa có quyền lập ở ma trận của luồng sửa thì máy chủ trả 403, dù màn đã ẩn nút.
+  - Khi bản ghi đích chưa chốt thì máy chủ từ chối, vì sửa trước khi chốt đi đường khác theo ADR-003.
+  - Khi ghi thành công thì yêu cầu ở trạng thái chờ duyệt, người lập và thời điểm lấy ở máy chủ, người duyệt còn trống; bản ghi gốc không đổi.
+  dinh_nghia_xong:
+  - Tập loại đối tượng sửa được và quan hệ của target_id ghi lại vào SKM_DB (G-18).
+- key: SC-050/FE
+  cha: SC-050
+  tracker: devtask
+  title_vi: 'Giao diện: Tạo yêu cầu điều chỉnh sau xác nhận'
+  spec_refs:
+    sc:
+    - SC-050
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs:
+  - G-FG06-03
+  mo_ta: 'Dựng màn lập yêu cầu điều chỉnh: chọn loại đối tượng và bản ghi, ô nội dung sửa, ô lý do, tải bằng chứng; trạng thái và người lập chỉ hiện, không cho nhập.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trạng thái, người lập, người duyệt là nhãn chỉ đọc do máy chủ gán, không phải ô nhập bắt buộc như spec hiện tại (G-FG06-03).
+  - Đối tượng chọn từ danh sách bản ghi đã chốt, không gõ mã tay; có ba ô loại sửa, số tiền, kỳ áp dụng.
+  - Thiếu lý do hoặc bằng chứng thì màn chặn gửi và giữ dữ liệu đã nhập.
+  dinh_nghia_xong: []
+- key: SC-050/BE
+  cha: SC-050
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tạo yêu cầu điều chỉnh sau xác nhận'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - adjustment_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  - P-16
+  gap_refs:
+  - G-FG06-03
+  mo_ta: 'Viết spec rồi làm API ghi yêu cầu điều chỉnh trên kho mã hệ đích: kiểm quyền lập, kiểm đối tượng đã chốt, ghi yêu cầu và liên kết bằng chứng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người lập lấy từ phiên, trạng thái đầu là chờ duyệt; API không nhận người duyệt từ body.
+  - Quyền lập đọc ma trận của luồng sửa ở mỗi lần gọi; vai chưa có dòng thì bị chặn (P-16, P-12).
+  - Mỗi yêu cầu ghi một dòng nhật ký kiểm toán.
+  dinh_nghia_xong: []
+- key: SC-050/DB
+  cha: SC-050
+  tracker: devtask
+  title_vi: Tạo bảng adjustment_requests
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - adjustment_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-18
+  - G-FG06-02
+  - G-FG06-03
+  mo_ta: Viết migration bảng adjustment_requests; chốt kiểu của target_id và chung_cu_ref còn để trống ở SKM_DB (P-06) trước khi tạo bảng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu và quan hệ của target_id, kiểu của chung_cu_ref được chốt, có người duyệt và ghi lại vào SKM_DB (G-18).
+  - Có thêm cột nội dung sửa, thời điểm lập, thời điểm duyệt và lý do từ chối (G-FG06-02, G-FG06-03).
+  - Cơ sở dữ liệu chặn người duyệt trùng người lập.
+  dinh_nghia_xong: []
+- key: SC-050/TEST
+  cha: SC-050
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo yêu cầu điều chỉnh sau xác nhận'
+  spec_refs:
+    sc:
+    - SC-050
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lập yêu cầu điều chỉnh, nhắm vào quyền lập và việc bản ghi gốc không đổi.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lập yêu cầu cho một giao dịch thuộc ngày đã khoá: có một yêu cầu chờ duyệt, giao dịch gốc không đổi.'
+  - Tài khoản không có quyền lập ở ma trận của luồng sửa gọi thẳng API nhận 403.
+  - 'Gửi kèm người lập hoặc trạng thái giả trong body: bản ghi lưu người của phiên và trạng thái chờ duyệt.'
+  dinh_nghia_xong: []
+- key: SC-051
+  cha: FG-06
+  tracker: story
+  title_vi: Danh sách yêu cầu điều chỉnh
+  ten_ja: 調整要求一覧
+  spec_refs:
+    sc:
+    - SC-051
+    api: []
+    tech: []
+    bang:
+    - adjustment_requests
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs: []
+  mo_ta: 照合事務 (nhóm đối soát) và 承認者 (người duyệt) tra yêu cầu điều chỉnh theo 業務日 (ngày nghiệp vụ) và trạng thái để biết yêu cầu nào còn chờ duyệt, ai lập, lý do và bằng chứng là gì. Màn chỉ đọc; người duyệt chọn yêu cầu chờ duyệt để xử lý ở SC-052.
+  pham_vi: Màn SC-051 (SPEC-SKM-126); API đọc danh sách viết mới ở SC-051/BE (P-01); bảng `adjustment_requests` (chỉ đọc, migration thuộc SC-050/DB).
+  luong_chinh:
+  - Người dùng mở màn; máy chủ trả yêu cầu mới nhất, trang đầu.
+  - Người dùng lọc theo ngày và trạng thái; máy chủ trả lại danh sách, không đổi dữ liệu.
+  - 承認者 chọn một yêu cầu chờ duyệt để mở SC-052.
+  tieu_chi_nghiem_thu:
+  - Khi lọc theo trạng thái chờ duyệt thì chỉ còn yêu cầu chưa được duyệt hay từ chối.
+  - Khi yêu cầu đã duyệt hoặc đã từ chối thì dòng hiện người duyệt; yêu cầu chờ duyệt để trống ô này.
+  - Khi người xem ngoài 照合事務 và 承認者 thì máy chủ trả 403.
+  dinh_nghia_xong:
+  - Bộ lọc trạng thái dùng đúng tập giá trị trạng thái mà SC-050/DB chốt.
+- key: SC-051/FE
+  cha: SC-051
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách yêu cầu điều chỉnh'
+  spec_refs:
+    sc:
+    - SC-051
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn danh sách yêu cầu điều chỉnh chỉ đọc: lọc theo 業務日 (ngày nghiệp vụ) và trạng thái, bảng sáu cột, nhãn trạng thái và phân trang.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lọc không đổi dữ liệu; phân trang giữ điều kiện lọc.
+  - Dòng chờ duyệt có đường mở SC-052, chỉ hiện với 承認者 (người duyệt).
+  dinh_nghia_xong: []
+- key: SC-051/BE
+  cha: SC-051
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách yêu cầu điều chỉnh'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - adjustment_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs: []
+  mo_ta: Viết spec rồi làm API đọc danh sách yêu cầu điều chỉnh có lọc và phân trang trên kho mã hệ đích.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày lọc sai định dạng trả 400; cỡ trang và thứ tự theo quy ước chung của dự án.
+  - Vai được đọc là 照合事務 (nhóm đối soát) và 承認者 (người duyệt) theo ma trận quyền (P-12).
+  dinh_nghia_xong: []
+- key: SC-051/TEST
+  cha: SC-051
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách yêu cầu điều chỉnh'
+  spec_refs:
+    sc:
+    - SC-051
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử lọc và phân quyền của danh sách yêu cầu điều chỉnh.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dữ liệu mẫu có yêu cầu chờ duyệt, đã duyệt và bị từ chối: lọc theo từng trạng thái ra đúng tập.'
+  - Tài khoản ngoài hai vai được đọc nhận 403.
+  dinh_nghia_xong: []
+- key: SC-052
+  cha: FG-06
+  tracker: story
+  title_vi: Duyệt yêu cầu điều chỉnh
+  ten_ja: 調整要求承認・却下
+  spec_refs:
+    sc:
+    - SC-052
+    api: []
+    tech: []
+    bang:
+    - adjustment_entries
+    - adjustment_requests
+    fr:
+    - FR-CORR-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG06-01
+  - G-FG06-04
+  mo_ta: 承認者 (người duyệt) xem yêu cầu điều chỉnh rồi duyệt hoặc từ chối; duyệt thì hệ thống sinh 赤伝 (bút toán đảo) cho bản ghi gốc hoặc một dòng chênh lệch vào kỳ áp dụng, bản ghi gốc giữ nguyên. Người duyệt phải là tài khoản khác người lập, kể cả khi người lập cũng có vai duyệt.
+  pham_vi: Màn SC-052 (SPEC-SKM-127); API duyệt, từ chối viết mới ở SC-052/BE (P-01); bảng `adjustment_entries` (chủ migration), đổi trạng thái `adjustment_requests`.
+  luong_chinh:
+  - 承認者 chọn một yêu cầu chờ duyệt ở SC-051; màn hiện đối tượng, nội dung sửa, lý do, bằng chứng và người lập, mọi ô chỉ đọc.
+  - 承認者 bấm duyệt hoặc từ chối; từ chối thì nhập lý do.
+  - Máy chủ chặn khi người bấm là người lập, hoặc yêu cầu không còn chờ duyệt.
+  - Duyệt thì máy chủ ghi dòng đảo hoặc dòng chênh lệch và đổi trạng thái yêu cầu trong cùng giao dịch CSDL; bản ghi gốc không đổi.
+  - Máy chủ ghi người duyệt, thời điểm và nhật ký kiểm toán có trước, sau.
+  tieu_chi_nghiem_thu:
+  - Khi người bấm duyệt chính là người lập thì máy chủ trả 422 M_26 như luồng duyệt bản quy tắc, yêu cầu giữ nguyên.
+  - Khi duyệt loại đảo thì dòng đảo mang số tiền ngược dấu bản ghi gốc; loại chênh lệch thì mang đúng số đã khai; bản ghi gốc không đổi.
+  - Khi từ chối thì không sinh dòng nào; yêu cầu lưu người từ chối, thời điểm và lý do.
+  - Khi yêu cầu đã duyệt hoặc đã từ chối thì máy chủ không cho duyệt lại, trạng thái giữ nguyên.
+  dinh_nghia_xong:
+  - Số cấp duyệt và người giữ vai cập nhật theo đáp của INV-Q-02 (P-16).
+- key: SC-052/FE
+  cha: SC-052
+  tracker: devtask
+  title_vi: 'Giao diện: Duyệt yêu cầu điều chỉnh'
+  spec_refs:
+    sc:
+    - SC-052
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs:
+  - G-FG06-01
+  mo_ta: Dựng màn duyệt yêu cầu điều chỉnh chỉ đọc với hai nút duyệt, từ chối và ô lý do từ chối, thay cho bốn ô nhập và nút lưu nháp của spec hiện tại (G-FG06-01).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi dữ liệu của yêu cầu là nhãn chỉ đọc; nút duyệt ẩn khi người đăng nhập là người lập, nhưng máy chủ vẫn kiểm lại.
+  - Từ chối mà lý do trống thì màn chặn gửi.
+  - Yêu cầu không còn chờ duyệt thì hai nút bị vô hiệu.
+  dinh_nghia_xong: []
+- key: SC-052/BE
+  cha: SC-052
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Duyệt yêu cầu điều chỉnh'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - adjustment_entries
+    - adjustment_requests
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-16
+  gap_refs:
+  - G-FG06-04
+  mo_ta: 'Viết spec rồi làm API duyệt và từ chối yêu cầu điều chỉnh: kiểm người duyệt khác người lập, ghi dòng đảo hoặc chênh lệch, đổi trạng thái yêu cầu trong một giao dịch CSDL.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người duyệt lấy từ phiên; trùng người lập thì trả 422 M_26, không ghi gì.
+  - Không có lệnh sửa hay xoá nào trên bản ghi gốc; báo cáo đọc dòng đảo, dòng chênh lệch qua khung nhìn tổng hợp mà SC-052/DB chốt (G-FG06-04).
+  - Lỗi ở bất kỳ lệnh ghi nào thì hoàn tác cả hai, trả 500 M_25.
+  dinh_nghia_xong: []
+- key: SC-052/DB
+  cha: SC-052
+  tracker: devtask
+  title_vi: Tạo bảng adjustment_entries
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - adjustment_entries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG06-04
+  mo_ta: Viết migration bảng adjustment_entries, chỉ thêm dòng; chốt kiểu của loại, số tiền, kỳ áp dụng còn ghi «chốt ở LAB-5» (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Loại chỉ nhận đảo hoặc chênh lệch; có cột trỏ bản ghi bị đảo, người ghi và thời điểm ghi theo ADR-003 (G-FG06-04).
+  - Kiểu cột được chốt, có người duyệt và ghi lại vào SKM_DB.
+  dinh_nghia_xong: []
+- key: SC-052/TEST
+  cha: SC-052
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Duyệt yêu cầu điều chỉnh'
+  spec_refs:
+    sc:
+    - SC-052
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-CORR-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử duyệt và từ chối yêu cầu điều chỉnh, nhắm vào tách người lập với người duyệt và việc bản ghi gốc không đổi.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Người lập tự duyệt yêu cầu của mình, kể cả khi tài khoản có vai duyệt: bị từ chối 422 M_26, không sinh dòng nào.'
+  - 'Duyệt loại đảo cho một giao dịch: có một dòng đảo trỏ về giao dịch, giao dịch gốc không đổi, tổng của giao dịch đọc qua khung nhìn tổng hợp bằng 0.'
+  - 'Từ chối kèm lý do: không có dòng mới; yêu cầu lưu người từ chối, thời điểm và lý do.'
+  dinh_nghia_xong: []
+- key: SC-053
+  cha: FG-06
+  tracker: story
+  title_vi: Ma trận quyền của luồng sửa
+  spec_refs:
+    sc:
+    - SC-053
+    api: []
+    tech: []
+    bang:
+    - permission_matrix
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG06-05
+  - G-FG06-06
+  mo_ta: 'システム管理者 (quản trị hệ thống) và 照合部門長 (trưởng bộ phận đối soát) đặt vai nào được lập yêu cầu điều chỉnh và vai nào được duyệt. Ma trận là dữ liệu: thiếu dòng nghĩa là không cho phép, và API của luồng sửa đọc nó ở máy chủ chứ không chỉ ẩn nút.'
+  pham_vi: Màn SC-053 (SPEC-SKM-128); API đọc và ghi ma trận viết mới ở SC-053/BE (P-01); bảng `permission_matrix` (chủ migration theo seed, dùng chung với API-203 của FG-01).
+  luong_chinh:
+  - Người dùng mở màn; máy chủ trả các dòng vai × thao tác của luồng sửa.
+  - Người dùng bật hoặc tắt quyền lập, quyền duyệt cho từng vai rồi bấm Lưu.
+  - Máy chủ kiểm toàn bộ thay đổi, ghi trong một giao dịch CSDL và ghi nhật ký trước, sau.
+  - Lần gọi kế tiếp của SC-050 và SC-052 đọc ma trận mới.
+  tieu_chi_nghiem_thu:
+  - Khi một vai không có dòng cho thao tác lập hay duyệt thì API của SC-050 hay SC-052 trả 403 cho vai đó.
+  - Khi lưu thì quyền mới có hiệu lực ngay ở lần gọi kế tiếp.
+  - Khi một phần tử thay đổi sai thì cả lần lưu bị từ chối, không ghi một phần.
+  - Khi lưu thành công thì nhật ký ghi người lưu, thời điểm và giá trị trước, sau.
+  - Khi システム管理者 chưa có dòng nào trong ma trận quyền chung thì vai đó chưa dùng được màn (P-12).
+  dinh_nghia_xong:
+  - Mã thao tác lập, duyệt của luồng sửa ghi vào SKM_DB và bảng ánh xạ vai của System Design (G-FG06-05).
+- key: SC-053/FE
+  cha: SC-053
+  tracker: devtask
+  title_vi: 'Giao diện: Ma trận quyền của luồng sửa'
+  spec_refs:
+    sc:
+    - SC-053
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-03
+  gap_refs:
+  - G-FG06-06
+  mo_ta: Dựng màn ma trận quyền của luồng sửa dạng bảng vai × thao tác với ô bật, tắt; thời điểm cập nhật chỉ hiện, không nhập (G-FG06-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Vai và thao tác chọn từ danh sách máy chủ trả, không gõ tay.
+  - Lưu bị từ chối thì màn giữ các thay đổi chưa lưu và hiện lý do.
+  dinh_nghia_xong: []
+- key: SC-053/BE
+  cha: SC-053
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Ma trận quyền của luồng sửa'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - permission_matrix
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG06-05
+  mo_ta: Viết spec rồi làm API đọc và ghi ma trận quyền của luồng sửa, kiểm toàn bộ thay đổi trước khi ghi, dùng chung cách đọc ma trận với API-203.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi cả mảng hoặc không ghi gì; mỗi lần lưu có một dòng nhật ký có trước, sau.
+  - Dịch vụ kiểm quyền mà SC-050/BE và SC-052/BE gọi đọc ma trận ở mỗi lần gọi, không lưu đệm.
+  dinh_nghia_xong: []
+- key: SC-053/DB
+  cha: SC-053
+  tracker: devtask
+  title_vi: Tạo bảng permission_matrix
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - permission_matrix
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-2
+  priority: 1
+  premise_refs:
+  - P-06
+  - P-12
+  gap_refs:
+  - G-FG06-05
+  mo_ta: Viết migration bảng permission_matrix trên kho mã hệ đích; kiểu cột vai theo vai đích thay cho kiểu vai của prototype.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột vai chứa được vai nội bộ của System Design và loại người tham gia; tập mã thao tác có thêm lập, duyệt của luồng sửa (G-FG06-05).
+  - Khoá chính theo cặp vai, thao tác giữ như SKM_DB; thiếu dòng nghĩa là không cho phép.
+  dinh_nghia_xong: []
+- key: SC-053/TEST
+  cha: SC-053
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Ma trận quyền của luồng sửa'
+  spec_refs:
+    sc:
+    - SC-053
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-CORR-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ma trận quyền của luồng sửa, nhắm vào việc thiếu dòng là bị chặn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Bỏ quyền lập của một vai rồi gọi API của SC-050 bằng tài khoản vai đó: nhận 403.'
+  - 'Lưu một mảng có một phần tử sai: không dòng nào đổi.'
+  - 'Bật quyền rồi gọi lại ngay: lần gọi kế tiếp được phép.'
+  dinh_nghia_xong: []
+- key: INV-Q-02
+  cha: FG-06
+  tracker: investigation
+  title_vi: Người đề nghị và số cấp duyệt bút toán đảo 赤伝
+  han: Trước khi viết code FG-06
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-02]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - A10
+    hoi:
+    - Q-02
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ai được đề nghị sửa sau khi đã xác nhận, tức phát hành 赤伝 (bút toán đảo), cần mấy cấp duyệt và ai chịu trách nhiệm cuối? LAB-01 đang giả định hai cấp (GD-11): người đề nghị và người duyệt là hai tài khoản khác nhau.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

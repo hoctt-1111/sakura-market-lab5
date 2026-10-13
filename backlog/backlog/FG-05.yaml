@@ -1,0 +1,579 @@
+# Seed epic FG-05 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-05
+  tracker: epic
+  title_vi: Kết quả đấu giá せり
+  feature: auction-result
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs: []
+  mo_ta: Nhóm chức năng này ghi kết quả cuối của từng lô sau せり (đấu giá) do người điều hành phiên nhập tay, sinh giao dịch kênh せり cho lô trúng và đưa lô ế sang 相対取引 (giao dịch thỏa thuận). Hệ thống chỉ tạo khung phiên và lưu kết quả; việc ra giá bằng tay và 符丁 (mật mã giá) diễn ra ngoài hệ thống, không có nhận dạng tự động nào.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-05 đã đóng.
+  - Khi người điều hành ghi một lô trúng giá thì có đúng một dòng kết quả mang người nhập và một dòng giao dịch kênh せり, ghi trong cùng một giao dịch CSDL.
+  - Khi lô vẫn ế sau lần tái せり (đấu lại) cho phép thì lô chuyển sang chờ 相対 và chọn được ở SC-030.
+  - Câu hỏi về số lần tái せり tối đa (G-FG05-07) đã có đáp, hoặc khách xác nhận giữ một lần như prototype.
+  dinh_nghia_xong: []
+items:
+- key: SC-040
+  cha: FG-05
+  tracker: story
+  title_vi: Ghi kết quả phiên đấu giá せり
+  ten_ja: せり結果登録
+  spec_refs:
+    sc:
+    - SC-040
+    api:
+    - API-212
+    tech: []
+    bang:
+    - auction_results
+    fr:
+    - FR-PARTY-02
+    - FR-SERI-01
+    - FR-SERI-02
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG05-01
+  mo_ta: 'せり進行役 (người điều hành phiên せり) nhập kết quả cuối của từng lô: trúng giá kèm người trúng và đơn giá, tái せり (đấu lại), hoặc chuyển sang 相対 (giao dịch thỏa thuận). Hệ thống không đọc ảnh hay suy 符丁 (mật mã giá); người bấm Đăng ký được lưu làm người xác nhận.
+
+    Ràng buộc đặc thù: Người trúng phải có quyền ứng giá せり và giấy còn hiệu lực tại ngày chốt: 仲卸 (trung gian bán buôn) theo 許可 (giấy phép), 売買参加者 (người tham gia mua bán) theo 承認 (chấp thuận); kiểm ở máy chủ.'
+  pham_vi: Màn SC-040 (SPEC-SKM-123); API-212, nhánh lô ế theo TECH-302; bảng `auction_results` (chủ migration), ghi `transactions` kênh せり qua module trade, đổi trạng thái `lots`.
+  luong_chinh:
+  - せり進行役 chọn phiên của 業務日 (ngày nghiệp vụ) và một lô đang chờ せり.
+  - Người điều hành chọn trúng giá, tái せり hoặc chuyển 相対; trúng giá thì chọn người trúng, nhập đơn giá yên/kg.
+  - Máy chủ kiểm lô; với trúng giá thì kiểm quyền ứng giá và giấy của người trúng tại ngày chốt.
+  - Máy chủ ghi kết quả mang người bấm, đổi trạng thái lô, và khi trúng giá ghi giao dịch kênh せり, cùng một giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi trúng giá mà thiếu người trúng hoặc đơn giá ≤ 0 thì trả 400 M_08, không ghi gì.
+  - Khi người trúng không có quyền ứng giá せり thì trả 403 M_27; giấy tạm dừng, 失効 (mất hiệu lực) hoặc quá hạn tại ngày chốt thì trả 422 M_21.
+  - Khi ghi thành công thì kết quả lưu người bấm lấy từ phiên và giờ máy chủ, không lấy giá trị gửi kèm.
+  - Khi tái せり lần hai thì trả 409 M_23; lỗi ở lệnh ghi nào cũng không ghi gì, trả 500 M_25.
+  dinh_nghia_xong:
+  - Spec SC-040 thêm số lượng, thời điểm ghi (G-FG05-01).
+- key: SC-040/FE
+  cha: SC-040
+  tracker: devtask
+  title_vi: 'Giao diện: Ghi kết quả phiên đấu giá せり'
+  spec_refs:
+    sc:
+    - SC-040
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  - constraint:two-tier
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn ghi kết quả せり (đấu giá) cho văn phòng và tablet: chọn phiên, lô, loại kết quả, người trúng và đơn giá; nhãn lần thử và người xác nhận do máy chủ gán.
+
+    Ràng buộc đặc thù: Danh sách người trúng chỉ lọc sơ bộ; kết quả cuối theo lần kiểm quyền せり và giấy 許可 (giấy phép), 承認 (chấp thuận) ở máy chủ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi chọn trúng giá thì ô người trúng và đơn giá thành bắt buộc; đơn giá không phải số nguyên từ 1 đến 12 chữ số thì màn chặn gửi.
+  - Khi chọn tái せり hoặc chuyển 相対 (giao dịch thỏa thuận) thì hai ô đó ẩn và không gửi lên.
+  - Khi API trả 403, 409 hoặc 422 thì màn giữ dữ liệu đã nhập và hiện câu báo của mã.
+  dinh_nghia_xong: []
+- key: SC-040/BE
+  cha: SC-040
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Ghi kết quả phiên đấu giá せり'
+  spec_refs:
+    sc: []
+    api:
+    - API-212
+    tech: []
+    bang:
+    - auction_results
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:two-tier
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-05
+  gap_refs:
+  - G-FG05-01
+  - G-FG04-02
+  mo_ta: 'Làm API-212 trên module trade: kiểm lô còn chờ せり (đấu giá), rẽ theo ba loại kết quả, gọi dịch vụ kiểm tư cách bên mua của TECH-301/BE cho nhánh trúng giá, rồi ghi kết quả, trạng thái lô và giao dịch trong một giao dịch CSDL.
+
+    Ràng buộc đặc thù: Nhánh trúng giá dùng chung luật hai tầng 許可 (giấy phép) / 承認 (chấp thuận) với 相対 (giao dịch thỏa thuận), chỉ đổi mã quyền thành quyền ứng giá せり.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Giao dịch kênh せり ghi qua cùng hàm chốt giao dịch của module trade mà API-208 dùng; ngày giao dịch là 業務日 (ngày nghiệp vụ) giờ Nhật (G-FG04-02).
+  - Người xác nhận lấy từ phiên; số lượng giao dịch lấy theo cả lô cho tới khi G-FG05-01 có cách chốt.
+  - Ba lệnh ghi riêng của prototype gộp vào một giao dịch CSDL; lỗi ở lệnh nào cũng hoàn tác cả ba.
+  dinh_nghia_xong: []
+- key: SC-040/DB
+  cha: SC-040
+  tracker: devtask
+  title_vi: Tạo bảng auction_results
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - auction_results
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:two-tier
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG05-01
+  - G-FG05-07
+  mo_ta: 'Viết migration bảng auction_results trên kho mã hệ đích, chỉ thêm dòng; mỗi lần nhập kết quả là một dòng mang người nhập.
+
+    Ràng buộc đặc thù: Cột người xác nhận bắt buộc và có khoá ngoại tới tài khoản, vì kết quả せり (đấu giá) chỉ hợp lệ khi có người nhập.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có thêm cột số lượng và thời điểm ghi mà FR-SERI-02 đòi, ghi lại vào SKM_DB (G-FG05-01).
+  - Lần thử có ràng buộc duy nhất theo cặp lô và lần thử; trần lần thử giữ 2 như SKM_DB tới khi G-FG05-07 có đáp.
+  - Migration chạy sau DATA-FG05/DB vì có khoá ngoại tới auction_sessions.
+  dinh_nghia_xong: []
+- key: SC-040/TEST
+  cha: SC-040
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Ghi kết quả phiên đấu giá せり'
+  spec_refs:
+    sc:
+    - SC-040
+    api:
+    - API-212
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-02
+    - FR-SERI-01
+    - FR-SERI-02
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ghi kết quả せり (đấu giá), gồm ca hai tầng tư cách của người trúng và ca chứng minh kết quả luôn có người nhập.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi kết quả trúng giá kèm người xác nhận giả trong body: dòng kết quả lưu người của phiên; không có API hay tác vụ nền nào tạo dòng kết quả mà không có người đăng nhập.'
+  - 'Người trúng là 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn trước ngày chốt, hoặc 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) đang tạm dừng: bị từ chối 422 M_21, không thêm dòng giao dịch.'
+  - Tái せり lần hai trả 409 M_23; gây lỗi ở bước ghi giao dịch thì dòng kết quả và trạng thái lô cũng không đổi.
+  dinh_nghia_xong: []
+- key: SC-041
+  cha: FG-05
+  tracker: story
+  title_vi: Tra lại kết quả đấu giá せり
+  ten_ja: せり結果一覧・再照会
+  spec_refs:
+    sc:
+    - SC-041
+    api:
+    - API-211
+    tech: []
+    bang:
+    - auction_results
+    fr:
+    - FR-SERI-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG05-03
+  - G-FG05-04
+  mo_ta: 'せり進行役 (người điều hành phiên), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) tra lại kết quả せり (đấu giá) theo 業務日 (ngày nghiệp vụ) và trạng thái: từng lần thử, người trúng, đơn giá và ai đã nhập. Màn cũng tạo khung hai phiên của ngày, vì SC-040 chỉ chọn được phiên đã có.
+
+    Ràng buộc đặc thù: Mỗi dòng hiện người nhập kết quả; kết quả bị sửa về sau thì hiện trước, sau và lý do, để lần ra ai quyết.'
+  pham_vi: Màn SC-041 (SPEC-SKM-124); API-211 (tạo khung phiên) và API đọc danh sách viết mới ở SC-041/BE (G-FG05-06); bảng `auction_results` (chỉ đọc), `auction_sessions` (migration thuộc DATA-FG05).
+  luong_chinh:
+  - Người dùng mở màn; máy chủ trả kết quả せり của 業務日 hiện tại, trang đầu.
+  - Người dùng lọc theo ngày và trạng thái; máy chủ trả lại danh sách, không đổi dữ liệu.
+  - せり進行役 bấm tạo phiên cho một ngày; máy chủ tạo đúng hai phiên theo khung giờ của 業務規程 (quy chế nghiệp vụ).
+  tieu_chi_nghiem_thu:
+  - Khi tạo phiên cho một ngày thì có đúng hai phiên, Ca 1 05:00–07:00 và Ca 2 15:00–16:30; tạo lần hai cho cùng ngày thì trả 409.
+  - Khi lô có hai lần thử thì danh sách hiện cả hai dòng, mỗi dòng mang người nhập của lần đó.
+  - Khi kết quả của một lô đã được sửa thì dòng hiện giá trị trước, sau và lý do sửa (G-FG05-03).
+  - Khi người xem thuộc 内部監査 mà ma trận quyền chưa có dòng cho vai đó thì máy chủ trả 403 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-041 thêm nút tạo phiên và cột trước, sau, lý do (G-FG05-03, G-FG05-04).
+- key: SC-041/FE
+  cha: SC-041
+  tracker: devtask
+  title_vi: 'Giao diện: Tra lại kết quả đấu giá せり'
+  spec_refs:
+    sc:
+    - SC-041
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG05-04
+  mo_ta: 'Dựng màn danh sách kết quả せり (đấu giá) có lọc theo 業務日 (ngày nghiệp vụ) và trạng thái, phân trang, cùng nút tạo khung phiên của ngày.
+
+    Ràng buộc đặc thù: Cột người nhập luôn hiện ở mọi dòng; dòng đã sửa có đánh dấu và hiện trước, sau, lý do.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nút tạo phiên chỉ hiện với せり進行役 (người điều hành phiên) và không có ô nhập giờ (G-FG05-04).
+  - Lọc không đổi dữ liệu; phân trang giữ điều kiện lọc.
+  - Khi tạo phiên trả 409 vì ngày đã có phiên thì màn báo ngày đó đã đăng ký, không tạo thêm.
+  dinh_nghia_xong: []
+- key: SC-041/BE
+  cha: SC-041
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tra lại kết quả đấu giá せり'
+  spec_refs:
+    sc: []
+    api:
+    - API-211
+    tech: []
+    bang:
+    - auction_results
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-05
+  - P-12
+  gap_refs:
+  - G-FG05-03
+  - G-FG05-06
+  mo_ta: 'Làm API-211, và viết spec rồi làm API đọc danh sách kết quả せり (đấu giá) trên module trade có lọc, phân trang và lịch sử sửa của từng dòng.
+
+    Ràng buộc đặc thù: Lịch sử sửa đọc qua module ghi nhật ký kiểm toán, không đọc thẳng bảng nhật ký (ADR-003).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - API-211 tạo đúng hai phiên theo khung giờ cấu hình của 業務規程 (quy chế nghiệp vụ), không nhận giờ từ trình duyệt; ngày đã có phiên trả 409.
+  - API đọc trả lần thử, người trúng, đơn giá, người nhập, và trước, sau, lý do khi có sửa (G-FG05-03, G-FG05-06).
+  - Vai được đọc là せり進行役 (người điều hành phiên), 照合事務 (nhóm đối soát), 内部監査 (kiểm toán nội bộ) theo ma trận quyền (P-12); chỉ せり進行役 gọi được API-211.
+  dinh_nghia_xong: []
+- key: SC-041/TEST
+  cha: SC-041
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tra lại kết quả đấu giá せり'
+  spec_refs:
+    sc:
+    - SC-041
+    api:
+    - API-211
+    tech: []
+    bang: []
+    fr:
+    - FR-SERI-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tra lại kết quả せり (đấu giá) và tạo khung phiên, nhắm vào việc mỗi kết quả lần ra được người nhập.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô có hai lần thử do hai người nhập: danh sách hiện đủ hai dòng, đúng người của từng lần, khớp cơ sở dữ liệu.'
+  - Tạo phiên cho một ngày ra đúng hai phiên 05:00–07:00 và 15:00–16:30; gọi lại cho cùng ngày trả 409, không thêm phiên.
+  - Tài khoản ngoài ba vai được đọc nhận 403; tài khoản 照合事務 (nhóm đối soát) gọi API-211 nhận 403.
+  dinh_nghia_xong: []
+- key: TECH-302
+  cha: FG-05
+  tracker: story
+  title_vi: Luồng lô せり ế chuyển sang 相対 hoặc bán trực tiếp
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    - API-212
+    tech:
+    - TECH-302
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:aitai
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-18
+  gap_refs:
+  - G-FG05-02
+  - G-FG05-07
+  mo_ta: 'TECH-302 lo nhánh lô ế của せり (đấu giá): lô được tái せり (đấu lại) tối đa một lần, vẫn không ai trả giá thì chuyển sang chờ 相対 (giao dịch thỏa thuận) để bán tiếp ở SC-030, hoặc bán trực tiếp qua API-209 khi quy tắc bán cho bên thứ ba bật. Bảng chuyển trạng thái của lô quyết lô đi đâu, không suy từ tên màn.
+
+    Ràng buộc đặc thù: Lô ế không bị coi là hết hàng mà vào đúng luồng 相対 với kiểm tư cách bên mua của TECH-301, vì 相対 là kênh chính của chợ.'
+  pham_vi: TECH-302 (SPEC-SKM-302) cho nhánh tái せり và chuyển 相対 của API-212; ghi `auction_results`, đổi trạng thái `lots`; phần chốt 相対 sau đó thuộc TECH-301, API-208 của FG-04, bán trực tiếp thuộc API-209 (mặc định tắt, P-18).
+  luong_chinh:
+  - せり進行役 (người điều hành phiên) chọn tái せり cho lô đang chờ せり; máy chủ ghi lần thử 1 là không bán được nếu chưa có dòng, rồi mở lần thử 2.
+  - Lô vẫn ế thì せり進行役 chọn chuyển 相対; máy chủ kiểm lô còn chờ せり rồi chuyển lô sang chờ 相対.
+  - Máy chủ ghi dòng kết quả chuyển 相対 cùng lượt đổi trạng thái lô và ghi nhật ký kiểm toán.
+  - 取引運用 (nhóm vận hành giao dịch) chọn lô đó ở SC-030 để chốt 相対.
+  tieu_chi_nghiem_thu:
+  - Khi lô đã có lần thử 2 mà chọn tái せり nữa thì trả 409 M_23, không thêm dòng.
+  - Khi lô không còn chờ せり mà chọn chuyển 相対 thì trả 409 M_10, trạng thái lô không đổi.
+  - Khi chuyển 相対 thành công thì lô ở trạng thái chờ 相対, SC-030 chọn được lô và giao dịch sau đó qua kiểm tư cách của TECH-301.
+  - Khi quy tắc bán cho bên thứ ba tắt thì lô ế chỉ đi được đường 相対 (P-18).
+  dinh_nghia_xong:
+  - Spec TECH-302 sửa bước 4.3 từ ghi đè sang thêm dòng (G-FG05-02).
+- key: TECH-302/BE
+  cha: TECH-302
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Luồng lô せり ế chuyển sang 相対 hoặc bán trực tiếp'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    - API-212
+    tech:
+    - TECH-302
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:aitai
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-18
+  gap_refs:
+  - G-FG05-02
+  - G-FG05-07
+  mo_ta: 'Làm nhánh tái せり (đấu giá) và chuyển 相対 của API-212 trên module trade, dùng bảng chuyển trạng thái của lô do SC-020/DB chốt.
+
+    Ràng buộc đặc thù: Lô chuyển 相対 (giao dịch thỏa thuận) phải chọn được ngay ở SC-030 mà không phải đưa lên kênh bán lần nữa.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi lần nhập là một dòng auction_results mới; không ghi đè dòng của lần thử trước (G-FG05-02).
+  - Dòng kết quả, trạng thái lô và nhật ký kiểm toán ghi trong một giao dịch CSDL; lỗi thì trả 500 M_25 và không đổi gì.
+  - Trần lần thử đọc từ một chỗ duy nhất, theo đáp của G-FG05-07.
+  dinh_nghia_xong: []
+- key: TECH-302/TEST
+  cha: TECH-302
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Luồng lô せり ế chuyển sang 相対 hoặc bán trực tiếp'
+  spec_refs:
+    sc: []
+    api:
+    - API-208
+    - API-212
+    tech:
+    - TECH-302
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:aitai
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử nhánh lô ế: tái せり (đấu giá) một lần, chuyển 相対 (giao dịch thỏa thuận) rồi chốt ở SC-030.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô qua tái せり rồi chuyển 相対: auction_results có đủ dòng của từng lần, lô ở trạng thái chờ 相対, SC-030 chốt được với bên mua đủ tư cách.'
+  - Tái せり lần hai trả 409 M_23; chuyển 相対 cho lô đã bán trả 409 M_10.
+  - 'Quy tắc bán cho bên thứ ba tắt: lô ế không bán trực tiếp được (P-18).'
+  dinh_nghia_xong: []
+- key: DATA-FG05
+  cha: FG-05
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-TRADE): auction_sessions'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - auction_sessions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG05-05
+  mo_ta: Story này dựng bảng khung phiên せり (đấu giá) mà API-211 ghi, SC-040 và API-212 đọc để chọn phiên. Bảng chỉ giữ ngày, ca và giờ của phiên; hệ thống không điều hành phiên.
+  pham_vi: Bảng `auction_sessions` (chủ migration, vùng D-TRADE); dòng do API-211 của SC-041 ghi, SC-040 và API-212 đọc.
+  luong_chinh:
+  - BE-1 đối chiếu cột của bảng với SKM_DB và chốt ràng buộc duy nhất theo ngày và ca (G-FG05-05).
+  - BE-1 viết migration và giá trị mặc định của trạng thái phiên.
+  - BE-1 nạp dữ liệu mẫu hai phiên của một ngày cho TEST của SC-040 và SC-041.
+  tieu_chi_nghiem_thu:
+  - Khi ghi phiên thứ hai trùng ngày và ca thì cơ sở dữ liệu từ chối, khớp mã 409 của API-211.
+  - Khi tạo phiên không nêu trạng thái thì phiên mang trạng thái mặc định prepared.
+  dinh_nghia_xong:
+  - Ràng buộc duy nhất theo ngày và ca ghi lại vào SKM_DB (G-FG05-05).
+- key: DATA-FG05/DB
+  cha: DATA-FG05
+  tracker: devtask
+  title_vi: Tạo bảng auction_sessions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - auction_sessions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG05-05
+  mo_ta: Viết migration bảng auction_sessions trên kho mã hệ đích theo SKM_DB, thêm ràng buộc duy nhất theo ngày và ca.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Hai phiên cùng ngày cùng ca bị từ chối; trạng thái mặc định prepared.
+  - Migration chạy trước SC-040/DB vì auction_results có khoá ngoại tới bảng này.
+  dinh_nghia_xong: []
+- key: DATA-FG05/TEST
+  cha: DATA-FG05
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-TRADE): auction_sessions'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của bảng auction_sessions.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ghi hai phiên cùng ngày cùng ca: lần hai bị cơ sở dữ liệu từ chối.'
+  - 'Xoá một phiên đã có kết quả せり (đấu giá): bị khoá ngoại chặn.'
+  dinh_nghia_xong: []
+- key: INV-FG05-TAI-SERI
+  cha: FG-05
+  tracker: investigation
+  title_vi: Số lần tái せり tối đa cho mỗi lô
+  han: Trước sprint của SC-040/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_SYSTEM_DESIGN.md A4 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-040
+    api: []
+    tech: []
+    bang:
+    - auction_results
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG05-07
+  mo_ta: Quy chế của chợ cho một lô ế được tái せり (đấu lại) tối đa mấy lần? Trần một lần đang dùng là của prototype và quy tắc A4 của LAB-4; RFP không nêu số lần, còn SKM_DB viết cứng trần này vào ràng buộc của cột lần thử.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

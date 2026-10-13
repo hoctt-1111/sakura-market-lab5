@@ -1,0 +1,859 @@
+# Seed epic FG-02 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-02
+  tracker: epic
+  title_vi: Tư cách người tham gia 許可・承認
+  feature: participant-qualification
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-09
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này lưu hồ sơ bốn loại người tham gia và tư cách của họ, tách hai loại giấy: 仲卸 (trung gian bán buôn) giữ 許可 (giấy phép), 売買参加者 (người tham gia mua bán) giữ 承認 (chấp thuận), không gộp thành một quyền. Hệ thống chỉ ghi kết quả xét duyệt làm trên giấy, giữ lịch sử đổi tư cách và cảnh báo giấy sắp hết hạn để chợ gia hạn trước khi giao dịch bị chặn lúc chốt.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-02 đã đóng.
+  - Khi lưu hồ sơ 仲卸 thì chỉ bộ cột 許可 có giá trị, hồ sơ 売買参加者 chỉ có bộ cột 承認; ghi cả hai bộ cho một hồ sơ bị chặn ở CSDL.
+  - Khi đổi trạng thái tư cách thì lịch sử có thêm một dòng với trước, sau, người quyết, ngày quyết và lý do; dòng cũ không bị sửa.
+  - Các issue điều tra của FG-02 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng (P-09).
+  dinh_nghia_xong: []
+items:
+- key: SC-010
+  cha: FG-02
+  tracker: story
+  title_vi: Danh sách người tham gia
+  ten_ja: 参加者一覧
+  spec_refs:
+    sc:
+    - SC-010
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    fr:
+    - FR-PARTY-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG02-05
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) và 取引運用 (nhóm vận hành giao dịch) tra người tham gia theo loại và trạng thái tư cách, xem số và hạn của đúng loại giấy. Nhóm giao dịch xem trước bên mua nào còn tư cách, nhưng kết quả chốt vẫn theo lần kiểm ở máy chủ.
+
+    Ràng buộc đặc thù: Bảng tách hai cặp cột giấy: 仲卸 chỉ có số, hạn 許可, 売買参加者 chỉ có số, hạn 承認.'
+  pham_vi: Màn SC-010 (SPEC-SKM-107), chỉ đọc `participants`; SC-010/BE viết spec API đọc rồi làm theo P-01. Màn không ghi qua API-204 (G-FG02-05).
+  luong_chinh:
+  - Người dùng mở SC-010; máy chủ kiểm vai trước khi đọc `participants`.
+  - Người dùng lọc theo ngày nghiệp vụ và trạng thái; lọc không đổi dữ liệu.
+  - Màn hiện loại, mã, tên, số và hạn giấy theo loại, trạng thái, ngày và lý do đổi gần nhất.
+  - Muốn đổi tư cách thì người dùng sang SC-013.
+  tieu_chi_nghiem_thu:
+  - Khi dòng là 仲卸 (trung gian bán buôn) thì chỉ cột 許可 (giấy phép) có giá trị, 売買参加者 (người tham gia mua bán) chỉ cột 承認 (chấp thuận); 卸売業者 (bán buôn đầu mối), 買出人 (người mua lẻ) để trống cả hai.
+  - Khi lọc theo một trạng thái thì chỉ hiện người tham gia đang ở đúng trạng thái đó.
+  - Khi người gọi không mang vai được phép thì API đọc trả 403 M_05; vai của 取引運用 lấy theo giả định P-12.
+  dinh_nghia_xong:
+  - Spec SC-010 bỏ dòng gọi API-204 ở mục xử lý lỗi (G-FG02-05).
+- key: SC-010/FE
+  cha: SC-010
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách người tham gia'
+  spec_refs:
+    sc:
+    - SC-010
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-05
+  mo_ta: 'Dựng màn danh sách người tham gia cho văn phòng: hai ô lọc, bảng chín cột, nhãn trạng thái, phân trang và nút Lọc.
+
+    Ràng buộc đặc thù: Cặp cột 許可 (giấy phép) và cặp cột 承認 (chấp thuận) hiện tách nhau, không gộp.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô trạng thái là danh sách chọn, không gõ tự do.
+  - Bấm Lọc chỉ tải lại danh sách; màn không có nút gọi API-204 (G-FG02-05).
+  - API đọc trả 403 thì màn báo không có quyền, không hiện bảng.
+  dinh_nghia_xong: []
+- key: SC-010/BE
+  cha: SC-010
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách người tham gia'
+  spec_refs:
+    sc: []
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-05
+  gap_refs:
+  - G-FG02-05
+  mo_ta: 'Viết spec API đọc danh sách người tham gia rồi làm API đó trên module party (P-01); việc ghi qua API-204 thuộc SC-013/BE.
+
+    Ràng buộc đặc thù: Trả số, hạn giấy theo cột của đúng loại người tham gia, không trả cột hạn gộp của prototype.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểm vai theo vai đích ở mục 6.1 spec màn, không theo vai admin của prototype (P-05).
+  - Lọc theo trạng thái và ngày nghiệp vụ, có phân trang.
+  - Không trả qualification_type hay qualified_until.
+  dinh_nghia_xong: []
+- key: SC-010/TEST
+  cha: SC-010
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách người tham gia'
+  spec_refs:
+    sc:
+    - SC-010
+    api:
+    - API-204
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cách hiện hai loại giấy, bộ lọc và quyền xem của SC-010.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Có một 仲卸 (trung gian bán buôn) và một 売買参加者 (người tham gia mua bán): dòng 仲卸 chỉ hiện số, hạn 許可 (giấy phép), dòng 売買参加者 chỉ hiện số, hạn 承認 (chấp thuận).'
+  - 'Lọc theo trạng thái tạm dừng: chỉ hiện người đang tạm dừng; `participants` không đổi sau khi lọc.'
+  - 'Tài khoản không mang vai được phép gọi API đọc: nhận 403.'
+  dinh_nghia_xong: []
+- key: SC-011
+  cha: FG-02
+  tracker: story
+  title_vi: Tạo và sửa hồ sơ người tham gia
+  ten_ja: 参加者登録・編集
+  spec_refs:
+    sc:
+    - SC-011
+    api: []
+    tech: []
+    bang:
+    - participants
+    fr:
+    - FR-PARTY-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-01
+  - G-FG02-04
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) tạo và sửa hồ sơ người tham gia thuộc bốn loại 卸売業者 (bán buôn đầu mối), 仲卸 (trung gian bán buôn), 売買参加者 (người tham gia mua bán), 買出人 (người mua lẻ). Đây là một trong sáu màn lõi có validation đủ ở LAB-4. Màn chỉ ghi kết quả cấp giấy đã xét ngoài hệ thống.
+
+    Ràng buộc đặc thù: 仲卸 nhập số, hạn 許可, 売買参加者 nhập số, hạn 承認 vào hai bộ ô riêng; đổi loại thì bộ ô kia bị xoá trắng.'
+  pham_vi: Màn SC-011 (SPEC-SKM-108); bảng `participants` (chủ migration, ràng buộc ck_participants_tier_exclusive). SC-011/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người dùng chọn loại người tham gia, nhập mã và tên.
+  - Màn chỉ hiện bộ ô giấy của đúng loại; người dùng nhập số, hạn giấy và trạng thái.
+  - Trạng thái đổi, kể cả lúc tạo hồ sơ, thì người dùng nhập ngày đổi và lý do.
+  - Máy chủ kiểm vai và từng luật, ghi `participants` với bộ giấy kia để trống; trạng thái đổi thì ghi kèm dòng lịch sử (G-FG02-01).
+  tieu_chi_nghiem_thu:
+  - Khi mã trống hoặc trùng thì máy chủ từ chối; mã là khoá đối chiếu với hệ kế toán (IF-ACC-01).
+  - Khi 仲卸 thiếu số hoặc hạn 許可 (giấy phép), hay 売買参加者 thiếu số hoặc hạn 承認 (chấp thuận), thì trả 400; ghi giấy của loại kia bị CSDL chặn.
+  - Khi trạng thái đổi mà thiếu ngày đổi hoặc lý do thì trả 400; hệ đích bắt buộc lý do, khác prototype.
+  - Khi lưu 卸売業者 hoặc 買出人 thì cả hai bộ cột giấy để trống.
+  dinh_nghia_xong:
+  - Mã thông báo lỗi cho từng luật của SC-011 được cấp vào bảng mã lỗi chung.
+  - Cột ngày bắt đầu hiệu lực của hai loại giấy chốt theo G-FG02-04.
+- key: SC-011/FE
+  cha: SC-011
+  tracker: devtask
+  title_vi: 'Giao diện: Tạo và sửa hồ sơ người tham gia'
+  spec_refs:
+    sc:
+    - SC-011
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn hồ sơ người tham gia cho văn phòng: mười ô nhập, nút Lưu và Huỷ, kiểm phía giao diện theo luật của spec.
+
+    Ràng buộc đặc thù: Bộ ô 許可 (giấy phép) chỉ hiện với 仲卸 (trung gian bán buôn), bộ ô 承認 (chấp thuận) chỉ hiện với 売買参加者 (người tham gia mua bán).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đổi loại thì bộ ô giấy không thuộc loại mới bị ẩn và xoá trắng trước khi gửi.
+  - Trạng thái khác giá trị ban đầu thì ngày đổi và lý do thành bắt buộc; ngày đúng dạng YYYY-MM-DD.
+  - Còn ô bắt buộc trống hoặc sai định dạng thì không gửi, tô đỏ ô lỗi kèm lý do.
+  dinh_nghia_xong: []
+- key: SC-011/BE
+  cha: SC-011
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tạo và sửa hồ sơ người tham gia'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - participants
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG02-01
+  mo_ta: 'Viết spec API hồ sơ người tham gia rồi làm API đó trên module party, kiểm lại mọi luật của spec ở máy chủ (P-01).
+
+    Ràng buộc đặc thù: Máy chủ tự kiểm bộ giấy bắt buộc theo loại, vì CSDL chỉ chặn ghi nhầm bộ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mã trùng trả lỗi có mã thông báo riêng, không rơi vào nhánh 500.
+  - Đổi trạng thái thì gọi dịch vụ đổi tư cách của SC-013/BE; hồ sơ và lịch sử cùng thành công hoặc cùng hoàn tác (G-FG02-01).
+  - Vai không được phép nhận 403 M_05; lỗi ghi trả 500 M_25.
+  dinh_nghia_xong: []
+- key: SC-011/DB
+  cha: SC-011
+  tracker: devtask
+  title_vi: Tạo bảng participants
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - participants
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG02-04
+  mo_ta: 'Viết migration bảng `participants` theo thiết kế đích: bốn cột giấy riêng thay cho cột gộp của prototype.
+
+    Ràng buộc đặc thù: ck_participants_tier_exclusive chặn 仲卸 (trung gian bán buôn) có giá trị ở cột 承認 (chấp thuận) và 売買参加者 (người tham gia mua bán) có giá trị ở cột 許可 (giấy phép).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có kyoka_so, kyoka_het_han, shonin_so, shonin_het_han; bỏ qualification_type và qualified_until.
+  - Mã người tham gia có chỉ mục duy nhất uq_participants_code.
+  - Cột ngày bắt đầu hiệu lực chốt theo G-FG02-04 trước khi chạy migration (P-06).
+  dinh_nghia_xong: []
+- key: SC-011/TEST
+  cha: SC-011
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo và sửa hồ sơ người tham gia'
+  spec_refs:
+    sc:
+    - SC-011
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử từng luật validation và hai nhánh giấy của SC-011.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tạo 仲卸 (trung gian bán buôn) có số, hạn 許可 (giấy phép) rồi đổi loại sang 売買参加者 (người tham gia mua bán): bộ 許可 bị xoá trắng; gọi thẳng API ghi cả hai bộ cho một hồ sơ thì bị từ chối.'
+  - 'Tạo hồ sơ với mã đã tồn tại: bị từ chối, không có dòng mới.'
+  - 'Đổi sang tạm dừng mà bỏ trống lý do: trả 400; có lý do thì có đúng một dòng lịch sử ghi người, thời điểm, trước, sau.'
+  dinh_nghia_xong: []
+- key: SC-012
+  cha: FG-02
+  tracker: story
+  title_vi: Hồ sơ và lịch sử tư cách
+  ten_ja: 参加者詳細（資格履歴）
+  spec_refs:
+    sc:
+    - SC-012
+    api: []
+    tech: []
+    bang:
+    - participants
+    - qualification_history
+    fr:
+    - FR-PARTY-01
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG02-01
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) và 内部監査 (kiểm toán nội bộ) xem hồ sơ một người tham gia cùng lịch sử đổi tư cách: trước, sau, ngày quyết, người quyết, lý do. Kiểm toán tra lại ở đây vì sao một bên bị dừng hay 失効 (mất hiệu lực). Vai 内部監査 chưa gán vai nội bộ (P-12).
+
+    Ràng buộc đặc thù: Hồ sơ chỉ hiện số, hạn của đúng loại giấy: 許可 (giấy phép) với 仲卸 (trung gian bán buôn), 承認 (chấp thuận) với 売買参加者 (người tham gia mua bán).'
+  pham_vi: Màn SC-012 (SPEC-SKM-109), chỉ đọc `participants` và `qualification_history` (migration thuộc SC-013/DB). SC-012/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người xem mở SC-012 cho một người tham gia; máy chủ kiểm vai của phiên.
+  - Máy chủ đọc hồ sơ và các dòng `qualification_history` của người đó.
+  - Màn hiện giấy theo loại và bảng lịch sử; bấm Quay lại không ghi gì.
+  tieu_chi_nghiem_thu:
+  - Khi người tham gia đã đổi trạng thái qua SC-011 hoặc SC-013 thì mọi lần đổi đều có trong bảng lịch sử (G-FG02-01).
+  - Khi người tham gia chưa đổi tư cách lần nào thì bảng lịch sử hiện trạng thái rỗng, không báo lỗi.
+  - Khi người xem không mang vai được phép thì API đọc trả 403 M_05.
+  - Màn và API không có lệnh nào sửa hay xoá dòng lịch sử.
+  dinh_nghia_xong:
+  - Lịch sử đọc từ một nguồn duy nhất đã chốt ở G-FG02-01.
+- key: SC-012/FE
+  cha: SC-012
+  tracker: devtask
+  title_vi: 'Giao diện: Hồ sơ và lịch sử tư cách'
+  spec_refs:
+    sc:
+    - SC-012
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn chi tiết người tham gia: khối số và hạn giấy, bảng lịch sử năm cột, nút Quay lại.
+
+    Ràng buộc đặc thù: Khối giấy chỉ hiện cặp ô của đúng loại người tham gia.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 仲卸 (trung gian bán buôn) chỉ hiện 許可 (giấy phép), 売買参加者 (người tham gia mua bán) chỉ hiện 承認 (chấp thuận); hai loại còn lại không có khối giấy.
+  - Bảng lịch sử rỗng hiện trạng thái rỗng thay vì lỗi.
+  - Màn không có nút sửa hay xoá.
+  dinh_nghia_xong: []
+- key: SC-012/BE
+  cha: SC-012
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Hồ sơ và lịch sử tư cách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - participants
+    - qualification_history
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-12
+  - P-24
+  gap_refs:
+  - G-FG02-01
+  mo_ta: 'Viết spec API đọc hồ sơ và lịch sử tư cách rồi làm API đó trên module party, chỉ đọc (P-01).
+
+    Ràng buộc đặc thù: Trả bộ giấy theo loại người tham gia, không trả cột gộp của prototype.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mã người tham gia không tồn tại thì trả 404, thống nhất với cách P-24 chốt cho API-204.
+  - Lịch sử đọc từ `qualification_history`, gồm cả lần đổi qua SC-011 (G-FG02-01).
+  - Vai 内部監査 (kiểm toán nội bộ) chưa có dòng trong ma trận thì nhận 403 tới khi INV-Q-SD4 có đáp (P-12).
+  dinh_nghia_xong: []
+- key: SC-012/TEST
+  cha: SC-012
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Hồ sơ và lịch sử tư cách'
+  spec_refs:
+    sc:
+    - SC-012
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-01
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử nội dung lịch sử tư cách và cách hiện giấy theo loại của SC-012.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đổi trạng thái một người hai lần, qua SC-011 rồi qua SC-013: SC-012 hiện đủ hai dòng với trước, sau, người quyết, lý do.'
+  - 'Mở hồ sơ 仲卸 (trung gian bán buôn): chỉ thấy số, hạn 許可 (giấy phép); mở hồ sơ 買出人 (người mua lẻ): không có khối giấy.'
+  - 'Gọi API đọc với mã người tham gia không tồn tại: nhận 404.'
+  dinh_nghia_xong: []
+- key: SC-013
+  cha: FG-02
+  tracker: story
+  title_vi: Đổi trạng thái tư cách
+  spec_refs:
+    sc:
+    - SC-013
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    - qualification_history
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-01
+  - G-FG02-03
+  - G-FG02-06
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) hoặc 承認者 (người duyệt) ghi kết quả dừng, mở lại hay cho 失効 (mất hiệu lực) tư cách một người tham gia. Xét duyệt làm trên giấy; máy chỉ ghi kết quả người nhập. Trạng thái mới áp ngay ở lần chốt 相対取引 (giao dịch thỏa thuận) kế tiếp.
+
+    Ràng buộc đặc thù: Gia hạn ghi đúng cột hạn: 許可 (giấy phép) cho 仲卸, 承認 (chấp thuận) cho 売買参加者.'
+  pham_vi: Màn SC-013 (SPEC-SKM-110); API-204; bảng `qualification_history` (chủ migration), `participants`, `audit_log`.
+  luong_chinh:
+  - Người dùng chọn trạng thái mới, nhập ngày quyết, người quyết, lý do, hạn mới nếu gia hạn.
+  - Máy chủ kiểm vai và bước chuyển, đọc trạng thái trước từ CSDL.
+  - Máy chủ cập nhật `participants`, thêm dòng `qualification_history`, `audit_log` trong một giao dịch CSDL.
+  tieu_chi_nghiem_thu:
+  - Khi lưu thì dòng lịch sử có người quyết, ngày quyết theo văn bản xét duyệt, người ghi lấy từ phiên, giờ máy chủ (G-FG02-03).
+  - Khi thiếu lý do thì trả 400; mã người tham gia không có thì trả 404 (P-24).
+  - Khi gia hạn cho 仲卸 (trung gian bán buôn) thì chỉ kyoka_het_han đổi, cho 売買参加者 (người tham gia mua bán) thì chỉ shonin_het_han đổi.
+  - Khi bước chuyển ngoài bảng chuyển đã chốt thì máy chủ từ chối (G-FG02-06).
+  dinh_nghia_xong:
+  - Spec SC-013, API-204 sửa theo G-FG02-01, G-FG02-03, G-FG02-06.
+- key: SC-013/FE
+  cha: SC-013
+  tracker: devtask
+  title_vi: 'Giao diện: Đổi trạng thái tư cách'
+  spec_refs:
+    sc:
+    - SC-013
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-02
+  - G-FG02-03
+  mo_ta: 'Dựng màn đổi trạng thái tư cách: giấy theo loại, trạng thái trước chỉ đọc, trạng thái sau, ngày quyết, người quyết, lý do, nút Lưu và Huỷ.
+
+    Ràng buộc đặc thù: Ô hạn mới chỉ hiện cho đúng loại giấy, 許可 (giấy phép) hoặc 承認 (chấp thuận).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trạng thái trước chỉ đọc, lấy từ hồ sơ; màn không gửi giá trị này (G-FG02-03).
+  - Ô lý do bắt buộc; thiếu thì màn chặn gửi (G-FG02-02).
+  - API trả 500 M_25 thì màn báo lưu thất bại, giữ dữ liệu đã nhập.
+  dinh_nghia_xong: []
+- key: SC-013/BE
+  cha: SC-013
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Đổi trạng thái tư cách'
+  spec_refs:
+    sc: []
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    - qualification_history
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-05
+  - P-24
+  gap_refs:
+  - G-FG02-01
+  - G-FG02-02
+  - G-FG02-06
+  - G-FG02-08
+  mo_ta: 'Làm API-204 trên module party: đọc trạng thái trước, kiểm bước chuyển, ghi `participants`, `qualification_history` và `audit_log` (qua hàm dùng chung của SC-130/BE) trong một giao dịch; SC-011/BE dùng lại dịch vụ này (G-FG02-01).
+
+    Ràng buộc đặc thù: Hạn mới ghi vào kyoka_het_han hoặc shonin_het_han theo loại, không nhận tham số hạn gộp (G-FG02-08).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trả 404 khi mã người tham gia không tồn tại, thay nhánh 500 của prototype (P-24).
+  - Lý do là tham số bắt buộc; thiếu thì trả 400 (G-FG02-02).
+  - Kiểm quyền theo vai đích ở mục 6.1 spec màn, không theo vai admin của prototype (P-05).
+  dinh_nghia_xong: []
+- key: SC-013/DB
+  cha: SC-013
+  tracker: devtask
+  title_vi: Tạo bảng qualification_history
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - qualification_history
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG02-03
+  mo_ta: 'Viết migration bảng `qualification_history` chỉ thêm dòng: hội đồng quyết trên giấy, hệ thống ghi kết quả.
+
+    Ràng buộc đặc thù: Giá trị trước và sau ghi được cả hạn giấy khi gia hạn, theo cột 許可 (giấy phép) hoặc 承認 (chấp thuận) của đúng loại người tham gia.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Kiểu cột truoc và sau (đang để «—» ở SKM_DB) được chốt và ghi lại vào SKM_DB trước khi chạy migration (P-06).
+  - Có cột người ghi lấy từ phiên, tách khỏi decided_by là người quyết (G-FG02-03).
+  - Khoá ngoại participant_id trỏ `participants`, nên migration chạy sau SC-011/DB.
+  dinh_nghia_xong: []
+- key: SC-013/TEST
+  cha: SC-013
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Đổi trạng thái tư cách'
+  spec_refs:
+    sc:
+    - SC-013
+    api:
+    - API-204
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ghi kết quả đổi tư cách và gia hạn theo loại giấy của SC-013.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi kèm giá trị trước giả và giờ giả: dòng lịch sử lưu trạng thái trước đọc từ CSDL, giờ máy chủ, người ghi là người của phiên.'
+  - Gia hạn 仲卸 (trung gian bán buôn) thì chỉ kyoka_het_han đổi, gia hạn 売買参加者 (người tham gia mua bán) thì chỉ shonin_het_han đổi; lần chốt 相対 (giao dịch thỏa thuận) kế tiếp kiểm theo hạn mới.
+  - 'Thiếu lý do, rồi mã người tham gia không tồn tại: lần lượt nhận 400 và 404, không có dòng lịch sử mới.'
+  dinh_nghia_xong: []
+- key: SC-014
+  cha: FG-02
+  tracker: story
+  title_vi: Danh sách cảnh báo sắp hết hạn
+  ten_ja: 失効間近警告一覧
+  spec_refs:
+    sc:
+    - SC-014
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-05
+  - G-FG02-07
+  mo_ta: '参加者管理 (người quản lý người tham gia) và 運用担当者 (người phụ trách vận hành tư cách) theo dõi những người có giấy gần tới hạn, để nhắc họ gia hạn trước khi bị chặn lúc chốt. Ngưỡng 失効間近 (sắp hết hạn) là tham số cấu hình, khởi tạo 30 ngày (P-09, FR-PARTY-03).
+
+    Ràng buộc đặc thù: Hạn so với ngưỡng là hạn của đúng loại giấy: 許可 với 仲卸, 承認 với 売買参加者.'
+  pham_vi: Màn SC-014 (SPEC-SKM-111), chỉ đọc `participants`; SC-103 đọc cùng ngưỡng. SC-014/BE viết spec API rồi làm theo P-01.
+  luong_chinh:
+  - Người dùng mở SC-014; máy chủ kiểm vai, đọc ngưỡng từ cấu hình.
+  - Máy chủ lấy người có hạn giấy theo loại nằm trong ngưỡng tính từ ngày nghiệp vụ.
+  - Màn hiện loại, mã, tên, số, hạn giấy, số ngày còn lại, trạng thái (G-FG02-07).
+  - Có kết quả gia hạn thì người dùng sang SC-013 để ghi (G-FG02-05).
+  tieu_chi_nghiem_thu:
+  - Khi đổi tham số ngưỡng thì danh sách đổi theo, không sửa mã; SC-103 dùng cùng giá trị.
+  - Khi 仲卸 (trung gian bán buôn) có hạn 許可 (giấy phép) trong ngưỡng thì có tên; hạn 承認 (chấp thuận) không xét cho 仲卸, và 売買参加者 (người tham gia mua bán) chỉ xét hạn 承認.
+  - Khi lọc theo một ngày nghiệp vụ khác hôm nay thì ngưỡng tính từ ngày đó.
+  - Khi người gọi không mang vai được phép thì API đọc trả 403 M_05.
+  dinh_nghia_xong:
+  - Spec SC-014 có cột số ngày còn lại, bỏ dòng gọi API-204 (G-FG02-07, G-FG02-05).
+- key: SC-014/FE
+  cha: SC-014
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách cảnh báo sắp hết hạn'
+  spec_refs:
+    sc:
+    - SC-014
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-2
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG02-05
+  mo_ta: 'Dựng màn cảnh báo sắp hết hạn: hai ô lọc, bảng người có hạn trong ngưỡng, cột số ngày còn lại, phân trang và nút Lọc.
+
+    Ràng buộc đặc thù: Cột hạn từng dòng theo đúng loại giấy, 許可 (giấy phép) hoặc 承認 (chấp thuận).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bấm Lọc chỉ tải lại danh sách, không gửi lệnh ghi nào.
+  - Danh sách rỗng hiện trạng thái rỗng, không báo lỗi.
+  - Màn không có nút ghi; muốn gia hạn thì mở SC-013 (G-FG02-05).
+  dinh_nghia_xong: []
+- key: SC-014/BE
+  cha: SC-014
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách cảnh báo sắp hết hạn'
+  spec_refs:
+    sc: []
+    api:
+    - API-204
+    tech: []
+    bang:
+    - participants
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-2
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-05
+  - P-09
+  gap_refs:
+  - G-FG02-07
+  mo_ta: 'Viết spec API đọc danh sách sắp hết hạn rồi làm API đó, đọc ngưỡng từ cấu hình thay cho số viết cứng của prototype (P-01, P-09).
+
+    Ràng buộc đặc thù: So kyoka_het_han với 仲卸 (trung gian bán buôn), shonin_het_han với 売買参加者 (người tham gia mua bán).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngưỡng khởi tạo 30 ngày, đổi được không cần phát hành lại; tư cách chạm ngưỡng thì gọi dịch vụ thông báo của SC-121/BE (G-FG12-06).
+  - Ngày mốc là ngày nghiệp vụ giờ Nhật, không theo UTC.
+  - Trả số ngày còn lại từng dòng (G-FG02-07); kiểm vai theo mục 6.1 spec màn (P-05).
+  dinh_nghia_xong: []
+- key: SC-014/TEST
+  cha: SC-014
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách cảnh báo sắp hết hạn'
+  spec_refs:
+    sc:
+    - SC-014
+    api:
+    - API-204
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ngưỡng cấu hình được và cách so hạn theo loại giấy của SC-014.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đặt ngưỡng ở cấu hình thử nghiệm: người có hạn trong ngưỡng hiện, ngoài ngưỡng không hiện; ca đúng ngày biên ghi theo cách SC-014/BE chốt.'
+  - '売買参加者 (người tham gia mua bán) có hạn 承認 (chấp thuận) trong ngưỡng, cột 許可 (giấy phép) rỗng: vẫn hiện; 仲卸 (trung gian bán buôn) chỉ xét theo hạn 許可.'
+  - 'Đổi tham số ngưỡng: danh sách đổi theo mà không phát hành lại.'
+  dinh_nghia_xong: []
+- key: INV-GD-02
+  cha: FG-02
+  tracker: investigation
+  title_vi: Ngưỡng cảnh báo 失効間近 và cách cấu hình
+  han: Trước LAB-5 (đề xuất)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: PREMISE.md (LAB-4) §4.1 dòng 2
+  spec_refs:
+    sc:
+    - SC-014
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Chợ muốn được báo trước bao nhiêu ngày khi giấy 許可 (giấy phép) hoặc 承認 (chấp thuận) của người tham gia sắp hết hạn? RFP không cho số; LAB-4 tạm đặt 30 ngày và prototype viết cứng trong mã. Con số đó có đúng không, và chợ cần một ngưỡng chung hay riêng cho từng loại giấy?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG02-TRANG-THAI
+  cha: FG-02
+  tracker: investigation
+  title_vi: Bảng chuyển trạng thái tư cách và trạng thái 再審査
+  han: Trước sprint của SC-013/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_QUALIFICATION_CHANGE_SPEC.md §3 (LAB-4) · rfp p.37 FIG-010
+  spec_refs:
+    sc:
+    - SC-011
+    - SC-013
+    api:
+    - API-204
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:two-tier
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG02-06
+  mo_ta: Tư cách của người tham gia có những trạng thái nào và được chuyển giữa chúng theo những bước nào? Spec LAB-4 có ba trạng thái (có hiệu lực, tạm dừng, 失効 (mất hiệu lực)) với ba thao tác dừng, mở lại, 失効, còn sơ đồ của RFP vẽ thêm 再審査 (xét lại); chưa rõ 失効 có mở lại được không và giấy quá hạn có tự chuyển sang 失効 không.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

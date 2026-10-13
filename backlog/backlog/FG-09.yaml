@@ -1,0 +1,816 @@
+# Seed epic FG-09 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-09
+  tracker: epic
+  title_vi: Thưởng thanh toán đủ hạn 完納奨励金
+  feature: full-payment-incentive
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  - constraint:incentive
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  - P-10
+  - P-22
+  gap_refs: []
+  mo_ta: 'Nhóm chức năng này tính 完納奨励金 (thưởng thanh toán đủ hạn) cho từng hoá đơn của kỳ đã chốt sổ: máy 判定 (xét) đủ hay không đủ điều kiện và tính số tiền gợi ý, còn người của nhóm đối soát 確定 (xác nhận cuối) từng dòng kèm lý do. Dòng đã 確定 không bao giờ bị sửa; sai số phát hiện về sau ghi thành 次期差分 (chênh lệch đẩy sang kỳ sau).
+
+    Ràng buộc đặc thù: Số tiền bằng số tiền đủ điều kiện nhân 交付率 (tỷ lệ chi thưởng) của bản quy tắc có hiệu lực tại hạn thanh toán và nhân hệ số thuế 110/100, nhân xong mới làm tròn xuống yên; trả sau hạn thì bằng 0, và tiền chỉ coi là chốt khi có người 確定.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-09 đã đóng.
+  - Khi chạy 判定 cho một kỳ thì mỗi hoá đơn của kỳ có đúng một dòng gợi ý mang suất và ngày hiệu lực của bản quy tắc áp tại hạn thanh toán, chưa có người xác nhận.
+  - Khi một dòng được 確定 thì hệ thống ghi người, thời điểm, lý do và giá trị trước, sau; không có đường nào 確定 nhiều dòng một lần hay 確定 không qua người bấm.
+  - INV-GD-03 và INV-TECH-304 đã có câu trả lời, hoặc khách và Tech Lead xác nhận giữ giả định P-10, P-22.
+  dinh_nghia_xong: []
+items:
+- key: SC-080
+  cha: FG-09
+  tracker: story
+  title_vi: Chạy tính tiền khuyến khích 完納奨励金
+  ten_ja: 完納奨励金計算実行
+  spec_refs:
+    sc:
+    - SC-080
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentives
+    fr:
+    - FR-INC-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-10
+  - P-22
+  gap_refs:
+  - G-FG09-01
+  mo_ta: '照合事務 (nhóm đối soát) chọn kỳ đã chốt sổ, bấm 判定 (xét) để máy gợi ý 完納奨励金 (thưởng thanh toán đủ hạn) cho từng hoá đơn, rồi 確定 (xác nhận cuối) từng dòng đủ điều kiện kèm lý do. Ô số tiền chỉ đọc; mỗi lần 確定 một hoá đơn.
+
+    Ràng buộc đặc thù: Số gợi ý nhân 110/100 trước rồi làm tròn xuống yên, theo suất của bản quy tắc hiệu lực tại hạn thanh toán; trả sau hạn được 0.'
+  pham_vi: Màn SC-080 (SPEC-SKM-138); API-215 (判定), API-216 (確定) theo TECH-304; bảng `incentives` (chủ migration), đọc `invoices`, `payments`, bản quy tắc của FG-10.
+  luong_chinh:
+  - 照合事務 chọn kỳ đã chốt sổ; màn hiện kết quả cũ nếu có.
+  - 照合事務 bấm 判定; máy chủ tính theo TECH-304, lưu dòng gợi ý chưa có người xác nhận.
+  - Màn hiện cờ 判定, số tiền đủ điều kiện, suất, hệ số thuế, số tiền, lý do từng dòng.
+  - 照合事務 chọn một dòng đủ điều kiện, nhập lý do, bấm 確定.
+  - Máy chủ ghi người bấm, giờ máy chủ, nhật ký trước, sau; dòng khoá lại.
+  tieu_chi_nghiem_thu:
+  - Khi tích số tiền đủ điều kiện, suất và 110/100 có phần lẻ thì số gợi ý là tích đó làm tròn xuống yên một lần ở cuối.
+  - Khi hoá đơn trả sau hạn, dù một ngày nghiệp vụ, thì số tiền gợi ý bằng 0.
+  - Khi 確定 thì lưu người của phiên, giờ máy chủ, nhật ký có lý do 5–500 ký tự; dòng không đủ điều kiện trả 422 M_12, dòng đã 確定 trả 409 M_03 và không đổi khi chạy lại 判定.
+  - Khi lưu dòng gợi ý thất bại thì API trả 500 SAVE_FAILED, màn không cho 確定 (P-22).
+  dinh_nghia_xong:
+  - Spec SC-080 sửa theo đáp của INV-GD-03.
+- key: SC-080/FE
+  cha: SC-080
+  tracker: devtask
+  title_vi: 'Giao diện: Chạy tính tiền khuyến khích 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-080
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  - constraint:incentive
+  owner: FE-1
+  priority: 2
+  premise_refs:
+  - P-22
+  gap_refs: []
+  mo_ta: 'Dựng màn SC-080 cho văn phòng: chọn kỳ, bảng kết quả chỉ đọc, ô lý do và hai nút 判定 (xét), 確定 (xác nhận cuối); mọi số tiền do máy chủ trả, màn không tự tính.
+
+    Ràng buộc đặc thù: Nút 確定 chỉ bấm được khi đúng một dòng đủ điều kiện, chưa 確定 được chọn và lý do dài 5–500 ký tự; màn không có chọn nhiều dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi chưa chọn kỳ thì nút 判定 không gọi API; lý do trống hoặc ngoài 5–500 ký tự thì 確定 không gọi API.
+  - Khi API trả 404 M_13, 409 M_03, 422 M_12 hoặc 500 M_25 thì dòng giữ nguyên và hiện đúng câu báo của mã.
+  - Hệ số thuế hiện cố định 110/100, không có ô sửa; lượt 判定 báo lưu thất bại thì không dòng nào của lượt đó được 確定.
+  dinh_nghia_xong: []
+- key: SC-080/BE
+  cha: SC-080
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chạy tính tiền khuyến khích 完納奨励金'
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentives
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-22
+  gap_refs:
+  - G-FG09-02
+  - G-FG09-09
+  mo_ta: 'Làm API-215 và API-216 trên module incentive: API-215 gọi dịch vụ tính của TECH-304/BE rồi lưu dòng gợi ý, API-216 kiểm và ghi bước 確定 (xác nhận cuối) cho đúng một hoá đơn.
+
+    Ràng buộc đặc thù: Người 確定 và thời điểm lấy từ phiên và đồng hồ máy chủ; API không nhận tham số người hay giờ xác nhận từ trình duyệt.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bước 確定 cập nhật cột xác nhận và ghi nhật ký kiểm toán (lý do, trước, sau gồm số tiền và ngày hiệu lực bản quy tắc) trong một giao dịch CSDL; lỗi thì không ghi gì, trả 500 M_25.
+  - Lưu dòng gợi ý thất bại thì API-215 trả 500 SAVE_FAILED thay vì bỏ qua như prototype (P-22).
+  - Mã kỳ của API-215 theo kỳ hoá đơn mà FG-08 sinh ra (G-FG09-02); lỗi lý do dùng mã riêng thêm vào bảng mã lỗi chung (G-FG09-09); vai gọi được theo giả định P-12.
+  dinh_nghia_xong: []
+- key: SC-080/DB
+  cha: SC-080
+  tracker: devtask
+  title_vi: Tạo bảng incentives
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - incentives
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG09-01
+  - G-FG09-07
+  mo_ta: 'Viết migration bảng incentives trên kho mã hệ đích: mỗi hoá đơn một dòng, giữ cờ 判定 (xét), số tiền đủ điều kiện, suất, hệ số thuế, số tiền, lý do 判定 và hai cột xác nhận.
+
+    Ràng buộc đặc thù: Dòng đã có thời điểm 確定 (xác nhận cuối) bị chặn sửa và xoá ở mức cơ sở dữ liệu; chỉ dòng gợi ý chưa 確定 được ghi đè (G-FG09-01).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có ràng buộc duy nhất trên invoice_id; hệ số thuế mặc định 1.1 và chỉ nhận đúng giá trị đó.
+  - Cách ghi của bảng (ghi đè gợi ý, ghi một lần cột xác nhận, chặn sửa sau 確定) được Tech Lead duyệt và ghi lại vào SKM_DB (G-FG09-01).
+  - Cột trỏ bản quy tắc đã áp dùng cùng khoá bản quy tắc mà SC-091/DB chốt (G-FG09-07).
+  dinh_nghia_xong: []
+- key: SC-080/TEST
+  cha: SC-080
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chạy tính tiền khuyến khích 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-080
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang: []
+    fr:
+    - FR-INC-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử luồng 判定 (xét) rồi 確定 (xác nhận cuối) của SC-080, gồm ca làm tròn và ca chứng minh tiền thưởng luôn đi qua người xác nhận.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hoá đơn mà làm tròn trước và làm tròn sau cho hai số khác nhau (ca DS-INC-EDGE-01 khi khách cấp tệp, Q-01): số gợi ý khớp cách nhân 110/100 trước, làm tròn xuống yên sau.'
+  - 'Chạy 判定 rồi không bấm 確定: mọi dòng của kỳ vẫn trống người và thời điểm xác nhận; gửi 確定 kèm người và giờ giả thì bản ghi lưu người của phiên và giờ máy chủ.'
+  - '確定 dòng chưa 判定, dòng không đủ điều kiện, dòng đã 確定: lần lượt nhận 404 M_13, 422 M_12, 409 M_03, không dòng nào đổi.'
+  dinh_nghia_xong: []
+- key: SC-081
+  cha: FG-09
+  tracker: story
+  title_vi: Chi tiết khoản thưởng 完納奨励金
+  ten_ja: 奨励金明細詳細
+  spec_refs:
+    sc:
+    - SC-081
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentives
+    fr:
+    - FR-AUDIT-03
+    - FR-INC-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG09-03
+  - G-FG09-04
+  mo_ta: '照合事務 (nhóm đối soát), 財務部門 (bộ phận tài chính) và 内部監査 (kiểm toán nội bộ) mở một dòng 完納奨励金 (thưởng thanh toán đủ hạn) để xem đủ điều kiện hay không, số tiền tính từ đâu, theo bản quy tắc nào và ai 確定 (xác nhận cuối) lúc nào. Màn chỉ đọc; đây là chỗ giải trình một khoản thưởng khi có tranh chấp.
+
+    Ràng buộc đặc thù: Màn hiện đủ số tiền đủ điều kiện, suất, hệ số 110/100 và ngày hiệu lực bản quy tắc để người xem tự tính lại số tiền, và tách dòng gợi ý khỏi dòng đã 確定.'
+  pham_vi: Màn SC-081 (SPEC-SKM-139); API đọc một dòng thưởng viết mới ở SC-081/BE (G-FG09-04); bảng `incentives` (chỉ đọc) kèm hoá đơn ở `invoices`.
+  luong_chinh:
+  - Người dùng mở chi tiết theo mã hoá đơn.
+  - Máy chủ kiểm vai người xem rồi trả dòng thưởng cùng hoá đơn.
+  - Màn hiện cờ 判定 (xét), số tiền đủ điều kiện, suất, hệ số thuế, số tiền, lý do, người và thời điểm 確定.
+  - Người dùng bấm Quay lại; màn không ghi gì.
+  tieu_chi_nghiem_thu:
+  - Khi dòng chưa 確定 thì người và thời điểm xác nhận để trống và màn ghi rõ đây là gợi ý của máy.
+  - Khi dòng đã 確定 thì người, thời điểm và ngày hiệu lực bản quy tắc hiện đúng như bản ghi.
+  - Khi lấy số tiền đủ điều kiện nhân suất nhân 110/100 rồi làm tròn xuống yên thì ra đúng số tiền trên màn.
+  - Khi người xem thuộc 財務部門 hoặc 内部監査 mà ma trận quyền chưa có dòng cho vai đó thì máy chủ trả 403 (P-12).
+  dinh_nghia_xong:
+  - Spec SC-081 sửa ánh xạ dữ liệu của ô số tiền đủ điều kiện (G-FG09-03).
+- key: SC-081/FE
+  cha: SC-081
+  tracker: devtask
+  title_vi: 'Giao diện: Chi tiết khoản thưởng 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-081
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:incentive
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG09-03
+  - G-FG09-04
+  mo_ta: 'Dựng màn chi tiết một dòng thưởng, chỉ đọc, hiện số tiền đủ điều kiện và cờ 判定 (xét) thành hai ô riêng.
+
+    Ràng buộc đặc thù: Màn không có nút 判定 hay 確定 (xác nhận cuối); 確定 chỉ làm ở SC-080 (G-FG09-04).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dòng gợi ý và dòng đã 確定 phân biệt bằng nhãn trạng thái, không chỉ bằng ô người xác nhận để trống.
+  - Mở được theo mã hoá đơn từ SC-080 và SC-082; mã không tồn tại thì hiện 404 M_14.
+  dinh_nghia_xong: []
+- key: SC-081/BE
+  cha: SC-081
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chi tiết khoản thưởng 完納奨励金'
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentives
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG09-03
+  - G-FG09-04
+  mo_ta: 'Viết spec rồi làm API đọc một dòng thưởng theo mã hoá đơn trên module incentive, trả đủ dữ liệu để tính lại số tiền.
+
+    Ràng buộc đặc thù: API chỉ đọc; không gọi API-215 hay API-216 dù hai API này gắn với màn qua screen_id.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trả cả số tiền đủ điều kiện và cờ 判定 (xét) (G-FG09-03), cùng suất, hệ số thuế, số tiền, ngày hiệu lực bản quy tắc, người và thời điểm 確定 (xác nhận cuối).
+  - Mã hoá đơn không có thì trả 404 M_14; vai được đọc là 照合事務 (nhóm đối soát), 財務部門 (bộ phận tài chính), 内部監査 (kiểm toán nội bộ) theo ma trận quyền (P-12).
+  dinh_nghia_xong: []
+- key: SC-081/TEST
+  cha: SC-081
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chi tiết khoản thưởng 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-081
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-03
+    - FR-INC-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử màn chi tiết thưởng, nhắm vào việc tính lại được số tiền và phân quyền ba vai.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dòng đã 確定 (xác nhận cuối): số tiền đủ điều kiện nhân suất nhân 110/100 làm tròn xuống yên ra đúng số tiền trên màn; người và thời điểm khớp cơ sở dữ liệu.'
+  - Dòng chưa 確定 hiện là gợi ý, người xác nhận trống; tài khoản ngoài ba vai được đọc nhận 403.
+  dinh_nghia_xong: []
+- key: SC-082
+  cha: FG-09
+  tracker: story
+  title_vi: Danh sách chênh lệch kỳ sau 完納奨励金
+  ten_ja: 次期差分一覧
+  spec_refs:
+    sc:
+    - SC-082
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentive_adjustments
+    fr:
+    - FR-INC-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG09-05
+  - G-FG09-06
+  mo_ta: '照合事務 (nhóm đối soát) và 財務部門 (bộ phận tài chính) tra các dòng 次期差分 (chênh lệch đẩy sang kỳ sau) của 完納奨励金 (thưởng thanh toán đủ hạn): hoá đơn nào, kỳ phát sinh, kỳ phản ánh, số chênh và lý do. Dòng đã 確定 (xác nhận cuối) và báo cáo kỳ trước giữ nguyên; điều chỉnh về sau chỉ hiện ở đây.
+
+    Ràng buộc đặc thù: Số chênh là hiệu của hai số tiền đã làm tròn xuống yên, cột chênh lệch lưu số nguyên yên, nên kỳ sau không cộng phần lẻ.'
+  pham_vi: Màn SC-082 (SPEC-SKM-140); API đọc danh sách chênh lệch viết mới ở SC-082/BE (G-FG09-04); bảng `incentive_adjustments` (chỉ đọc, migration thuộc DATA-FG09).
+  luong_chinh:
+  - Người dùng mở màn; máy chủ trả các dòng chênh lệch, trang đầu.
+  - Người dùng nhập 業務日 (ngày nghiệp vụ) rồi bấm Lọc.
+  - Máy chủ trả danh sách đã lọc; màn không đổi dữ liệu.
+  tieu_chi_nghiem_thu:
+  - Khi một dòng đã 確定 được tính lại ra số khác thì có đúng một dòng chênh lệch mới, dòng thưởng gốc không đổi.
+  - Khi chạy lại 判定 (xét) mà số không đổi thì danh sách không thêm dòng nào (G-FG09-05).
+  - Khi lọc theo 業務日 thì danh sách chỉ còn dòng thuộc kỳ chứa ngày đó, theo đơn vị kỳ chốt ở G-FG09-02.
+  - Khi người xem ngoài 照合事務 và 財務部門, hoặc 財務部門 chưa có dòng trong ma trận quyền, thì máy chủ trả 403 (P-12).
+  dinh_nghia_xong:
+  - Cách xác nhận và đưa chênh lệch vào kỳ sau cập nhật theo đáp của câu hỏi ở G-FG09-06.
+- key: SC-082/FE
+  cha: SC-082
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách chênh lệch kỳ sau 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-082
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:incentive
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn danh sách 次期差分 (chênh lệch đẩy sang kỳ sau) chỉ đọc, có ô lọc 業務日 (ngày nghiệp vụ), bảng năm cột và phân trang.
+
+    Ràng buộc đặc thù: Số chênh là số nguyên yên máy chủ đã tính từ hai số làm tròn xuống; màn hiện đúng dấu âm, dương và không tính lại hay gộp dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày lọc sai định dạng thì màn chặn gửi; không có dòng nào thì hiện trạng thái rỗng, không báo lỗi.
+  - Bấm Lọc không đổi dữ liệu; phân trang giữ điều kiện lọc.
+  dinh_nghia_xong: []
+- key: SC-082/BE
+  cha: SC-082
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách chênh lệch kỳ sau 完納奨励金'
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang:
+    - incentive_adjustments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG09-02
+  - G-FG09-04
+  mo_ta: 'Viết spec rồi làm API đọc danh sách chênh lệch kỳ sau trên module incentive, có lọc và phân trang.
+
+    Ràng buộc đặc thù: API chỉ đọc incentive_adjustments; dòng chênh lệch chỉ do TECH-304/BE ghi, không API nào khác thêm hay sửa.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày lọc quy về kỳ theo đơn vị kỳ chốt ở G-FG09-02; cỡ trang và thứ tự theo quy ước chung của dự án.
+  - Vai được đọc là 照合事務 (nhóm đối soát) và 財務部門 (bộ phận tài chính) theo ma trận quyền (P-12); vai khác nhận 403.
+  dinh_nghia_xong: []
+- key: SC-082/TEST
+  cha: SC-082
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách chênh lệch kỳ sau 完納奨励金'
+  spec_refs:
+    sc:
+    - SC-082
+    api:
+    - API-215
+    - API-216
+    tech: []
+    bang: []
+    fr:
+    - FR-INC-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử danh sách 次期差分 (chênh lệch đẩy sang kỳ sau), nhắm vào việc dòng đã 確定 (xác nhận cuối) không bị sửa.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - '確定 một dòng, đổi một dữ liệu đầu vào của hoá đơn đó rồi chạy lại 判定 (xét): có một dòng chênh lệch bằng hiệu hai số đã làm tròn, dòng thưởng gốc không đổi.'
+  - 'Chạy lại 判定 lần nữa khi không đổi gì: không thêm dòng chênh lệch.'
+  - Tài khoản ngoài hai vai được đọc nhận 403.
+  dinh_nghia_xong: []
+- key: TECH-304
+  cha: FG-09
+  tracker: story
+  title_vi: Luồng thưởng 完納奨励金, máy 判定 (xét), người 確定 (xác nhận)
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech:
+    - TECH-304
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-10
+  - P-22
+  gap_refs:
+  - G-FG09-06
+  - G-FG09-08
+  mo_ta: 'TECH-304 là luồng lõi của 完納奨励金 (thưởng thanh toán đủ hạn): máy 判定 (xét) từng hoá đơn và lưu gợi ý, người 確定 (xác nhận cuối) từng dòng, dòng đã 確定 mà tính lại khác thì sinh 次期差分 (chênh lệch đẩy sang kỳ sau). Bảy yếu tố của BR-INC-01 nằm trong một dịch vụ dùng chung.
+
+    Ràng buộc đặc thù: Suất theo bản quy tắc hiệu lực tại hạn thanh toán của từng hoá đơn, không theo ngày chạy; nhân 110/100 trước, làm tròn xuống yên sau; trả sau hạn bằng 0, không ân hạn.'
+  pham_vi: TECH-304 (SPEC-SKM-304) phục vụ API-215, API-216; đọc `invoices`, `payments`, bản quy tắc incentive của FG-10; ghi `incentives`, `incentive_adjustments` và nhật ký kiểm toán.
+  luong_chinh:
+  - Dịch vụ nhận mã kỳ, đọc hoá đơn và các lần thanh toán của kỳ.
+  - Với từng hoá đơn, dịch vụ lấy bản quy tắc hiệu lực tại hạn thanh toán và ghi ngày hiệu lực của bản.
+  - Dịch vụ xét đủ điều kiện theo ngày trả so với hạn, tính số tiền, lưu dòng gợi ý.
+  - Dòng đã 確定 không bị ghi đè; số mới khác thì dịch vụ ghi một dòng chênh lệch cho kỳ sau.
+  - Người 確定 từng dòng qua API-216; dịch vụ ghi người, thời điểm và nhật ký.
+  tieu_chi_nghiem_thu:
+  - Khi hai hoá đơn cùng kỳ có hạn thanh toán ở hai bên ngày đổi bản quy tắc thì mỗi dòng mang suất và ngày hiệu lực của bản riêng.
+  - Khi tích có phần lẻ thì kết quả làm tròn xuống yên một lần ở cuối.
+  - Khi hoá đơn trả thiếu hoặc lần trả cuối sau hạn theo 業務日 (ngày nghiệp vụ) giờ Nhật thì số tiền bằng 0 (G-FG09-08).
+  - Khi lưu dòng gợi ý thất bại thì luồng dừng với SAVE_FAILED, không dòng nào được 確定 (P-22).
+  - Khi 確定 thì người xác nhận lấy từ phiên; người 判定 và người 確定 được là một người.
+  dinh_nghia_xong:
+  - Spec TECH-304 đóng Q1 theo đáp INV-TECH-304, ghi luật chênh lệch của G-FG09-05.
+- key: TECH-304/BE
+  cha: TECH-304
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Luồng thưởng 完納奨励金, máy 判定 (xét), người 確定 (xác nhận)'
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech:
+    - TECH-304
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-10
+  - P-22
+  gap_refs:
+  - G-FG09-05
+  - G-FG09-08
+  - G-FG04-02
+  mo_ta: 'Làm dịch vụ tính 完納奨励金 (thưởng thanh toán đủ hạn) trên module incentive: chọn bản quy tắc theo hạn thanh toán, xét đủ điều kiện, tính số tiền, lưu dòng gợi ý và ghi 次期差分 (chênh lệch đẩy sang kỳ sau).
+
+    Ràng buộc đặc thù: Công thức là một hàm thuần có kiểm thử đơn vị riêng cho thứ tự nhân 110/100 trước, làm tròn xuống yên sau; module chỉ đọc bản quy tắc của FG-10, không tự đổi suất.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Chênh lệch tính so với số đã 確定 (xác nhận cuối) cộng các chênh lệch đã ghi; lượt chạy lại không đổi số thì không ghi dòng mới (G-FG09-05).
+  - Hoá đơn chỉ đủ điều kiện khi tổng các lần trả không quá hạn bằng số tiền hoá đơn, theo P-10 và API-214 (G-FG09-08).
+  - Mốc so hạn là 業務日 (ngày nghiệp vụ) giờ Nhật, dùng chung hàm 業務日 với FG-04 (G-FG04-02).
+  dinh_nghia_xong: []
+- key: TECH-304/TEST
+  cha: TECH-304
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Luồng thưởng 完納奨励金, máy 判定 (xét), người 確定 (xác nhận)'
+  spec_refs:
+    sc: []
+    api:
+    - API-215
+    - API-216
+    tech:
+    - TECH-304
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử bảng quyết định của luồng thưởng: ngày trả so với hạn, bản quy tắc theo hạn, làm tròn, dòng đã 確定 (xác nhận cuối) và lưu thất bại.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai hoá đơn có hạn thanh toán ở hai bên ngày đổi bản quy tắc: mỗi dòng mang suất và ngày hiệu lực của bản đúng với hạn của nó.'
+  - Hoá đơn trả đủ đúng ngày hạn được thưởng; trả sau hạn một ngày nghiệp vụ hoặc trả thiếu được 0.
+  - 'Gây lỗi khi lưu dòng gợi ý: API trả 500 SAVE_FAILED, gọi 確定 cho hoá đơn đó nhận 404 M_13.'
+  dinh_nghia_xong: []
+- key: DATA-FG09
+  cha: FG-09
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-INCENTIVE): invoices, payments, incentive_adjustments'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - incentive_adjustments
+    - invoices
+    - payments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:incentive
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG09-02
+  - G-FG09-10
+  mo_ta: 'Story này dựng ba bảng mà luồng 完納奨励金 (thưởng thanh toán đủ hạn) cần nhưng không màn nào nhập trực tiếp: hoá đơn và các lần thanh toán do FG-08 ghi, dòng 次期差分 (chênh lệch đẩy sang kỳ sau) do TECH-304 ghi. Thiếu chúng thì 判定 (xét) không có hạn thanh toán và ngày trả để so.
+
+    Ràng buộc đặc thù: Hạn thanh toán của hoá đơn và ngày trả của từng lần thanh toán quyết định thưởng có hay bằng 0, nên là cột ngày bắt buộc và không sửa được sau khi ghi.'
+  pham_vi: Bảng `invoices`, `payments`, `incentive_adjustments` (chủ migration, vùng D-INCENTIVE); dòng của hai bảng đầu do API-213 và API-214 của FG-08 ghi, bảng thứ ba do TECH-304/BE ghi.
+  luong_chinh:
+  - BE-1 đối chiếu kiểu cột, khoá ngoại của ba bảng với SKM_DB và chốt khoá ngoại từ invoices tới bảng kỳ theo G-FG09-02.
+  - BE-1 viết migration và quyền chỉ thêm cho ba bảng, xử lý riêng cột trạng thái hoá đơn theo G-FG09-10.
+  - BE-1 nạp dữ liệu mẫu cho TEST của FG-09.
+  tieu_chi_nghiem_thu:
+  - Khi ghi một lần thanh toán có số tiền ≤ 0 thì cơ sở dữ liệu từ chối.
+  - Khi ứng dụng gửi lệnh sửa hoặc xoá dòng thanh toán hay dòng chênh lệch thì bị chặn ở mức quyền cơ sở dữ liệu.
+  - Khi invoices trỏ tới kỳ thì khoá ngoại theo đơn vị kỳ đã chốt ở G-FG09-02, không mặc định theo bảng chốt tháng của prototype.
+  dinh_nghia_xong:
+  - Dữ liệu mẫu có hoá đơn trả đủ đúng hạn, trả trễ và trả nhiều lần, dùng chung cho TEST của SC-080 và TECH-304.
+- key: DATA-FG09/DB
+  cha: DATA-FG09
+  tracker: devtask
+  title_vi: Tạo bảng invoices, payments, incentive_adjustments
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - incentive_adjustments
+    - invoices
+    - payments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:incentive
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG09-02
+  - G-FG09-10
+  mo_ta: 'Viết migration ba bảng invoices, payments, incentive_adjustments trên kho mã hệ đích theo SKM_DB, kèm khoá ngoại tới participants và tới bảng kỳ.
+
+    Ràng buộc đặc thù: Hạn thanh toán và ngày trả là cột ngày bắt buộc; lý do của dòng chênh lệch bắt buộc để mỗi khoản đẩy sang kỳ sau giải trình được.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Số tiền thanh toán có ràng buộc > 0; tiền lưu số nguyên yên như SKM_DB.
+  - Cột trạng thái hoá đơn được xử lý theo cách Tech Lead chốt ở G-FG09-10, các cột khác chặn sửa ở mức quyền cơ sở dữ liệu.
+  - Khoá ngoại invoices tới bảng kỳ theo G-FG09-02, ghi lại vào SKM_DB.
+  dinh_nghia_xong: []
+- key: DATA-FG09/TEST
+  cha: DATA-FG09
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-INCENTIVE): invoices, payments, incentive_adjustments'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của ba bảng invoices, payments, incentive_adjustments.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ghi hoá đơn thiếu hạn thanh toán, hoặc thanh toán thiếu ngày trả, số tiền 0, trỏ hoá đơn không tồn tại: bị cơ sở dữ liệu từ chối, vì thiếu hai mốc ngày thì không xét được thưởng.'
+  - 'Sửa hoặc xoá một dòng thanh toán hay dòng chênh lệch: bị chặn ở mức quyền cơ sở dữ liệu.'
+  dinh_nghia_xong: []
+- key: INV-GD-03
+  cha: FG-09
+  tracker: investigation
+  title_vi: Cách tính 適格金額 và bảng 交付率
+  han: Trước LAB-5
+  nguoi_tra_loi: Khách
+  nguon: PREMISE.md (LAB-4) §4.1 dòng 3
+  spec_refs:
+    sc: []
+    api: []
+    tech:
+    - TECH-304
+    bang:
+    - incentives
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:incentive
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 適格金額 (số tiền đủ điều kiện tính thưởng) của một hoá đơn là toàn bộ số tiền hoá đơn hay chỉ một phần? Bảng 交付率 (tỷ lệ chi thưởng) chợ đang dùng có một mức hay nhiều bậc, và 支払期日 (hạn thanh toán) tính từ ngày nào? Câu trả lời quyết công thức của TECH-304 và số cột của bảng suất ở SC-091.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-TECH-304
+  cha: FG-09
+  tracker: investigation
+  title_vi: Xử lý khi lưu kết quả chờ của bước tính thưởng thất bại
+  han: '2026-10-08'
+  nguoi_tra_loi: Tech Lead
+  nguon: detail-flows.yaml › details[SKM_INCENTIVE_EVALUATE_CONFIRM].cau_hoi_mo[1]
+  spec_refs:
+    sc: []
+    api: []
+    tech:
+    - TECH-304
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    hoi:
+    - TECH-304-Q1
+  labels:
+  - type:investigation
+  - constraint:incentive
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Bước tính thưởng lưu kết quả chờ, tức gợi ý chưa được người 確定 (xác nhận cuối). Khi lệnh lưu đó thất bại, API-215 phải trả lỗi lưu 500 hay được bỏ qua vì đó chỉ là gợi ý? Prototype không kiểm lỗi của lệnh ghi này; câu hỏi giao Tech Lead, hạn 08/10/2026, đã quá hạn.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG09-CHENH-LECH
+  cha: FG-09
+  tracker: investigation
+  title_vi: Ai xác nhận 次期差分 và cách đưa chênh lệch vào kỳ sau
+  han: Trước sprint của TECH-304/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_INCENTIVE_NEXT_DIFF_SPEC.md §3 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-082
+    api: []
+    tech:
+    - TECH-304
+    bang:
+    - incentive_adjustments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - constraint:incentive
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG09-06
+  mo_ta: Dòng 次期差分 (chênh lệch đẩy sang kỳ sau) của 完納奨励金 (thưởng thanh toán đủ hạn) có cần người 確定 (xác nhận cuối) như dòng thưởng thường không, ai xác nhận, và chênh lệch được cộng vào tiền trả của kỳ nào? Spec chỉ nói máy ghi dòng chênh lệch, chưa có bước người xác nhận và chưa nói cách chọn kỳ phản ánh.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

@@ -1,0 +1,800 @@
+# Seed epic FG-07 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-07
+  tracker: epic
+  title_vi: Giao hàng và ngoại lệ giao hàng
+  feature: delivery
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-06
+  - P-13
+  gap_refs: []
+  mo_ta: Nhóm chức năng này ghi từng lần 引渡し (giao hàng) của một giao dịch đã chốt, cho biết mỗi giao dịch đã giao bao nhiêu, còn bao nhiêu, và giữ lại mọi ngoại lệ thiếu, vượt, trả lại hay huỷ một phần để người của chợ xử lý. Máy chỉ ghi và cộng số; khi số lệch, giao xong hay chưa do người xác nhận quyết, theo quy tắc 精算 (quyết toán) mà khách chưa trả lời (INV-Q-SD1). Dữ liệu giao hàng là một trong ba nguồn của đối soát ngày ở FG-08.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-07 đã đóng.
+  - Khi một giao dịch được giao làm nhiều lần thì SC-062 hiện đủ các lần, luỹ kế và số còn lại khớp số lượng của giao dịch.
+  - Khi số giao lệch số giao dịch thì máy không tự coi là xong; ngoại lệ chờ một người xác nhận và hệ thống ghi ai xác nhận, lúc nào.
+  - Các issue điều tra của FG-07 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-060
+  cha: FG-07
+  tracker: story
+  title_vi: Ghi nhận lần giao hàng
+  ten_ja: 引渡し記録登録
+  spec_refs:
+    sc:
+    - SC-060
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr:
+    - FR-DEL-01
+    - FR-DEL-05
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG07-01
+  - G-FG07-02
+  mo_ta: '配送部門 (bộ phận giao hàng) ghi từng lần 引渡し (giao hàng) của một giao dịch đã chốt: lần thứ mấy, bao nhiêu, lúc nào, ai giao. Một giao dịch giao được nhiều lần, mỗi lần là một dòng mới; số đã giao và số còn lại tính từ các dòng này và là một nguồn của đối soát ngày.'
+  pham_vi: Màn SC-060 (SPEC-SKM-129) trên tablet hiện trường; bảng `deliveries` (chủ migration, chỉ thêm dòng), đọc `transactions`; API ghi chưa có spec, SC-060/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người giao hàng chọn giao dịch; màn hiện số lượng giao dịch, số đã giao và số còn lại.
+  - Người giao hàng nhập số lượng lần này, thời điểm giao rồi bấm Đăng ký.
+  - Máy chủ kiểm 業務日 (ngày nghiệp vụ) của lần giao chưa khoá, gán lần thứ kế tiếp và người thực hiện từ phiên.
+  - Máy chủ thêm một dòng deliveries; luỹ kế vượt số giao dịch thì màn báo lệch và mở SC-063.
+  tieu_chi_nghiem_thu:
+  - Khi bấm Đăng ký thì hệ thống ghi người thực hiện của phiên và giờ máy chủ; người thực hiện gửi từ trình duyệt bị bỏ qua.
+  - Khi ghi thêm lần giao cho cùng giao dịch thì có dòng mới mang lần thứ kế tiếp, các dòng cũ giữ nguyên.
+  - Khi số lượng không phải số dương hoặc quá hai chữ số lẻ thì cả màn và máy chủ từ chối.
+  - Khi 業務日 của lần giao đã khoá thì máy chủ từ chối bằng mã ngày đã khoá (P-24).
+  - Khi luỹ kế vượt số lượng giao dịch thì máy không tự điều chỉnh; phần lệch thành ngoại lệ chờ người xử lý (P-13).
+  dinh_nghia_xong:
+  - Spec SC-060 ghi lại kiểu ô và cách gán lần thứ, người thực hiện theo G-FG07-01.
+- key: SC-060/FE
+  cha: SC-060
+  tracker: devtask
+  title_vi: 'Giao diện: Ghi nhận lần giao hàng'
+  spec_refs:
+    sc:
+    - SC-060
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG07-01
+  mo_ta: 'Dựng màn ghi lần giao trên tablet hiện trường: chọn giao dịch, ô số lượng và thời điểm giao, hiện số đã giao và số còn lại; lần thứ và người thực hiện chỉ hiển thị.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi mở màn thì người thực hiện là người đang đăng nhập ở dạng chỉ đọc; lần thứ do máy chủ trả về.
+  - Khi số lượng trống, không phải số dương hoặc quá hai chữ số lẻ thì màn chặn gửi; khi mất mạng thì lần giao được lưu tạm trên thiết bị, đồng bộ qua hàng đợi của SC-151 khi có mạng lại, màn hiện rõ lần giao đang chờ (ADR-010, G-E18-01).
+  - Khi máy chủ báo luỹ kế vượt số giao dịch thì màn chuyển sang SC-063 với lần giao vừa ghi.
+  dinh_nghia_xong: []
+- key: SC-060/BE
+  cha: SC-060
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Ghi nhận lần giao hàng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-13
+  gap_refs:
+  - G-FG07-01
+  - G-FG08-08
+  mo_ta: 'Viết spec rồi làm API ghi lần giao trên module delivery (P-01): kiểm giao dịch, kiểm ngày đã khoá, gán lần thứ và người thực hiện, thêm dòng deliveries.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi body gửi kèm lần thứ hay người thực hiện thì API vẫn dùng số kế tiếp và người của phiên.
+  - Lệch giữa luỹ kế và số giao dịch so với dung sai đọc từ cấu hình; tham số còn trống thì mọi lệch đều cần ngoại lệ (P-13).
+  - Kiểm ngày đã khoá qua dịch vụ của SC-071/BE (G-FG08-08); mỗi lần ghi và mỗi lần bị chặn có một dòng audit_log.
+  dinh_nghia_xong: []
+- key: SC-060/DB
+  cha: SC-060
+  tracker: devtask
+  title_vi: Tạo bảng deliveries
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG07-02
+  mo_ta: Viết migration bảng deliveries trên kho mã hệ đích, chỉ thêm dòng; chốt kiểu cột và thêm các cột ghi sổ chung của ADR-003 trước khi tạo bảng (P-06, G-FG07-02).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Có khoá ngoại tới transactions và khoá duy nhất theo cặp giao dịch, lần thứ.
+  - Số lượng lưu hai chữ số lẻ; người thực hiện có khoá ngoại tới bảng profiles.
+  dinh_nghia_xong: []
+- key: SC-060/TEST
+  cha: SC-060
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Ghi nhận lần giao hàng'
+  spec_refs:
+    sc:
+    - SC-060
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-01
+    - FR-DEL-05
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử ghi lần giao: nhiều lần trên một giao dịch, giá trị giả gửi từ trình duyệt và ngày đã khoá.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu kèm người thực hiện giả và lần thứ giả: dòng deliveries mang người của phiên và lần thứ kế tiếp.'
+  - 'Giao nhiều lần cho một giao dịch rồi mở SC-062: luỹ kế bằng tổng các lần, số còn lại bằng số giao dịch trừ luỹ kế.'
+  - 'Ghi lần giao có thời điểm thuộc 業務日 (ngày nghiệp vụ) đã khoá: bị từ chối bằng mã ngày đã khoá và có dòng audit_log.'
+  dinh_nghia_xong: []
+- key: SC-061
+  cha: FG-07
+  tracker: story
+  title_vi: Danh sách giao hàng theo trạng thái
+  ten_ja: 引渡し一覧（状態別）
+  spec_refs:
+    sc:
+    - SC-061
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  - P-13
+  gap_refs:
+  - G-FG07-03
+  mo_ta: 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) tra giao dịch theo trạng thái giao hàng để biết việc nào còn chờ, đang giao, đã xong hay có ngoại lệ. Bảng deliveries không có cột trạng thái và chỉ thêm dòng, nên trạng thái tính từ luỹ kế đã giao và ngoại lệ chứ không lưu sẵn.
+  pham_vi: Màn SC-061 (SPEC-SKM-130) cho văn phòng và tablet; đọc `deliveries`, `delivery_exceptions`, `transactions`; API đọc chưa có spec, SC-061/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng chọn khoảng 業務日 (ngày nghiệp vụ) và trạng thái rồi bấm Lọc.
+  - 'Máy chủ tính trạng thái từng giao dịch: chưa có lần giao, đã giao một phần, giao đủ theo quy tắc 精算 (quyết toán), hoặc còn ngoại lệ chưa xác nhận.'
+  - Màn hiện danh sách có phân trang; bấm một dòng mở SC-062.
+  tieu_chi_nghiem_thu:
+  - Khi giao dịch chưa có lần giao nào thì hiện trạng thái chờ; đã giao một phần thì hiện đang giao.
+  - Khi luỹ kế khớp số giao dịch trong dung sai cấu hình thì hiện xong; tham số trống thì chỉ khớp đúng mới là xong (P-13).
+  - Khi giao dịch còn ngoại lệ chưa được xác nhận thì hiện trạng thái ngoại lệ, bất kể luỹ kế.
+  - Khi lọc thì dữ liệu không đổi; người không mang một trong hai vai của màn nhận 403 M_05.
+  dinh_nghia_xong:
+  - Spec SC-061 thêm bộ lọc, cột trạng thái và cách tính theo G-FG07-03.
+- key: SC-061/FE
+  cha: SC-061
+  tracker: devtask
+  title_vi: 'Giao diện: Danh sách giao hàng theo trạng thái'
+  spec_refs:
+    sc:
+    - SC-061
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG07-03
+  mo_ta: 'Dựng màn danh sách giao hàng cho văn phòng và tablet: bộ lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng có huy hiệu trạng thái, phân trang, mở SC-062 từ dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi chọn trạng thái và bấm Lọc thì danh sách chỉ còn giao dịch đúng trạng thái đó.
+  - Khi không có dòng nào thì màn hiện trạng thái rỗng, không báo lỗi.
+  - Bấm một dòng mở SC-062 của đúng giao dịch đó.
+  dinh_nghia_xong: []
+- key: SC-061/BE
+  cha: SC-061
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh sách giao hàng theo trạng thái'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-13
+  gap_refs:
+  - G-FG07-03
+  mo_ta: Viết spec rồi làm API đọc danh sách giao hàng trên module delivery (P-01), tính trạng thái theo giao dịch từ deliveries, delivery_exceptions và transactions.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Trạng thái tính lúc đọc, không thêm cột trạng thái vào bảng chỉ thêm dòng (G-FG07-03).
+  - Dung sai đọc từ cùng tham số cấu hình với SC-060/BE (P-13).
+  - Lọc theo khoảng 業務日 (ngày nghiệp vụ) và trạng thái chạy ở máy chủ, có phân trang.
+  dinh_nghia_xong: []
+- key: SC-061/TEST
+  cha: SC-061
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh sách giao hàng theo trạng thái'
+  spec_refs:
+    sc:
+    - SC-061
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cách tính bốn trạng thái giao hàng và bộ lọc của SC-061.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dựng đủ bốn loại giao dịch (chưa giao, giao một phần, giao đủ, có ngoại lệ chưa xác nhận): mỗi giao dịch hiện đúng một trạng thái.'
+  - Giao dịch giao đủ nhưng còn ngoại lệ chưa xác nhận hiện trạng thái ngoại lệ.
+  - Tài khoản không mang vai 配送部門 (bộ phận giao hàng) hay 照合事務 (nhóm đối soát) gọi API danh sách nhận 403.
+  dinh_nghia_xong: []
+- key: SC-062
+  cha: FG-07
+  tracker: story
+  title_vi: Chi tiết giao hàng và số còn lại
+  spec_refs:
+    sc:
+    - SC-062
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr:
+    - FR-DEL-04
+    - FR-DEL-05
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG07-04
+  mo_ta: 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) mở một giao dịch để thấy mọi lần 引渡し (giao hàng), số đã giao luỹ kế và số còn lại. Spec màn mới có năm nhãn của một lần giao, nên story bổ sung danh sách các lần, hai con số tính và ngoại lệ đi kèm (G-FG07-04).
+  pham_vi: Màn SC-062 (SPEC-SKM-131) cho văn phòng và tablet; đọc `deliveries`, `delivery_exceptions`, `transactions`; API đọc chưa có spec, SC-062/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng mở chi tiết từ một dòng của SC-061 hoặc SC-064.
+  - Máy chủ trả số lượng giao dịch, các lần giao theo lần thứ, luỹ kế, số còn lại và ngoại lệ của từng lần.
+  - Người dùng xem, mở SC-063 cho lần giao cần ghi ngoại lệ, hoặc bấm Quay lại.
+  tieu_chi_nghiem_thu:
+  - Khi giao dịch có nhiều lần giao thì luỹ kế bằng tổng số lượng các lần, số còn lại bằng số lượng giao dịch trừ luỹ kế.
+  - Khi một lần giao có ngoại lệ thì ngoại lệ hiện dưới lần đó, kèm người xác nhận nếu đã xác nhận; luỹ kế không tự trừ số của ngoại lệ (P-13).
+  - Khi giao dịch chưa có lần giao nào thì luỹ kế để trống và số còn lại bằng cả số lượng giao dịch.
+  - Khi mã giao dịch không tồn tại thì trả 404 M_14.
+  dinh_nghia_xong:
+  - Spec SC-062 thêm danh sách lần giao, luỹ kế và số còn lại theo G-FG07-04.
+- key: SC-062/FE
+  cha: SC-062
+  tracker: devtask
+  title_vi: 'Giao diện: Chi tiết giao hàng và số còn lại'
+  spec_refs:
+    sc:
+    - SC-062
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG07-04
+  mo_ta: 'Dựng màn chi tiết giao dịch: số lượng giao dịch, bảng các lần giao theo lần thứ, luỹ kế, số còn lại, ngoại lệ dưới từng lần và nút mở SC-063.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi giao vượt số giao dịch thì màn hiện phần vượt kèm nhãn lệch thay cho số còn lại.
+  - Nút mở SC-063 chỉ hiện với vai 配送部門 (bộ phận giao hàng).
+  - Khi chưa có lần giao nào thì bảng hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-062/BE
+  cha: SC-062
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chi tiết giao hàng và số còn lại'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-13
+  gap_refs:
+  - G-FG07-04
+  mo_ta: 'Viết spec rồi làm API đọc chi tiết giao dịch trên module delivery (P-01): các lần giao, luỹ kế, số còn lại và ngoại lệ của từng lần.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Luỹ kế và số còn lại tính lúc đọc từ deliveries và transactions, không lưu vào cột nào (G-FG07-04).
+  - Mỗi ngoại lệ trả kèm trạng thái xác nhận, người xác nhận và thời điểm.
+  - Giao dịch không tồn tại trả 404 M_14.
+  dinh_nghia_xong: []
+- key: SC-062/TEST
+  cha: SC-062
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chi tiết giao hàng và số còn lại'
+  spec_refs:
+    sc:
+    - SC-062
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-04
+    - FR-DEL-05
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử luỹ kế và số còn lại của một giao dịch giao nhiều lần.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giao nhiều lần với số có hai chữ số lẻ: luỹ kế bằng đúng tổng, không lệch do làm tròn.'
+  - 'Giao vượt số giao dịch: màn hiện phần vượt và nhãn lệch, có một ngoại lệ chờ xác nhận.'
+  - 'Lần giao có ngoại lệ trả lại: luỹ kế vẫn là tổng các lần, ngoại lệ hiện riêng dưới lần đó.'
+  dinh_nghia_xong: []
+- key: SC-063
+  cha: FG-07
+  tracker: story
+  title_vi: Ghi ngoại lệ giao hàng
+  ten_ja: 引渡し例外登録
+  spec_refs:
+    sc:
+    - SC-063
+    api: []
+    tech: []
+    bang:
+    - delivery_exceptions
+    fr:
+    - FR-DEL-03
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG07-05
+  - G-FG07-06
+  mo_ta: '配送部門 (bộ phận giao hàng) ghi ngoại lệ của một lần 引渡し (giao hàng): thiếu, vượt, trả lại hoặc huỷ một phần, kèm lý do chọn từ danh mục và số lượng. Máy chỉ ghi; ngoại lệ có hiệu lực khi một người xác nhận, và hệ thống lưu ai xác nhận, lúc nào.'
+  pham_vi: Màn SC-063 (SPEC-SKM-132) trên tablet hiện trường, mở từ SC-062 hoặc khi SC-060 báo lệch; bảng `delivery_exceptions` (chủ migration, chỉ thêm dòng); API ghi và xác nhận chưa có spec, SC-063/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người giao hàng chọn loại, lý do trong danh mục, nhập số lượng rồi bấm Lưu; máy chủ ghi ngoại lệ ở trạng thái chờ xác nhận.
+  - Người xác nhận mở ngoại lệ đang chờ, đối chiếu số và lý do rồi bấm Xác nhận.
+  - Máy chủ ghi người xác nhận từ phiên và giờ máy chủ; từ đó ngoại lệ không sửa trực tiếp được.
+  - Ngoại lệ đã xác nhận đi vào số ngoại lệ của đối soát ngày (SC-070).
+  tieu_chi_nghiem_thu:
+  - Khi người xác nhận bấm Xác nhận thì hệ thống ghi mã người xác nhận lấy từ phiên và thời điểm theo giờ máy chủ; giá trị gửi từ trình duyệt bị bỏ qua.
+  - Khi người đã ghi ngoại lệ tự bấm Xác nhận thì máy chủ từ chối; giả định này giữ tới khi INV-FG07-XAC-NHAN có đáp.
+  - Khi loại không thuộc bốn loại hoặc lý do không có trong danh mục thì máy chủ từ chối.
+  - Khi ngày còn ngoại lệ chờ xác nhận thì SC-071 không cho khoá 業務日 (ngày nghiệp vụ) đó.
+  - Khi cần sửa ngoại lệ đã xác nhận thì ghi dòng mới có lý do, dòng cũ giữ nguyên.
+  dinh_nghia_xong:
+  - Spec SC-063 thêm người xác nhận, nút Xác nhận và danh mục lý do theo G-FG07-05, G-FG07-06.
+- key: SC-063/FE
+  cha: SC-063
+  tracker: devtask
+  title_vi: 'Giao diện: Ghi ngoại lệ giao hàng'
+  spec_refs:
+    sc:
+    - SC-063
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:hitl
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG07-05
+  mo_ta: 'Dựng màn ghi ngoại lệ trên tablet: chọn một trong bốn loại, chọn lý do từ danh mục, ô số lượng, nút Lưu; người xác nhận thấy thêm nút Xác nhận ở ngoại lệ đang chờ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Loại và lý do là danh sách chọn, không có ô gõ tự do.
+  - Người xác nhận và thời điểm chỉ hiển thị, không có ô nhập.
+  - Nút Xác nhận ẩn với người đã ghi ngoại lệ đó; máy chủ vẫn chặn nếu bị gọi thẳng.
+  dinh_nghia_xong: []
+- key: SC-063/BE
+  cha: SC-063
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Ghi ngoại lệ giao hàng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - delivery_exceptions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-13
+  gap_refs:
+  - G-FG07-05
+  - G-FG08-08
+  mo_ta: 'Viết spec rồi làm hai API trên module delivery (P-01): ghi ngoại lệ ở trạng thái chờ và xác nhận ngoại lệ, lấy người và giờ ở phía máy chủ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Xác nhận ghi người của phiên và giờ máy chủ, bỏ qua giá trị trong body; người ghi tự xác nhận bị từ chối.
+  - Lệch ngoài dung sai cấu hình, hoặc khi tham số còn trống, thì ngoại lệ luôn chờ người xác nhận, không tự đóng (P-13).
+  - Ghi và xác nhận đều có dòng audit_log; ngày đã khoá bị chặn qua dịch vụ khoá ngày của SC-071/BE.
+  dinh_nghia_xong: []
+- key: SC-063/DB
+  cha: SC-063
+  tracker: devtask
+  title_vi: Tạo bảng delivery_exceptions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - delivery_exceptions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-06
+  gap_refs:
+  - G-FG07-02
+  - G-FG07-05
+  mo_ta: Viết migration bảng delivery_exceptions, chỉ thêm dòng; thêm chỗ lưu trạng thái xác nhận, người xác nhận, thời điểm và các cột ghi sổ của ADR-003 (P-06, G-FG07-05).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Cột loại chỉ nhận bốn giá trị thiếu, vượt, trả lại, huỷ một phần; có khoá ngoại tới deliveries.
+  - Người xác nhận có khoá ngoại tới profiles; cách lưu bước xác nhận mà vẫn chỉ thêm dòng được chốt, có người duyệt và ghi vào SKM_DB.
+  dinh_nghia_xong: []
+- key: SC-063/TEST
+  cha: SC-063
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Ghi ngoại lệ giao hàng'
+  spec_refs:
+    sc:
+    - SC-063
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-03
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ghi ngoại lệ và bước người xác nhận của SC-063.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu xác nhận kèm người và giờ giả: bản ghi lưu người của phiên và giờ máy chủ.'
+  - 'Người đã ghi ngoại lệ gọi API xác nhận: bị từ chối, ngoại lệ vẫn ở trạng thái chờ.'
+  - Ngày còn ngoại lệ chờ xác nhận thì lệnh khoá ở SC-071 bị từ chối; sau khi một người khác xác nhận thì khoá được.
+  dinh_nghia_xong: []
+- key: SC-064
+  cha: FG-07
+  tracker: story
+  title_vi: Bảng theo dõi giao hàng tồn đọng
+  spec_refs:
+    sc:
+    - SC-064
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-FG07-07
+  mo_ta: 配送部門 (bộ phận giao hàng) và 市場管理者 (quản lý chợ) xem số giao hàng tồn đọng, số quá hạn, số có ngoại lệ và danh sách cần xử lý, để dọn việc trước khi khoá ngày. Spec chưa định nghĩa thế nào là tồn đọng hay quá hạn, nên mốc thời gian để ở tham số cấu hình, chưa có số (G-FG07-07).
+  pham_vi: Màn SC-064 (SPEC-SKM-133) ở văn phòng, chỉ xem; đọc `deliveries`, `delivery_exceptions`, `transactions`; API đọc chưa có spec, SC-064/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng chọn kỳ theo dõi.
+  - Máy chủ đếm giao dịch còn số chưa giao, giao dịch vượt mốc quá hạn cấu hình và giao dịch có ngoại lệ chờ xác nhận.
+  - Màn hiện ba con số, mức tồn đọng và danh sách cần xử lý; bấm một dòng mở SC-062.
+  tieu_chi_nghiem_thu:
+  - Khi giao dịch còn số chưa giao thì được đếm là tồn đọng; vượt mốc cấu hình tính từ ngày giao dịch thì được đếm thêm là quá hạn.
+  - Khi tham số mốc quá hạn còn trống thì ô quá hạn hiện «chưa cấu hình», không hiện số giả.
+  - Khi giao dịch có ngoại lệ chờ xác nhận thì được đếm ở ô có ngoại lệ và nằm trong danh sách cần xử lý.
+  - Khi người dùng không mang vai 配送部門 hay 市場管理者 thì máy chủ trả 403 M_05.
+  dinh_nghia_xong:
+  - Spec SC-064 ghi định nghĩa tồn đọng, quá hạn và tham số mốc theo G-FG07-07.
+- key: SC-064/FE
+  cha: SC-064
+  tracker: devtask
+  title_vi: 'Giao diện: Bảng theo dõi giao hàng tồn đọng'
+  spec_refs:
+    sc:
+    - SC-064
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs:
+  - G-FG07-07
+  mo_ta: 'Dựng bảng theo dõi ở văn phòng: bộ lọc kỳ, ba ô số, huy hiệu mức tồn đọng và danh sách cần xử lý mở được SC-062.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi mốc quá hạn chưa cấu hình thì ô quá hạn hiện nhãn chưa cấu hình.
+  - Khi danh sách cần xử lý rỗng thì màn hiện trạng thái rỗng.
+  dinh_nghia_xong: []
+- key: SC-064/BE
+  cha: SC-064
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bảng theo dõi giao hàng tồn đọng'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - deliveries
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG07-07
+  mo_ta: 'Viết spec rồi làm API đọc bảng theo dõi trên module delivery (P-01): đếm tồn đọng, quá hạn, có ngoại lệ và trả danh sách cần xử lý.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tồn đọng dùng chung cách tính trạng thái của SC-061/BE, không viết lại lần thứ hai.
+  - Mốc quá hạn đọc từ tham số cấu hình, chưa có số; sự kiện giao hàng tồn đọng của EV2 dùng cùng định nghĩa và gửi qua dịch vụ thông báo của SC-121/BE (G-FG12-06).
+  - API chỉ đọc, không ghi bảng nào.
+  dinh_nghia_xong: []
+- key: SC-064/TEST
+  cha: SC-064
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng theo dõi giao hàng tồn đọng'
+  spec_refs:
+    sc:
+    - SC-064
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ba con số của bảng theo dõi tồn đọng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dựng giao dịch chưa giao xong, giao dịch quá mốc và giao dịch có ngoại lệ chờ: mỗi ô đếm đúng giao dịch thuộc nó.'
+  - 'Bỏ trống tham số mốc quá hạn: ô quá hạn hiện chưa cấu hình.'
+  - Ba con số khớp danh sách giao dịch ở SC-061 trong cùng kỳ.
+  dinh_nghia_xong: []
+- key: INV-Q-SD1
+  cha: FG-07
+  tracker: investigation
+  title_vi: Dung sai 精算 giữa số đã giao và số giao dịch
+  han: Trước LAB-5 (viết migration D2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-SD1]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - A8
+    hoi:
+    - Q-SD1
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 1
+  premise_refs:
+  - P-13
+  gap_refs: []
+  mo_ta: Khi số giao hàng đã xác nhận lệch với số lượng của giao dịch, lệch tới mức nào thì vẫn coi là khớp lúc 精算 (quyết toán)? Yêu cầu giao hàng mới nêu các loại ngoại lệ, chưa nêu mức chênh được chấp nhận; nếu có ngưỡng thì đó là một mức chung hay khác nhau theo loài, theo khách hàng?
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG07-XAC-NHAN
+  cha: FG-07
+  tracker: investigation
+  title_vi: Danh mục lý do và người xác nhận ngoại lệ giao hàng
+  han: Trước sprint của SC-063/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_DELIVERY_EXCEPTION_SPEC.md §3, A-2, A-3 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-063
+    api: []
+    tech: []
+    bang:
+    - delivery_exceptions
+    fr:
+    - FR-DEL-03
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG07-06
+  mo_ta: Danh mục lý do của ngoại lệ giao hàng (thiếu, vượt, trả lại, huỷ một phần) gồm những lý do nào, vai nào được xác nhận ngoại lệ, và người ghi có được tự xác nhận ngoại lệ của mình không? Spec SC-063 đòi lý do chọn từ danh mục và có người xác nhận, nhưng không liệt kê lý do nào và không nói ai xác nhận.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

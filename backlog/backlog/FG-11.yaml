@@ -1,0 +1,2439 @@
+# Seed epic FG-11 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: FG-11
+  tracker: epic
+  title_vi: Báo cáo và xuất sang hệ kế toán
+  feature: reporting
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-11
+  - P-17
+  - P-23
+  gap_refs: []
+  mo_ta: Nhóm chức năng này cho người của chợ chạy 12 báo cáo cố định RPT-01…RPT-12 rồi kết xuất CSV, và xuất dữ liệu đối soát của 業務日 (ngày nghiệp vụ) đã khoá sang hệ kế toán theo một chiều. Phần chung làm một lần ở hai khuôn KH-181 (lọc, bảng kết quả, phân trang, kết xuất CSV) và KH-182 (chạy xuất theo lô); 15 màn chỉ thêm cột, bộ lọc riêng và nguồn dữ liệu của mình (P-23). Không có công cụ nào để người dùng tự dựng báo cáo mới, đúng giới hạn của FR-RPT-03.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của FG-11 đã đóng.
+  - Khi mở danh mục thì có đúng 12 báo cáo RPT-01…RPT-12, và không màn hay API nào cho thêm báo cáo, thêm cột hay lưu mẫu mới.
+  - Khi chạy xuất một 業務日 đã khoá thì tệp CSV có đủ 6 trường tối thiểu của IF-ACC-01; chạy lại cùng mã lô ra đúng tệp cũ, còn ngày chưa khoá bị máy chủ từ chối (ADR-014).
+  - Các issue điều tra của FG-11 và câu hỏi Q-04 về cách kết nối đã có câu trả lời, hoặc khách xác nhận giữ giả định P-11, P-17 đang dùng.
+  dinh_nghia_xong: []
+items:
+- key: SC-100
+  cha: FG-11
+  tracker: story
+  title_vi: Danh mục báo cáo
+  ten_ja: レポートカタログ
+  spec_refs:
+    sc:
+    - SC-100
+    api: []
+    tech: []
+    bang:
+    - report_definitions
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  - P-23
+  gap_refs:
+  - G-FG11-11
+  mo_ta: 'SC-100 dùng khuôn KH-181 để liệt kê 12 báo cáo RPT-01…RPT-12 (mã, tên, chu kỳ, nguồn, vai xem được) và mở từng báo cáo. Khác khuôn: chỉ đọc report_definitions, danh mục nạp bằng migration, không sửa được trên màn (FR-RPT-03).'
+  pham_vi: Màn SC-100 (SPEC-SKM-145) nối vào KH-181; đọc `report_definitions`, dữ liệu nạp ở DATA-FG11.
+  luong_chinh:
+  - Máy chủ trả các báo cáo mà vai người dùng xem được.
+  - Người dùng lọc theo chu kỳ ngày hoặc tháng.
+  - Người dùng bấm một dòng để mở báo cáo đó.
+  tieu_chi_nghiem_thu:
+  - Khi vai xem được mọi báo cáo thì danh mục có đúng 12 dòng RPT-01…RPT-12.
+  - Khi vai không được xem một báo cáo thì dòng đó ẩn, mở thẳng nhận 403 M_05.
+  - Khi mở màn thì không có nút thêm, sửa hay xoá báo cáo.
+  dinh_nghia_xong:
+  - Spec SC-100 ghi vai xem được của từng báo cáo khi INV-Q-SD4 có đáp (G-FG11-11).
+- key: SC-100/FE
+  cha: SC-100
+  tracker: devtask
+  title_vi: 'Giao diện: Danh mục báo cáo'
+  spec_refs:
+    sc:
+    - SC-100
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Dựng màn danh mục trên khuôn KH-181: bảng mã, tên, chu kỳ, nguồn dữ liệu, bộ lọc chu kỳ và đường mở từng màn báo cáo.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn không có ô nhập hay nút ghi nào ngoài nút Lọc.
+  - Bấm một dòng mở đúng màn của mã báo cáo đó.
+  dinh_nghia_xong: []
+- key: SC-100/BE
+  cha: SC-100
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Danh mục báo cáo'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_definitions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-12
+  gap_refs:
+  - G-FG11-11
+  mo_ta: Viết spec rồi làm API đọc danh mục trên module settle (P-01), trả các báo cáo mà vai của người gọi xem được.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - API chỉ đọc report_definitions; bảng này không có API ghi nào.
+  - Lọc dòng theo danh sách vai xem được và ma trận quyền (P-12).
+  dinh_nghia_xong: []
+- key: SC-100/TEST
+  cha: SC-100
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Danh mục báo cáo'
+  spec_refs:
+    sc:
+    - SC-100
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử danh mục báo cáo theo từng vai.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Vai xem được mọi báo cáo: thấy đủ 12 dòng RPT-01…RPT-12.'
+  - 'Vai bị loại khỏi một báo cáo: dòng đó ẩn, gọi thẳng API của báo cáo nhận 403 M_05.'
+  dinh_nghia_xong: []
+- key: SC-101
+  cha: FG-11
+  tracker: story
+  title_vi: Báo cáo giao dịch theo ngày
+  spec_refs:
+    sc:
+    - SC-101
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-01
+  - G-FG08-04
+  mo_ta: '照合事務 (nhóm đối soát) chạy RPT-01 trên khuôn KH-181: số giao dịch và tổng giá trị của từng 業務日 (ngày nghiệp vụ), tách kênh 相対 (giao dịch thỏa thuận) và せり (đấu giá). Khác khuôn chỉ ở bộ cột này và truy vấn trên transactions.'
+  pham_vi: Màn SC-101 (SPEC-SKM-146) nối vào KH-181; đọc `transactions`, bỏ dòng đã có bản ghi ở `transaction_cancellations`.
+  luong_chinh:
+  - Người dùng chọn khoảng 業務日, bấm Lọc.
+  - Máy chủ đếm giao dịch còn hiệu lực, cộng giá trị theo ngày và kênh.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi ngày có cả 相対 và せり thì mỗi kênh một dòng, cộng lại bằng số cả ngày.
+  - Khi giao dịch đã huỷ thì không đếm, không cộng giá trị (G-FG08-04).
+  - Khi so với SC-070 cùng ngày thì số giao dịch và tổng tiền khớp.
+  dinh_nghia_xong:
+  - Spec SC-101 ghi bộ cột và luật đếm giao dịch còn hiệu lực (G-FG11-01).
+- key: SC-101/FE
+  cha: SC-101
+  tracker: devtask
+  title_vi: 'Giao diện: Báo cáo giao dịch theo ngày'
+  spec_refs:
+    sc:
+    - SC-101
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Khai bộ cột của RPT-01 cho khuôn KH-181: 業務日 (ngày nghiệp vụ), kênh, số giao dịch, tổng giá trị.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tên kênh hiện bằng nhãn 相対 (giao dịch thỏa thuận) và せり (đấu giá), không hiện mã kỹ thuật.
+  - Giá trị hiện số nguyên yên, không có phần lẻ.
+  dinh_nghia_xong: []
+- key: SC-101/BE
+  cha: SC-101
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Báo cáo giao dịch theo ngày'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG08-04
+  mo_ta: 'Viết phần spec riêng rồi làm truy vấn RPT-01 đăng ký vào API khuôn của KH-181/BE (P-01): gom transactions theo 業務日 (ngày nghiệp vụ) và kênh.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Loại giao dịch có dòng huỷ trước khi đếm và cộng (G-FG08-04).
+  - Ngày lấy theo cột ngày giao dịch tính giờ Nhật, không theo UTC.
+  dinh_nghia_xong: []
+- key: SC-101/TEST
+  cha: SC-101
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Báo cáo giao dịch theo ngày'
+  spec_refs:
+    sc:
+    - SC-101
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử số liệu của RPT-01.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngày có giao dịch 相対 (giao dịch thỏa thuận) và せり (đấu giá), trong đó một giao dịch 相対 đã huỷ: giao dịch huỷ không được đếm.'
+  - Tổng tiền của ngày khớp bảng đối soát SC-070 cùng ngày.
+  dinh_nghia_xong: []
+- key: SC-102
+  cha: FG-11
+  tracker: story
+  title_vi: Lịch sử lô, trạng thái giao dịch
+  spec_refs:
+    sc:
+    - SC-102
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-01
+  - G-FG03-05
+  mo_ta: Người dùng chạy RPT-02 trên khuôn KH-181 để lần vòng đời một lô từ nhận, lên kênh, chốt tới giao, mỗi lần đổi trạng thái có người và thời điểm. Khác khuôn ở bộ lọc mã lô, trạng thái giao dịch và nguồn ghép nhiều bảng cùng audit_log.
+  pham_vi: Màn SC-102 (SPEC-SKM-147) nối vào KH-181; đọc `lots`, `arrivals`, `transactions`, `deliveries`, `audit_log`.
+  luong_chinh:
+  - Người dùng nhập mã lô hoặc chọn trạng thái giao dịch, bấm Lọc.
+  - Máy chủ ghép các mốc của lô theo thời gian.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi lọc một mã lô thì các mốc hiện đúng thứ tự, mỗi mốc có người và thời điểm.
+  - Khi lô đổi trạng thái nhiều lần thì mỗi lần một dòng, lấy từ audit_log.
+  - Khi hiện trạng thái lô thì dùng tập giá trị SC-020/DB chốt (G-FG03-05).
+  dinh_nghia_xong:
+  - Spec SC-102 ghi danh sách mốc và bộ cột (G-FG11-01).
+- key: SC-102/FE
+  cha: SC-102
+  tracker: devtask
+  title_vi: 'Giao diện: Lịch sử lô, trạng thái giao dịch'
+  spec_refs:
+    sc:
+    - SC-102
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-02 (mã lô, mốc, trạng thái trước và sau, người, thời điểm) và hai bộ lọc riêng mã lô, trạng thái giao dịch cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô mã lô nhập tay; ô trạng thái giao dịch là danh sách chọn.
+  - Các mốc của cùng một lô hiện liền nhau theo thời gian.
+  dinh_nghia_xong: []
+- key: SC-102/BE
+  cha: SC-102
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Lịch sử lô, trạng thái giao dịch'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG03-05
+  mo_ta: 'Viết phần spec riêng rồi làm truy vấn RPT-02 cho API khuôn (P-01): ghép mốc từ bảng lô, giao dịch, giao hàng và dòng audit_log đổi trạng thái lô.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mốc đổi trạng thái lấy từ audit_log, không suy từ trạng thái hiện tại; truy vấn chỉ đọc.
+  - Lô chưa có giao dịch vẫn trả mốc nhận và lên kênh, không bị lọc mất.
+  dinh_nghia_xong: []
+- key: SC-102/TEST
+  cha: SC-102
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Lịch sử lô, trạng thái giao dịch'
+  spec_refs:
+    sc:
+    - SC-102
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử vòng đời lô của RPT-02.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô đi đủ nhận, lên kênh, chốt và giao hai lần: báo cáo có đủ mốc, đúng thứ tự.'
+  - 'Lô chưa bán: chỉ có mốc nhận và lên kênh, không báo lỗi.'
+  dinh_nghia_xong: []
+- key: SC-103
+  cha: FG-11
+  tracker: story
+  title_vi: Tư cách hết hạn và sắp hết hạn
+  spec_refs:
+    sc:
+    - SC-103
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: PM
+  priority: 2
+  premise_refs:
+  - P-09
+  - P-23
+  gap_refs:
+  - G-FG02-06
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) chạy RPT-03 trên khuôn KH-181: người tham gia đã hoặc sắp hết hạn giấy, chia nhóm 許可 (giấy phép) và 承認 (chấp thuận). Khác khuôn ở bộ lọc tình trạng và ngưỡng 失効間近 (sắp hết hạn) dùng chung với SC-014, khởi tạo 30 ngày (P-09).
+
+    Ràng buộc đặc thù: 仲卸 chỉ xét hạn 許可, 売買参加者 chỉ xét hạn 承認; không gộp thành một cột hạn.'
+  pham_vi: Màn SC-103 (SPEC-SKM-148) nối vào KH-181; đọc kyoka_het_han, shonin_het_han của `participants` và ngưỡng của SC-014.
+  luong_chinh:
+  - Người dùng chọn 業務日 (ngày nghiệp vụ) làm ngày mốc, tình trạng, loại người tham gia, bấm Lọc.
+  - Máy chủ so hạn đúng loại giấy với ngày mốc và ngưỡng.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi 仲卸 (trung gian bán buôn) có hạn 許可 trong ngưỡng thì ở nhóm 許可, nhãn sắp hết hạn; quá ngày mốc thì nhãn đã hết hạn.
+  - Khi 売買参加者 (người tham gia mua bán) có hạn 承認 trong ngưỡng thì chỉ ở nhóm 承認.
+  - Khi đổi ngưỡng thì SC-103 và SC-014 ra cùng danh sách; báo cáo không đổi tư cách ai (G-FG02-06).
+  dinh_nghia_xong:
+  - Spec SC-103 ghi hai nhóm cột theo loại giấy và nguồn của ngưỡng (P-09).
+- key: SC-103/FE
+  cha: SC-103
+  tracker: devtask
+  title_vi: 'Giao diện: Tư cách hết hạn và sắp hết hạn'
+  spec_refs:
+    sc:
+    - SC-103
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  - constraint:two-tier
+  owner: FE-1
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Khai hai nhóm cột của RPT-03 (mã, tên, số giấy, hạn giấy, số ngày còn lại, nhãn tình trạng) và bộ lọc tình trạng, loại người tham gia cho khuôn KH-181.
+
+    Ràng buộc đặc thù: Nhóm 許可 (giấy phép) và nhóm 承認 (chấp thuận) hiện thành hai bảng riêng, không gộp vào một cột hạn.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngưỡng đang dùng hiện ở đầu báo cáo để người đọc biết mốc sắp hết hạn.
+  - Dòng đã hết hạn và dòng sắp hết hạn mang hai nhãn khác nhau.
+  dinh_nghia_xong: []
+- key: SC-103/BE
+  cha: SC-103
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tư cách hết hạn và sắp hết hạn'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:two-tier
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-01
+  - P-09
+  gap_refs:
+  - G-FG02-06
+  mo_ta: 'Viết phần spec riêng rồi làm truy vấn RPT-03 cho API khuôn (P-01), gọi lại cách tính hạn của SC-014/BE thay vì viết lần thứ hai.
+
+    Ràng buộc đặc thù: Hạn 許可 (giấy phép) chỉ đọc cho 仲卸 (trung gian bán buôn), hạn 承認 (chấp thuận) chỉ đọc cho 売買参加者 (người tham gia mua bán); không dùng cột hạn gộp của prototype.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngưỡng đọc từ cùng tham số cấu hình với SC-014, khởi tạo 30 ngày (P-09).
+  - Ngày mốc là 業務日 (ngày nghiệp vụ) giờ Nhật; truy vấn chỉ đọc, không đổi tư cách của ai.
+  dinh_nghia_xong: []
+- key: SC-103/TEST
+  cha: SC-103
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tư cách hết hạn và sắp hết hạn'
+  spec_refs:
+    sc:
+    - SC-103
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-PARTY-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử hai nhóm giấy của RPT-03.
+
+    Ràng buộc đặc thù: Dữ liệu mẫu có cả 仲卸 và 売買参加者 cùng hạn, để chứng minh mỗi loại chỉ xét đúng giấy của mình.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - '仲卸 (trung gian bán buôn) có hạn 許可 (giấy phép) trong ngưỡng: có tên ở nhóm 許可, không có ở nhóm 承認 (chấp thuận).'
+  - '売買参加者 (người tham gia mua bán) có hạn 承認 đã qua ngày mốc: mang nhãn đã hết hạn ở nhóm 承認.'
+  - 'Đổi ngưỡng ở cấu hình: SC-103 và SC-014 ra cùng danh sách.'
+  dinh_nghia_xong: []
+- key: SC-104
+  cha: FG-11
+  tracker: story
+  title_vi: Giao hàng tồn đọng và ngoại lệ
+  spec_refs:
+    sc:
+    - SC-104
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  - P-23
+  gap_refs:
+  - G-FG07-03
+  - G-FG07-07
+  - G-FG11-11
+  mo_ta: '配送部門 (bộ phận giao hàng) và 市場管理者 (quản lý chợ) chạy RPT-04 trên khuôn KH-181: giao hàng còn tồn theo tuổi tồn và loại ngoại lệ. Khác khuôn ở hai bộ lọc này; định nghĩa tồn đọng và mốc tuổi tồn dùng chung với SC-064 (G-FG07-07).'
+  pham_vi: Màn SC-104 (SPEC-SKM-149) nối vào KH-181; đọc `transactions`, `deliveries`, `delivery_exceptions` qua cách tính của SC-061/BE (G-FG07-03).
+  luong_chinh:
+  - Người dùng chọn 業務日 (ngày nghiệp vụ), tuổi tồn, loại ngoại lệ, bấm Lọc.
+  - Máy chủ lấy giao dịch còn số chưa giao, tính tuổi tồn, gắn ngoại lệ.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi so với SC-064 cùng ngày thì số dòng tồn đọng khớp ô tồn đọng.
+  - Khi mốc tuổi tồn chưa cấu hình thì cột tuổi tồn hiện «chưa cấu hình», không hiện số giả.
+  - Khi vai 配送部門 chưa gán vai nội bộ thì nhận 403 M_05 tới khi INV-Q-SD4 có đáp (P-12).
+  dinh_nghia_xong:
+  - Spec SC-104 ghi bộ cột và nhóm tuổi tồn theo định nghĩa của SC-064 (G-FG07-07).
+- key: SC-104/FE
+  cha: SC-104
+  tracker: devtask
+  title_vi: 'Giao diện: Giao hàng tồn đọng và ngoại lệ'
+  spec_refs:
+    sc:
+    - SC-104
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-04 (giao dịch, bên mua, số đã giao, số còn lại, tuổi tồn, loại ngoại lệ) và hai bộ lọc tuổi tồn, loại ngoại lệ cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô loại ngoại lệ chọn từ bốn loại thiếu, vượt, trả lại, huỷ một phần của delivery_exceptions.
+  - Dòng có ngoại lệ chờ xác nhận mang nhãn riêng.
+  dinh_nghia_xong: []
+- key: SC-104/BE
+  cha: SC-104
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Giao hàng tồn đọng và ngoại lệ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG07-07
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-04 cho API khuôn (P-01), gọi lại cách tính trạng thái của SC-061/BE và định nghĩa tồn đọng của SC-064/BE.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không viết lại luật tồn đọng lần thứ hai; đổi mốc ở cấu hình thì SC-064 và SC-104 đổi cùng lúc.
+  - Tuổi tồn đếm bằng 業務日 (ngày nghiệp vụ) giờ Nhật từ ngày giao dịch.
+  dinh_nghia_xong: []
+- key: SC-104/TEST
+  cha: SC-104
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Giao hàng tồn đọng và ngoại lệ'
+  spec_refs:
+    sc:
+    - SC-104
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-DEL-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử RPT-04, đối chiếu với SC-064.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giao dịch giao một phần và có ngoại lệ thiếu: có trong báo cáo, đúng loại ngoại lệ.'
+  - 'Cùng 業務日 (ngày nghiệp vụ): số dòng tồn đọng của RPT-04 bằng ô tồn đọng của SC-064.'
+  dinh_nghia_xong: []
+- key: SC-105
+  cha: FG-11
+  tracker: story
+  title_vi: Bảng đối soát ngày (bản báo cáo)
+  spec_refs:
+    sc:
+    - SC-105
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG08-04
+  mo_ta: '照合事務 (nhóm đối soát) chạy RPT-05 trên khuôn KH-181 để lấy bản lưu của bảng 日次照合 (đối soát ngày) SC-070. Khác khuôn: chỉ đọc daily_reconciliations, lấy dòng lập mới nhất của mỗi 業務日 (ngày nghiệp vụ), không tính lại số (G-FG08-04).'
+  pham_vi: Màn SC-105 (SPEC-SKM-150) nối vào KH-181; đọc `daily_reconciliations` (migration thuộc DATA-FG08), `business_day_locks`.
+  luong_chinh:
+  - Người dùng chọn khoảng 業務日, bấm Lọc.
+  - Máy chủ trả dòng mới nhất của từng ngày kèm cờ đã khoá.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi mở SC-105 và SC-070 cùng một ngày thì mọi cột số liệu giống nhau.
+  - Khi EV3 đã chạy lại cho một ngày thì chỉ lấy dòng lập mới nhất.
+  - Khi ngày chưa khoá thì dòng mang nhãn chưa khoá, vì số còn có thể đổi.
+  dinh_nghia_xong:
+  - Spec SC-105 ghi cột cờ đã khoá và luật chọn dòng mới nhất (G-FG08-04).
+- key: SC-105/FE
+  cha: SC-105
+  tracker: devtask
+  title_vi: 'Giao diện: Bảng đối soát ngày (bản báo cáo)'
+  spec_refs:
+    sc:
+    - SC-105
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Khai bộ cột của RPT-05 cho khuôn KH-181: đúng các cột của SC-070, thêm cột đã khoá.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Thứ tự và tên cột trùng SC-070 để người đối soát so được hai bản.
+  - Tổng tiền hiện số nguyên yên.
+  dinh_nghia_xong: []
+- key: SC-105/BE
+  cha: SC-105
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bảng đối soát ngày (bản báo cáo)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG08-04
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-05 cho API khuôn (P-01), đọc lại kết quả của tác vụ EV3, không đếm lại từ giao dịch.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi 業務日 (ngày nghiệp vụ) trả một dòng có giờ lập mới nhất; cờ đã khoá lấy từ business_day_locks.
+  - Truy vấn chỉ đọc, không gọi lại EV3.
+  dinh_nghia_xong: []
+- key: SC-105/TEST
+  cha: SC-105
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng đối soát ngày (bản báo cáo)'
+  spec_refs:
+    sc:
+    - SC-105
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử RPT-05, đối chiếu với SC-070.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngày có hai lần chạy EV3: báo cáo lấy dòng mới hơn.'
+  - 'Cùng một ngày: số của RPT-05 và SC-070 trùng nhau ở mọi cột.'
+  dinh_nghia_xong: []
+- key: SC-106
+  cha: FG-11
+  tracker: story
+  title_vi: Bảng xuất đối soát cho kế toán
+  spec_refs:
+    sc:
+    - SC-106
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-17
+  - P-23
+  gap_refs:
+  - G-FG11-03
+  - G-FG11-04
+  mo_ta: '照合事務 (nhóm đối soát) chạy RPT-06 trên khuôn KH-181 để xem lại nội dung đã giao sang kế toán theo 業務日 (ngày nghiệp vụ) và mã lô. Khác khuôn: chỉ đọc lô đã có để đối chiếu, không sinh lô mới; tệp chính thức chỉ đi qua SC-113 (G-FG11-04).'
+  pham_vi: Màn SC-106 (SPEC-SKM-151) nối vào KH-181; đọc `export_batches` và nội dung lô KH-182/BE đã lưu.
+  luong_chinh:
+  - Người dùng chọn 業務日 hoặc nhập mã lô, bấm Lọc.
+  - Máy chủ trả các dòng của lô, đủ 6 trường của IF-ACC-01.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi lọc một mã lô thì số dòng, tổng tiền, tổng thuế khớp tệp SC-113 đã giao.
+  - Khi ngày chưa có lô thì báo cáo rỗng; màn không có nút chạy xuất.
+  - Khi kết xuất CSV ở màn này thì export_batches không thêm dòng.
+  dinh_nghia_xong:
+  - Spec SC-106 ghi màn chỉ đọc lô đã xuất, căn cứ IF-ACC-01 (G-FG11-03).
+- key: SC-106/FE
+  cha: SC-106
+  tracker: devtask
+  title_vi: 'Giao diện: Bảng xuất đối soát cho kế toán'
+  spec_refs:
+    sc:
+    - SC-106
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-06 (mã lô, 業務日 (ngày nghiệp vụ), mã người tham gia, tổng tiền, số thuế, trạng thái dòng) và hai bộ lọc ngày, mã lô cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn không có nút chạy xuất; nút Kết xuất CSV chỉ tạo bản đối chiếu.
+  - Trạng thái dòng phân biệt dòng gốc với dòng điều chỉnh.
+  dinh_nghia_xong: []
+- key: SC-106/BE
+  cha: SC-106
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Bảng xuất đối soát cho kế toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-17
+  gap_refs:
+  - G-FG11-04
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-06 cho API khuôn (P-01), đọc nội dung đã lưu của lô do KH-182/BE ghi.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không tính lại số từ giao dịch khi lô đã có; đọc đúng nội dung đã lưu theo mã lô.
+  - Truy vấn không ghi export_batches.
+  dinh_nghia_xong: []
+- key: SC-106/TEST
+  cha: SC-106
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng xuất đối soát cho kế toán'
+  spec_refs:
+    sc:
+    - SC-106
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử RPT-06, đối chiếu với tệp xuất.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lô đã xuất: số dòng, tổng tiền, tổng thuế bằng tệp của SC-113.'
+  - 'Kết xuất CSV ở RPT-06: số dòng của export_batches không đổi.'
+  dinh_nghia_xong: []
+- key: SC-107
+  cha: FG-11
+  tracker: story
+  title_vi: Kết quả tính thưởng theo kỳ
+  spec_refs:
+    sc:
+    - SC-107
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-AUDIT-03
+    - FR-INC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-10
+  - P-12
+  - P-23
+  gap_refs:
+  - G-FG09-07
+  - G-FG11-11
+  mo_ta: '照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) chạy RPT-07 trên khuôn KH-181: kết quả 完納奨励金 (thưởng thanh toán đủ hạn) theo kỳ và người tham gia, kèm bản quy tắc đã áp. Khác khuôn ở bộ lọc kỳ, người tham gia và nguồn incentives; báo cáo không tính lại, không 確定 (xác nhận cuối).'
+  pham_vi: Màn SC-107 (SPEC-SKM-152) nối vào KH-181; đọc `incentives`, `invoices` và bản quy tắc theo khoá SC-091/DB chốt (G-FG09-07).
+  luong_chinh:
+  - Người dùng chọn kỳ, người tham gia, bấm Lọc.
+  - 'Máy chủ trả dòng thưởng: hoá đơn, số đủ điều kiện, suất, số thưởng, trạng thái 確定, bản quy tắc.'
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi xem một dòng thưởng thì thấy số hiệu và ngày hiệu lực của bản quy tắc đã dùng (FR-AUDIT-03).
+  - Khi dòng đã 確定 thì có người và thời điểm xác nhận; chưa 確定 thì mang nhãn chờ.
+  - Khi vai 内部監査 chưa gán vai nội bộ thì nhận 403 M_05 tới khi INV-Q-SD4 có đáp (P-12).
+  dinh_nghia_xong:
+  - Spec SC-107 cập nhật câu hỏi Q-05 theo đáp của INV-GD-03 (P-10).
+- key: SC-107/FE
+  cha: SC-107
+  tracker: devtask
+  title_vi: 'Giao diện: Kết quả tính thưởng theo kỳ'
+  spec_refs:
+    sc:
+    - SC-107
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-07 và hai bộ lọc kỳ, người tham gia cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Số thưởng hiện số nguyên yên đúng như dòng incentives đã lưu, giao diện không làm tròn lại.
+  - Cột bản quy tắc hiện cả số hiệu lẫn ngày hiệu lực.
+  dinh_nghia_xong: []
+- key: SC-107/BE
+  cha: SC-107
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Kết quả tính thưởng theo kỳ'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG09-07
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-07 cho API khuôn (P-01), đọc dòng thưởng đã lưu, không gọi lại bước tính của TECH-304.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bản quy tắc tra theo khoá SC-091/DB chốt, kể cả khi bản đó bị lùi sau lúc tính (G-FG09-07).
+  - Số tiền lấy nguyên từ incentives; truy vấn chỉ đọc.
+  dinh_nghia_xong: []
+- key: SC-107/TEST
+  cha: SC-107
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Kết quả tính thưởng theo kỳ'
+  spec_refs:
+    sc:
+    - SC-107
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-AUDIT-03
+    - FR-INC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử bản quy tắc hiện trên RPT-07.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Kỳ có hai bản quy tắc: mỗi dòng trỏ đúng bản đã áp cho hoá đơn của nó.'
+  - 'Bản quy tắc bị lùi sau lúc tính: báo cáo vẫn hiện bản đã dùng.'
+  dinh_nghia_xong: []
+- key: SC-108
+  cha: FG-11
+  tracker: story
+  title_vi: Log điều chỉnh sau khi khoá
+  spec_refs:
+    sc:
+    - SC-108
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-SETTLE-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG06-02
+  - G-FG06-04
+  mo_ta: '照合事務 (nhóm đối soát) và 承認者 (người duyệt) chạy RPT-08 trên khuôn KH-181: mọi bút toán đảo và dòng chênh lệch ghi sau khi 業務日 (ngày nghiệp vụ) đã khoá. Khác khuôn ở bộ lọc người thực hiện và nguồn là dòng điều chỉnh của FG-06 so với dòng khoá ngày.'
+  pham_vi: Màn SC-108 (SPEC-SKM-153) nối vào KH-181; đọc `adjustment_entries`, `adjustment_requests` (FG-06), `business_day_locks`.
+  luong_chinh:
+  - Người dùng chọn khoảng 業務日, người thực hiện, bấm Lọc.
+  - Máy chủ lấy dòng điều chỉnh ghi sau giờ khoá của ngày bị điều chỉnh.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi điều chỉnh ghi trước giờ khoá ngày thì không có trong báo cáo; ghi sau thì có.
+  - Khi hiện một dòng thì có người lập, người duyệt, thời điểm ghi từ cột SC-050/DB, SC-052/DB thêm (G-FG06-02, G-FG06-04).
+  - Khi bút toán đảo đi kèm dòng chênh lệch thì hai dòng hiện cạnh nhau.
+  dinh_nghia_xong:
+  - Spec SC-108 ghi bộ cột và luật «sau khoá» theo thời điểm ghi sổ (G-FG06-04).
+- key: SC-108/FE
+  cha: SC-108
+  tracker: devtask
+  title_vi: 'Giao diện: Log điều chỉnh sau khi khoá'
+  spec_refs:
+    sc:
+    - SC-108
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-08 (業務日 (ngày nghiệp vụ) bị điều chỉnh, loại đảo hay chênh lệch, số tiền, kỳ áp dụng, người lập, người duyệt, thời điểm ghi) và bộ lọc người thực hiện cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bộ lọc người thực hiện chọn từ danh sách tài khoản, không gõ tự do.
+  - Loại dòng hiện bằng nhãn đảo hoặc chênh lệch.
+  dinh_nghia_xong: []
+- key: SC-108/BE
+  cha: SC-108
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Log điều chỉnh sau khi khoá'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG06-04
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-08 cho API khuôn (P-01), so thời điểm ghi của dòng điều chỉnh với thời điểm khoá của ngày.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đọc dòng đảo từ đúng nơi SC-052/DB chốt, không đọc cả hai nơi (G-FG06-04).
+  - Ngày chưa có dòng khoá thì không có dòng nào trong báo cáo.
+  dinh_nghia_xong: []
+- key: SC-108/TEST
+  cha: SC-108
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Log điều chỉnh sau khi khoá'
+  spec_refs:
+    sc:
+    - SC-108
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử luật «sau khoá» của RPT-08.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai điều chỉnh cho cùng một ngày, một trước và một sau giờ khoá: báo cáo chỉ có điều chỉnh sau.'
+  - 'Lọc theo người duyệt: chỉ còn dòng người đó duyệt.'
+  dinh_nghia_xong: []
+- key: SC-109
+  cha: FG-11
+  tracker: story
+  title_vi: Tổng hợp tranh chấp và SLA xử lý
+  spec_refs:
+    sc:
+    - SC-109
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-10
+  - G-FG08-05
+  mo_ta: '照合事務 (nhóm đối soát) chạy RPT-09 trên khuôn KH-181: tranh chấp theo trạng thái và thời gian xử lý của từng người phụ trách, so với mục tiêu SLA. Khác khuôn ở cột SLA; mục tiêu là tham số cấu hình, khởi tạo 3 ngày làm việc theo GD-13, chờ INV-Q-18 (G-FG11-10).'
+  pham_vi: Màn SC-109 (SPEC-SKM-154) nối vào KH-181; đọc `disputes` (DATA-FG08, thời điểm đóng theo G-FG08-05) và dòng tạo tranh chấp ở `audit_log`.
+  luong_chinh:
+  - Người dùng chọn khoảng 業務日 (ngày nghiệp vụ), trạng thái tranh chấp, bấm Lọc.
+  - Máy chủ tính thời gian từ lúc mở tới lúc đóng (chưa đóng thì tới 業務日 hiện tại), gom theo người phụ trách.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi tranh chấp đóng sau mục tiêu, hoặc còn mở đã vượt mục tiêu, thì được đếm là quá SLA.
+  - Khi đổi tham số mục tiêu thì báo cáo đổi theo, không sửa mã.
+  - Khi tranh chấp chưa có người phụ trách thì gom vào nhóm chưa giao.
+  dinh_nghia_xong:
+  - Spec SC-109 cập nhật Q-18 theo đáp của INV-Q-18 (G-FG11-10).
+- key: SC-109/FE
+  cha: SC-109
+  tracker: devtask
+  title_vi: 'Giao diện: Tổng hợp tranh chấp và SLA xử lý'
+  spec_refs:
+    sc:
+    - SC-109
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-09 (người phụ trách, số đang mở, số đã đóng, thời gian xử lý trung bình, số quá SLA) và bộ lọc trạng thái tranh chấp cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mục tiêu SLA đang dùng hiện ở đầu báo cáo.
+  - Nhóm chưa giao người phụ trách hiện thành một dòng riêng.
+  dinh_nghia_xong: []
+- key: SC-109/BE
+  cha: SC-109
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Tổng hợp tranh chấp và SLA xử lý'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG11-10
+  - G-FG08-05
+  mo_ta: 'Viết phần spec riêng rồi làm truy vấn RPT-09 cho API khuôn (P-01): mốc mở lấy từ dòng audit_log tạo tranh chấp, mốc đóng từ cột DATA-FG08/DB thêm (G-FG08-05).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mục tiêu SLA đọc từ tham số cấu hình, khởi tạo 3 ngày làm việc theo GD-13 (G-FG11-10).
+  - Cách đếm ngày làm việc ghi vào spec SC-109 cùng đáp của INV-Q-18; truy vấn chỉ đọc.
+  dinh_nghia_xong: []
+- key: SC-109/TEST
+  cha: SC-109
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tổng hợp tranh chấp và SLA xử lý'
+  spec_refs:
+    sc:
+    - SC-109
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cột SLA của RPT-09.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Một tranh chấp đóng trong mục tiêu và một đóng quá mục tiêu: chỉ tranh chấp sau bị đếm quá SLA.'
+  - 'Đổi mục tiêu ở cấu hình: số quá SLA đổi theo mà không phát hành lại.'
+  dinh_nghia_xong: []
+- key: SC-110
+  cha: FG-11
+  tracker: story
+  title_vi: Báo cáo tháng theo người tham gia
+  spec_refs:
+    sc:
+    - SC-110
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-RPT-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-09
+  mo_ta: '市場管理者 (quản lý chợ) chạy RPT-10 trên khuôn KH-181: số liệu tháng của từng người tham gia, tách theo bản quy tắc hiệu lực. Khác khuôn ở bộ lọc tháng, người tham gia; chỉ số đã công bố của FR-RPT-02 chưa được liệt kê, nên chỉ dựng cột tính được từ giao dịch và thưởng, chờ INV-Q-17 (G-FG11-09).'
+  pham_vi: Màn SC-110 (SPEC-SKM-155) nối vào KH-181; đọc `transactions`, `participants`, `incentives` và bản quy tắc theo ngày hiệu lực.
+  luong_chinh:
+  - Người dùng chọn tháng, người tham gia, bấm Lọc.
+  - Máy chủ gom số theo người tham gia và bản quy tắc của từng 業務日 (ngày nghiệp vụ).
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi tháng có hai bản quy tắc thì số mỗi người tách theo bản, cộng lại bằng số cả tháng.
+  - Khi cộng mọi người tham gia thì tổng giá trị khớp tổng RPT-01 của các ngày trong tháng.
+  - Khi INV-Q-17 chưa có đáp thì chưa có cột chỉ số công bố, không đặt chỉ số tạm.
+  dinh_nghia_xong:
+  - Spec SC-110 ghi danh sách chỉ số theo đáp của INV-Q-17 (G-FG11-09).
+- key: SC-110/FE
+  cha: SC-110
+  tracker: devtask
+  title_vi: 'Giao diện: Báo cáo tháng theo người tham gia'
+  spec_refs:
+    sc:
+    - SC-110
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-10 (người tham gia, bản quy tắc, số giao dịch, khối lượng, giá trị, tiền thưởng) và bộ lọc tháng, người tham gia cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bộ lọc kỳ chọn theo tháng, không chọn khoảng ngày tự do.
+  - Mỗi người tham gia có một dòng cho mỗi bản quy tắc áp trong tháng.
+  dinh_nghia_xong: []
+- key: SC-110/BE
+  cha: SC-110
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Báo cáo tháng theo người tham gia'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG11-09
+  mo_ta: 'Viết phần spec riêng rồi làm truy vấn RPT-10 cho API khuôn (P-01): gom theo tháng, người tham gia và bản quy tắc tra theo ngày hiệu lực của từng 業務日 (ngày nghiệp vụ).'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bản quy tắc tra theo khoá SC-091/DB chốt, cùng cách SC-107/BE dùng.
+  - Giao dịch đã huỷ bị loại như ở RPT-01.
+  dinh_nghia_xong: []
+- key: SC-110/TEST
+  cha: SC-110
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Báo cáo tháng theo người tham gia'
+  spec_refs:
+    sc:
+    - SC-110
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tách theo bản quy tắc của RPT-10.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tháng đổi bản quy tắc giữa tháng: mỗi người có hai dòng, cộng lại bằng số cả tháng.'
+  - Tổng giá trị mọi người trong tháng bằng tổng RPT-01 của các ngày trong tháng.
+  dinh_nghia_xong: []
+- key: SC-111
+  cha: FG-11
+  tracker: story
+  title_vi: Báo cáo tháng theo loại giao dịch
+  spec_refs:
+    sc:
+    - SC-111
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-RPT-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-09
+  mo_ta: '市場管理者 (quản lý chợ) chạy RPT-11 trên khuôn KH-181: tỷ trọng theo giá trị của 相対 (giao dịch thỏa thuận) và せり (đấu giá) từng tháng. Khác khuôn ở bộ lọc loại giao dịch và cột tỷ trọng; đo theo giá trị chứ không theo số giao dịch, vì 相対 mang phần lớn giá trị của chợ.'
+  pham_vi: Màn SC-111 (SPEC-SKM-156) nối vào KH-181; đọc `transactions`, `transaction_cancellations` và bản quy tắc theo ngày hiệu lực.
+  luong_chinh:
+  - Người dùng chọn tháng, loại giao dịch, bấm Lọc.
+  - Máy chủ cộng giá trị theo kênh và bản quy tắc, tính tỷ trọng trên tổng tháng.
+  - Người dùng kết xuất CSV qua khuôn.
+  tieu_chi_nghiem_thu:
+  - Khi tháng có ít giao dịch 相対 nhưng giá trị lớn thì tỷ trọng 相対 vẫn tính theo giá trị.
+  - Khi tháng có hai bản quy tắc thì số tách theo từng bản (FR-RPT-02).
+  - Khi cộng các kênh thì tổng giá trị bằng tổng RPT-01 của tháng.
+  dinh_nghia_xong:
+  - Spec SC-111 ghi danh sách chỉ số theo đáp của INV-Q-17 (G-FG11-09).
+- key: SC-111/FE
+  cha: SC-111
+  tracker: devtask
+  title_vi: 'Giao diện: Báo cáo tháng theo loại giao dịch'
+  spec_refs:
+    sc:
+    - SC-111
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-11 (tháng, kênh, bản quy tắc, số giao dịch, giá trị, tỷ trọng giá trị) và bộ lọc loại giao dịch cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi kênh có giao dịch trong tháng hiện thành một dòng, kể cả kênh bán trực tiếp nếu có.
+  - Tỷ trọng hiện kèm giá trị gốc để người đọc tự kiểm.
+  dinh_nghia_xong: []
+- key: SC-111/BE
+  cha: SC-111
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Báo cáo tháng theo loại giao dịch'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG11-09
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-11 cho API khuôn (P-01), dùng chung luật loại giao dịch đã huỷ với RPT-01.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tỷ trọng tính trên giá trị, mẫu số là tổng giá trị còn hiệu lực của tháng.
+  - Bản quy tắc tra cùng cách với SC-110/BE.
+  dinh_nghia_xong: []
+- key: SC-111/TEST
+  cha: SC-111
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Báo cáo tháng theo loại giao dịch'
+  spec_refs:
+    sc:
+    - SC-111
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-02
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tỷ trọng theo giá trị của RPT-11.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tháng có ít giao dịch 相対 (giao dịch thỏa thuận) nhưng giá trị lớn hơn せり (đấu giá): tỷ trọng 相対 lớn hơn dù số giao dịch ít hơn.'
+  - Tổng giá trị các kênh bằng tổng RPT-01 của tháng.
+  dinh_nghia_xong: []
+- key: SC-112
+  cha: FG-11
+  tracker: story
+  title_vi: Báo cáo phiên bản quy tắc đã áp
+  spec_refs:
+    sc:
+    - SC-112
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr:
+    - FR-RULE-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-12
+  - P-23
+  gap_refs:
+  - G-FG10-01
+  - G-FG11-11
+  mo_ta: 'ルール管理者 (người quản lý quy tắc) và 内部監査 (kiểm toán nội bộ) chạy RPT-12 trên khuôn KH-181: từng bản quy tắc do ai lập, ai duyệt, hiệu lực từ ngày nào, đang ở trạng thái nào. Khác khuôn ở bộ lọc khoá quy tắc, ngày hiệu lực và nguồn là bảng SC-091/DB chốt (G-FG10-01).'
+  pham_vi: Màn SC-112 (SPEC-SKM-157) nối vào KH-181; đọc `business_rules` hoặc `rule_versions`, theo quyết định của SC-091/DB.
+  luong_chinh:
+  - Người dùng chọn khoá quy tắc, khoảng ngày hiệu lực, bấm Lọc.
+  - 'Máy chủ trả từng bản: người lập, người duyệt, ngày hiệu lực, trạng thái, người lùi.'
+  - Người dùng kết xuất CSV qua khuôn, hằng tháng hoặc sau mỗi lần đổi.
+  tieu_chi_nghiem_thu:
+  - Khi bản đã duyệt thì người lập và người duyệt là hai người khác nhau.
+  - Khi bản bị lùi thì vẫn có dòng, kèm người lùi và thời điểm lùi.
+  - Khi so một bản thì trạng thái trên báo cáo trùng trạng thái API ghi quy tắc trả (G-FG10-01).
+  dinh_nghia_xong:
+  - Spec SC-112 trỏ đúng bảng nguồn SC-091/DB chốt (G-FG10-01).
+- key: SC-112/FE
+  cha: SC-112
+  tracker: devtask
+  title_vi: 'Giao diện: Báo cáo phiên bản quy tắc đã áp'
+  spec_refs:
+    sc:
+    - SC-112
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Khai bộ cột của RPT-12 (khoá quy tắc, bản, người lập, người duyệt, ngày hiệu lực, trạng thái) và hai bộ lọc khoá quy tắc, ngày hiệu lực cho khuôn KH-181.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bản bị lùi mang nhãn riêng, không bị ẩn.
+  - Cột người lập và người duyệt hiện tên tài khoản, không hiện mã.
+  dinh_nghia_xong: []
+- key: SC-112/BE
+  cha: SC-112
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Báo cáo phiên bản quy tắc đã áp'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  gap_refs:
+  - G-FG10-01
+  mo_ta: Viết phần spec riêng rồi làm truy vấn RPT-12 cho API khuôn (P-01), chỉ đọc bảng nguồn SC-091/DB chốt.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không đọc trạng thái từ cả hai bảng bản quy tắc (G-FG10-01).
+  - Truy vấn chỉ đọc.
+  dinh_nghia_xong: []
+- key: SC-112/TEST
+  cha: SC-112
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Báo cáo phiên bản quy tắc đã áp'
+  spec_refs:
+    sc:
+    - SC-112
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RULE-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử RPT-12.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Bản lập, duyệt rồi lùi: báo cáo có đủ người lập, người duyệt và người lùi.'
+  - 'Lọc theo khoảng ngày hiệu lực: chỉ còn bản có ngày trong khoảng.'
+  dinh_nghia_xong: []
+- key: SC-113
+  cha: FG-11
+  tracker: story
+  title_vi: Chạy xuất dữ liệu sang hệ kế toán
+  ten_ja: 会計連携出力実行
+  spec_refs:
+    sc:
+    - SC-113
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-11
+  - P-17
+  - P-23
+  gap_refs:
+  - G-FG11-03
+  - G-FG11-05
+  mo_ta: '照合事務 (nhóm đối soát) mở SC-113 trên khuôn KH-182 để xuất dữ liệu đối soát của một 業務日 (ngày nghiệp vụ) đã khoá thành tệp CSV cho hệ kế toán của 財務部門 (bộ phận tài chính). Khác khuôn: đây là màn duy nhất có nút Chạy xuất; mã hoá và bảng thuế đọc từ cấu hình (P-11), cách giao tệp chờ INV-Q-04 (P-17).'
+  pham_vi: Màn SC-113 (SPEC-SKM-158) nối vào KH-182; ghi `export_batches`, `report_runs` qua API của KH-182/BE.
+  luong_chinh:
+  - Người dùng chọn 業務日 đã khoá, định dạng CSV.
+  - 'Người dùng kiểm bản xem trước: số dòng, tổng tiền, tổng thuế.'
+  - Người dùng bấm Chạy xuất; máy chủ sinh mã lô, ghi tệp, trả đường tải.
+  - Lần chạy lỗi hiện trạng thái lỗi và có thông báo lỗi xuất.
+  tieu_chi_nghiem_thu:
+  - Khi xuất xong thì tệp mã hoá theo tham số cấu hình, khởi tạo Shift-JIS, số thuế chia ba mức 10%, 8%, miễn thuế (P-11).
+  - Khi đổi tham số mã hoá thì chỉ lô mới đổi; lô cũ tải lại vẫn ra đúng tệp cũ.
+  - Khi chưa chốt kênh kết nối thì người dùng tải tệp từ màn; cách giao khác chờ INV-Q-04.
+  dinh_nghia_xong:
+  - Spec SC-113 trỏ IF-ACC-01 và FR-SETTLE-02 làm căn cứ (G-FG11-03).
+- key: SC-113/FE
+  cha: SC-113
+  tracker: devtask
+  title_vi: 'Giao diện: Chạy xuất dữ liệu sang hệ kế toán'
+  spec_refs:
+    sc:
+    - SC-113
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Gắn khuôn KH-182 cho màn chạy xuất: ô 業務日 (ngày nghiệp vụ) chỉ cho chọn ngày đã khoá, vùng xem trước có số dòng, tổng tiền, tổng thuế.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ngày chưa khoá không chọn được; nếu yêu cầu vẫn tới máy chủ thì màn hiện lỗi máy chủ trả về.
+  - Sau khi chạy, màn hiện mã lô do máy chủ sinh và đường tải tệp.
+  dinh_nghia_xong: []
+- key: SC-113/BE
+  cha: SC-113
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chạy xuất dữ liệu sang hệ kế toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-11
+  - P-17
+  gap_refs:
+  - G-FG11-05
+  mo_ta: Nối API chạy xuất của KH-182/BE với cấu hình mã hoá, bảng thuế và nơi lưu tệp của môi trường (P-11, P-17).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mã hoá, bảng thuế và nơi lưu tệp đọc từ cấu hình; không giá trị nào viết cứng.
+  - Lần chạy lỗi gửi thông báo lỗi xuất theo FR-NOTIFY-01 và giữ trạng thái lỗi để chạy lại dưới cùng mã lô.
+  dinh_nghia_xong: []
+- key: SC-113/TEST
+  cha: SC-113
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chạy xuất dữ liệu sang hệ kế toán'
+  spec_refs:
+    sc:
+    - SC-113
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử chạy xuất thật trên một 業務日 (ngày nghiệp vụ) đã khoá.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ngày có dòng thuộc cả ba mức thuế: tệp tách đúng ba mức, tổng thuế khớp bản xem trước.'
+  - 'Mở tệp theo mã hoá Shift-JIS: tên người tham gia tiếng Nhật đọc đúng, không lỗi ký tự.'
+  - 'Lần chạy lỗi: có thông báo lỗi xuất, chạy lại dùng cùng mã lô.'
+  dinh_nghia_xong: []
+- key: SC-114
+  cha: FG-11
+  tracker: story
+  title_vi: Lịch sử xuất dữ liệu
+  spec_refs:
+    sc:
+    - SC-114
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-17
+  - P-23
+  gap_refs:
+  - G-FG11-03
+  - G-FG11-05
+  mo_ta: '照合事務 (nhóm đối soát) mở SC-114 trên khuôn KH-182 để tra lô đã xuất theo mã lô, trạng thái, người chạy, và lấy lại đúng tệp khi bên kế toán báo lệch. Khác khuôn: chỉ đọc lịch sử lô; chạy lại dùng mã lô cũ, không sinh lô mới (ADR-014).'
+  pham_vi: Màn SC-114 (SPEC-SKM-159) nối vào KH-182; đọc `export_batches` và `report_runs` (migration thuộc DATA-FG11).
+  luong_chinh:
+  - Người dùng lọc theo mã lô, trạng thái, người chạy hoặc khoảng 業務日 (ngày nghiệp vụ).
+  - 'Màn hiện từng lô: mã, ngày, định dạng, giờ chạy, người chạy, trạng thái.'
+  - Người dùng tải lại tệp, hoặc chạy lại lô lỗi qua API của KH-182/BE.
+  tieu_chi_nghiem_thu:
+  - Khi tải lại lô đã xong thì tệp giống hệt lần giao đầu, không có lô mới.
+  - Khi lọc theo người chạy thì chỉ còn lô của người đó, theo người của phiên lúc chạy.
+  - Khi chạy lại lô lỗi thì dùng cùng mã lô; trạng thái lô theo lần chạy mới nhất.
+  dinh_nghia_xong:
+  - Spec SC-114 trỏ IF-ACC-01 và ghi luật chạy lại theo mã lô (G-FG11-03).
+- key: SC-114/FE
+  cha: SC-114
+  tracker: devtask
+  title_vi: 'Giao diện: Lịch sử xuất dữ liệu'
+  spec_refs:
+    sc:
+    - SC-114
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Gắn khuôn KH-182 cho màn lịch sử: bộ lọc mã lô, trạng thái, người chạy, bảng lô và nút tải lại, chạy lại theo dòng.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nút chạy lại chỉ hiện ở lô mang trạng thái lỗi.
+  - Điều kiện lọc được giữ khi chuyển trang.
+  dinh_nghia_xong: []
+- key: SC-114/BE
+  cha: SC-114
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Lịch sử xuất dữ liệu'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-17
+  gap_refs:
+  - G-FG11-05
+  mo_ta: Viết phần spec riêng rồi làm API đọc lịch sử lô cho khuôn KH-182 (P-01); chạy lại gọi đúng API của KH-182/BE với mã lô cũ.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - API đọc không ghi bảng nào; trạng thái lô lấy từ dòng report_runs mới nhất của mã lô.
+  - Chạy lại chỉ nhận mã lô đã có, không nhận ngày hay định dạng mới.
+  dinh_nghia_xong: []
+- key: SC-114/TEST
+  cha: SC-114
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Lịch sử xuất dữ liệu'
+  spec_refs:
+    sc:
+    - SC-114
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử tra cứu và chạy lại lô.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Tải lại một lô đã xong hai lần: hai tệp giống hệt nhau.'
+  - 'Chạy lại lô lỗi: cùng mã lô, trạng thái chuyển sang xong, ngày đó không có lô thứ hai.'
+  dinh_nghia_xong: []
+- key: KH-181
+  cha: FG-11
+  tracker: story
+  title_vi: Khuôn báo cáo lọc, xem và xuất CSV
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_definitions
+    - report_runs
+    fr:
+    - FR-RPT-01
+    - FR-RPT-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-23
+  gap_refs:
+  - G-FG11-01
+  - G-FG11-02
+  - G-FG11-12
+  mo_ta: 'KH-181 làm một lần phần chung của 13 màn SC-100…SC-112: bộ lọc kỳ, chu kỳ, trạng thái lần chạy, bảng kết quả có phân trang, kết xuất CSV và lịch sử lần chạy. Mỗi màn nối vào bằng một bộ cột và một truy vấn cố định viết trong mã; người dùng chỉ chọn giá trị lọc. Không có chỗ thêm báo cáo, thêm cột hay lưu mẫu, vì FR-RPT-03 loại trừ công cụ tự tạo báo cáo (P-23).'
+  pham_vi: Khuôn SKM_RPT_TEMPLATE_LIST (SPEC-SKM-181) ở văn phòng; `report_definitions` (12 báo cáo, nạp bằng migration) và `report_runs` (mỗi lần kết xuất một dòng), migration thuộc DATA-FG11; API dùng chung chưa có spec, KH-181/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng mở màn báo cáo; máy chủ kiểm vai có trong danh sách vai xem được của báo cáo.
+  - Người dùng chọn kỳ (bắt buộc), chu kỳ, bộ lọc riêng và bấm Lọc; máy chủ chạy truy vấn cố định, trả trang kết quả.
+  - Người dùng bấm Kết xuất CSV; máy chủ chạy lại đúng điều kiện, ghi tệp và thêm một dòng report_runs mang người của phiên, giờ máy chủ, trạng thái.
+  - Người dùng tải tệp từ lịch sử lần chạy.
+  tieu_chi_nghiem_thu:
+  - Khi bỏ trống kỳ hoặc ngày bắt đầu sau ngày kết thúc thì máy chủ trả 400, không ghi report_runs (P-03).
+  - Khi mã báo cáo ngoài danh mục thì trả 404 M_14; API không có tham số chọn cột hay đổi công thức.
+  - Khi vai không nằm trong danh sách vai xem được thì trả 403 M_05, kể cả khi gọi thẳng API.
+  - Khi kết xuất xong thì tệp khớp bảng đang xem và mang thời điểm tạo, 業務日 (ngày nghiệp vụ), người chạy, mã lần chạy (G-FG11-12).
+  - Khi kết xuất lỗi thì có thêm một dòng report_runs trạng thái lỗi, không có tệp.
+  dinh_nghia_xong:
+  - Spec SPEC-SKM-181 ghi cách màn khai bộ cột, truy vấn và luật của ô kỳ (P-03, G-FG11-01).
+- key: KH-181/FE
+  cha: KH-181
+  tracker: devtask
+  title_vi: 'Giao diện: Khuôn báo cáo lọc, xem và xuất CSV'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-FG11-01
+  mo_ta: 'Dựng thành phần khuôn dùng chung cho 13 màn báo cáo: ô kỳ, ô chu kỳ, ô trạng thái lần chạy, chỗ gắn bộ lọc riêng của màn, bảng kết quả nhận bộ cột từ màn, phân trang, nút Lọc, nút Kết xuất CSV và bảng lịch sử lần chạy.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn con chỉ truyền bộ cột và bộ lọc riêng; thành phần không có ô nào cho người dùng chọn cột hay đặt tên báo cáo.
+  - Khi bỏ trống kỳ thì nút Lọc và nút Kết xuất CSV bị chặn, lỗi hiện ngay cạnh ô kỳ.
+  - Khi kết quả rỗng thì bảng hiện trạng thái rỗng, không báo lỗi; lần chạy lỗi hiện nhãn lỗi trong lịch sử.
+  dinh_nghia_xong: []
+- key: KH-181/BE
+  cha: KH-181
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khuôn báo cáo lọc, xem và xuất CSV'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - report_definitions
+    - report_runs
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-11
+  - P-12
+  gap_refs:
+  - G-FG11-02
+  - G-FG11-12
+  - G-19
+  mo_ta: 'Viết spec rồi làm API đọc và API kết xuất dùng chung trên module settle (P-01): nhận mã báo cáo, kỳ, chu kỳ và bộ lọc riêng, gọi truy vấn cố định mà màn đăng ký, ghi tệp và dòng report_runs.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Người chạy lấy từ phiên, giờ chạy lấy từ máy chủ; API không nhận hai giá trị này từ thân yêu cầu.
+  - 'Quyền xem kiểm hai lớp: vai có dòng trong ma trận quyền (P-12) và nằm trong danh sách vai xem được của báo cáo.'
+  - Cỡ trang, thứ tự sắp xếp theo quy ước chung của dự án (G-19); mã hoá tệp CSV đọc từ tham số cấu hình dùng chung với tệp xuất kế toán (P-11).
+  dinh_nghia_xong: []
+- key: KH-181/TEST
+  cha: KH-181
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khuôn báo cáo lọc, xem và xuất CSV'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-01
+    - FR-RPT-03
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử phần chung của khuôn báo cáo, chạy trên SC-101 làm màn mẫu.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gửi yêu cầu kết xuất kèm tên người và giờ giả: dòng report_runs lưu người của phiên và giờ máy chủ.'
+  - Gọi API với mã báo cáo ngoài danh mục nhận 404 M_14; gửi thêm tham số tên cột thì cột trả về không đổi.
+  - Tài khoản có vai mở được khuôn nhưng không nằm trong danh sách vai xem được của báo cáo nhận 403 M_05.
+  dinh_nghia_xong: []
+- key: KH-182
+  cha: FG-11
+  tracker: story
+  title_vi: Khuôn chạy xuất sang hệ kế toán
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr:
+    - FR-RPT-03
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-17
+  - P-23
+  gap_refs:
+  - G-FG11-05
+  - G-FG11-06
+  - G-FG11-08
+  mo_ta: 'KH-182 làm một lần phần chung của SC-113 và SC-114: chọn một 業務日 (ngày nghiệp vụ) đã khoá, xem trước, chạy xuất ra tệp CSV một chiều và tra lịch sử lô. Mỗi ngày đã khoá có đúng một lô với mã do máy sinh; chạy lại cùng mã lô trả đúng tệp cũ (ADR-014, P-17). Hệ thống chỉ giao tệp, không gọi API của sản phẩm kế toán nào, không nhận dữ liệu ngược về.'
+  pham_vi: Khuôn SKM_RPT_TEMPLATE_EXPORT (SPEC-SKM-182) ở văn phòng; `export_batches` (định danh lô) và `report_runs` (mỗi lần chạy một dòng), migration thuộc DATA-FG11; đọc `business_day_locks`, `transactions`; API chưa có spec, KH-182/BE viết rồi làm (P-01).
+  luong_chinh:
+  - Người dùng chọn một 業務日 và định dạng; máy chủ kiểm ngày đã có dòng khoá.
+  - Máy chủ dựng bản xem trước, mỗi người tham gia một dòng, kèm tổng tiền và tổng thuế.
+  - Người dùng bấm Chạy xuất; ngày chưa có lô thì máy chủ sinh mã lô, ghi export_batches, tệp CSV theo cấu hình (P-11) và một dòng report_runs.
+  - Ngày đã có lô thì máy chủ trả tệp đã lưu; lần chạy lỗi gửi thông báo lỗi xuất (FR-NOTIFY-01), chạy lại dưới cùng mã lô.
+  tieu_chi_nghiem_thu:
+  - Khi chọn 業務日 chưa khoá thì máy chủ từ chối, không sinh mã lô, không ghi bảng nào (ADR-014).
+  - Khi xuất thành công thì tệp có mã lô, 業務日, mã người tham gia, tổng tiền, số thuế, trạng thái dòng, kèm thời điểm tạo và người chạy.
+  - Khi chạy lại cùng mã lô thì tệp giống hệt tệp đã giao lần đầu, ngày đó không có lô thứ hai.
+  - Khi trình duyệt gửi mã lô, người chạy hay giờ chạy thì máy chủ bỏ qua và tự gán.
+  - Khi người dùng không có vai được phép thì máy chủ trả 403 M_05.
+  dinh_nghia_xong:
+  - Spec SPEC-SKM-182 sửa ô kỳ thành một 業務日, ô mã lô thành chỉ hiển thị (G-FG11-05, G-FG11-06).
+- key: KH-182/FE
+  cha: KH-182
+  tracker: devtask
+  title_vi: 'Giao diện: Khuôn chạy xuất sang hệ kế toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-1
+  priority: 3
+  premise_refs:
+  - P-11
+  gap_refs:
+  - G-FG11-06
+  mo_ta: 'Dựng thành phần khuôn xuất cho SC-113 và SC-114: ô chọn 業務日 (ngày nghiệp vụ), ô định dạng, ô mã lô chỉ hiển thị, vùng xem trước, ghi chú xuất một chiều, bảng lịch sử lô và hai nút Chạy xuất, Huỷ.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ô mã lô không nhập được; giá trị chỉ hiện sau khi máy chủ sinh (G-FG11-06).
+  - Ô định dạng chỉ có một lựa chọn CSV; mã hoá và bảng thuế không hiện thành ô chọn (P-11).
+  - Khi máy chủ từ chối ngày chưa khoá thì màn hiện lý do và giữ ngày đã chọn.
+  dinh_nghia_xong: []
+- key: KH-182/BE
+  cha: KH-182
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khuôn chạy xuất sang hệ kế toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-01
+  - P-11
+  - P-17
+  gap_refs:
+  - G-FG11-05
+  - G-FG11-08
+  - G-FG08-04
+  mo_ta: 'Viết spec rồi làm API xem trước, chạy xuất và đọc lô trên module settle (P-01): kiểm ngày đã khoá ở tầng dịch vụ, dựng 6 trường từ giao dịch của ngày, ghi tệp CSV, dòng export_batches và dòng report_runs.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi 業務日 (ngày nghiệp vụ) có tối đa một lô; chạy lại cùng mã lô trả tệp đã lưu, không tính lại từ dữ liệu (G-FG11-05).
+  - Tổng tiền theo người tham gia dùng luật đếm giao dịch còn hiệu lực của SC-070/BE; số thuế tính theo bảng ba mức ở cấu hình, mức áp cho từng dòng là tham số chờ INV-GD-04 (P-11, G-FG11-08).
+  - Ngày chưa khoá trả một mã lỗi riêng thêm vào bảng mã lỗi chung; lỗi ghi tệp trả 500 M_25, lần chạy mang trạng thái lỗi và gọi dịch vụ thông báo của SC-121/BE (G-FG12-06).
+  dinh_nghia_xong: []
+- key: KH-182/TEST
+  cha: KH-182
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khuôn chạy xuất sang hệ kế toán'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-03
+    - FR-SETTLE-02
+    - IF-ACC-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-182
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Thiết kế ca kiểm thử phần chung của khuôn xuất kế toán: chặn ngày chưa khoá, đủ 6 trường, chạy lại cùng mã lô.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Chạy xuất cho 業務日 (ngày nghiệp vụ) chưa có dòng khoá: bị từ chối, export_batches và report_runs không thêm dòng.'
+  - 'Chạy xuất hai lần cho cùng một ngày đã khoá: cùng một mã lô, hai tệp giống hệt nhau.'
+  - 'Gửi kèm mã lô, người chạy và giờ giả: lô lưu mã do máy sinh, người của phiên và giờ máy chủ.'
+  dinh_nghia_xong: []
+- key: DATA-FG11
+  cha: FG-11
+  tracker: story
+  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-SETTLE): report_definitions, report_runs, export_batches'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    - report_definitions
+    - report_runs
+    fr: []
+    adr:
+    - ADR-014
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-06
+  - P-17
+  gap_refs:
+  - G-FG11-07
+  - G-FG11-12
+  mo_ta: 'Ba bảng report_definitions (danh mục báo cáo), report_runs (lần chạy) và export_batches (lô xuất kế toán) không có màn nào ghi trực tiếp: migration nạp danh mục, KH-181/BE và KH-182/BE ghi hai bảng sau. Story này dựng ba bảng trên kho mã hệ đích, chốt các ô kiểu còn «—» và thêm cột còn thiếu trước khi hai khuôn chạy (P-04, P-06).'
+  pham_vi: Bảng `report_definitions` (12 dòng RPT-01…RPT-12 nạp bằng migration, không có đường ghi từ giao diện), `report_runs` và `export_batches` (cả hai chỉ thêm dòng theo ADR-014); thêm cột cho hai bảng sau theo G-FG11-07, G-FG11-12.
+  luong_chinh:
+  - 'Người làm DB chốt kiểu bốn ô còn «—»: nguồn dữ liệu, vai xem được, mã báo cáo, tham chiếu tệp (P-06).'
+  - Người làm DB viết migration ba bảng, kèm khoá duy nhất cho mã lô và cho 業務日 (ngày nghiệp vụ) của lô.
+  - Người làm DB nạp 12 dòng danh mục và dữ liệu mẫu một ngày đã khoá để KH-182 chạy thử.
+  tieu_chi_nghiem_thu:
+  - Khi chạy migration trên cơ sở dữ liệu trống thì ba bảng được tạo đủ, không còn ô kiểu «—» (P-06).
+  - Khi ghi lô thứ hai cho cùng một 業務日 hoặc trùng mã lô thì cơ sở dữ liệu từ chối.
+  - Khi sửa hoặc xoá dòng report_runs, export_batches thì bị chặn ở mức quyền cơ sở dữ liệu.
+  dinh_nghia_xong:
+  - SKM_DB ghi lại cột mới của export_batches và report_runs (G-FG11-07, G-FG11-12).
+- key: DATA-FG11/DB
+  cha: DATA-FG11
+  tracker: devtask
+  title_vi: Tạo bảng report_definitions, report_runs, export_batches
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - export_batches
+    - report_definitions
+    - report_runs
+    fr: []
+    adr:
+    - ADR-014
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-04
+  - P-06
+  gap_refs:
+  - G-FG11-07
+  - G-FG11-12
+  mo_ta: Viết migration report_definitions, report_runs, export_batches trên kho mã hệ đích; chốt kiểu bốn ô còn «—» và thêm cột theo G-FG11-07, G-FG11-12 trước khi tạo bảng (P-06).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - export_batches có cột 業務日 (ngày nghiệp vụ) kiểu ngày, khoá duy nhất cho mã lô và cho 業務日; trạng thái từng lần chạy không ghi đè ở bảng này.
+  - report_runs có cột mã lần chạy, điều kiện lọc đã dùng và cột trỏ export_batches; mỗi lần chạy, chạy lại là một dòng mới.
+  - report_definitions nạp đủ 12 dòng RPT-01…RPT-12; vai xem được lưu theo mã vai của ma trận quyền.
+  dinh_nghia_xong: []
+- key: DATA-FG11/TEST
+  cha: DATA-FG11
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-SETTLE): report_definitions, report_runs, export_batches'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử ràng buộc của ba bảng danh mục báo cáo, lần chạy và lô xuất kế toán.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ghi lô thứ hai cho cùng một 業務日 (ngày nghiệp vụ) hoặc trùng mã lô: cơ sở dữ liệu từ chối.'
+  - 'Sửa hoặc xoá một dòng report_runs hay export_batches: bị chặn ở mức quyền cơ sở dữ liệu.'
+  - 'Đếm report_definitions sau migration: đúng 12 dòng, mã RPT-01…RPT-12.'
+  dinh_nghia_xong: []
+- key: INV-Q-04
+  cha: FG-11
+  tracker: investigation
+  title_vi: Cách kết nối và môi trường thử với hệ kế toán
+  han: Trước UAT
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: system-design.yaml › cau_hoi_mo[Q-04]
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-014
+    nfr: []
+    sd:
+    - EV1
+    hoi:
+    - Q-04
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 2
+  premise_refs:
+  - P-17
+  gap_refs: []
+  mo_ta: Dữ liệu đối soát của 業務日 (ngày nghiệp vụ) đã khoá được chuyển sang hệ kế toán của khách bằng phương thức nào, xác thực ra sao, và có môi trường thử nào để hai bên kiểm trước nghiệm thu không? Câu này chờ buổi họp về giao tiếp hai hệ; nếu khách chọn kết nối API hai chiều thay cho tệp CSV một chiều (ADR-014) thì phải thêm việc tích hợp.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-Q-17
+  cha: FG-11
+  tracker: investigation
+  title_vi: Chỉ số đã công bố dùng cho báo cáo tháng RPT-10, RPT-11
+  han: Trước sprint của SC-110/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_RPT10_PARTICIPANT_MONTHLY_SPEC.md §6.2 Q-17 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-110
+    - SC-111
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-02
+    adr: []
+    nfr: []
+    hoi:
+    - Q-17
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG11-09
+  mo_ta: Báo cáo tháng RPT-10 và RPT-11 dùng những chỉ số đã công bố nào? FR-RPT-02 nhắc tới chỉ số phạm vi cơ bản đã công bố nhưng RFP không liệt kê, câu Q-17 của LAB-4 còn mở và chưa có giả định thay thế.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-Q-18
+  cha: FG-11
+  tracker: investigation
+  title_vi: Mục tiêu số ngày xử lý tranh chấp cho báo cáo RPT-09
+  han: Trước sprint của SC-109/BE
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_RPT09_DISPUTE_SLA_SPEC.md §6.2 Q-18 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-109
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-SETTLE-03
+    adr: []
+    nfr: []
+    hoi:
+    - Q-18
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG11-10
+  mo_ta: Khách đặt mục tiêu xử lý một tranh chấp trong bao nhiêu ngày làm việc, và ngày làm việc đếm theo lịch nào? Báo cáo RPT-09 so thời gian xử lý với mục tiêu này; LAB-4 tạm lấy 3 ngày làm việc theo giả định GD-13 (câu Q-18).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
