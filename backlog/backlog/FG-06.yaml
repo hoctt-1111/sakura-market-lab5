@@ -663,3 +663,66 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu: []
   dinh_nghia_xong: []
+- key: INV-FG06-DONG-DAO
+  cha: FG-06
+  tracker: investigation
+  title_vi: Nơi giữ dòng đảo 赤伝 và khung nhìn chuẩn cho báo cáo
+  han: 20/10/2026 (trước Sprint 1)
+  nguoi_tra_loi: Tech Lead
+  nguon: ADR-003 §2 · SKM_DB.md §4.19 adjustment_entries (LAB-4)
+  spec_refs:
+    sc:
+    - SC-052
+    api: []
+    tech: []
+    bang:
+    - adjustment_entries
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG06-04
+  mo_ta: Dòng đảo 赤伝 (bút toán đảo) nằm ngay trong bảng tiền với năm cột dùng chung như ADR-003, hay ở bảng riêng adjustment_entries như data-model? Báo cáo đọc số đã điều chỉnh qua khung nhìn chuẩn nào? Lựa chọn áp cho mọi bảng chỉ thêm dòng, nên Tech Lead chốt trước khi PLT-03/BE dựng khung ghi chung và SC-052/DB tạo bảng.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG06-MA-TRAN-QUYEN
+  cha: FG-06
+  tracker: investigation
+  title_vi: Phân quyền theo loại người tham gia hay vai nội bộ
+  han: 20/10/2026 (trước Sprint 1)
+  nguoi_tra_loi: Tech Lead
+  nguon: SKM_CORRECTION_PERMISSION_MATRIX_SPEC.md §4.3 · SKM_DB.md §4.2 permission_matrix (LAB-4)
+  spec_refs:
+    sc:
+    - SC-053
+    api:
+    - API-203
+    tech: []
+    bang:
+    - permission_matrix
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:two-tier
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG06-05
+  mo_ta: Quyền lập và duyệt của luồng sửa sau xác nhận dùng chung bảng permission_matrix hay tách bảng riêng? Bảng hiện giữ quyền theo loại người tham gia, chỉ có bốn thao tác 相対 (giao dịch thỏa thuận), せり (đấu giá), đấu thầu, báo bán lại do API-203 ghi, còn luồng sửa cần quyền theo vai nội bộ. Việc này đụng cả FG-01 lẫn FG-06, nên Tech Lead chốt cùng người làm API-203/BE trước khi SC-053/DB viết migration.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

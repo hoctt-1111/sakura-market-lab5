@@ -12,6 +12,12 @@ DUONG_DAN = (r"`[^`]*/[^`]*`", r"\b[\w.-]+\.(?:md|ya?ml|py|sql|json|txt|csv)\b")
 NHAN_RB = "constraint:"
 XU_LY_RE = re.compile(r"^(premise|gia_dinh|issue):(\S+)$")
 XU_LY_CHU = {"premise": "đã sửa thiết kế (PREMISE {})", "gia_dinh": "giả định (PREMISE {})", "issue": "issue {}"}
+# Mục «Nguồn» của điều tra: trường `nguon` tách theo « · », mỗi chỗ một dòng; khoá registry viết lại thành câu, tên tệp bỏ đuôi.
+# Bảng mặc định theo bố cục registry của dự án mẫu; dự án khác đặt `than.nguon_doi: [[mẫu regex, chữ thay], …]`.
+NGUON_DOI_MAC_DINH = (
+    (r"system-design\.yaml › cau_hoi_mo\[([^\]]+)\]", r"câu hỏi mở \1 của thiết kế hệ thống (LAB-4)"),
+    (r"detail-flows\.yaml › details\[([^\]]+)\]\.cau_hoi_mo\[(\d+)\]", r"câu hỏi mở số \2 của luồng \1 (LAB-4)"),
+    (r"\bHANDOFF\.md\b", "ghi chú bàn giao"), (r"\brfp\b", "RFP"), (r"\b([\w-]+)\.(?:md|ya?ml)\b", r"\1"))
 
 
 def loai_mau(it: dict) -> str:
@@ -77,7 +83,9 @@ def cho_ho(it: dict, ctx) -> list[str]:
     for m in it.get("gap_refs") or []:
         if m not in ctx.gaps:
             raise LoiBoSinh(f"{it['key']}: gap_refs {m} không có trong gaps")
-        ra.append(f"{m} — {cau_dau(ctx.gaps[m]['mo_ta'])} (xử lý: {xu_ly_than(ctx.gaps[m]['xu_ly'], ctx)})")
+        xl = ctx.gaps[m]["xu_ly"]  # chỗ hở xử lý ngay ở chính issue này thì nói thẳng, không tự trỏ về mình
+        tu = (m2 := XU_LY_RE.match(str(xl).strip())) and m2[1] == "issue" and m2[2] == it["key"]
+        ra.append(f"{m} — {cau_dau(ctx.gaps[m]['mo_ta'])} (xử lý: {'ngay trong story này' if tu else xu_ly_than(xl, ctx)})")
     return ra
 
 
@@ -87,3 +95,10 @@ def xu_ly_than(s, ctx) -> str:
         return "để mở"
     m = XU_LY_RE.match(str(s).strip())
     return XU_LY_CHU[m[1]].format(ctx.so_issue(m[2]) if m[1] == "issue" else m[2]) if m else lam_sach(s)
+
+
+def nguon_inv(s, ctx) -> list[str]:
+    """`nguon` của điều tra → gạch đầu dòng (tách theo « · »), sau khi đổi chữ theo `than.nguon_doi` hoặc bảng mặc định."""
+    for mau, thay in ctx.than_cfg.get("nguon_doi") or NGUON_DOI_MAC_DINH:
+        s = re.sub(mau, thay, str(s or ""))
+    return [f"- {x.strip()}" for x in s.split(" · ") if x.strip()]

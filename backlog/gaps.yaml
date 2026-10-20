@@ -1,35 +1,38 @@
-# Chỗ hở hoặc mâu thuẫn của spec LAB-4 (repo nộp main 3ab06e6) — bản gộp P4 của ba nguồn: P2 (phần đầu file), P1 tự động
+# Chỗ hở hoặc mâu thuẫn của spec LAB-4 (phát hiện trên bản nộp 12/10/2026) — bản gộp P4 của ba nguồn: P2 (phần đầu file), P1 tự động
 # (gaps/p1-tu-dong.yaml) và 19 agent P3 (gaps/<epic>.yaml). File nguồn giữ nguyên; mã có ở đây thắng bản nguồn (gap_gop.py).
-# Đường dẫn trong `spec` tính từ gốc repo LAB-4 đã nộp; file nằm sâu trong specs/ và references/ ghi bằng tên file (tên là duy nhất
-# trong cây). xu_ly ∈ {"premise:P-xx", "gia_dinh:P-xx", "issue:<key>", "de-mo"}; dòng trùng nội dung ghi `trung: <mã giữ lại>`
+# Mốc con trỏ: repo hoctt-1111/sakura-market-lab4-spec, nhánh main, commit df4a6b0 (gói 0.4.1), nộp ngày 17/10/2026.
+# Con trỏ `file:dòng` trong `spec` ghi đường dẫn đầy đủ tính từ gốc repo đó (không có thư mục = file ở gốc), trừ `data-model.md`
+# (tên duy nhất; bộ sinh md cắt đoạn `docs/` của references/docs/…); kiểm bằng lab-05/tools/kiem-con-tro-lab4.py. Con trỏ không
+# kèm câu trích; số dòng đã dời theo nội dung dòng cũ. Spec ghi bằng mục (§, mục N) giữ tên file trần.
+# xu_ly ∈ {"premise:P-xx", "gia_dinh:P-xx", "issue:<key>", "de-mo"}; dòng trùng nội dung ghi `trung: <mã giữ lại>`
 # và mang cùng xu_ly với dòng đó. Mã G không đánh lại; `phat_hien` giữ nơi phát hiện.
 # `ai_quyet` (tuỳ chọn, dòng `de-mo`): ai đóng dòng để mở khi khác mặc định «người giữ bộ spec LAB-4» (cột «Ai quyết»
 # của task-breakdown.md §4).
-# Nguồn P2: (a) 9 mục Low của reviewer P4 LAB-4 (reviewer-261012-p4-noi-dung.md, L1–L7 lượt 1 và 2 mục lượt 2)
-#        (b) HANDOFF.md dòng 29–39 · (c) lệch 55/53 màn chưa có API (trùng L2, gộp vào G-01)
+# Nguồn P2: (a) 9 mục Low của bản soát nội dung LAB-4 ở P4 (L1–L7 lượt 1 và 2 mục lượt 2)
+#        (b) ghi chú bàn giao nội bộ của LAB-4 · (c) lệch 55/53 màn chưa có API (trùng L2, gộp vào G-01)
 #        (d) câu hỏi mở trong spec LAB-4 phát hiện khi dò nguồn cho PREMISE (G-15…G-20)
 g:
-  # ----- P2: reviewer LAB-4, HANDOFF, câu hỏi mở trong spec (G-01…G-20) -----
+  # ----- P2: bản soát LAB-4, ghi chú bàn giao, câu hỏi mở trong spec (G-01…G-20) -----
   - ma: G-01
-    spec: '`README.md:172` (sai khác #7) · `PREMISE.md:80` · `README.md:203`'
-    mo_ta: LAB-4 ghi «55 màn còn lại chưa có API», nhưng trường screen_id của 23 spec API chỉ gắn 19 trong 72 màn, nên số màn chưa có API là 53; con số 55 là 74 spec (72 màn cộng 2 khuôn báo cáo) trừ 19. Reviewer LAB-4 nêu đúng lệch này ở mục L2.
+    spec: '`README.md:176` (sai khác #7) · `PREMISE.md:132` · `README.md:207`'
+    mo_ta: "Bản nộp 12/10 ghi «55 màn còn lại chưa có API» trong khi screen_id của 23 spec API gắn 19 màn, nên số đúng lúc đó là 53 (bản soát của LAB-4 nêu ở mục L2). Bản 0.4.1 bỏ SC-081, SC-082 khỏi screen_id của API tính thưởng, screen_id còn gắn 17 màn, nên con số 55 màn và 2 khuôn nay khớp (`README.md:211`)."
     xu_ly: premise:P-01
-    ly_do: P-01 dùng số đếm lại (53 màn và 2 khuôn) để giao sub-issue BE, nên backlog không thừa hay thiếu issue nào vì con số 55.
+    ly_do: "P-01 dùng số của 0.4.1 (55 màn và 2 khuôn) để giao sub-issue BE, nên backlog không thừa hay thiếu issue nào; SC-041 có thêm việc API đọc riêng (G-FG05-06)."
     phat_hien: p2
   - ma: G-02
-    spec: '`README.md:88` (bảng loại tài liệu, hàng api)'
+    spec: '`README.md:91` (bảng loại tài liệu, hàng api)'
     mo_ta: Hàng api ghi «mỗi API (route đã build) một file» trong khi cột số file là 23, gồm cả 3 API thiết kế đích chưa build (reviewer LAB-4, L1).
     xu_ly: premise:P-04
     ly_do: P-04 coi cả 23 API là việc mới trên kho mã hệ đích, nên nhãn đã build hay chưa build của README LAB-4 không còn quyết định issue nào được tạo.
     phat_hien: p2
   - ma: G-03
-    spec: '`SKM_DB.md:524` (cùng kiểu ở dòng 680, 709, 781, 940, 969, 999)'
+    spec: '`specs/system-design/database-design/SKM_DB.md:528` (cùng kiểu ở dòng 684, 713, 803, 970, 999, 1044)'
     mo_ta: Bảy ô khoá ngoại ghi «kiểu UUID theo data-model.md §0.6» và không mang ghi chú «chốt ở LAB-5» như các ô suy khác (reviewer LAB-4, L3).
     xu_ly: de-mo
     ly_do: Bảy ô đã có kiểu UUID với căn cứ ở §0.6, chỉ thiếu ghi chú chờ chốt, nên sub-issue DB dùng thẳng kiểu đó; người giữ bộ spec LAB-4 thêm ghi chú cho đồng bộ ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
     phat_hien: p2
   - ma: G-04
-    spec: '`data-model.md:185` (bảng B của §0.7)'
+    spec: '`data-model.md:189` (bảng B của §0.7)'
     mo_ta: Một số ô ở bảng B suy kiểu theo cột có tên gần giống của bảng đã build, ví dụ dinh_dang theo payments.method, nên «đối chiếu đã build» thực chất là đối chiếu theo tên (reviewer LAB-4, L4).
     xu_ly: premise:P-06
     ly_do: P-06 bắt sub-issue DB chốt lại mọi ô còn ghi «chốt ở LAB-5», kể cả các ô suy theo tên này, trước khi viết migration.
@@ -41,7 +44,7 @@ g:
     ly_do: Reviewer LAB-4 đã kết luận đây không phải lỗi vì chuẩn chỉ đặt mục lục ở bốn nơi và mục lục của api-design đã liệt kê đủ ba API, nên backlog không có việc nào; dòng này chỉ đóng khi chuẩn đổi và người giữ bộ spec LAB-4 thêm hàng cho từng API.
     phat_hien: p2
   - ma: G-06
-    spec: '`SKM_TRADE_CANCEL_CREATE_API.md:63` (và dòng 64, 82)'
+    spec: '`specs/system-design/api-design/negotiated-trade/SKM_TRADE_CANCEL_CREATE_API.md:66` (và dòng 67, 85)'
     mo_ta: API huỷ dùng tạm mã ALREADY_CLOSED có câu báo nói «kỳ» cho ngày đã khoá và chưa có mã cho giao dịch đã huỷ trước đó (reviewer LAB-4, L6; câu hỏi mở Q4 của API).
     xu_ly: premise:P-24
     ly_do: P-24 chốt thêm hai mã riêng, nên sub-issue BE và TEST của SC-034 viết ca kiểm theo mã mới thay cho mã dùng tạm.
@@ -53,89 +56,89 @@ g:
     ly_do: Lỗi chỉ nằm ở ảnh chú thích, không đổi nội dung item, nên SC-034/FE làm theo bảng item; người giữ bộ spec LAB-4 vẽ lại ảnh ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
     phat_hien: p2
   - ma: G-08
-    spec: '`SKM_TRADE_CANCEL_SPEC.md:84` (đến dòng 88)'
+    spec: '`specs/negotiated-trade/screen-specification/SKM_TRADE_CANCEL_SPEC.md:87` (đến dòng 91)'
     mo_ta: Cột Data Source của SC-034 ghi «DB (server)» trong khi ghi chú cùng dòng nói màn đọc giao dịch qua API 222 (reviewer LAB-4, lượt 2, mục a).
     xu_ly: premise:P-07
     ly_do: P-07 ghi FE của SC-034 lấy dữ liệu qua API 222, nên người làm không đọc thẳng bảng theo chữ của cột Data Source.
     phat_hien: p2
   - ma: G-09
-    spec: '`SKM_TRADE_REJECT_REASON_SPEC.md:101` (đến dòng 106)'
+    spec: '`specs/negotiated-trade/screen-specification/SKM_TRADE_REJECT_REASON_SPEC.md:112` (đến dòng 117)'
     mo_ta: Mục xử lý lỗi của SC-033 còn nhãn «Đang gọi» API tạo giao dịch trong khi màn không gọi API nào, lỗi chỉ được nhận từ SC-030 (reviewer LAB-4, lượt 2, mục b).
     xu_ly: premise:P-07
     ly_do: P-07 ghi FE của SC-033 chỉ hiện lỗi SC-030 đã nhận, nên sub-issue FE không có lời gọi API thừa.
     phat_hien: p2
   - ma: G-10
-    spec: '`AI-report.md:346` (ca kiểm KC-01)'
-    mo_ta: Ca kiểm KC-01 của LAB-4 đối chiếu spec màn với bản HTML sinh từ cùng một registry, nên đây là kiểm chứng vòng tròn; reviewer LAB-4 xếp mục M6 (HANDOFF.md dòng 39).
+    spec: '`AI-report.md:388` (ca kiểm KC-01)'
+    mo_ta: "Ca kiểm KC-01 của LAB-4 đối chiếu spec màn với bản HTML sinh từ cùng một registry, nên đây là kiểm chứng vòng tròn; bản soát của LAB-4 xếp mục M6."
     xu_ly: de-mo
     ly_do: Mục M6 nói về cách LAB-4 tự kiểm bộ tài liệu, không phải chỗ hở của thiết kế hệ đích, nên backlog không có issue nào; ca KC-01 chỉ được sửa nếu LAB-4 nộp lại, còn LAB-5 tránh lặp lỗi bằng cách lấy tập đích của cổng độ phủ từ cây LAB-4 đã nộp.
     ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p2
   - ma: G-11
-    spec: '`AI-report.md:441` (bài học KN-24)'
-    mo_ta: Con trỏ từ AI-report và PREMISE của LAB-4 sang file ngoài cây nộp dùng số dòng, chưa có neo ổn định, nên sửa file được dẫn là con trỏ trôi (HANDOFF.md dòng 33, 39).
+    spec: '`AI-report.md:506` (bài học KN-24)'
+    mo_ta: "Con trỏ từ AI-report và PREMISE của LAB-4 sang file ngoài cây nộp dùng số dòng, chưa có neo ổn định, nên sửa file được dẫn là con trỏ trôi."
     xu_ly: de-mo
     ly_do: Đây là việc của bộ công cụ LAB-4, không thuộc backlog hệ đích và chỉ sửa nếu LAB-4 nộp lại; PREMISE LAB-5 tránh lặp lỗi bằng cách luôn kèm câu trích bên cạnh số dòng.
     ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p2
   - ma: G-12
-    spec: '`SKM_DB.md:23` · `SKM_DB.md:415`'
-    mo_ta: 31 ô kiểu của bảng C còn để «—» và LAB-4 ghi kiểu chính thức chốt khi viết migration ở LAB-5 (HANDOFF.md dòng 29, 39).
+    spec: '`specs/system-design/database-design/SKM_DB.md:23` · `specs/system-design/database-design/SKM_DB.md:418`'
+    mo_ta: "31 ô kiểu của bảng C còn để «—» và LAB-4 ghi kiểu chính thức chốt khi viết migration ở LAB-5; bản 0.4.1 vẫn giữ 31 ô này."
     xu_ly: premise:P-06
     ly_do: P-06 giao việc chốt kiểu cho sub-issue DB của issue làm chủ bảng, nên không ô nào vào migration khi chưa có kiểu được duyệt.
     phat_hien: p2
   - ma: G-13
-    spec: '`SKM_TRADE_CANCEL_CREATE_API.md:79` (đến dòng 81)'
-    mo_ta: Spec API huỷ để mở trạng thái lô sau khi huỷ, việc huỷ một phần và việc huỷ giao dịch せり; HANDOFF LAB-4 ghi trạng thái lô sau huỷ là đầu vào còn treo cho LAB-5 (HANDOFF.md dòng 39).
+    spec: '`specs/system-design/api-design/negotiated-trade/SKM_TRADE_CANCEL_CREATE_API.md:82` (đến dòng 84)'
+    mo_ta: "Spec API huỷ để mở ba câu cho LAB-5: trạng thái lô sau khi huỷ, việc huỷ một phần và việc huỷ giao dịch せり (đấu giá), hạn «trước LAB-5»."
     xu_ly: gia_dinh:P-21
     ly_do: P-21 đặt giá trị mặc định cho cả ba câu và mở issue điều tra INV-LOT-HUY, nên SC-034 viết được tiêu chí nghiệm thu ngay.
     phat_hien: p2
   - ma: G-14
-    spec: '`README.md:194` (sai khác #29) · `common-spec.md:25`'
-    mo_ta: HANDOFF ghi «validation 22 màn còn lại»; đếm lại có 20 spec màn mang dòng «Chưa thiết kế chi tiết» và 2 khuôn báo cáo cũng mang dòng đó, cộng là 22 spec chứ không phải 22 màn (HANDOFF.md dòng 39).
+    spec: '`README.md:198` (sai khác #29) · `specs/_common/common-spec.md:25`'
+    mo_ta: "Ghi chú bàn giao nội bộ của LAB-4 nói «22 màn còn lại» cần kiểm tra đầu vào chi tiết, trong khi bản nộp 12/10 có 20 spec màn và 2 khuôn mang dòng «Chưa thiết kế chi tiết», tức 22 spec chứ không phải 22 màn. Bản 0.4.1 nâng SC-013, SC-060, SC-063, SC-071 lên màn lõi (`README.md:198`), nay còn 16 spec màn và 2 khuôn mang dòng đó."
     xu_ly: premise:P-03
-    ly_do: P-03 liệt kê đúng 20 màn và 2 khuôn cần validation chi tiết, nên sub-issue TEST không bỏ sót hai khuôn báo cáo.
+    ly_do: "P-03 liệt kê đúng 16 màn và 2 khuôn của 0.4.1, nên sub-issue TEST không bỏ sót hai khuôn báo cáo và không viết lại phần kiểm tra đầu vào của bốn màn đã lên lõi."
     phat_hien: p2
   - ma: G-15
-    spec: '`SKM_ARRIVAL_CREATE_API.md:76` · `SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md:76`'
+    spec: '`specs/system-design/api-design/lot-intake/SKM_ARRIVAL_CREATE_API.md:81` · `specs/system-design/api-design/participant-qualification/SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md:86`'
     mo_ta: Hai API để mở mã trả về khi bản ghi không tồn tại (400 hay 404 ở API 205, 500 hay 404 ở API 204); cả hai câu giao Tech Lead, hạn 08/10/2026, đã quá hạn.
     xu_ly: premise:P-24
     ly_do: P-24 chốt 404 cho cả hai, nên sub-issue TEST của SC-020, SC-010, SC-013, SC-014 kiểm theo một mã thống nhất.
     phat_hien: p2
   - ma: G-16
-    spec: '`SKM_TRADE_DETAIL_READ_API.md:75`'
+    spec: '`specs/system-design/api-design/negotiated-trade/SKM_TRADE_DETAIL_READ_API.md:78`'
     mo_ta: Ghi chú UX của SC-032 đòi hiện trạng thái nhánh 更正 (sửa sau xác nhận) và bản quy tắc đã áp, nhưng API 222 chưa trả hai dữ liệu này; câu hỏi mở đề xuất bổ sung ở LAB-5.
     xu_ly: premise:P-25
     ly_do: P-25 chốt bổ sung hai trường và xếp SC-032/BE sau API của FG-06 và FG-10, nên thứ tự sprint không làm SC-032 thiếu dữ liệu.
     phat_hien: p2
   - ma: G-17
-    spec: '`SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:157` · `SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:254` · `SKM_INCENTIVE_EVALUATE_API.md:73`'
+    spec: '`specs/full-payment-incentive/technical-design/SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:168` · `specs/full-payment-incentive/technical-design/SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:271` · `specs/system-design/api-design/full-payment-incentive/SKM_INCENTIVE_EVALUATE_API.md:79`'
     mo_ta: Luồng tính thưởng chưa quy định khi lưu kết quả chờ thất bại thì trả lỗi hay bỏ qua; cùng một câu hỏi lặp ở thiết kế chi tiết và spec API 215, hạn 08/10/2026 đã qua.
     xu_ly: gia_dinh:P-22
     ly_do: P-22 chọn trả lỗi làm mặc định và giữ issue điều tra INV-TECH-304 để Tech Lead xác nhận, vì luồng này trả tiền thật.
     phat_hien: p2
   - ma: G-18
-    spec: '`SKM_DB.md:1763` (đến dòng 1770, câu hỏi mở Q1–Q8)'
+    spec: '`specs/system-design/database-design/SKM_DB.md:1858` (đến dòng 1865, câu hỏi mở Q1–Q8)'
     mo_ta: Tám cột kết thúc bằng _id (ví dụ sessions.user_id, attachments.target_id) chưa rõ trỏ tới bảng nào hoặc chưa khai khoá ngoại; câu hỏi giao Tech Lead với hạn «trước LAB-5».
     xu_ly: premise:P-06
     ly_do: P-06 gộp tám câu này vào việc chốt kiểu của sub-issue DB, nên migration không chạy khi quan hệ còn bỏ ngỏ.
     phat_hien: p2
   - ma: G-19
-    spec: '`SKM_TRADE_LIST_READ_API.md:75`'
+    spec: '`specs/system-design/api-design/negotiated-trade/SKM_TRADE_LIST_READ_API.md:79`'
     mo_ta: API 221 chưa có cỡ trang, thứ tự sắp xếp và khoảng ngày mặc định khi bỏ trống ngày; RFP không nêu, câu hỏi giao Tech Lead.
     xu_ly: issue:SC-031/BE
     ly_do: SC-031/BE chốt cỡ trang, thứ tự sắp xếp và khoảng ngày mặc định theo quy ước chung của dự án khi viết spec API, Tech Lead duyệt; ba giá trị không đổi nghiệp vụ nên không giữ chỗ ước lượng riêng.
     phat_hien: p2
   - ma: G-20
-    spec: '`SKM_AITAI_TRADE_CREATE_API.md:37` (cùng kiểu ở 17 file API)'
-    mo_ta: HANDOFF ghi «dòng Xác thực 20 API sang vai đích»; đếm lại chỉ 17 file ghi vai prototype, 3 trong 20 API đã build là công khai (đăng nhập, đăng xuất, kiểm tình trạng) nên không có vai để đổi (HANDOFF.md dòng 39).
+    spec: '`specs/system-design/api-design/negotiated-trade/SKM_AITAI_TRADE_CREATE_API.md:40` (cùng kiểu ở 17 file API)'
+    mo_ta: "Ghi chú bàn giao nội bộ của LAB-4 nói đổi dòng Xác thực của «20 API» sang vai đích, trong khi chỉ 17 file ghi vai prototype; 3 trong 20 API đã build là công khai (đăng nhập, đăng xuất, kiểm tình trạng). Bản 0.4.1 đã ghi dòng vai đích cho cả 20 API (`PREMISE.md:47`)."
     xu_ly: premise:P-05
-    ly_do: P-05 dùng số 17 và liệt kê đúng sub-issue BE của 17 API, nên không có việc đổi vai thừa cho 3 API công khai.
+    ly_do: "P-05 nay đã vào LAB-4 0.4.1: sub-issue BE của 17 API kiểm quyền theo vai đích LAB-4 đã ghi, còn 3 API công khai không có việc đổi vai."
     phat_hien: p2
   # ----- P1: bộ sinh seed tự phát hiện (gaps/p1-tu-dong.yaml) -----
   - ma: G-A-SC-033-thuc-the-rong
     spec: SC-033
-    mo_ta: Màn SC-033 không khai thực thể chính (`thuc_the_chinh` rỗng); bộ sinh backlog vẫn tạo sub-issue BE khi màn có item đọc bảng hoặc gắn API.
+    mo_ta: Màn SC-033 không khai thực thể chính (`thuc_the_chinh` rỗng); backlog vẫn có sub-issue BE khi màn có item đọc bảng hoặc gắn API.
     xu_ly: issue:SC-033/BE
     ly_do: SC-033 không đọc bảng nào nên SC-033/BE không làm API mới, chỉ bảo đảm phản hồi từ chối của API-208 đủ mã và câu báo để màn hiện lý do; thực thể chính để trống là đúng.
     phat_hien: p1
@@ -155,29 +158,29 @@ g:
     phat_hien: p1
   - ma: G-A-DB-d2-chi-27-bang
     spec: system-design.yaml › trien_khai.d D2
-    mo_ta: D2 chỉ ghi migration 27 bảng thiết kế; hệ đích là repo mới nên bộ sinh backlog tạo sub-issue DB cho cả 45 bảng (bảng đã build ở prototype cũng phải tạo lại).
+    mo_ta: D2 chỉ ghi migration 27 bảng thiết kế; hệ đích là repo mới nên backlog có sub-issue DB cho cả 45 bảng (bảng đã build ở prototype cũng phải tạo lại).
     xu_ly: premise:P-04
     ly_do: 'P-04 sửa thứ tự D1–D3: kho mã hệ đích viết migration cho cả 45 bảng, nên backlog có sub-issue DB cho cả 18 bảng prototype đã có.'
     phat_hien: p1
   - ma: G-A-ADR-yaml-hong
     spec: adr.yaml
-    mo_ta: 'adr.yaml không nạp được bằng YAML (dòng 24: could not find expected '':''); bộ sinh backlog đọc trạng thái ADR từ các file adr-0*.md.'
+    mo_ta: 'adr.yaml không nạp được bằng YAML (dòng 24: could not find expected '':''); backlog lấy trạng thái ADR từ các file adr-0*.md.'
     xu_ly: de-mo
-    ly_do: Lỗi nằm ở registry làm việc của LAB-4, ngoài cây đã nộp, và không đổi việc nào của backlog vì bộ sinh đọc trạng thái ADR từ các file ADR đã nộp; người giữ bộ công cụ LAB-4 sửa nếu LAB-4 nộp lại, nên dòng này để mở tới lúc đó.
+    ly_do: Lỗi nằm ở registry làm việc của LAB-4, ngoài cây đã nộp, và không đổi việc nào của backlog vì backlog lấy trạng thái ADR từ các file ADR đã nộp; người giữ bộ công cụ LAB-4 sửa nếu LAB-4 nộp lại, nên dòng này để mở tới lúc đó.
     ai_quyet: người giữ bộ công cụ LAB-4
     phat_hien: p1
   # ----- P3 FG-01 (gaps/FG-01.yaml) -----
   - ma: G-FG01-01
     spec: SKM_LOGIN_SPEC.md (A-1, A-3, mục 4.3) · SKM_AUTH_SIGN_IN_API.md (mục 3) · ADR-011 §4
-    mo_ta: SC-001 đòi tên đăng nhập và mã MFA với mọi người, còn API-201 chỉ nhận email và mật khẩu, không có bước nhận mã MFA. MFA lại chỉ áp cho vai quản trị và vai duyệt (ADR-011, NFR-SEC-01), nên ô mã không nên hiện với người hiện trường.
+    mo_ta: "Bản nộp 12/10: SC-001 đòi mã MFA với mọi người còn API-201 không có bước nhận mã. Bản 0.4.1 chỉ mở ô mã MFA cho một vai (`specs/account-access/screen-specification/SKM_LOGIN_SPEC.md:128`) và ghi hệ đích uỷ đăng nhập cho Cognito, MFA bắt buộc với tài khoản quản trị và vai duyệt (`specs/system-design/api-design/account-access/SKM_AUTH_SIGN_IN_API.md:44`), nhưng bảng tham số của API-201 vẫn chỉ có email và mật khẩu."
     xu_ly: issue:SC-001/BE
-    ly_do: Làm đúng spec hiện tại thì tài khoản quản trị vào được mà không qua MFA, còn người hiện trường lại bị hỏi mã, nên SC-001/BE thêm bước xác minh mã vào spec API-201 và chốt định danh đăng nhập là email trước khi SC-001/FE dựng màn.
+    ly_do: "Màn và API nay cùng hướng, chỉ còn bước nhận mã chưa vào spec API; SC-001/BE thêm bước xác minh mã qua Cognito vào spec API-201 và giữ email làm định danh đăng nhập trước khi SC-001/FE dựng màn."
     phat_hien: FG-01
   - ma: G-FG01-02
     spec: SKM_AUTH_SIGN_IN_API.md (mục 4) · SKM_AUTH_SIGN_OUT_API.md (mục 2, 4) · SKM_DB.md §4.38 audit_log
-    mo_ta: API-201 và API-202 ghi nhật ký vào bảng audit_logs, còn SKM_DB và System Design §7 đặt tên bảng là audit_log.
+    mo_ta: "Bản nộp 12/10: API-201 và API-202 ghi nhật ký vào bảng audit_logs, còn SKM_DB và System Design §7 đặt tên audit_log. Bản 0.4.1 đã đổi hai spec API sang audit_log (`specs/system-design/api-design/account-access/SKM_AUTH_SIGN_IN_API.md:63`); tên audit_logs chỉ còn ở file mẫu của chuẩn."
     xu_ly: issue:SC-001/BE
-    ly_do: Giữ hai tên thì lệnh ghi của hai API không khớp migration của DATA-FG13/DB, nên SC-001/BE và API-202/BE ghi theo tên audit_log của SKM_DB.
+    ly_do: "Tên đã khớp ở 0.4.1; SC-001/BE và API-202/BE ghi theo audit_log của SKM_DB, ca kiểm của leaf TEST đọc đúng bảng đó."
     phat_hien: FG-01
   - ma: G-FG01-03
     spec: SKM_ACCOUNT_LIST_SPEC.md (mục 3, 4.1) · SKM_PERMISSION_HISTORY_SPEC.md (mục 4.1) · SKM_DB.md §4.38 audit_log (Overview)
@@ -242,21 +245,21 @@ g:
   # ----- P3 FG-02 (gaps/FG-02.yaml) -----
   - ma: G-FG02-01
     spec: SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md (mục 2, 3) · SKM_PARTICIPANT_EDIT_SPEC.md (mục 5, B-1) · SKM_PARTICIPANT_DETAIL_SPEC.md (mục 4.3) · SKM_QUALIFICATION_CHANGE_SPEC.md (mục 4.3)
-    mo_ta: Chưa có đường ghi nào thêm dòng vào qualification_history. Đổi tư cách qua SC-011 hay qua API-204 chỉ ghi audit_log, trong khi SC-012 và SC-013 đọc lịch sử từ qualification_history.
+    mo_ta: "Bản nộp 12/10 chưa có đường ghi nào thêm dòng vào qualification_history: đổi tư cách qua SC-011 hay API-204 chỉ ghi audit_log. Bản 0.4.1 cho SC-013 gọi API-204 và máy chủ ghi qualification_history cùng audit_log (`specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:104`)."
     xu_ly: issue:SC-013/BE
-    ly_do: Làm đúng spec thì màn lịch sử tư cách luôn rỗng, nên SC-013/BE làm một dịch vụ đổi tư cách ghi cả qualification_history lẫn audit_log trong một giao dịch, và SC-011/BE gọi lại dịch vụ đó.
+    ly_do: "SC-013/BE làm dịch vụ đổi tư cách ghi cả qualification_history lẫn audit_log trong một giao dịch như spec 0.4.1; SC-011/BE gọi lại đúng dịch vụ đó để hai đường không lệch."
     phat_hien: FG-02
   - ma: G-FG02-02
     spec: SKM_QUALIFICATION_CHANGE_SPEC.md (A-10) · SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md (qualificationReason) · SKM_PARTICIPANT_EDIT_SPEC.md (A-10)
-    mo_ta: Lý do đổi tư cách bắt buộc ở SC-011 theo RFP B.7, nhưng lại tuỳ chọn ở ô lý do của SC-013 và ở tham số lý do của API-204.
+    mo_ta: "Bản nộp 12/10: lý do đổi tư cách bắt buộc ở SC-011 nhưng tuỳ chọn ở SC-013 và API-204. Bản 0.4.1 bắt lý do 5–500 ký tự với mọi phép chuyển ở SC-013 (`specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:94`)."
     xu_ly: issue:SC-013/BE
-    ly_do: Cùng một thay đổi mà hai đường có luật khác nhau thì người dùng sẽ sang SC-013 để khỏi ghi lý do, nên SC-013/BE và SC-013/FE bắt buộc lý do như SC-011.
+    ly_do: "SC-013/BE kiểm lý do ở máy chủ theo ngưỡng của 0.4.1 và dùng cùng luật cho SC-011, để không đường nào bỏ qua được lý do."
     phat_hien: FG-02
   - ma: G-FG02-03
     spec: SKM_QUALIFICATION_CHANGE_SPEC.md (A-6, A-9, mục 4.2, 5, 6.1) · SKM_DB.md §4.6 qualification_history
-    mo_ta: SC-013 không tách người ghi khỏi người quyết. Mục 6.1 cho sửa ô trạng thái trước và ô người quyết dù mục 4.2 ghi người quyết là «tự điền», nút Lưu ghi «bản nháp» trên một bảng chỉ thêm dòng, và qualification_history chỉ có một cột decided_by.
+    mo_ta: "Bản nộp 12/10: SC-013 cho sửa ô trạng thái trước và ô người quyết, nút Lưu ghi bản nháp trên bảng chỉ thêm dòng. Bản 0.4.1 để máy chủ gán decided_by từ phiên, API không nhận tham số này (`specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:109`)."
     xu_ly: issue:SC-013/DB
-    ly_do: Để người nhập tự gõ cả giá trị trước lẫn người quyết thì dòng lịch sử không chứng minh được ai đã ghi, nên SC-013/DB thêm cột người ghi lấy từ phiên, SC-013/FE khoá ô trạng thái trước và ghi thật khi bấm Lưu.
+    ly_do: "Người ghi và người quyết nay cùng là người bấm lưu; SC-013/DB giữ một cột decided_by lấy từ phiên như 0.4.1, SC-013/FE khoá ô trạng thái trước và ghi thật khi bấm Lưu."
     phat_hien: FG-02
   - ma: G-FG02-04
     spec: SKM_PARTICIPANT_EDIT_SPEC.md (mục 6.3) · SKM_DB.md §4.5 participants (Cột thiết kế đích) · rfp p.70 (B.2)
@@ -272,9 +275,9 @@ g:
     phat_hien: FG-02
   - ma: G-FG02-06
     spec: rfp p.37 (FIG-010) · SKM_PARTICIPANT_EDIT_SPEC.md (A-8) · SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md (qualification)
-    mo_ta: 'Bộ trạng thái tư cách lệch RFP: RFP có bốn trạng thái, spec LAB-4 chỉ có ba. RFP vẽ thêm 再審査 (xét lại), còn SC-011, SC-013 và API-204 không có; không spec nào ghi bước chuyển nào được phép, kể cả 失効 có mở lại được không và quá hạn có tự chuyển sang 失効 không.'
+    mo_ta: "Bản nộp 12/10: RFP vẽ bốn trạng thái tư cách (thêm 再審査 (xét lại)) còn spec LAB-4 chỉ có ba, không spec nào ghi bước chuyển nào được phép. Bản 0.4.1 thêm 再審査 và bảng chuyển trạng thái theo cách đọc FIG-010 của nhà thầu, không có lịch chạy tự đổi trạng thái (`specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:174`)."
     xu_ly: premise:P-29
-    ly_do: P-29 thêm 再審査 vào danh sách trạng thái và để bảng chuyển ở cấu hình, khởi tạo theo ba thao tác của LAB-4; INV-FG02-TRANG-THAI hỏi khách bảng chuyển trước sprint của SC-013/BE.
+    ly_do: "P-29 nay đã vào LAB-4 0.4.1; SC-013/BE làm bảng chuyển theo spec 0.4.1, còn bước vào, ra 再審査 và việc 失効 (mất hiệu lực) có mở lại được không do khách xác nhận ở INV-FG02-TRANG-THAI."
     phat_hien: FG-02
   - ma: G-FG02-07
     spec: SKM_EXPIRY_WARNING_LIST_SPEC.md (mục 4.1, 4.3) · SKM_PARTICIPANT_LIST_SPEC.md (mục 4.1)
@@ -284,12 +287,12 @@ g:
     phat_hien: FG-02
   - ma: G-FG02-08
     spec: SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md (mục 2, 3) · SKM_QUALIFICATION_CHANGE_SPEC.md (A-1 đến A-4, mục 6.1)
-    mo_ta: API-204 chỉ nhận một tham số hạn gộp của prototype và không nhận số giấy, trong khi SC-013 cho sửa số và hạn của cả hai bộ giấy.
+    mo_ta: "Bản nộp 12/10: API-204 chỉ nhận một tham số hạn gộp của prototype và không nhận số giấy. Bản 0.4.1 nhận basisNo, basisExpiresOn và ghi vào đúng cột theo loại người tham gia (`specs/system-design/api-design/participant-qualification/SKM_PARTICIPANT_QUALIFICATION_UPDATE_API.md:57`)."
     xu_ly: issue:SC-013/BE
-    ly_do: Giữ tham số gộp thì máy chủ phải tự đoán cột theo loại và số giấy mới không ghi được, nên SC-013/BE đổi tham số theo bốn cột đích và từ chối bộ giấy không thuộc loại của người tham gia.
+    ly_do: "SC-013/BE làm theo tham số của 0.4.1 và từ chối bộ giấy không thuộc loại của người tham gia bằng 422, như spec API đã ghi."
     phat_hien: FG-02
   - ma: G-FG02-09
-    spec: '`SKM_QUALIFICATION_CHANGE_SPEC.md:11` (frontmatter related) · `SKM_QUALIFICATION_CHANGE_SPEC.md:45`'
+    spec: '`specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:11` (frontmatter related) · `specs/participant-qualification/screen-specification/SKM_QUALIFICATION_CHANGE_SPEC.md:48`'
     mo_ta: FR chi phối của SC-013 là FR-PARTY-03 (cảnh báo tư cách sắp hết hạn), trong khi màn làm việc đổi trạng thái tư cách, gần FR-PARTY-01 và mục B.7 của RFP hơn; mã này đi thẳng vào spec_refs và khối dữ liệu của SC-013.
     xu_ly: de-mo
     ly_do: Backlog giữ mã FR của LAB-4 để truy vết, còn ca kiểm thử của SC-013/TEST đã viết theo việc đổi trạng thái thật, nên backlog không thiếu ca nào; người giữ bộ spec LAB-4 sửa bảng ánh xạ FR của màn ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
@@ -340,8 +343,8 @@ g:
   - ma: G-FG03-08
     spec: SKM_LOT_SPLIT_CREATE_API.md (freshnessGrade) · SKM_DB.md §4.11 lot_evaluations
     mo_ta: Kết quả 目利き được ghi ở hai nơi. Hạng độ tươi nhập lúc tách lô qua API-206 nằm ở lots.freshness_grade, kết quả của SC-023 nằm ở lot_evaluations; spec không nói nơi nào là bản chính.
-    xu_ly: issue:SC-023/BE
-    ly_do: SC-023/BE chốt cùng Tech Lead bản chính của hạng độ tươi trước khi làm API, đề xuất lot_evaluations là bản chính và lots.freshness_grade chỉ là giá trị lúc tách lô, để danh sách, chi tiết lô và giao dịch đọc cùng một hạng.
+    xu_ly: "issue:INV-FG03-HANG-TUOI"
+    ly_do: "Spec API-206 và SKM_DB giữ hạng độ tươi ở hai chỗ, nên Tech Lead chọn bản chính ở INV-FG03-HANG-TUOI trước khi SC-023/BE làm API; đề xuất lot_evaluations là bản chính, lots.freshness_grade chỉ là giá trị lúc tách lô, để danh sách, chi tiết lô và giao dịch đọc cùng một hạng."
     phat_hien: FG-03
   - ma: G-FG03-09
     spec: SKM_LOT_ADJUST_SPEC.md (B-1, mục 5) · data-model.md (lot_adjustments)
@@ -358,8 +361,8 @@ g:
   - ma: G-FG03-11
     spec: SKM_DB.md §4.7 arrivals (recorded_by)
     mo_ta: Cột arrivals.recorded_by trỏ bảng auth.users của Supabase. Hệ đích không có bảng này nên khoá ngoại phải nối sang bảng tài khoản của hệ đích.
-    xu_ly: issue:DATA-FG03/DB
-    ly_do: Chép nguyên ghi chú thì migration của hệ đích trỏ khoá ngoại tới một bảng không tồn tại, nên DATA-FG03/DB nối cột này với bảng profiles.
+    xu_ly: "premise:P-04"
+    ly_do: "Ghi chú tham chiếu auth.users là dấu của migration Supabase; P-04 cho kho mã hệ đích viết migration cho cả 45 bảng, nên DATA-FG03/DB nối cột này với profiles như mọi cột người ghi khác."
     phat_hien: FG-03
   # ----- P3 FG-04 (gaps/FG-04.yaml) -----
   - ma: G-FG04-01
@@ -394,9 +397,9 @@ g:
     phat_hien: FG-04
   - ma: G-FG04-06
     spec: SKM_DIRECT_SALE_CREATE_API.md (response 12) · SKM_DB.md §4.5 participants
-    mo_ta: API-209 kiểm hạn tư cách của 買出人 nhưng không có cột hạn để kiểm. Bảng participants chỉ có hạn giấy của 仲卸 (許可) và 売買参加者 (承認).
-    xu_ly: issue:API-209/BE
-    ly_do: Không có cột hạn thì ca từ chối này không kiểm được như mô tả, nên API-209/BE chỉ kiểm trạng thái tư cách của 買出人 và ghi rõ giới hạn đó vào spec API.
+    mo_ta: "Bản nộp 12/10: API-209 kiểm hạn tư cách của 買出人 (người mua lẻ) nhưng bảng participants chỉ có hạn giấy của 仲卸 (許可) và 売買参加者 (承認). Bản 0.4.1 dùng participants.qualified_until làm hạn tham gia của 卸売業者 và 買出人 (giả định GD-19), và hỏi khách ở Q-22 việc 買出人 có được mua qua 相対 không (`PREMISE.md:42`)."
+    xu_ly: "issue:INV-Q-22"
+    ly_do: "Quyền mua 相対 và cách quản lý hạn tham gia của 買出人 do khách quyết; INV-Q-22 hỏi trước TECH-301/BE, trong lúc chờ API-209/BE kiểm theo qualified_until như giả định P-43."
     phat_hien: FG-04
   - ma: G-FG04-07
     spec: SKM_DB.md §4.13 transactions (reservation_id) · P-20 · P-04
@@ -407,15 +410,15 @@ g:
   # ----- P3 FG-05 (gaps/FG-05.yaml) -----
   - ma: G-FG05-01
     spec: SKM_SERI_RESULT_ENTRY_SPEC.md §6.3 · SKM_DB.md §4.17 auction_results
-    mo_ta: Bảng auction_results thiếu cột số lượng và thời điểm mà FR-SERI-02 đòi lưu. Prototype lấy số lượng bằng cả lô khi sinh giao dịch, spec màn tự ghi đây là khoảng trống cho LAB-5.
+    mo_ta: "Bảng auction_results thiếu cột số lượng và thời điểm mà FR-SERI-02 đòi lưu. Bản 0.4.1 thêm created_at do máy chủ gán (`specs/system-design/database-design/SKM_DB.md:910`), còn số lượng vẫn chưa có cột; prototype lấy số lượng bằng cả lô khi sinh giao dịch."
     xu_ly: issue:SC-040/DB
-    ly_do: Thiếu thời điểm thì không chứng minh được kết quả nhập lúc nào, thiếu số lượng thì giao dịch せり không đối được với phần đã giao; SC-040/DB thêm hai cột, SC-040/BE ghi số lượng theo cả lô tới khi có ô nhập.
+    ly_do: "Thiếu số lượng thì giao dịch せり không đối được với phần đã giao; SC-040/DB thêm cột số lượng và dùng created_at của 0.4.1 cho thời điểm, SC-040/BE ghi số lượng theo cả lô tới khi có ô nhập."
     phat_hien: FG-05
   - ma: G-FG05-02
     spec: SKM_SERI_UNSOLD_TO_AITAI_TECH.md §4.3 · data-model.md FG-05 (auction_results append-only)
-    mo_ta: TECH-302 ghi đè dòng auction_results theo lần thử hiện tại khi chuyển 相対, trong khi data-model xếp bảng này loại chỉ thêm.
+    mo_ta: "Bản nộp 12/10: TECH-302 ghi đè dòng auction_results của lần thử hiện tại khi chuyển 相対, trong khi data-model xếp bảng này loại chỉ thêm. Bản 0.4.1 đổi sang thêm dòng mới cho lần thử thứ hai (`specs/auction-result/technical-design/SKM_SERI_UNSOLD_TO_AITAI_TECH.md:70`)."
     xu_ly: issue:TECH-302/BE
-    ly_do: Ghi đè thì mất dòng của lần thử trước, đúng lỗi ADR-003 nêu ở prototype; TECH-302/BE thêm dòng mới cho mỗi lần nhập và sửa lại bước 4.3 của spec.
+    ly_do: "TECH-302/BE thêm một dòng cho mỗi lần nhập như 0.4.1, ca kiểm của TECH-302/TEST đếm đủ hai dòng sau lần thử thứ hai."
     phat_hien: FG-05
   - ma: G-FG05-03
     spec: SKM_SERI_RESULT_LIST_SPEC.md §3, §4.1, §4.3
@@ -425,15 +428,15 @@ g:
     phat_hien: FG-05
   - ma: G-FG05-04
     spec: SKM_SERI_RESULT_LIST_SPEC.md §4.3 · SKM_SERI_RESULT_ENTRY_SPEC.md §4.2 (A-1)
-    mo_ta: SC-040 chỉ chọn được phiên lập sẵn ở SC-041, nhưng SC-041 không có nút nào gọi API-211. Spec ghi trang prototype có gọi API này và hẹn bổ sung item ở LAB-5.
+    mo_ta: "Bản nộp 12/10: SC-040 chỉ chọn được phiên lập sẵn ở SC-041, nhưng SC-041 không có nút nào gọi API-211. Bản 0.4.1 thêm khối 開催登録 (đăng ký phiên) có ô ngày mở hai phiên (`specs/auction-result/screen-specification/SKM_SERI_RESULT_LIST_SPEC.md:68`)."
     xu_ly: issue:SC-041/FE
-    ly_do: Không có nút tạo phiên thì không ai lập được phiên và SC-040 không chạy được; SC-041/FE thêm nút tạo phiên không có ô giờ, chỉ hiện với せり進行役.
+    ly_do: "SC-041/FE dựng khối 開催登録 theo spec 0.4.1, chỉ hiện với せり進行役 (người điều hành phiên); SC-041/BE dùng API-211 hiện có."
     phat_hien: FG-05
   - ma: G-FG05-05
     spec: SKM_DB.md §4.16 auction_sessions · SKM_SERI_SESSION_CREATE_API.md (response 6)
     mo_ta: auction_sessions không có ràng buộc duy nhất theo ngày dù API-211 trả 409 khi ngày đã đăng ký. Chỉ kiểm ở mã ứng dụng thì hai lời gọi cùng lúc vẫn tạo trùng phiên.
-    xu_ly: issue:DATA-FG05/DB
-    ly_do: Phiên trùng làm SC-040 có hai lựa chọn cho cùng một ca; DATA-FG05/DB thêm ràng buộc duy nhất theo ngày và ca để cơ sở dữ liệu tự chặn.
+    xu_ly: issue:SC-041/DB
+    ly_do: "Phiên trùng làm SC-040 có hai lựa chọn cho cùng một ca; SC-041/DB thêm ràng buộc duy nhất theo ngày và ca để cơ sở dữ liệu tự chặn. Bản 0.4.1 cho khối 開催登録 của SC-041 ghi auction_sessions (`specs/auction-result/screen-specification/SKM_SERI_RESULT_LIST_SPEC.md:99`), nên SC-041/DB làm chủ migration của bảng này thay cho DATA-FG05/DB."
     phat_hien: FG-05
   - ma: G-FG05-06
     spec: SKM_SERI_RESULT_LIST_SPEC.md §4.3 · SKM_SERI_SESSION_CREATE_API.md (screen_id) · P-01
@@ -469,14 +472,14 @@ g:
   - ma: G-FG06-04
     spec: ADR-003 §2 (năm cột dùng chung, khung nhìn chuẩn) · SKM_DB.md §4.19 adjustment_entries · data-model.md §0.1
     mo_ta: Hai thiết kế khác nhau cho dòng đảo. ADR-003 đặt dòng đảo ngay trong bảng tiền với năm cột dùng chung (loại dòng, dòng bị thay, dòng bị đảo, người và thời điểm ghi sổ), còn data-model đặt ở bảng riêng adjustment_entries chỉ có yêu cầu, loại, số tiền, kỳ áp dụng.
-    xu_ly: issue:PLT-03/BE
-    ly_do: Câu dòng đảo nằm ở đâu áp cho mọi bảng chỉ-thêm, nên PLT-03/BE chốt cùng Tech Lead nơi giữ dòng đảo và khung nhìn chuẩn mà báo cáo phải đọc, rồi SC-052/DB tạo bảng theo kết quả đó.
+    xu_ly: "issue:INV-FG06-DONG-DAO"
+    ly_do: "ADR-003 và data-model đặt dòng đảo ở hai chỗ khác nhau và lựa chọn áp cho mọi bảng chỉ thêm, nên Tech Lead chốt ở INV-FG06-DONG-DAO nơi giữ dòng đảo và khung nhìn chuẩn mà báo cáo phải đọc, trước khi PLT-03/BE dựng khung và SC-052/DB tạo bảng."
     phat_hien: FG-06
   - ma: G-FG06-05
     spec: SKM_CORRECTION_PERMISSION_MATRIX_SPEC.md §4.3 · SKM_DB.md §4.2 permission_matrix · SKM_PERMISSION_UPDATE_API.md §3
     mo_ta: SC-053 trỏ bảng permission_matrix, bảng đang giữ quyền theo loại người tham gia. Vai là enum của prototype và thao tác chỉ có 4 mã của 相対, せり, đấu thầu, báo bán lại do API-203 ghi; luồng sửa cần quyền lập, duyệt theo vai nội bộ mà bảng chưa có.
-    xu_ly: issue:SC-053/DB
-    ly_do: Dùng chung bảng mà không mở rộng kiểu vai và mã thao tác thì không khai được quyền của luồng sửa; SC-053/DB chốt cùng Tech Lead và người làm API-203/BE trước khi viết migration.
+    xu_ly: "issue:INV-FG06-MA-TRAN-QUYEN"
+    ly_do: "Bảng hiện giữ quyền theo loại người tham gia còn luồng sửa cần quyền theo vai nội bộ; dùng chung hay tách bảng đụng cả FG-01 lẫn FG-06, nên Tech Lead chốt ở INV-FG06-MA-TRAN-QUYEN cùng người làm API-203/BE trước khi SC-053/DB viết migration."
     phat_hien: FG-06
   - ma: G-FG06-06
     spec: SKM_CORRECTION_PERMISSION_MATRIX_SPEC.md §4.1, §5
@@ -487,37 +490,37 @@ g:
   # ----- P3 FG-07 (gaps/FG-07.yaml) -----
   - ma: G-FG07-01
     spec: SKM_DELIVERY_ENTRY_SPEC.md (A-2, A-3, A-4, A-5) · SKM_DB.md §4.20 deliveries
-    mo_ta: SC-060 cho gõ tay lần thứ và người thực hiện. Bốn ô A-2 đến A-5 đều khai kiểu chuỗi, trong khi cột lan_thu là số nguyên, so_luong là số hai chữ số lẻ, boi là mã người dùng; bảng cũng không có ràng buộc chống trùng lần thứ trong một giao dịch.
+    mo_ta: "Bản nộp 12/10: SC-060 cho gõ tay lần thứ và người thực hiện, bảng deliveries không chống trùng lần thứ. Bản 0.4.1 để máy chủ gán 回次 (lần thứ) và người thực hiện, thêm khoá duy nhất theo giao dịch và lần thứ (`specs/system-design/database-design/SKM_DB.md:1017`)."
     xu_ly: issue:SC-060/BE
-    ly_do: Gõ tay người thực hiện thì bản ghi giao hàng không chứng minh được ai giao, gõ tay lần thứ thì hai thiết bị có thể ghi trùng một lần; nên SC-060/BE gán cả hai ở máy chủ, SC-060/DB đặt khoá duy nhất theo cặp giao dịch, lần thứ, rồi ghi lại vào spec màn.
+    ly_do: "SC-060/BE gán hai giá trị ở máy chủ và chặn bấm đúp bằng mã yêu cầu như 0.4.1; SC-060/DB tạo hai khoá duy nhất của bảng deliveries."
     phat_hien: FG-07
   - ma: G-FG07-02
     spec: ADR-003 §2 · data-model.md (vùng D-DELIVERY, cột Lưu trữ) · SKM_DB.md §4.20 deliveries, §4.21 delivery_exceptions
     mo_ta: Bảng deliveries và delivery_exceptions thiếu các cột ghi sổ của ADR-003. Hai bảng được khai chỉ thêm dòng, nhưng định nghĩa cột không có loại dòng, dòng bị thay, giờ ghi sổ và người ghi sổ, nên chưa có cách sửa một lần giao ghi nhầm trước khi khoá ngày.
     xu_ly: issue:SC-060/DB
-    ly_do: Thiếu các cột ghi sổ thì sửa một lần giao ghi nhầm chỉ còn cách UPDATE, trái ADR-003; SC-060/DB và SC-063/DB thêm cột theo cách PLT-03/BE chốt cho mọi bảng chỉ-thêm (G-FG06-04) rồi ghi lại vào SKM_DB. Việc này khác P-06 (kiểu cột) nên không gộp.
+    ly_do: Thiếu các cột ghi sổ thì sửa một lần giao ghi nhầm chỉ còn cách UPDATE, trái ADR-003; SC-060/DB thêm cột cho cả hai bảng theo cách PLT-03/BE chốt cho mọi bảng chỉ-thêm (G-FG06-04) rồi ghi lại vào SKM_DB. Việc này khác P-06 (kiểu cột) nên không gộp.
     phat_hien: FG-07
   - ma: G-FG07-03
     spec: SKM_DELIVERY_LIST_SPEC.md (mục 3, 4.1) · FR-DEL-01 · SKM_DB.md §4.20 deliveries
-    mo_ta: SC-061 lọc theo trạng thái nhưng không có trạng thái để lọc. FR-DEL-01 đòi ít nhất bốn trạng thái chờ, đang giao, xong, ngoại lệ; màn chỉ có bộ lọc ngày và năm cột của lần giao, còn bảng deliveries không có cột trạng thái.
+    mo_ta: "Bản nộp 12/10: SC-061 lọc theo trạng thái nhưng bảng deliveries không có cột trạng thái. Bản 0.4.1 thêm transactions.delivery_status với bốn trạng thái 待機中, 一部引渡, 例外あり, 完了 do máy chủ tính từ luỹ kế và ngoại lệ (`specs/delivery/screen-specification/SKM_DELIVERY_LIST_SPEC.md:109`)."
     xu_ly: issue:SC-061/BE
-    ly_do: Bảng chỉ thêm dòng nên không lưu được trạng thái đổi theo thời gian; SC-061/BE tính trạng thái theo giao dịch từ luỹ kế, dung sai P-13 và ngoại lệ chưa xác nhận, SC-061/FE thêm bộ lọc và cột trạng thái, rồi ghi lại vào spec màn. Cách đọc còn lại (trạng thái theo từng lần giao) cần thêm bước lên lịch giao mà spec không có.
+    ly_do: "SC-061/BE đọc trạng thái theo giao dịch như 0.4.1, SC-061/FE thêm bộ lọc và cột trạng thái; cách tính dùng chung với SC-062 và SC-064."
     phat_hien: FG-07
   - ma: G-FG07-04
     spec: SKM_DELIVERY_DETAIL_SPEC.md (mục 4.1) · FR-DEL-04 · FR-DEL-05 · SKM_SYSTEM_DESIGN.md A8
-    mo_ta: SC-062 không có luỹ kế và số còn lại. Màn chỉ có năm nhãn của một lần giao và nút Quay lại, trong khi FR-DEL-05 đòi hai số này cho từng giao dịch và FR-DEL-04 đòi lần ra mọi lần giao liên quan; A8 lại gọi deliveries.so_luong là luỹ kế, còn SC-060 ghi vào đó số của từng lần. Chưa màn nào có đường mở SC-062.
+    mo_ta: "Bản nộp 12/10: SC-062 không có luỹ kế và số còn lại, còn A8 gọi deliveries.so_luong là luỹ kế. Bản 0.4.1 sửa A8: máy chủ cộng so_luong của từng lần để so với số lượng giao dịch (`architecture/SKM_SYSTEM_DESIGN.md:254`), và SC-062 thành màn luỹ kế và số còn lại (`specs/delivery/screen-specification/SKM_DELIVERY_DETAIL_SPEC.md:54`)."
     xu_ly: issue:SC-062/BE
-    ly_do: Coi so_luong là luỹ kế thì mỗi lần giao phải đọc rồi ghi lại số cũ, dễ lệch khi hai thiết bị cùng ghi; SC-062/BE giữ so_luong là số của từng lần, tính luỹ kế và số còn lại lúc đọc, SC-061 và SC-064 mở SC-062 từ dòng, rồi sửa câu chữ của A8.
+    ly_do: "SC-062/BE giữ so_luong là số của từng lần, tính luỹ kế và số còn lại lúc đọc như 0.4.1; SC-061 và SC-064 mở SC-062 từ dòng."
     phat_hien: FG-07
   - ma: G-FG07-05
     spec: SKM_DELIVERY_EXCEPTION_SPEC.md (mục 3, 4.1, 5) · FR-DEL-03 · SKM_DB.md §4.21 delivery_exceptions
-    mo_ta: SC-063 thiếu bước người xác nhận ngoại lệ. FR-DEL-03 đòi danh mục lý do và người xác nhận ngoại lệ, mô tả màn cũng nhắc người xác nhận, nhưng màn chỉ có ô gõ tự do cho loại và lý do, nút Lưu chỉ ghi bản nháp, còn bảng không có cột người xác nhận hay thời điểm xác nhận.
+    mo_ta: "Bản nộp 12/10: SC-063 thiếu bước người xác nhận ngoại lệ, bảng không có cột người hay giờ xác nhận. Bản 0.4.1 thêm người xác nhận do máy chủ gán và bước 照合事務 đóng ngoại lệ ghi closed_by, closed_at (`specs/delivery/screen-specification/SKM_DELIVERY_EXCEPTION_SPEC.md:109`)."
     xu_ly: issue:SC-063/BE
-    ly_do: Không có người xác nhận thì ngoại lệ thiếu, vượt hay trả lại do một người ghi là xong, trái nguyên tắc máy ghi nhận, người xác nhận; SC-063/BE thêm API xác nhận lấy người và giờ từ máy chủ, SC-063/DB thêm cột, SC-063/FE đổi ô tự do thành danh sách chọn.
+    ly_do: "SC-063/BE làm lệnh ghi và lệnh đóng ngoại lệ lấy người, giờ từ máy chủ như 0.4.1; SC-063/FE chọn lý do từ danh mục, còn danh mục và vai xác nhận theo P-33."
     phat_hien: FG-07
   - ma: G-FG07-06
     spec: FR-DEL-03 · SKM_DELIVERY_EXCEPTION_SPEC.md (A-2, A-3)
-    mo_ta: Danh mục lý do và người được xác nhận ngoại lệ chưa có nguồn. Spec không liệt kê lý do nào, không nói vai nào được xác nhận, cũng không nói người ghi có được tự xác nhận ngoại lệ của mình hay không.
+    mo_ta: "Danh mục lý do và người được xác nhận ngoại lệ chưa có nguồn. Bản 0.4.1 thêm ô chọn lý do theo danh mục của từng loại ngoại lệ và giao 照合事務 (nhóm đối soát) đóng ngoại lệ (`specs/delivery/screen-specification/SKM_DELIVERY_EXCEPTION_SPEC.md:92`), nhưng RFP không liệt kê mục nào của danh mục, cũng không nói người ghi có được tự xác nhận ngoại lệ của mình không."
     xu_ly: gia_dinh:P-33
     ly_do: P-33 để danh mục lý do ở cấu hình và tách người xác nhận khỏi người ghi; INV-FG07-XAC-NHAN hỏi khách trước sprint của SC-063/BE.
     phat_hien: FG-07
@@ -530,27 +533,27 @@ g:
   # ----- P3 FG-08 (gaps/FG-08.yaml) -----
   - ma: G-FG08-01
     spec: SKM_BUSINESS_DAY_LOCK_SPEC.md (B-1 ở mục 4.3, mục 5) · SKM_BILLING_CLOSE_API.md (mục 2, 3)
-    mo_ta: Nút Lưu của SC-071 gọi API-213, là lệnh chốt hoá đơn theo tháng. Màn khoá theo 業務日 và ghi business_day_locks, còn API-213 nhận tham số tháng, sinh hoá đơn và khoá lô; sự kiện của nút lại ghi là lưu bản nháp còn sửa được, trái nghĩa với khoá.
+    mo_ta: "Bản nộp 12/10: nút Lưu của SC-071 gọi API-213, là lệnh chốt hoá đơn theo tháng. Bản 0.4.1 cho SC-071 gọi SKM_BILLING_CLOSE với tham số businessDay để ghi business_day_locks (`specs/daily-reconciliation/screen-specification/SKM_BUSINESS_DAY_LOCK_SPEC.md:90`), còn chốt kỳ tháng đi chế độ period của cùng API, nên một API mang hai việc."
     xu_ly: issue:API-213
-    ly_do: Làm đúng chữ của spec thì mỗi lần khoá một ngày sẽ chốt cả tháng hoá đơn; lệnh chốt hoá đơn tháng tách thành story API-213 gọi riêng, SC-071/BE làm lệnh khoá ngày mới ghi business_day_locks, rồi sửa mục 4.3 và mục 5 của spec SC-071.
+    ly_do: "Backlog vẫn tách hai việc: story API-213 giữ chốt kỳ, SC-071/BE làm lệnh khoá ngày ghi business_day_locks, mỗi việc có ca kiểm riêng, nên khoá một ngày không bao giờ chốt cả kỳ."
     phat_hien: FG-08
   - ma: G-FG08-02
     spec: SKM_BUSINESS_DAY_LOCK_SPEC.md (A-2, A-3) · SKM_TRADE_CANCEL_CREATE_API.md (response 1)
-    mo_ta: SC-071 cho nhập tay thời điểm khoá và người khoá. Hai ô A-2, A-3 là ô nhập bắt buộc, trong khi spec API huỷ giao dịch đã quyết người và giờ của loại bản ghi này do máy chủ gán.
+    mo_ta: "Bản nộp 12/10: SC-071 cho nhập tay thời điểm khoá và người khoá. Bản 0.4.1 đổi hai ô thành nhãn do máy chủ gán (`specs/daily-reconciliation/screen-specification/SKM_BUSINESS_DAY_LOCK_SPEC.md:92`)."
     xu_ly: issue:SC-071/BE
-    ly_do: Khoá ngày tạo nghĩa vụ pháp lý; cho gõ tay người và giờ thì bản ghi khoá không chứng minh được ai khoá lúc nào, nên SC-071/BE lấy hai giá trị từ phiên và giờ máy chủ, SC-071/FE chỉ hiển thị.
+    ly_do: "SC-071/BE lấy người từ phiên và giờ từ máy chủ như 0.4.1, SC-071/FE chỉ hiển thị; ca kiểm của SC-071/TEST gửi kèm hai giá trị giả và kiểm máy chủ bỏ qua."
     phat_hien: FG-08
   - ma: G-FG08-03
     spec: SKM_SYSTEM_DESIGN.md (EV3, A7) · SKM_BUSINESS_DAY_LOCK_SPEC.md (mục 3, 6.1)
-    mo_ta: Chưa rõ ai khoá 業務日. EV3 tả tác vụ nền đối soát rồi khoá ngày, SC-071 lại cho 照合事務 và 照合部門長 bấm khoá; A7 nói mở lại ngày đã khoá thì ghi bản khoá mới trong khi màn không có đường mở lại, và spec chưa nói chốt hoá đơn tháng có phải chờ mọi ngày trong tháng khoá xong không.
+    mo_ta: "Bản nộp 12/10: EV3 tả tác vụ nền đối soát rồi khoá ngày, SC-071 lại cho người bấm khoá. Bản 0.4.1 đổi EV3 thành lịch chạy dựng 日次照合表 (bảng đối soát ngày), không khoá; khoá là thao tác của 照合事務 ở SC-071 (`architecture/SKM_SYSTEM_DESIGN.md:144`). Còn để ngỏ: A7 nói mở lại ngày đã khoá thì ghi bản khoá mới mà màn không có đường mở lại, và chốt kỳ tháng có phải chờ mọi ngày trong tháng khoá xong không."
     xu_ly: gia_dinh:P-34
-    ly_do: P-34 giữ khoá là bước người bấm ở SC-071, EV3 chỉ lập bảng và mở tranh chấp, chưa có đường mở lại; INV-FG08-KHOA-NGAY hỏi Tech Lead trước checkpoint 19/10.
+    ly_do: "P-34 giữ khoá là bước người bấm ở SC-071, khớp 0.4.1; chưa làm đường mở lại, INV-FG08-KHOA-NGAY hỏi Tech Lead việc mở lại và thứ tự với chốt kỳ tháng."
     phat_hien: FG-08
   - ma: G-FG08-04
     spec: SKM_DAILY_RECONCILIATION_SPEC.md (mục 3) · FR-SETTLE-01 · SKM_DB.md §4.22 daily_reconciliations · SKM_SYSTEM_DESIGN.md EV3
     mo_ta: Bảng đối soát ngày chưa có luật đếm và luật lệch. FR-SETTLE-01 đòi phản ánh mọi giao dịch đủ điều kiện của 業務日 nhưng không nói giao dịch đã huỷ hay 直販 có được tính không; EV3 mở tranh chấp khi ba nguồn lệch mà không nói lệch nghĩa là gì; bảng chỉ thêm dòng trong khi EV3 chạy lại được cùng ngày, chưa nói dòng nào là bản dùng.
-    xu_ly: issue:SC-070/BE
-    ly_do: Không có luật thì hai lần chạy cho hai con số khác nhau và không ai giải thích được tranh chấp; SC-070/BE loại giao dịch có dòng huỷ, coi dòng có giờ lập mới nhất là bản dùng, viết luật lệch theo A8 và P-13 rồi ghi vào spec cho Tech Lead duyệt.
+    xu_ly: "issue:INV-FG08-LUAT-DOI-SOAT"
+    ly_do: "Giao dịch nào được đếm (đã huỷ, 直販 (bán trực tiếp)) và thế nào là lệch là luật nghiệp vụ của chợ, nên INV-FG08-LUAT-DOI-SOAT hỏi khách; trong lúc chờ, SC-070/BE loại giao dịch có dòng huỷ, coi dòng có giờ lập mới nhất là bản dùng và viết luật lệch theo A8, P-13."
     phat_hien: FG-08
   - ma: G-FG08-05
     spec: SKM_DB.md §4.24 disputes, ERD 3 · FR-SETTLE-03 · SKM_DISPUTE_LIST_SPEC.md (mục 3)
@@ -566,9 +569,9 @@ g:
     phat_hien: FG-08
   - ma: G-FG08-07
     spec: SKM_PAYMENT_CREATE_API.md (screen_id, mục 2, response 7) · data-model.md (invoices, payments) · ADR-003
-    mo_ta: API-214 không gắn màn nào và sửa trạng thái hoá đơn tại chỗ. Spec để trống màn gọi, không nói vai nào ghi tiền về, và cập nhật invoices.status sau mỗi lần ghi, trong khi bảng invoices được khai chỉ thêm dòng.
-    xu_ly: issue:API-214/BE
-    ly_do: Không có màn gọi thì tiền về không vào được hệ thống và 完納奨励金 của FG-09 thiếu đầu vào; API-214/BE chốt màn gọi và vai cùng PM, tính trạng thái hoá đơn từ tổng payments lúc đọc theo ADR-003 thay vì UPDATE.
+    mo_ta: "API-214 không gắn màn nào và sửa trạng thái hoá đơn tại chỗ. Spec để trống màn gọi, không nói vai nào ghi tiền về, và cập nhật invoices.status sau mỗi lần ghi, trong khi bảng invoices được khai chỉ thêm dòng; bản 0.4.1 vẫn để đường nhập 入金 (tiền về) chờ Q-23 (`data-model.md:326`)."
+    xu_ly: "issue:INV-Q-23"
+    ly_do: "Ai ghi tiền về và qua đường nào do khách trả lời ở Q-23 (mức chặn), INV-Q-23 theo dõi câu này; phần chỉ thêm dòng không phải chờ: API-214/BE tính trạng thái hoá đơn từ tổng payments lúc đọc theo ADR-003 thay vì UPDATE."
     phat_hien: FG-08
   - ma: G-FG08-08
     spec: FR-CORR-03 · SKM_BUSINESS_DAY_LOCK_SPEC.md (mục 3) · SKM_TRADE_CANCEL_CREATE_API.md (response 7)
@@ -579,27 +582,27 @@ g:
   - ma: G-FG08-09
     spec: SKM_DB.md §4.23 business_day_locks · SKM_TRADE_CANCEL_CREATE_API.md (response 7) · SKM_SYSTEM_DESIGN.md A7
     mo_ta: business_day_locks không chặn hai dòng khoá cho một ngày và không phân biệt khoá với mở lại. API-223 coi ngày có dòng trong bảng là đã khoá, còn A7 nói mở lại thì ghi bản khoá mới; bảng chỉ có ngày, giờ, người và lý do, không có khoá duy nhất theo ngày.
-    xu_ly: issue:SC-071/DB
-    ly_do: Nếu mở lại cũng là một dòng thì «có dòng» không còn nghĩa là đã khoá và API-223 chặn sai; SC-071/DB đặt khoá duy nhất theo business_day, không làm đường mở lại cho tới khi INV-FG08-KHOA-NGAY có đáp.
+    xu_ly: "issue:INV-FG08-KHOA-NGAY"
+    ly_do: "Mở lại ngày đã khoá là quyết định còn chờ INV-FG08-KHOA-NGAY; tới khi có đáp, SC-071/DB đặt khoá duy nhất theo business_day và không làm đường mở lại, nên «có dòng» vẫn nghĩa là đã khoá với API-223."
     phat_hien: FG-08
   # ----- P3 FG-09 (gaps/FG-09.yaml) -----
   - ma: G-FG09-01
     spec: SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md §4.2, §4.5 · data-model.md FG-09 (cột Lưu trữ) · ADR-003 Hợp đồng 1
-    mo_ta: Bảng incentives xếp loại chỉ thêm nhưng luồng 確定 lại sửa tại chỗ. Data-model và ADR-003 cấm sửa, xoá bảng tiền của module incentive, còn TECH-304 ghi đè dòng gợi ý theo hoá đơn và cập nhật hai cột người, thời điểm xác nhận trên chính dòng đó.
-    xu_ly: issue:SC-080/DB
-    ly_do: Thu hồi quyền sửa như mẫu định nghĩa xong của leaf DB thì bước 確定 không ghi được; để sửa tự do thì dòng đã 確定 có thể bị đè. SC-080/DB chốt cùng Tech Lead một cách ghi (ghi đè dòng gợi ý chưa 確定, ghi một lần cột xác nhận, chặn mọi sửa sau đó) rồi ghi lại vào SKM_DB.
+    mo_ta: "Bảng incentives xếp loại chỉ thêm nhưng luồng 判定 (xét) và 確定 (xác nhận) vẫn sửa tại chỗ. Ở bản 0.4.1, data-model vẫn xếp incentives là append-only (`data-model.md:328`), còn TECH-304 cho 判定 ghi đè dòng chưa 確定 và cho 確定, 却下 (bác) cập nhật dòng đó (`specs/full-payment-incentive/technical-design/SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:163`)."
+    xu_ly: "issue:INV-FG09-GHI-DE"
+    ly_do: "Hai tài liệu LAB-4 nói ngược nhau về một bảng tiền, nên Tech Lead chốt ở INV-FG09-GHI-DE: đổi loại lưu trữ của incentives, hay giữ chỉ thêm và ghi kết quả 確定 thành dòng mới; SC-080/DB viết migration theo kết quả, đề xuất ghi đè dòng chưa 確定, ghi một lần cột xác nhận rồi chặn mọi sửa."
     phat_hien: FG-09
   - ma: G-FG09-02
     spec: SKM_INCENTIVE_EVALUATE_API.md (closingId) · SKM_DB.md §4.25 monthly_closings, §4.26 invoices · SKM_BILLING_CLOSE_API.md §2
-    mo_ta: Kỳ tính thưởng của hệ đích chưa được thiết kế. API-215 nhận mã của bảng chốt tháng monthly_closings và invoices trỏ khoá ngoại tới bảng đó, trong khi SKM_DB và API-213 ghi chốt tháng là lệch có chủ ý của prototype, hệ đích khoá 業務日 theo ngày.
-    xu_ly: issue:SC-080/BE
-    ly_do: SC-080/BE nhận mã kỳ do lệnh chốt hoá đơn tháng của story API-213 sinh ra, không tự đặt đơn vị kỳ; DATA-FG09/DB và bộ lọc của SC-082 dùng cùng mã kỳ đó.
+    mo_ta: "Kỳ tính thưởng của hệ đích chưa được thiết kế ở bản nộp 12/10. Bản 0.4.1 đặt 対象期 (kỳ tính) là tháng lịch theo 業務日 JST (giả định GD-20), hoá đơn sinh lúc 期間締め (chốt kỳ) tháng ở monthly_closings.period, và hỏi khách ở Q-23, mức chặn (`PREMISE.md:41`)."
+    xu_ly: "issue:INV-Q-23"
+    ly_do: "Ranh giới kỳ quyết cách gom hoá đơn của cả nhóm thưởng nên INV-Q-23 cần đáp trước TECH-304/BE; SC-080/BE nhận mã kỳ do lệnh chốt kỳ của story API-213 sinh ra, DATA-FG09/DB và bộ lọc của SC-082 dùng cùng mã đó."
     phat_hien: FG-09
   - ma: G-FG09-03
     spec: SKM_INCENTIVE_DETAIL_SPEC.md §4.3 (A-2) · SKM_DB.md §4.28 incentives (eligible, eligible_amount)
-    mo_ta: Ô «Số tiền đủ điều kiện» của SC-081 trỏ cột cờ incentives.eligible. Cột đó là cờ đúng sai của 判定, số tiền nằm ở eligible_amount như SKM_DB và SC-080 đã ghi.
+    mo_ta: "Bản nộp 12/10: ô «Số tiền đủ điều kiện» của SC-081 trỏ cột cờ incentives.eligible thay cho eligible_amount. Bản 0.4.1 trỏ đúng eligible_amount (`specs/full-payment-incentive/screen-specification/SKM_INCENTIVE_DETAIL_SPEC.md:96`)."
     xu_ly: issue:SC-081/BE
-    ly_do: Làm theo đúng chữ thì màn chi tiết hiện đúng sai thay cho số tiền, người kiểm toán không đối được công thức; SC-081/BE trả cả số tiền và cờ, SC-081/FE hiện hai ô riêng.
+    ly_do: "SC-081/BE trả cả số tiền và cờ 判定, SC-081/FE hiện hai ô riêng như 0.4.1; API đọc của SC-081 là API mới viết theo P-01."
     phat_hien: FG-09
   - ma: G-FG09-04
     spec: SKM_INCENTIVE_DETAIL_SPEC.md §4.3 · SKM_INCENTIVE_NEXT_DIFF_SPEC.md §4.3 · SKM_INCENTIVE_RUN_SPEC.md §5 · SKM_INCENTIVE_EVALUATE_API.md (screen_id)
@@ -621,9 +624,9 @@ g:
     phat_hien: FG-09
   - ma: G-FG09-07
     spec: ADR-004 §2 · SKM_DB.md §4.28 (rate, rule_effective_from) · SKM_DB.md §4.30 business_rules (khoá key, effective_from)
-    mo_ta: incentives lưu suất và ngày hiệu lực thay cho mã bản quy tắc mà ADR-004 đòi mọi bảng tiền phải lưu. Với khoá (key, effective_from) hiện tại thì ngày hiệu lực vẫn trỏ đúng một bản, nhưng FG-10 có thể đổi khoá theo ADR-004.
+    mo_ta: "Bản nộp 12/10: incentives lưu suất và ngày hiệu lực thay cho mã bản quy tắc mà ADR-004 đòi mọi bảng tiền phải lưu. Bản 0.4.1 thêm rule_version_id trỏ rule_versions, khoá ngoại RESTRICT (`specs/system-design/database-design/SKM_DB.md:1290`)."
     xu_ly: issue:SC-080/DB
-    ly_do: SC-080/DB đi sau SC-091/DB và dùng đúng khoá bản quy tắc mà SC-091/DB chốt, để mỗi dòng thưởng truy được bản đã áp kể cả khi bản đó bị lùi về sau.
+    ly_do: "SC-080/DB đi sau SC-091/DB và dùng khoá ngoại của 0.4.1, để mỗi dòng thưởng truy được bản đã áp kể cả khi bản đó bị lùi về sau."
     phat_hien: FG-09
   - ma: G-FG09-08
     spec: SKM_DB.md §4.27 payments (Overview) · SKM_PAYMENT_CREATE_API.md §2 · P-10
@@ -640,28 +643,28 @@ g:
   - ma: G-FG09-10
     spec: data-model.md FG-09 (invoices append-only) · SKM_DB.md §4.26 invoices (status) · SKM_PAYMENT_CREATE_API.md §2
     mo_ta: invoices xếp loại chỉ thêm nhưng API-214 cập nhật trạng thái hoá đơn sau mỗi lần thanh toán. Cột status có ba giá trị unpaid, partial, paid và được tính lại theo tổng đã trả.
-    xu_ly: issue:API-214/BE
-    ly_do: 'Cùng mâu thuẫn với G-FG08-07: invoices chỉ thêm dòng nhưng API-214 sửa trạng thái; API-214/BE tính trạng thái từ tổng payments lúc đọc, nên DATA-FG09/DB giữ invoices chỉ thêm dòng.'
+    xu_ly: "issue:INV-Q-23"
+    ly_do: "Cùng mâu thuẫn với G-FG08-07 và cùng chờ Q-23; API-214/BE tính trạng thái từ tổng payments lúc đọc, nên DATA-FG09/DB giữ invoices chỉ thêm dòng."
     trung: G-FG08-07
     phat_hien: FG-09
   # ----- P3 FG-10 (gaps/FG-10.yaml) -----
   - ma: G-FG10-01
     spec: SKM_DB.md §4.30 business_rules, §4.31 rule_versions · SKM_RATE_VERSION_LIST_SPEC.md §4.3 · TECH-303 §4.3 · SKM_SYSTEM_DESIGN.md A5
-    mo_ta: Hai bảng cùng giữ trạng thái và người lập, người duyệt của bản quy tắc. Bảng đã build business_rules có trạng thái và các cột duyệt, lùi; bảng thiết kế rule_versions lặp lại cùng các ý đó; màn đọc rule_versions, API ghi business_rules, TECH-303 đếm trần trên business_rules còn System Design A5 nói đếm theo rule_versions.
+    mo_ta: "Bản nộp 12/10: business_rules (đã build) và rule_versions (thiết kế) cùng giữ trạng thái và người lập, người duyệt; màn đọc một bảng, API ghi bảng kia. Bản 0.4.1 chốt hệ đích ghi bản quy tắc vào rule_versions, business_rules chỉ còn là bảng của prototype (`specs/system-design/database-design/SKM_DB.md:1348`)."
     xu_ly: issue:SC-091/DB
-    ly_do: Hai nguồn cho cùng một trạng thái thì màn và API có thể nói khác nhau về một bản; SC-091/DB chốt một bảng nguồn, bảng kia chỉ tham chiếu, rồi sửa ánh xạ của SC-090 đến SC-093.
+    ly_do: "SC-091/DB tạo rule_versions làm bảng nguồn duy nhất như 0.4.1, không tạo business_rules ở hệ đích; ánh xạ của SC-090 đến SC-093 đọc rule_versions."
     phat_hien: FG-10
   - ma: G-FG10-02
     spec: ADR-004 §2, §3 (phương án A bị bỏ) · SKM_DB.md §4.30 (khoá chính key, effective_from) · SKM_RULE_VERSION_CREATE_API.md §2
-    mo_ta: SKM_DB giữ khoá (key, effective_from) và chỉ một cột ngày hiệu lực, đúng cách ADR-004 đã bỏ. ADR-004 chọn khoảng hiệu lực có ràng buộc loại trừ chống chồng và mã bản lưu ở mọi bảng tiền, API-217 cũng ghi theo hướng đó.
+    mo_ta: "Bản nộp 12/10: SKM_DB giữ khoá (key, effective_from) và một cột ngày hiệu lực, đúng cách ADR-004 đã bỏ. Bản 0.4.1 cho rule_versions cột valid_to và ràng buộc loại trừ chống hai bản 承認済 (đã duyệt) chồng hiệu lực (`specs/system-design/database-design/SKM_DB.md:1403`)."
     xu_ly: issue:SC-091/DB
-    ly_do: Giữ khoá cũ thì cơ sở dữ liệu không chặn được hai bản chồng hiệu lực; SC-091/DB chốt cách giữ khoảng hiệu lực theo ADR-004, SC-080/DB của FG-09 dùng cùng khoá bản đó (G-FG09-07).
+    ly_do: "SC-091/DB viết migration theo ràng buộc của 0.4.1 (cần extension btree_gist), SC-080/DB của FG-09 trỏ đúng mã bản đó (G-FG09-07)."
     phat_hien: FG-10
   - ma: G-FG10-03
     spec: TECH-303 §4.3 · SKM_RULE_VERSION_APPROVE_API.md §2 · SKM_RULE_VERSION_ROLLBACK_API.md §2
-    mo_ta: Trần 4 lần mỗi năm đếm số bản đang ở trạng thái đã duyệt, nên lùi bản làm số đếm giảm. Lùi một bản rồi lập và duyệt bản khác trong cùng năm thì khoá đó đổi được quá 4 lần.
-    xu_ly: issue:TECH-303/BE
-    ly_do: RFP B.6 giới hạn số lần đổi chứ không giới hạn số bản còn hiệu lực; TECH-303/BE đếm theo lịch sử các lần duyệt, kể cả bản đã lùi.
+    mo_ta: "Bản nộp 12/10 đếm trần 4 lần mỗi năm theo số bản đang ở trạng thái đã duyệt, nên lùi bản làm số đếm giảm. Bản 0.4.1 đếm mọi lần duyệt trong năm dương lịch của 発効日 (ngày hiệu lực), tính cả bản đã lùi, và hỏi khách cách đếm ở Q-24 (`specs/rules-and-rates/screen-specification/SKM_RATE_VERSION_APPROVAL_SPEC.md:167`)."
+    xu_ly: "issue:INV-Q-24"
+    ly_do: "Cách đếm trần là quy chế của chợ; TECH-303/BE đếm theo lịch sử các lần duyệt như 0.4.1 (giả định P-45), INV-Q-24 hỏi khách trước SC-092/BE."
     phat_hien: FG-10
   - ma: G-FG10-04
     spec: SKM_RATE_VERSION_ROLLBACK_SPEC.md §4.1, §4.2, §5 · SKM_RULE_VERSION_ROLLBACK_API.md §3
@@ -671,9 +674,9 @@ g:
     phat_hien: FG-10
   - ma: G-FG10-05
     spec: SKM_DB.md §4.30 business_rules (status, mặc định approved) · SKM_RULE_VERSION_CREATE_API.md §2
-    mo_ta: Cột trạng thái của business_rules mặc định là approved. Một lệnh chèn quên nêu trạng thái sẽ tạo bản có hiệu lực ngay, bỏ qua bước duyệt mà API-217 hứa.
+    mo_ta: "Bản nộp 12/10: cột trạng thái của business_rules mặc định approved, lệnh chèn quên nêu trạng thái thì bản có hiệu lực ngay. Bản 0.4.1 không ghi bản mới vào business_rules nữa; rule_versions chỉ có ràng buộc ba giá trị 起票, 承認済, ロールバック済 và không có mặc định (`specs/system-design/database-design/SKM_DB.md:1404`)."
     xu_ly: issue:SC-091/DB
-    ly_do: Bước duyệt bằng người không được phụ thuộc vào việc mã ứng dụng nhớ gửi trạng thái; SC-091/DB đổi mặc định sang nháp hoặc bỏ mặc định.
+    ly_do: "SC-091/DB giữ trang_thai không mặc định hoặc mặc định 起票 (bản nháp), để bước duyệt không phụ thuộc vào việc mã ứng dụng nhớ gửi trạng thái."
     phat_hien: FG-10
   - ma: G-FG10-06
     spec: SKM_RATE_VERSION_APPROVAL_SPEC.md §6.2 (Q-09), §6.3
@@ -697,14 +700,14 @@ g:
   - ma: G-FG11-02
     spec: FR-RPT-01 · SKM_RPT_TEMPLATE_LIST_SPEC.md (mục 5) · SKM_SYSTEM_DESIGN.md (EV1–EV3)
     mo_ta: Chưa có bước nào lập báo cáo ngày khi hết 業務日 (ngày nghiệp vụ). FR-RPT-01 đặt việc lập báo cáo ngày vào lúc kết thúc ngày, nhưng ba sự kiện EV1–EV3 của System Design không có tác vụ này, còn khuôn chỉ có nút Lọc và nút Kết xuất CSV.
-    xu_ly: issue:KH-181/BE
-    ly_do: 'Backlog đọc lúc kết thúc ngày là lúc 照合事務 (nhóm đối soát) chạy báo cáo: mỗi lần kết xuất CSV là một lần chạy ghi report_runs, không dựng tác vụ nền tự lập 12 báo cáo. Nếu khách cần báo cáo tự sinh theo lịch thì thêm một sự kiện mới gọi lại truy vấn của từng màn, không phải làm lại khuôn.'
+    xu_ly: "issue:INV-FG11-BAO-CAO-NGAY"
+    ly_do: "Coi việc lập báo cáo ngày là việc người chạy hay tác vụ tự chạy là cách hiểu của nhà thầu, nên INV-FG11-BAO-CAO-NGAY hỏi khách; trong lúc chờ, mỗi lần 照合事務 kết xuất CSV là một lần chạy ghi report_runs, khách cần tự sinh theo lịch thì thêm một sự kiện gọi lại truy vấn của từng màn, không làm lại khuôn."
     phat_hien: FG-11
   - ma: G-FG11-03
     spec: SKM_RPT06_ACCOUNTING_MATCH_SPEC.md · SKM_ACCOUNTING_EXPORT_SPEC.md · SKM_EXPORT_HISTORY_SPEC.md (frontmatter related, mục 3) · IF-ACC-01
-    mo_ta: Ba màn SC-106, SC-113, SC-114 chỉ dẫn IF-ACC-01, không mang FR nào. Mã giao diện ngoài này không nằm trong danh sách FR nên issue của ba màn có ô FR trống, và tiêu chí đối soát với kế toán không trỏ về mã yêu cầu nào; cùng chỗ với G-A-FG-11-thieu-fr do bộ sinh backlog tự phát hiện.
+    mo_ta: Ba màn SC-106, SC-113, SC-114 chỉ dẫn IF-ACC-01, không mang FR nào. Mã giao diện ngoài này không nằm trong danh sách FR nên issue của ba màn có ô FR trống, và tiêu chí đối soát với kế toán không trỏ về mã yêu cầu nào; cùng chỗ với G-A-FG-11-thieu-fr, phát hiện khi đối chiếu registry LAB-4 với spec đã nộp.
     xu_ly: issue:KH-182
-    ly_do: KH-182 mang tiêu chí của IF-ACC-01 cho hai màn xuất (6 trường tối thiểu, mã lô, chỉ xuất ngày đã khoá theo FR-SETTLE-02), còn SC-106 chỉ đọc lại lô; bộ sinh backlog thêm IF-ACC-01 và FR-SETTLE-02 vào spec_refs của KH-182, SC-106, SC-113, SC-114 để cổng độ phủ đếm được.
+    ly_do: KH-182 mang tiêu chí của IF-ACC-01 cho hai màn xuất (6 trường tối thiểu, mã lô, chỉ xuất ngày đã khoá theo FR-SETTLE-02), còn SC-106 chỉ đọc lại lô; backlog gắn IF-ACC-01 và FR-SETTLE-02 vào mã spec của KH-182, SC-106, SC-113, SC-114 để cổng độ phủ đếm được.
     phat_hien: FG-11
   - ma: G-FG11-04
     spec: SKM_RPT06_ACCOUNTING_MATCH_SPEC.md (mục 3, 4) · SKM_ACCOUNTING_EXPORT_SPEC.md (mục 3) · ADR-014 (mục 4)
@@ -733,8 +736,8 @@ g:
   - ma: G-FG11-08
     spec: IF-ACC-01 · SKM_DB.md §4.13 transactions, §4.22 daily_reconciliations, §4.26 invoices · integrations.md (hợp đồng dữ liệu)
     mo_ta: Hai trong 6 trường tối thiểu của IF-ACC-01 chưa có cột nguồn. Bảng đối soát ngày chỉ có tổng của cả ngày, không theo người tham gia; transactions và invoices chỉ có số tiền, không có mức thuế hay số thuế, trong khi tệp phải chia số thuế theo từng mức.
-    xu_ly: issue:KH-182/BE
-    ly_do: KH-182/BE cộng tổng tiền theo người tham gia từ giao dịch còn hiệu lực của ngày đã khoá, cùng luật đếm của SC-070/BE (G-FG08-04), để tổng lô khớp bảng đối soát. Số thuế tính từ bảng ba mức ở cấu hình (P-11); mức nào áp cho dòng nào và số tiền đã gồm thuế hay chưa cần hỏi thêm trong INV-GD-04.
+    xu_ly: "issue:INV-GD-04"
+    ly_do: "Mức thuế nào áp cho dòng nào và số tiền đã gồm thuế hay chưa là câu hỏi khách ở INV-GD-04; KH-182/BE cộng tổng theo người tham gia từ giao dịch còn hiệu lực của ngày đã khoá, cùng luật đếm của SC-070/BE (G-FG08-04), số thuế tính từ bảng ba mức ở cấu hình (P-11)."
     phat_hien: FG-11
   - ma: G-FG11-09
     spec: SKM_RPT10_PARTICIPANT_MONTHLY_SPEC.md (mục 6.2, Q-17) · SKM_RPT11_TRADE_TYPE_MONTHLY_SPEC.md (mục 6.2, Q-17) · FR-RPT-02
@@ -775,9 +778,9 @@ g:
     phat_hien: FG-12
   - ma: G-FG12-03
     spec: SKM_NOTIFICATION_LOG_SPEC.md (B-2 ở mục 4.1, 4.3) · SKM_DB.md §4.36 notification_log (kenh)
-    mo_ta: Cột kênh của SC-121 mang nhãn kênh giao dịch. Nhãn B-2 là 取引区分 (loại kênh giao dịch, như 相対 (giao dịch thỏa thuận) hay せり (đấu giá)) nhưng ô này đọc notification_log.kenh, tức kênh gửi trong ứng dụng hay email.
-    xu_ly: issue:SC-121/FE
-    ly_do: Để nhãn sai thì người vận hành đọc nhầm cột và lọc theo kênh không ra kết quả đúng; SC-121/FE đặt nhãn kênh gửi rồi sửa spec màn.
+    mo_ta: "Cột kênh của SC-121 mang nhãn kênh giao dịch. Nhãn B-2 là 取引区分 (loại kênh giao dịch, như 相対 (giao dịch thỏa thuận) hay せり (đấu giá)) nhưng ô này đọc notification_log.kenh, tức kênh gửi trong ứng dụng hay email; bản 0.4.1 vẫn giữ nhãn cũ (`specs/notification/screen-specification/SKM_NOTIFICATION_LOG_SPEC.md:131`)."
+    xu_ly: "de-mo"
+    ly_do: "Lỗi chỉ ở nhãn cột, dữ liệu đọc vẫn đúng notification_log.kenh, nên SC-121/FE đặt nhãn kênh gửi; người giữ bộ spec LAB-4 sửa nhãn B-2 ở lần phát hành spec sau, nên dòng này để mở tới lúc đó."
     phat_hien: FG-12
   - ma: G-FG12-04
     spec: SKM_OPS_ALERT_QUEUE_SPEC.md (mục 3, 4.1, 5) · SKM_DB.md §4.37 alert_queue · FR-NOTIFY-02
@@ -798,7 +801,7 @@ g:
     ly_do: Không bên nào gọi thì FG-12 dựng xong mà không thông báo nào được gửi; SC-121/BE làm hàm gửi dùng chung và ghi bốn điểm gọi vào spec, còn SC-014/BE, SC-070/BE, KH-182/BE, SC-064/BE mỗi leaf có tiêu chí gọi hàm đó.
     phat_hien: FG-12
   - ma: G-FG12-07
-    spec: '`SKM_NOTIFICATION_LOG_SPEC.md:11` · `SKM_OPS_ALERT_QUEUE_SPEC.md:11` (frontmatter related)'
+    spec: '`specs/notification/screen-specification/SKM_NOTIFICATION_LOG_SPEC.md:11` · `specs/notification/screen-specification/SKM_OPS_ALERT_QUEUE_SPEC.md:11` (frontmatter related)'
     mo_ta: 'FR của SC-121 và SC-122 đặt chéo nhau: SC-121 (nhật ký gửi) mang FR-NOTIFY-02, SC-122 (hàng đợi cảnh báo) mang FR-NOTIFY-01, trong khi tiêu chí nghiệm thu của FR-NOTIFY-01 là nội dung nhật ký gửi còn của FR-NOTIFY-02 là đẩy thông báo lỗi vào hàng đợi.'
     xu_ly: de-mo
     ly_do: Backlog giữ mã FR của LAB-4 để truy vết, còn SC-121/TEST và SC-122/TEST đã phủ cả hai ý theo đúng yêu cầu, nên backlog không thiếu ca nào; người giữ bộ spec LAB-4 sửa bảng ánh xạ FR của hai màn ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
@@ -855,9 +858,9 @@ g:
     phat_hien: FG-14
   - ma: G-FG14-03
     spec: RFP TBL-ATTACH-01 p.48 · DR-RET-01 · SKM_SYSTEM_DESIGN.md N10 · data-model.md (bảng C, cold_nam) · nfr-and-operations.md (Khôi phục sau sự cố) · SKM_DB.md §4.41 attachments, §4.43 retention_policies
-    mo_ta: Thời hạn lưu chưa tách theo loại tài liệu. RFP giữ phiếu nhận, phiếu giao dịch, bảng đối soát 7 năm trực tuyến và chỉ chuyển ảnh, chứng từ bổ trợ của tranh chấp và giao hàng sang lưu lạnh sau 3 năm; LAB-4 gộp mọi chứng từ vào nhóm 3 năm, data-model còn đọc 3 năm là thời gian nằm ở lưu lạnh, và attachments không có cột loại tài liệu để biết hạn nào áp.
+    mo_ta: "Thời hạn lưu chưa tách theo loại tài liệu. Bản 0.4.1 đã sửa cách đọc 3 năm: dữ liệu nghiệp vụ 7 năm trực tuyến, ảnh và chứng từ 3 năm trực tuyến rồi chuyển lưu lạnh (`architecture/SKM_SYSTEM_DESIGN.md:353`); nhưng RFP giữ phiếu nhận, phiếu giao dịch, bảng đối soát 7 năm, còn attachments chưa có cột loại tài liệu nên chưa biết hạn nào áp cho tệp nào."
     xu_ly: issue:SC-142/BE
-    ly_do: Áp nhầm nhóm 3 năm cho phiếu nhận là chuyển bằng chứng phải giữ 7 năm sang lưu lạnh quá sớm; SC-142/BE đặt mỗi loại tài liệu một dòng retention_policies theo bảng của RFP, để trống số năm lưu lạnh vì không nguồn nào cho số, và SC-025/DB thêm cột loại tài liệu cho attachments.
+    ly_do: "Áp nhầm nhóm 3 năm cho phiếu nhận là chuyển bằng chứng phải giữ 7 năm sang lưu lạnh quá sớm; SC-142/BE đặt mỗi loại tài liệu một dòng retention_policies, để trống số năm ở lưu lạnh vì không nguồn nào cho số (INV-Q-19), SC-025/DB thêm cột loại tài liệu cho attachments."
     phat_hien: FG-14
   - ma: G-FG14-04
     spec: SKM_RETENTION_ARCHIVE_SPEC.md (mục 3, 4.1, 5) · SKM_SYSTEM_DESIGN.md N10, Q-19
@@ -879,7 +882,7 @@ g:
     phat_hien: FG-14
   - ma: G-FG14-07
     spec: SKM_SYNC_QUEUE_SPEC.md (mục 3, 4.1, 5) · ADR-010 (mục 2, 4, 6) · SKM_SYSTEM_DESIGN.md N2 · SKM_DB.md §4.45 sync_queue · architecture.yaml AD-04 (LAB-1)
-    mo_ta: SC-151 không có đường người xử xung đột và chưa kể tên ba thao tác ghi tạm. ADR-010 đòi xung đột do người xử, không tự trộn, và giữ danh sách ba thao tác trong sync_queue, nhưng màn chỉ có bộ lọc và bảng, bảng không có cột người xử hay bản được chọn; ADR-010 dẫn nguồn AD-06, trong khi AD-06 của LAB-1 nói về ghi chỉ thêm, còn ba thao tác nằm ở AD-04 (nhập lô, ghi 目利き (thẩm định bằng mắt), ghi lần giao).
+    mo_ta: "SC-151 không có đường người xử xung đột và chưa kể tên ba thao tác ghi tạm. ADR-010 đòi xung đột do người xử, không tự trộn, và giữ danh sách ba thao tác trong sync_queue, nhưng màn chỉ có bộ lọc và bảng, bảng không có cột người xử hay bản được chọn. Lỗi dẫn nguồn AD-06 thay cho AD-04 của bản nộp 12/10 đã được 0.4.1 sửa (`adr/ADR-010-chay-suy-giam-ba-thao-tac.md:17`)."
     xu_ly: issue:SC-151/BE
     ly_do: Không có nút xử thì thao tác xung đột nằm mãi trong hàng đợi và dữ liệu ghi ở bến cá không bao giờ vào sổ; SC-151/BE làm lệnh xử ghi người của phiên, giờ máy chủ, áp bản được chọn qua API của SC-020, SC-023, SC-060, và cùng DATA-FG14/DB ghi tên ba thao tác vào spec.
     phat_hien: FG-14
@@ -899,14 +902,14 @@ g:
   - ma: G-E15-02
     spec: SKM_HEALTH_CHECK_API.md (response 1) · NFR-OPS-01
     mo_ta: Mẫu trả về 200 của API-220 còn trường locale của prototype. Prototype LAB-3 chạy ba thứ tiếng nên route trả thêm ngôn ngữ đang dùng, còn spec của hệ đích chỉ nói khoá status mà không nói giữ hay bỏ trường này.
-    xu_ly: issue:API-220/BE
-    ly_do: Bên gọi API-220 là cân bằng tải và đồng hồ đo, không cần ngôn ngữ; giữ trường này thì bên giám sát phụ thuộc một giá trị không có nghĩa vận hành. API-220/BE chỉ trả status và đề nghị sửa mẫu trả về của spec.
+    xu_ly: "premise:P-04"
+    ly_do: "Trường locale thuộc route của prototype; P-04 cho hệ đích làm mới cả 23 API và chỉ dùng route prototype để đối chiếu, nên API-220/BE chỉ trả status và đề nghị bỏ trường này khỏi mẫu trả về của spec."
     phat_hien: E15
   - ma: G-E15-03
     spec: ADR-016 §4 · infra-diagram.md (Ba môi trường) · SKM_SYSTEM_DESIGN.md N2
-    mo_ta: Staging chỉ được nhận dữ liệu đã che nhưng chưa có quy tắc che. ADR-016 và bảng môi trường đòi staging, diễn tập di trú dùng dữ liệu đã che, nhưng không tài liệu nào nói trường nào phải che, che cách nào và ai duyệt bộ dữ liệu sau khi che.
+    mo_ta: Môi trường thử chỉ được nhận dữ liệu đã che nhưng chưa có quy tắc che. ADR-016 và bảng môi trường đòi môi trường thử, diễn tập di trú dùng dữ liệu đã che, nhưng không tài liệu nào nói trường nào phải che, che cách nào và ai duyệt bộ dữ liệu sau khi che.
     xu_ly: issue:PLT-02/INFRA
-    ly_do: Không có quy tắc thì mỗi lần nạp staging che một kiểu và dữ liệu cá nhân của người tham gia có thể lọt vào môi trường thử; PLT-02/INFRA viết một script che dùng chung, danh sách trường cá nhân lấy theo FG-13, Tech Lead duyệt, rồi MIG-03 và E17 dùng lại.
+    ly_do: Không có quy tắc thì mỗi lần nạp môi trường thử che một kiểu và dữ liệu cá nhân của người tham gia có thể lọt vào môi trường thử; PLT-02/INFRA viết một script che dùng chung, danh sách trường cá nhân lấy theo FG-13, Tech Lead duyệt, rồi MIG-03 và E17 dùng lại.
     phat_hien: E15
   - ma: G-E15-04
     spec: ADR-003 §5 (hệ quả 1, 5) · ADR-016 §4, §5 (hệ quả 3) · SKM_DB.md §2
@@ -950,7 +953,7 @@ g:
     spec: SKM_SYSTEM_DESIGN.feature (AC1–AC7) · SKM_SYSTEM_DESIGN.md §9
     mo_ta: Bảy kịch bản nghiệm thu chỉ có ba vế điều kiện, hành động, kết quả. Không kịch bản nào nêu bộ dữ liệu cần dựng, môi trường chạy, ai nghiệm thu và bằng chứng phải lưu; mục 9 của thiết kế hệ thống cũng chỉ đối chiếu độ phủ mã quy tắc.
     xu_ly: de-mo
-    ly_do: Bảy story AC-n đã tự nêu dữ liệu chuẩn bị, môi trường staging, người nghiệm thu qua BrSE và bằng chứng phải lưu, nên phần còn mở chỉ là mẫu biên bản nghiệm thu của khách; PM chốt mẫu đó với khách qua BrSE trước đợt nghiệm thu đầu, tới lúc đó dòng này để mở.
+    ly_do: Bảy story AC-n đã tự nêu dữ liệu chuẩn bị, môi trường thử, người nghiệm thu qua BrSE và bằng chứng phải lưu, nên phần còn mở chỉ là mẫu biên bản nghiệm thu của khách; PM chốt mẫu đó với khách qua BrSE trước đợt nghiệm thu đầu, tới lúc đó dòng này để mở.
     ai_quyet: PM, chốt với khách qua BrSE
     phat_hien: E17
   - ma: G-E17-02
@@ -961,9 +964,9 @@ g:
     phat_hien: E17
   - ma: G-E17-03
     spec: SKM_SYSTEM_DESIGN.feature (AC4) · error-codes.md (M_20) · SKM_RULE_VERSION_APPROVE_API.md · TECH-303
-    mo_ta: AC4 chặn lần đổi thứ năm ngay ở bước lập bản, còn mã vượt trần chỉ được trả ở bước duyệt. Bảng mã lỗi ghi RULE_CHANGE_LIMIT thuộc API duyệt bản, và FG-10 đếm trần theo số lần duyệt chứ không theo số bản đã lập.
+    mo_ta: "Bản nộp 12/10: AC4 chặn lần đổi thứ năm ngay ở bước lập bản, còn mã vượt trần chỉ trả ở bước duyệt. Bản 0.4.1 sửa AC4 thành máy chủ chặn ở bước duyệt (`architecture/SKM_SYSTEM_DESIGN.feature:20`)."
     xu_ly: premise:P-27
-    ly_do: 'P-27: AC-4 kiểm trần ở bước duyệt cho khớp TECH-303 (G-FG10-03) và đề nghị sửa chữ «tạo» của AC4 thành «duyệt».'
+    ly_do: "P-27 (AC-4 kiểm trần ở bước duyệt cho khớp TECH-303) nay cùng hướng với 0.4.1; ca kiểm của AC-4/TEST chờ mã RULE_CHANGE_LIMIT ở API duyệt."
     phat_hien: E17
   - ma: G-E17-04
     spec: SKM_SYSTEM_DESIGN.feature (AC7) · SKM_SYSTEM_DESIGN.md EV2, §3 (notify) · SKM_DB.md §4.36 notification_log · SKM_SYSTEM_MONITOR_SPEC.md
@@ -982,13 +985,13 @@ g:
     spec: SKM_SYSTEM_DESIGN.md N3 · ADR-015 §5 · AD-03 (LAB-01)
     mo_ta: Diễn tập khôi phục được đòi «định kỳ» nhưng chưa có chu kỳ. N3 chỉ cho mức RTO 4 giờ, RPO 15 phút và cách đo là diễn tập; ADR-015 ghi cách đạt hai mức này mới là thiết kế, chưa diễn tập lần nào.
     xu_ly: issue:NFR-AVL/INFRA
-    ly_do: Con số RTO không diễn tập thì không kiểm chứng được; NFR-AVL/INFRA diễn tập ít nhất một lần trên staging trước phát hành, còn chu kỳ sau phát hành là tham số vận hành do khách duyệt khi bàn giao ở REL-04.
+    ly_do: Con số RTO không diễn tập thì không kiểm chứng được; NFR-AVL/INFRA diễn tập ít nhất một lần trên môi trường thử trước phát hành, còn chu kỳ sau phát hành là tham số vận hành do khách duyệt khi bàn giao ở REL-04.
     phat_hien: E18
   - ma: G-E18-03
     spec: SKM_SYSTEM_DESIGN.md N4, N5 · ADR-003 §5 (hệ quả 1) · ADR-008 §5 (hệ quả 4)
-    mo_ta: Yêu cầu hiệu năng chưa nói đo thao tác nào và chậm bao nhiêu là chậm. N4 đòi p95 không quá 2 giây cho «tra cứu thông thường» mà không liệt kê thao tác, N5 đòi tải cao điểm không làm chậm tác vụ lõi mà không có ngưỡng cho mức tăng.
+    mo_ta: "Yêu cầu hiệu năng chưa nói chậm bao nhiêu là chậm lúc tải cao điểm. Bản 0.4.1 làm rõ p95 ≤ 2 giây là NFR-PERF-01 cho mọi màn tra cứu thông thường (`architecture/SKM_SYSTEM_DESIGN.md:347`), nhưng N5 vẫn không có ngưỡng cho mức chậm đi của tác vụ lõi."
     xu_ly: issue:NFR-PERF/TEST
-    ly_do: Không có danh sách thì mỗi lần đo chọn một bộ thao tác khác và kết quả không so được qua các lần phát hành; NFR-PERF/TEST lập danh sách cố định, đề xuất tác vụ lõi là nhập lô, chốt giao dịch, ghi giao hàng, Tech Lead duyệt, còn mức tăng chấp nhận được để Tech Lead xác nhận từng lần vì chưa có nguồn số.
+    ly_do: "NFR-PERF/TEST lập danh sách thao tác đo cố định gồm các màn tra cứu và tác vụ lõi (nhập lô, chốt giao dịch, ghi giao hàng), Tech Lead duyệt; mức chậm chấp nhận được lúc cao điểm để Tech Lead xác nhận từng lần vì chưa có nguồn số."
     phat_hien: E18
   - ma: G-E18-04
     spec: SKM_SYSTEM_DESIGN.md N14 · NFR-COMP-01 · Q-12, GD-06 (LAB-01)
@@ -1027,3 +1030,10 @@ g:
     xu_ly: issue:REL-04
     ly_do: Thiếu các mục này thì khách nhận hệ mà không tự vận hành được và nhật ký bất thường thành dữ liệu không ai đọc; REL-04 gom chúng vào biên bản bàn giao có người nhận phía khách.
     phat_hien: E19
+  # ----- P3 đầu việc 3–5 (18/10): việc LAB-4 0.4.1 giao lại cho LAB-5 -----
+  - ma: G-FG07-08
+    spec: "`specs/delivery/screen-specification/SKM_DELIVERY_ENTRY_SPEC.md:184` · `specs/delivery/screen-specification/SKM_DELIVERY_EXCEPTION_SPEC.md:180` · `PREMISE.md:213` (Q-SD1 mục c)"
+    mo_ta: "LAB-4 giao lại cho LAB-5 cách tính lại số cần giao sau 訂正 (sửa sau xác nhận). Khi 引渡不足 (giao thiếu) hoặc 部分キャンセル (huỷ một phần) không có lần giao bù thì đóng ngoại lệ xong giao dịch vẫn chưa thành 完了, vì tổng đã giao còn hụt; phần lệch được xử lý qua 訂正 ở FG-06 (SC-050). Spec chưa nói sau 訂正 thì số cần giao của giao dịch tính lại thế nào (giả định nhà thầu, Q-SD1 mục c)."
+    xu_ly: "issue:INV-FG07-SO-CAN-GIAO"
+    ly_do: "Số cần giao quyết lúc nào giao dịch 完了 và số tính 精算, chạm cả FG-06 lẫn FG-07, nên Tech Lead chốt cách tính ở INV-FG07-SO-CAN-GIAO và gửi khách xác nhận cùng Q-SD1 trước khi SC-063/BE và SC-050/BE làm; đề xuất số cần giao bằng số lượng giao dịch trừ phần đã 訂正 có duyệt."
+    phat_hien: "FG-07"

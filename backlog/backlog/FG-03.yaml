@@ -45,6 +45,7 @@ items:
     - API-206
     tech: []
     bang:
+    - arrivals
     - lots
     fr:
     - FR-LOT-01
@@ -52,6 +53,7 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -69,6 +71,7 @@ items:
   - Khi tàu không tồn tại thì API-205 trả 404 (P-24), không ghi chuyến.
   - Khi tách xong thì mỗi lô có mã không trùng, trạng thái unlisted; màn không cho nhập kênh bán (G-FG03-02).
   - Khi người gọi không mang vai 受入担当者 thì API trả 403.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-020 thêm ô theo tham số API-205, API-206 (G-FG03-01).
 - key: SC-020/FE
@@ -87,6 +90,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs: []
@@ -112,6 +116,7 @@ items:
     - API-206
     tech: []
     bang:
+    - arrivals
     - lots
     fr: []
     adr: []
@@ -119,6 +124,7 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs: []
@@ -148,6 +154,7 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -181,6 +188,7 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs:
@@ -193,6 +201,7 @@ items:
   - 'Tách một chuyến thành nhiều lô hợp lệ: mỗi lô có mã không trùng, trạng thái unlisted, số lô tạo ra bằng số dòng gửi lên.'
   - Một dòng lô có cỡ ngoài L/M/S hoặc hạng ngoài A/B/C làm cả lần tách bị từ chối, bảng lots không thêm dòng nào.
   - Tổng khối lượng lệch quá 5% vẫn tạo lô và trả cảnh báo; lệch đúng 5% thì không có cảnh báo.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-021
   cha: FG-03
@@ -486,7 +495,7 @@ items:
   - Khi ghi lại kết quả cho cùng lô thì hệ thống thêm dòng mới, dòng cũ giữ nguyên.
   - Khi người gọi không mang vai 評価者, ở hệ đích là 運営担当者 (nhân viên vận hành), thì máy chủ trả 403.
   dinh_nghia_xong:
-  - Bản ghi thử trên staging cho thấy mỗi kết quả mang người xác nhận và thời điểm do máy chủ gán.
+  - Bản ghi thử trên môi trường thử cho thấy mỗi kết quả mang người xác nhận và thời điểm do máy chủ gán.
 - key: SC-023/FE
   cha: SC-023
   tracker: devtask
@@ -996,7 +1005,7 @@ items:
 - key: DATA-FG03/TEST
   cha: DATA-FG03
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-LOT): arrivals, species, vessels'
+  title_vi: 'Ca kiểm thử: Tạo bảng arrivals, species, vessels'
   spec_refs:
     sc: []
     api: []
@@ -1018,4 +1027,36 @@ items:
   - Ghi chuyến với tàu không có trong vessels bị cơ sở dữ liệu từ chối.
   - Ghi trùng mã tàu hoặc mã loài bị từ chối.
   - Sửa hoặc xoá một dòng arrivals bị chặn ở mức quyền cơ sở dữ liệu.
+  dinh_nghia_xong: []
+- key: INV-FG03-HANG-TUOI
+  cha: FG-03
+  tracker: investigation
+  title_vi: Bản chính của hạng độ tươi, lots hay lot_evaluations
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Tech Lead
+  nguon: SKM_LOT_SPLIT_CREATE_API.md (freshnessGrade) · SKM_DB.md §4.11 lot_evaluations (LAB-4)
+  spec_refs:
+    sc:
+    - SC-023
+    api:
+    - API-206
+    tech: []
+    bang:
+    - lot_evaluations
+    - lots
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG03-08
+  mo_ta: 'Hạng độ tươi của một lô lấy bản chính ở đâu: cột lots.freshness_grade nhập lúc tách lô qua API-206, hay kết quả 目利き (thẩm định bằng mắt) ghi ở lot_evaluations qua SC-023? Spec không nói nơi nào là bản chính, nên danh sách, chi tiết lô và giao dịch có thể đọc ra hai hạng khác nhau. Tech Lead chốt trước khi SC-023/BE làm API; đề xuất lot_evaluations là bản chính, lots.freshness_grade chỉ giữ giá trị lúc tách lô.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
   dinh_nghia_xong: []

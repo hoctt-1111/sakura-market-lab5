@@ -44,13 +44,17 @@ items:
     tech: []
     bang:
     - deliveries
+    - delivery_exceptions
+    - transactions
     fr:
     - FR-DEL-01
+    - FR-DEL-02
     - FR-DEL-05
     adr: []
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -59,21 +63,22 @@ items:
   gap_refs:
   - G-FG07-01
   - G-FG07-02
-  mo_ta: '配送部門 (bộ phận giao hàng) ghi từng lần 引渡し (giao hàng) của một giao dịch đã chốt: lần thứ mấy, bao nhiêu, lúc nào, ai giao. Một giao dịch giao được nhiều lần, mỗi lần là một dòng mới; số đã giao và số còn lại tính từ các dòng này và là một nguồn của đối soát ngày.'
+  mo_ta: '配送部門 (bộ phận giao hàng) ghi từng lần 引渡し (giao hàng) của một giao dịch đã chốt: lần thứ mấy, bao nhiêu, lúc nào, ai giao. Mỗi lần là một dòng mới; số đã giao và số còn lại tính từ các dòng này, là một nguồn của đối soát ngày.'
   pham_vi: Màn SC-060 (SPEC-SKM-129) trên tablet hiện trường; bảng `deliveries` (chủ migration, chỉ thêm dòng), đọc `transactions`; API ghi chưa có spec, SC-060/BE viết rồi làm (P-01).
   luong_chinh:
   - Người giao hàng chọn giao dịch; màn hiện số lượng giao dịch, số đã giao và số còn lại.
-  - Người giao hàng nhập số lượng lần này, thời điểm giao rồi bấm Đăng ký.
+  - Nhập số lượng lần này, thời điểm giao rồi bấm Đăng ký.
   - Máy chủ kiểm 業務日 (ngày nghiệp vụ) của lần giao chưa khoá, gán lần thứ kế tiếp và người thực hiện từ phiên.
   - Máy chủ thêm một dòng deliveries; luỹ kế vượt số giao dịch thì màn báo lệch và mở SC-063.
   tieu_chi_nghiem_thu:
-  - Khi bấm Đăng ký thì hệ thống ghi người thực hiện của phiên và giờ máy chủ; người thực hiện gửi từ trình duyệt bị bỏ qua.
-  - Khi ghi thêm lần giao cho cùng giao dịch thì có dòng mới mang lần thứ kế tiếp, các dòng cũ giữ nguyên.
+  - Khi bấm Đăng ký thì hệ thống ghi người thực hiện của phiên và giờ máy chủ; giá trị trình duyệt gửi bị bỏ qua.
+  - Khi ghi thêm lần giao cho cùng giao dịch thì có dòng mới mang lần kế tiếp, dòng cũ giữ nguyên.
   - Khi số lượng không phải số dương hoặc quá hai chữ số lẻ thì cả màn và máy chủ từ chối.
   - Khi 業務日 của lần giao đã khoá thì máy chủ từ chối bằng mã ngày đã khoá (P-24).
   - Khi luỹ kế vượt số lượng giao dịch thì máy không tự điều chỉnh; phần lệch thành ngoại lệ chờ người xử lý (P-13).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SC-060 ghi lại kiểu ô và cách gán lần thứ, người thực hiện theo G-FG07-01.
+  - Spec SC-060 ghi lại kiểu ô, cách gán lần thứ và người thực hiện (G-FG07-01).
 - key: SC-060/FE
   cha: SC-060
   tracker: devtask
@@ -90,6 +95,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs: []
@@ -113,12 +119,15 @@ items:
     tech: []
     bang:
     - deliveries
+    - delivery_exceptions
+    - transactions
     fr: []
     adr: []
     nfr: []
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -138,31 +147,35 @@ items:
 - key: SC-060/DB
   cha: SC-060
   tracker: devtask
-  title_vi: Tạo bảng deliveries
+  title_vi: Tạo bảng deliveries, delivery_exceptions
   spec_refs:
     sc: []
     api: []
     tech: []
     bang:
     - deliveries
+    - delivery_exceptions
     fr: []
     adr: []
     nfr: []
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
   - P-06
   gap_refs:
   - G-FG07-02
-  mo_ta: Viết migration bảng deliveries trên kho mã hệ đích, chỉ thêm dòng; chốt kiểu cột và thêm các cột ghi sổ chung của ADR-003 trước khi tạo bảng (P-06, G-FG07-02).
+  - G-FG07-05
+  mo_ta: Viết migration bảng deliveries trên kho mã hệ đích, chỉ thêm dòng; chốt kiểu cột và thêm các cột ghi sổ chung của ADR-003 trước khi tạo bảng (P-06, G-FG07-02). Bảng delivery_exceptions cũng chỉ thêm dòng; bước xác nhận lưu người xác nhận và thời điểm theo ADR-003, không sửa dòng ngoại lệ gốc.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Có khoá ngoại tới transactions và khoá duy nhất theo cặp giao dịch, lần thứ.
   - Số lượng lưu hai chữ số lẻ; người thực hiện có khoá ngoại tới bảng profiles.
+  - 'delivery_exceptions: cột loại chỉ nhận thiếu, vượt, trả lại, huỷ một phần, có khoá ngoại tới deliveries; người xác nhận có khoá ngoại tới profiles, cách lưu bước xác nhận được chốt có người duyệt và ghi vào SKM_DB.'
   dinh_nghia_xong: []
 - key: SC-060/TEST
   cha: SC-060
@@ -176,11 +189,13 @@ items:
     bang: []
     fr:
     - FR-DEL-01
+    - FR-DEL-02
     - FR-DEL-05
     adr: []
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -192,6 +207,7 @@ items:
   - 'Gửi yêu cầu kèm người thực hiện giả và lần thứ giả: dòng deliveries mang người của phiên và lần thứ kế tiếp.'
   - 'Giao nhiều lần cho một giao dịch rồi mở SC-062: luỹ kế bằng tổng các lần, số còn lại bằng số giao dịch trừ luỹ kế.'
   - 'Ghi lần giao có thời điểm thuộc 業務日 (ngày nghiệp vụ) đã khoá: bị từ chối bằng mã ngày đã khoá và có dòng audit_log.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-061
   cha: FG-07
@@ -205,6 +221,7 @@ items:
     tech: []
     bang:
     - deliveries
+    - transactions
     fr:
     - FR-DEL-01
     adr: []
@@ -271,6 +288,7 @@ items:
     tech: []
     bang:
     - deliveries
+    - transactions
     fr: []
     adr: []
     nfr: []
@@ -331,6 +349,7 @@ items:
     tech: []
     bang:
     - deliveries
+    - transactions
     fr:
     - FR-DEL-04
     - FR-DEL-05
@@ -397,6 +416,7 @@ items:
     tech: []
     bang:
     - deliveries
+    - transactions
     fr: []
     adr: []
     nfr: []
@@ -466,6 +486,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -474,24 +495,25 @@ items:
   gap_refs:
   - G-FG07-05
   - G-FG07-06
-  mo_ta: '配送部門 (bộ phận giao hàng) ghi ngoại lệ của một lần 引渡し (giao hàng): thiếu, vượt, trả lại hoặc huỷ một phần, kèm lý do chọn từ danh mục và số lượng. Máy chỉ ghi; ngoại lệ có hiệu lực khi một người xác nhận, và hệ thống lưu ai xác nhận, lúc nào.
+  mo_ta: '配送部門 (bộ phận giao hàng) ghi ngoại lệ của một lần 引渡し (giao hàng): thiếu, vượt, trả lại hoặc huỷ một phần, kèm lý do trong danh mục và số lượng.
 
 
     Ràng buộc đặc thù: Ngoại lệ chỉ có hiệu lực khi người khác người ghi bấm Xác nhận; hệ thống ghi người xác nhận từ phiên và giờ máy chủ, ngày còn ngoại lệ chờ thì không khoá được.'
-  pham_vi: Màn SC-063 (SPEC-SKM-132) trên tablet hiện trường, mở từ SC-062 hoặc khi SC-060 báo lệch; bảng `delivery_exceptions` (chủ migration, chỉ thêm dòng); API ghi và xác nhận chưa có spec, SC-063/BE viết rồi làm (P-01).
+  pham_vi: Màn SC-063 trên tablet hiện trường, mở từ SC-062 hoặc khi SC-060 báo lệch; bảng `delivery_exceptions` (chỉ thêm dòng, migration thuộc SC-060/DB); API ghi và xác nhận chưa có spec, SC-063/BE viết rồi làm (P-01).
   luong_chinh:
-  - Người giao hàng chọn loại, lý do trong danh mục, nhập số lượng rồi bấm Lưu; máy chủ ghi ngoại lệ ở trạng thái chờ xác nhận.
+  - Người giao hàng chọn loại, lý do trong danh mục, nhập số lượng, bấm Lưu; ngoại lệ ở trạng thái chờ xác nhận.
   - Người xác nhận mở ngoại lệ đang chờ, đối chiếu số và lý do rồi bấm Xác nhận.
   - Máy chủ ghi người xác nhận từ phiên và giờ máy chủ; từ đó ngoại lệ không sửa trực tiếp được.
   - Ngoại lệ đã xác nhận đi vào số ngoại lệ của đối soát ngày (SC-070).
   tieu_chi_nghiem_thu:
-  - Khi người xác nhận bấm Xác nhận thì hệ thống ghi mã người xác nhận lấy từ phiên và thời điểm theo giờ máy chủ; giá trị gửi từ trình duyệt bị bỏ qua.
-  - Khi người đã ghi ngoại lệ tự bấm Xác nhận thì máy chủ từ chối; giả định này giữ tới khi INV-FG07-XAC-NHAN có đáp.
-  - Khi loại không thuộc bốn loại hoặc lý do không có trong danh mục thì máy chủ từ chối.
+  - Khi bấm Xác nhận thì hệ thống ghi người xác nhận từ phiên và giờ máy chủ; giá trị gửi từ trình duyệt bị bỏ qua.
+  - Khi người đã ghi ngoại lệ tự bấm Xác nhận thì máy chủ từ chối (giả định tới khi INV-FG07-XAC-NHAN có đáp).
+  - Khi loại không thuộc bốn loại hoặc lý do ngoài danh mục thì máy chủ từ chối.
   - Khi ngày còn ngoại lệ chờ xác nhận thì SC-071 không cho khoá 業務日 (ngày nghiệp vụ) đó.
   - Khi cần sửa ngoại lệ đã xác nhận thì ghi dòng mới có lý do, dòng cũ giữ nguyên.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SC-063 thêm người xác nhận, nút Xác nhận và danh mục lý do theo G-FG07-05, G-FG07-06.
+  - Spec SC-063 thêm người xác nhận, nút Xác nhận và danh mục lý do (G-FG07-05, G-FG07-06).
 - key: SC-063/FE
   cha: SC-063
   tracker: devtask
@@ -509,6 +531,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:hitl
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs: []
@@ -542,6 +565,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:hitl
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -561,40 +585,6 @@ items:
   - Lệch ngoài dung sai cấu hình, hoặc khi tham số còn trống, thì ngoại lệ luôn chờ người xác nhận, không tự đóng (P-13).
   - Ghi và xác nhận đều có dòng audit_log; ngày đã khoá bị chặn qua dịch vụ khoá ngày của SC-071/BE.
   dinh_nghia_xong: []
-- key: SC-063/DB
-  cha: SC-063
-  tracker: devtask
-  title_vi: Tạo bảng delivery_exceptions
-  spec_refs:
-    sc: []
-    api: []
-    tech: []
-    bang:
-    - delivery_exceptions
-    fr: []
-    adr: []
-    nfr: []
-  labels:
-  - type:devtask
-  - team:backend
-  - constraint:hitl
-  owner: BE-1
-  priority: 2
-  premise_refs:
-  - P-06
-  gap_refs:
-  - G-FG07-02
-  - G-FG07-05
-  mo_ta: 'Viết migration bảng delivery_exceptions, chỉ thêm dòng; thêm chỗ lưu trạng thái xác nhận, người xác nhận, thời điểm và các cột ghi sổ của ADR-003 (P-06, G-FG07-05).
-
-
-    Ràng buộc đặc thù: Bảng chỉ thêm dòng; bước xác nhận lưu người xác nhận (khoá ngoại tới profiles) và thời điểm mà không sửa dòng ngoại lệ gốc, cách lưu được chốt có người duyệt.'
-  pham_vi: ''
-  luong_chinh: []
-  tieu_chi_nghiem_thu:
-  - Cột loại chỉ nhận bốn giá trị thiếu, vượt, trả lại, huỷ một phần; có khoá ngoại tới deliveries.
-  - Người xác nhận có khoá ngoại tới profiles; cách lưu bước xác nhận mà vẫn chỉ thêm dòng được chốt, có người duyệt và ghi vào SKM_DB.
-  dinh_nghia_xong: []
 - key: SC-063/TEST
   cha: SC-063
   tracker: testdesign
@@ -612,6 +602,7 @@ items:
   labels:
   - type:testdesign
   - constraint:hitl
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -623,6 +614,7 @@ items:
   - 'Gửi yêu cầu xác nhận kèm người và giờ giả: bản ghi lưu người của phiên và giờ máy chủ.'
   - 'Người đã ghi ngoại lệ gọi API xác nhận: bị từ chối, ngoại lệ vẫn ở trạng thái chờ.'
   - Ngày còn ngoại lệ chờ xác nhận thì lệnh khoá ở SC-071 bị từ chối; sau khi một người khác xác nhận thì khoá được.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-064
   cha: FG-07
@@ -782,7 +774,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Danh mục lý do và người xác nhận ngoại lệ giao hàng
-  han: Trước sprint của SC-063/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DELIVERY_EXCEPTION_SPEC.md §3, A-2, A-3 (LAB-4)
   spec_refs:
@@ -806,6 +798,43 @@ items:
   gap_refs:
   - G-FG07-06
   mo_ta: Danh mục lý do của ngoại lệ giao hàng (thiếu, vượt, trả lại, huỷ một phần) gồm những lý do nào, vai nào được xác nhận ngoại lệ, và người ghi có được tự xác nhận ngoại lệ của mình không? Spec SC-063 đòi lý do chọn từ danh mục và có người xác nhận, nhưng không liệt kê lý do nào và không nói ai xác nhận.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG07-SO-CAN-GIAO
+  cha: FG-07
+  tracker: investigation
+  title_vi: Số cần giao sau 訂正 khi giao thiếu hoặc huỷ một phần
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Tech Lead
+  nguon: SKM_DELIVERY_EXCEPTION_SPEC.md:180 (LAB-4) · Q-SD1 mục c
+  spec_refs:
+    sc:
+    - SC-050
+    - SC-063
+    api: []
+    tech: []
+    bang:
+    - delivery_exceptions
+    - transactions
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - A8
+    hoi:
+    - Q-SD1
+  labels:
+  - type:investigation
+  - constraint:hitl
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG07-08
+  mo_ta: Khi 引渡不足 (giao thiếu) hoặc 部分キャンセル (huỷ một phần) không có lần giao bù và phần chênh đã đi đường 訂正 (sửa sau xác nhận) ở SC-050, số cần giao của giao dịch tính lại thế nào? Đóng ngoại lệ xong, giao dịch vẫn chưa thành 完了 (xong) vì tổng đã giao còn hụt, mà số cần giao quyết cả lúc 完了 lẫn số tính 精算 (quyết toán). Tech Lead chốt rồi gửi khách xác nhận cùng Q-SD1 trước khi SC-063/BE và SC-050/BE làm; đề xuất số cần giao bằng số lượng giao dịch trừ phần đã 訂正 có duyệt.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu: []

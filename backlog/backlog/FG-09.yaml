@@ -49,6 +49,7 @@ items:
     tech: []
     bang:
     - incentives
+    - invoices
     fr:
     - FR-INC-01
     adr: []
@@ -57,6 +58,7 @@ items:
   - type:story
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -80,6 +82,7 @@ items:
   - Khi hoá đơn trả sau hạn, dù một ngày nghiệp vụ, thì số tiền gợi ý bằng 0.
   - Khi 確定 thì lưu người của phiên, giờ máy chủ, nhật ký có lý do 5–500 ký tự; dòng không đủ điều kiện trả 422 M_12, dòng đã 確定 trả 409 M_03 và không đổi khi chạy lại 判定.
   - Khi lưu dòng gợi ý thất bại thì API trả 500 SAVE_FAILED, màn không cho 確定 (P-22).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-080 sửa theo đáp của INV-GD-03.
 - key: SC-080/FE
@@ -100,6 +103,7 @@ items:
   - team:frontend
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs:
@@ -127,6 +131,7 @@ items:
     tech: []
     bang:
     - incentives
+    - invoices
     fr: []
     adr: []
     nfr: []
@@ -135,6 +140,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -171,6 +177,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -208,17 +215,20 @@ items:
   - type:testdesign
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: QA
   priority: 2
-  premise_refs: []
+  premise_refs:
+  - P-10
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử luồng 判定 (xét) rồi 確定 (xác nhận cuối) của SC-080, gồm ca làm tròn và ca chứng minh tiền thưởng luôn đi qua người xác nhận.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Hoá đơn mà làm tròn trước và làm tròn sau cho hai số khác nhau (ca DS-INC-EDGE-01 khi khách cấp tệp, Q-01): số gợi ý khớp cách nhân 110/100 trước, làm tròn xuống yên sau.'
-  - 'Chạy 判定 rồi không bấm 確定: mọi dòng của kỳ vẫn trống người và thời điểm xác nhận; gửi 確定 kèm người và giờ giả thì bản ghi lưu người của phiên và giờ máy chủ.'
-  - '確定 dòng chưa 判定, dòng không đủ điều kiện, dòng đã 確定: lần lượt nhận 404 M_13, 422 M_12, 409 M_03, không dòng nào đổi.'
+  - 'Ca INC-EDGE-03 (phần lẻ sau khi nhân hệ số thuế) của bộ ca DS-INC-EDGE-01: hoá đơn mà làm tròn trước và làm tròn sau cho hai số khác nhau; số gợi ý khớp cách nhân 110/100 trước, làm tròn xuống yên sau, suất lấy theo GD-17 (P-10).'
+  - 'Chạy 判定 rồi không bấm 確定: mọi dòng của kỳ vẫn trống người và thời điểm xác nhận; gửi 確定 kèm người và giờ giả thì lưu người của phiên và giờ máy chủ; 確定 dòng chưa 判定, không đủ điều kiện, đã 確定 lần lượt nhận 404 M_13, 422 M_12, 409 M_03, không dòng nào đổi.'
+  - 'Ca INC-EDGE-01 (取引率, tức tỷ lệ giao dịch, đúng ngưỡng tối thiểu thì áp đúng bản quy tắc có hiệu lực): chờ INV-GD-03 chốt tiêu chí xếp mức rồi mới viết số kỳ vọng; trước đó ca ghi «chờ đáp», không tính là đạt.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-081
   cha: FG-09
@@ -228,12 +238,11 @@ items:
   spec_refs:
     sc:
     - SC-081
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang:
     - incentives
+    - invoices
     fr:
     - FR-AUDIT-03
     - FR-INC-01
@@ -241,6 +250,7 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:hitl
   - constraint:incentive
   - spec-gap
   owner: PM
@@ -282,6 +292,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:hitl
   - constraint:incentive
   owner: FE-1
   priority: 2
@@ -304,27 +315,28 @@ items:
   title_vi: 'Phía máy chủ: Chi tiết khoản thưởng 完納奨励金'
   spec_refs:
     sc: []
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang:
     - incentives
+    - invoices
     fr: []
     adr: []
     nfr: []
   labels:
   - type:devtask
   - team:backend
+  - constraint:hitl
   - constraint:incentive
   owner: BE-1
   priority: 2
   premise_refs:
+  - P-01
   - P-12
   gap_refs:
   - G-FG09-03
   - G-FG09-04
-  mo_ta: 'Viết spec rồi làm API đọc một dòng thưởng theo mã hoá đơn trên module incentive, trả đủ dữ liệu để tính lại số tiền.
+  mo_ta: 'API đọc mới, chưa có spec (P-01): viết spec rồi làm API đọc một dòng thưởng theo mã hoá đơn trên module incentive, trả đủ dữ liệu để tính lại số tiền.
 
     Ràng buộc đặc thù: API chỉ đọc; không gọi API-215 hay API-216 dù hai API này gắn với màn qua screen_id.'
   pham_vi: ''
@@ -340,9 +352,7 @@ items:
   spec_refs:
     sc:
     - SC-081
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang: []
     fr:
@@ -352,6 +362,7 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:hitl
   - constraint:incentive
   owner: QA
   priority: 2
@@ -372,9 +383,7 @@ items:
   spec_refs:
     sc:
     - SC-082
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang:
     - incentive_adjustments
@@ -385,6 +394,7 @@ items:
   labels:
   - type:story
   - constraint:incentive
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -406,6 +416,7 @@ items:
   - Khi chạy lại 判定 (xét) mà số không đổi thì danh sách không thêm dòng nào (G-FG09-05).
   - Khi lọc theo 業務日 thì danh sách chỉ còn dòng thuộc kỳ chứa ngày đó, theo đơn vị kỳ chốt ở G-FG09-02.
   - Khi người xem ngoài 照合事務 và 財務部門, hoặc 財務部門 chưa có dòng trong ma trận quyền, thì máy chủ trả 403 (P-12).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Cách xác nhận và đưa chênh lệch vào kỳ sau cập nhật theo đáp của câu hỏi ở G-FG09-06.
 - key: SC-082/FE
@@ -425,6 +436,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:incentive
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs: []
@@ -444,9 +456,7 @@ items:
   title_vi: 'Phía máy chủ: Danh sách chênh lệch kỳ sau 完納奨励金'
   spec_refs:
     sc: []
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang:
     - incentive_adjustments
@@ -457,14 +467,16 @@ items:
   - type:devtask
   - team:backend
   - constraint:incentive
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
+  - P-01
   - P-12
   gap_refs:
   - G-FG09-02
   - G-FG09-04
-  mo_ta: 'Viết spec rồi làm API đọc danh sách chênh lệch kỳ sau trên module incentive, có lọc và phân trang.
+  mo_ta: 'API đọc mới, chưa có spec (P-01): viết spec rồi làm API đọc danh sách chênh lệch kỳ sau trên module incentive, có lọc và phân trang.
 
     Ràng buộc đặc thù: API chỉ đọc incentive_adjustments; dòng chênh lệch chỉ do TECH-304/BE ghi, không API nào khác thêm hay sửa.'
   pham_vi: ''
@@ -480,9 +492,7 @@ items:
   spec_refs:
     sc:
     - SC-082
-    api:
-    - API-215
-    - API-216
+    api: []
     tech: []
     bang: []
     fr:
@@ -492,6 +502,7 @@ items:
   labels:
   - type:testdesign
   - constraint:incentive
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -503,6 +514,7 @@ items:
   - '確定 một dòng, đổi một dữ liệu đầu vào của hoá đơn đó rồi chạy lại 判定 (xét): có một dòng chênh lệch bằng hiệu hai số đã làm tròn, dòng thưởng gốc không đổi.'
   - 'Chạy lại 判定 lần nữa khi không đổi gì: không thêm dòng chênh lệch.'
   - Tài khoản ngoài hai vai được đọc nhận 403.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: TECH-304
   cha: FG-09
@@ -523,6 +535,7 @@ items:
   - type:story
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -532,24 +545,23 @@ items:
   gap_refs:
   - G-FG09-06
   - G-FG09-08
-  mo_ta: 'TECH-304 là luồng lõi của 完納奨励金 (thưởng thanh toán đủ hạn): máy 判定 (xét) từng hoá đơn và lưu gợi ý, người 確定 (xác nhận cuối) từng dòng, dòng đã 確定 mà tính lại khác thì sinh 次期差分 (chênh lệch đẩy sang kỳ sau). Bảy yếu tố của BR-INC-01 nằm trong một dịch vụ dùng chung.
+  mo_ta: 'Luồng lõi của 完納奨励金 (thưởng thanh toán đủ hạn): máy 判定 (xét) từng hoá đơn và lưu gợi ý, người 確定 (xác nhận cuối) từng dòng; dòng đã 確定 mà tính lại khác thì sinh 次期差分 (chênh lệch đẩy sang kỳ sau). Bảy yếu tố của BR-INC-01 gom vào một dịch vụ.
 
-    Ràng buộc đặc thù: Suất theo bản quy tắc hiệu lực tại hạn thanh toán của từng hoá đơn, không theo ngày chạy; nhân 110/100 trước, làm tròn xuống yên sau; trả sau hạn bằng 0, không ân hạn.'
-  pham_vi: TECH-304 (SPEC-SKM-304) phục vụ API-215, API-216; đọc `invoices`, `payments`, bản quy tắc incentive của FG-10; ghi `incentives`, `incentive_adjustments` và nhật ký kiểm toán.
+    Ràng buộc đặc thù: Suất theo bản quy tắc hiệu lực tại hạn thanh toán, không theo ngày chạy; nhân 110/100 trước, làm tròn xuống yên sau.'
+  pham_vi: Phục vụ API-215, API-216; đọc `invoices`, `payments`, quy tắc FG-10; ghi `incentives`, `incentive_adjustments`, `audit_log`.
   luong_chinh:
-  - Dịch vụ nhận mã kỳ, đọc hoá đơn và các lần thanh toán của kỳ.
-  - Với từng hoá đơn, dịch vụ lấy bản quy tắc hiệu lực tại hạn thanh toán và ghi ngày hiệu lực của bản.
-  - Dịch vụ xét đủ điều kiện theo ngày trả so với hạn, tính số tiền, lưu dòng gợi ý.
-  - Dòng đã 確定 không bị ghi đè; số mới khác thì dịch vụ ghi một dòng chênh lệch cho kỳ sau.
-  - Người 確定 từng dòng qua API-216; dịch vụ ghi người, thời điểm và nhật ký.
+  - 'Với từng hoá đơn của kỳ: lấy bản quy tắc hiệu lực tại hạn thanh toán, xét đủ điều kiện theo ngày trả so với hạn, tính số tiền, lưu dòng gợi ý.'
+  - Dòng đã 確定 không bị ghi đè; số mới khác thì ghi một dòng chênh lệch cho kỳ sau.
+  - Người 確定 từng dòng qua API-216; dịch vụ ghi người, thời điểm, nhật ký.
   tieu_chi_nghiem_thu:
-  - Khi hai hoá đơn cùng kỳ có hạn thanh toán ở hai bên ngày đổi bản quy tắc thì mỗi dòng mang suất và ngày hiệu lực của bản riêng.
-  - Khi tích có phần lẻ thì kết quả làm tròn xuống yên một lần ở cuối.
+  - Khi hai hoá đơn cùng kỳ có hạn thanh toán ở hai bên ngày đổi quy tắc thì mỗi dòng mang suất và ngày hiệu lực của bản riêng.
+  - Khi tích có phần lẻ thì làm tròn xuống yên một lần ở cuối.
   - Khi hoá đơn trả thiếu hoặc lần trả cuối sau hạn theo 業務日 (ngày nghiệp vụ) giờ Nhật thì số tiền bằng 0 (G-FG09-08).
   - Khi lưu dòng gợi ý thất bại thì luồng dừng với SAVE_FAILED, không dòng nào được 確定 (P-22).
-  - Khi 確定 thì người xác nhận lấy từ phiên; người 判定 và người 確定 được là một người.
+  - Khi 確定 thì người xác nhận lấy từ phiên; người 判定 và người 確定 có thể trùng.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec TECH-304 đóng Q1 theo đáp INV-TECH-304, ghi luật chênh lệch của G-FG09-05.
+  - Spec TECH-304 đóng Q1 theo INV-TECH-304, ghi luật chênh lệch G-FG09-05.
 - key: TECH-304/BE
   cha: TECH-304
   tracker: devtask
@@ -570,6 +582,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
@@ -592,7 +605,7 @@ items:
 - key: TECH-304/TEST
   cha: TECH-304
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Luồng thưởng 完納奨励金, máy 判定 (xét), người 確定 (xác nhận)'
+  title_vi: 'Ca kiểm thử: Thưởng 完納奨励金, máy 判定 (xét), người 確定 (xác nhận)'
   spec_refs:
     sc: []
     api:
@@ -608,6 +621,7 @@ items:
   - type:testdesign
   - constraint:hitl
   - constraint:incentive
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -619,11 +633,12 @@ items:
   - 'Hai hoá đơn có hạn thanh toán ở hai bên ngày đổi bản quy tắc: mỗi dòng mang suất và ngày hiệu lực của bản đúng với hạn của nó.'
   - Hoá đơn trả đủ đúng ngày hạn được thưởng; trả sau hạn một ngày nghiệp vụ hoặc trả thiếu được 0.
   - 'Gây lỗi khi lưu dòng gợi ý: API trả 500 SAVE_FAILED, gọi 確定 cho hoá đơn đó nhận 404 M_13.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: DATA-FG09
   cha: FG-09
   tracker: story
-  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-INCENTIVE): invoices, payments, incentive_adjustments'
+  title_vi: Tạo bảng invoices, payments, incentive_adjustments
   spec_refs:
     sc: []
     api: []
@@ -699,7 +714,7 @@ items:
 - key: DATA-FG09/TEST
   cha: DATA-FG09
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-INCENTIVE): invoices, payments, incentive_adjustments'
+  title_vi: 'Ca kiểm thử: Bảng chưa có màn ghi của FG-09'
   spec_refs:
     sc: []
     api: []
@@ -781,11 +796,46 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu: []
   dinh_nghia_xong: []
+- key: INV-Q-23
+  cha: FG-09
+  tracker: investigation
+  title_vi: Ranh giới 対象期 của 完納奨励金 và đường nhập 入金
+  han: 31/10/2026 (mức chặn, theo LAB-4)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: PREMISE.md:41 (LAB-4) · Q-23 (LAB-01), mức chặn
+  spec_refs:
+    sc:
+    - SC-080
+    - SC-082
+    api:
+    - API-213
+    - API-214
+    tech:
+    - TECH-304
+    bang:
+    - invoices
+    - monthly_closings
+    - payments
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:incentive
+  owner: BrSE
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 対象期 (kỳ tính) của 完納奨励金 (thưởng thanh toán đủ hạn) bắt đầu và kết thúc ở đâu, và 入金 (tiền về) vào hệ bằng đường nào, ai ghi? RFP nhắc 対象期 mà không định nghĩa ranh giới, nên cách gom hoá đơn của cả nhóm thưởng chưa chốt; Q-23 ở mức chặn, khách cần đáp trước khi làm TECH-304/BE. Trong lúc chờ, kỳ là tháng lịch theo 業務日 (ngày nghiệp vụ) JST và 財務部門 (bộ phận tài chính) xác nhận 入金 rồi nhập kết quả (P-44).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
 - key: INV-FG09-CHENH-LECH
   cha: FG-09
   tracker: investigation
   title_vi: Ai xác nhận 次期差分 và cách đưa chênh lệch vào kỳ sau
-  han: Trước sprint của TECH-304/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_INCENTIVE_NEXT_DIFF_SPEC.md §3 (LAB-4)
   spec_refs:
@@ -810,6 +860,39 @@ items:
   gap_refs:
   - G-FG09-06
   mo_ta: Dòng 次期差分 (chênh lệch đẩy sang kỳ sau) của 完納奨励金 (thưởng thanh toán đủ hạn) có cần người 確定 (xác nhận cuối) như dòng thưởng thường không, ai xác nhận, và chênh lệch được cộng vào tiền trả của kỳ nào? Spec chỉ nói máy ghi dòng chênh lệch, chưa có bước người xác nhận và chưa nói cách chọn kỳ phản ánh.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG09-GHI-DE
+  cha: FG-09
+  tracker: investigation
+  title_vi: Bảng incentives chỉ thêm dòng hay cho ghi đè dòng chưa 確定
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Tech Lead
+  nguon: data-model.md FG-09 (cột Lưu trữ) · SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md §4.2 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-080
+    api: []
+    tech:
+    - TECH-304
+    bang:
+    - incentives
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:incentive
+  - spec-gap
+  owner: BE-1
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG09-01
+  mo_ta: Bảng incentives được ghi đè dòng chưa 確定 (xác nhận cuối), hay giữ chỉ thêm dòng và ghi kết quả 確定 thành dòng mới? data-model xếp incentives là bảng chỉ thêm, còn TECH-304 cho 判定 (xét) ghi đè dòng chưa 確定 và cho 確定, 却下 (bác) cập nhật dòng đó. Tech Lead chốt trước khi SC-080/DB viết migration; đề xuất ghi đè dòng chưa 確定, ghi cột xác nhận một lần rồi chặn mọi sửa.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu: []

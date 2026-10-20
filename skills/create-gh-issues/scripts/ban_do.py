@@ -2,8 +2,8 @@
 
 Bản ghi: {so, url, id, node_id, item_id, buoc: tao|them|field|cha, cha, cha_ok, bam, bam_than}. `bam_than` = sha256 thân đã
 đăng (check --snapshot so với thân dựng lại từ seed); `bam` = sha256 của (title, bam_than, nhãn đã sắp) — `--cap-nhat` so
-để PATCH. Bản thừa đã xử lý = issue ĐÃ ĐÓNG mang nhãn `spec-gap` nằm cạnh một issue khác cùng key; issue spec-gap duy nhất
-của một key (kể cả đã đóng) vẫn là issue thật của key đó.
+để PATCH. Bản thừa đã xử lý = issue ĐÃ ĐÓNG mang nhãn thừa `NHAN_THUA` nằm cạnh một issue khác cùng key; issue mang nhãn
+thừa duy nhất của một key (kể cả đã đóng) vẫn là issue của key đó. Nhãn thừa tách khỏi `spec-gap` (= chỗ hở của spec).
 """
 import hashlib
 import json
@@ -14,7 +14,7 @@ from lib import LoiBoSinh, doc_json, ghi_json_nguyen_tu
 from seed_doc import khoa_tu_title  # noqa: F401 (tái xuất)
 
 BUOC = ("tao", "them", "field", "cha")
-NHAN_THUA = "spec-gap"
+NHAN_THUA = "da-thay-the"
 
 
 def da_xong(buoc: str | None, moc: str) -> bool:
@@ -75,7 +75,7 @@ def hoa_map(m: dict, issues: list[dict] | None, seed_cha: dict) -> int:
         chinh[k], _ = chon_ban_chinh(ds)
         if chinh[k] is None:
             raise LoiBoSinh(f"{k}: {len(ds)} issue trùng key trên GitHub ({', '.join('#' + str(i['number']) for i in ds)})"
-                            " — đóng bản thừa với nhãn spec-gap rồi chạy lại")
+                            f" — đóng bản thừa với nhãn {NHAN_THUA} rồi chạy lại")
     so_github = {i["number"] for i in chinh.values()}
     for k, e in m.items():
         if e.get("so") not in so_github and k in seed_cha:

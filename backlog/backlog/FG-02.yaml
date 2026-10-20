@@ -199,7 +199,7 @@ items:
   gap_refs:
   - G-FG02-01
   - G-FG02-04
-  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) tạo và sửa hồ sơ người tham gia thuộc bốn loại 卸売業者 (bán buôn đầu mối), 仲卸 (trung gian bán buôn), 売買参加者 (người tham gia mua bán), 買出人 (người mua lẻ). Đây là một trong sáu màn lõi có validation đủ ở LAB-4. Màn chỉ ghi kết quả cấp giấy đã xét ngoài hệ thống.
+  mo_ta: '運用担当者 (người phụ trách vận hành tư cách) tạo và sửa hồ sơ người tham gia thuộc bốn loại 卸売業者 (bán buôn đầu mối), 仲卸 (trung gian bán buôn), 売買参加者 (người tham gia mua bán), 買出人 (người mua lẻ). Đây là một trong các màn lõi mà LAB-4 đã viết đủ luật kiểm tra đầu vào. Màn chỉ ghi kết quả cấp giấy đã xét ngoài hệ thống.
 
     Ràng buộc đặc thù: 仲卸 nhập số, hạn 許可, 売買参加者 nhập số, hạn 承認 vào hai bộ ô riêng; đổi loại thì bộ ô kia bị xoá trắng.'
   pham_vi: Màn SC-011 (SPEC-SKM-108); bảng `participants` (chủ migration, ràng buộc ck_participants_tier_exclusive). SC-011/BE viết spec API rồi làm theo P-01.
@@ -335,7 +335,7 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử từng luật validation và hai nhánh giấy của SC-011.
+  mo_ta: Thiết kế ca kiểm thử từng luật kiểm tra đầu vào và hai nhánh giấy của SC-011.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -833,7 +833,7 @@ items:
   cha: FG-02
   tracker: investigation
   title_vi: Bảng chuyển trạng thái tư cách và trạng thái 再審査
-  han: Trước sprint của SC-013/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_QUALIFICATION_CHANGE_SPEC.md §3 (LAB-4) · rfp p.37 FIG-010
   spec_refs:

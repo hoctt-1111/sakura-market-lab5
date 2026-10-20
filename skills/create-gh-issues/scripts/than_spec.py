@@ -112,7 +112,7 @@ def du_lieu(it: dict, ctx) -> list[str]:
     fr = r.get("fr") or m.get("fr_chi_phoi")
     d = {
         "item": f"Số item trên màn: {len(its)}" if "items" in m else None,
-        "validation": (f"Số điều kiện validation theo FR: {len(m['validation'])}{g.get('ghi_chu_validation', '')}"
+        "validation": (f"Số điều kiện kiểm tra đầu vào theo FR: {len(m['validation'])}{g.get('ghi_chu_validation', '')}"
                        if "validation" in m else None),
         "fr": ("FR chi phối: " + ", ".join(fr)) if fr else None,
         "tang": f"Tầng đặc quyền: {dien('tang', m['tang_dac_quyen'])}" if m.get("tang_dac_quyen") else None,

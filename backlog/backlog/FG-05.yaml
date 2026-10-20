@@ -176,7 +176,7 @@ items:
   tieu_chi_nghiem_thu:
   - Có thêm cột số lượng và thời điểm ghi mà FR-SERI-02 đòi, ghi lại vào SKM_DB (G-FG05-01).
   - Lần thử có ràng buộc duy nhất theo cặp lô và lần thử; trần lần thử giữ 2 như SKM_DB tới khi G-FG05-07 có đáp.
-  - Migration chạy sau DATA-FG05/DB vì có khoá ngoại tới auction_sessions.
+  - Migration chạy sau SC-041/DB vì có khoá ngoại tới auction_sessions.
   dinh_nghia_xong: []
 - key: SC-040/TEST
   cha: SC-040
@@ -224,6 +224,8 @@ items:
     tech: []
     bang:
     - auction_results
+    - auction_sessions
+    - transactions
     fr:
     - FR-SERI-03
     adr: []
@@ -231,6 +233,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -239,21 +242,23 @@ items:
   gap_refs:
   - G-FG05-03
   - G-FG05-04
-  mo_ta: 'せり進行役 (người điều hành phiên), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) tra lại kết quả せり (đấu giá) theo 業務日 (ngày nghiệp vụ) và trạng thái: từng lần thử, người trúng, đơn giá và ai đã nhập. Màn cũng tạo khung hai phiên của ngày, vì SC-040 chỉ chọn được phiên đã có.
+  mo_ta: 'せり進行役 (người điều hành phiên), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) tra lại kết quả せり (đấu giá) theo 業務日 (ngày nghiệp vụ) và trạng thái: từng lần thử, người trúng, đơn giá, người nhập. Màn cũng tạo khung hai phiên của ngày, vì SC-040 chỉ chọn phiên đã có.
 
-    Ràng buộc đặc thù: Mỗi dòng hiện người nhập kết quả; kết quả bị sửa về sau thì hiện trước, sau và lý do, để lần ra ai quyết.'
-  pham_vi: Màn SC-041 (SPEC-SKM-124); API-211 (tạo khung phiên) và API đọc danh sách viết mới ở SC-041/BE (G-FG05-06); bảng `auction_results` (chỉ đọc), `auction_sessions` (migration thuộc DATA-FG05).
+    Ràng buộc đặc thù: Mỗi dòng hiện người nhập; kết quả sửa về sau hiện trước, sau và lý do.'
+  pham_vi: Màn SC-041 (SPEC-SKM-124); API-211 (tạo khung phiên), API đọc danh sách do SC-041/BE viết (G-FG05-06); bảng `auction_results` (chỉ đọc), `auction_sessions` (migration thuộc SC-041/DB).
   luong_chinh:
-  - Người dùng mở màn; máy chủ trả kết quả せり của 業務日 hiện tại, trang đầu.
-  - Người dùng lọc theo ngày và trạng thái; máy chủ trả lại danh sách, không đổi dữ liệu.
-  - せり進行役 bấm tạo phiên cho một ngày; máy chủ tạo đúng hai phiên theo khung giờ của 業務規程 (quy chế nghiệp vụ).
+  - Người dùng mở màn; máy chủ trả trang đầu kết quả せり của 業務日 hiện tại.
+  - Người dùng lọc theo ngày và trạng thái; dữ liệu không đổi.
+  - せり進行役 bấm tạo phiên cho một ngày; máy chủ tạo hai phiên theo khung giờ của 業務規程 (quy chế nghiệp vụ).
   tieu_chi_nghiem_thu:
   - Khi tạo phiên cho một ngày thì có đúng hai phiên, Ca 1 05:00–07:00 và Ca 2 15:00–16:30; tạo lần hai cho cùng ngày thì trả 409.
   - Khi lô có hai lần thử thì danh sách hiện cả hai dòng, mỗi dòng mang người nhập của lần đó.
-  - Khi kết quả của một lô đã được sửa thì dòng hiện giá trị trước, sau và lý do sửa (G-FG05-03).
-  - Khi người xem thuộc 内部監査 mà ma trận quyền chưa có dòng cho vai đó thì máy chủ trả 403 (P-12).
+  - Khi kết quả của lô đã sửa thì dòng hiện giá trị trước, sau và lý do (G-FG05-03).
+  - Khi 内部監査 xem mà ma trận quyền chưa có dòng cho vai này thì máy chủ trả 403 (P-12).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-041 thêm nút tạo phiên và cột trước, sau, lý do (G-FG05-03, G-FG05-04).
+  - Ràng buộc duy nhất theo ngày và ca ghi lại vào SKM_DB (G-FG05-05).
 - key: SC-041/FE
   cha: SC-041
   tracker: devtask
@@ -271,6 +276,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:hitl
+  - constraint:jst
   owner: FE-1
   priority: 2
   premise_refs: []
@@ -297,6 +303,8 @@ items:
     tech: []
     bang:
     - auction_results
+    - auction_sessions
+    - transactions
     fr: []
     adr: []
     nfr: []
@@ -304,15 +312,17 @@ items:
   - type:devtask
   - team:backend
   - constraint:hitl
+  - constraint:jst
   owner: BE-1
   priority: 2
   premise_refs:
+  - P-01
   - P-05
   - P-12
   gap_refs:
   - G-FG05-03
   - G-FG05-06
-  mo_ta: 'Làm API-211, và viết spec rồi làm API đọc danh sách kết quả せり (đấu giá) trên module trade có lọc, phân trang và lịch sử sửa của từng dòng.
+  mo_ta: 'Làm API-211, cùng API đọc mới, chưa có spec (P-01): danh sách kết quả せり (đấu giá) trên module trade có lọc, phân trang và lịch sử sửa của từng dòng.
 
     Ràng buộc đặc thù: Lịch sử sửa đọc qua module ghi nhật ký kiểm toán, không đọc thẳng bảng nhật ký (ADR-003).'
   pham_vi: ''
@@ -321,6 +331,37 @@ items:
   - API-211 tạo đúng hai phiên theo khung giờ cấu hình của 業務規程 (quy chế nghiệp vụ), không nhận giờ từ trình duyệt; ngày đã có phiên trả 409.
   - API đọc trả lần thử, người trúng, đơn giá, người nhập, và trước, sau, lý do khi có sửa (G-FG05-03, G-FG05-06).
   - Vai được đọc là せり進行役 (người điều hành phiên), 照合事務 (nhóm đối soát), 内部監査 (kiểm toán nội bộ) theo ma trận quyền (P-12); chỉ せり進行役 gọi được API-211.
+  dinh_nghia_xong: []
+- key: SC-041/DB
+  cha: SC-041
+  tracker: devtask
+  title_vi: Tạo bảng auction_sessions
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang:
+    - auction_sessions
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  - constraint:hitl
+  - constraint:jst
+  owner: BE-1
+  priority: 2
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-FG05-05
+  mo_ta: Viết migration bảng auction_sessions trên kho mã hệ đích theo SKM_DB, thêm ràng buộc duy nhất theo ngày và ca.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Hai phiên cùng ngày cùng ca bị từ chối; trạng thái mặc định prepared.
+  - Migration chạy trước SC-040/DB vì auction_results có khoá ngoại tới bảng này.
   dinh_nghia_xong: []
 - key: SC-041/TEST
   cha: SC-041
@@ -340,6 +381,7 @@ items:
   labels:
   - type:testdesign
   - constraint:hitl
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -351,6 +393,7 @@ items:
   - 'Lô có hai lần thử do hai người nhập: danh sách hiện đủ hai dòng, đúng người của từng lần, khớp cơ sở dữ liệu.'
   - Tạo phiên cho một ngày ra đúng hai phiên 05:00–07:00 và 15:00–16:30; gọi lại cho cùng ngày trả 409, không thêm phiên.
   - Tài khoản ngoài ba vai được đọc nhận 403; tài khoản 照合事務 (nhóm đối soát) gọi API-211 nhận 403.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: TECH-302
   cha: FG-05
@@ -460,98 +503,11 @@ items:
   - Tái せり lần hai trả 409 M_23; chuyển 相対 cho lô đã bán trả 409 M_10.
   - 'Quy tắc bán cho bên thứ ba tắt: lô ế không bán trực tiếp được (P-18).'
   dinh_nghia_xong: []
-- key: DATA-FG05
-  cha: FG-05
-  tracker: story
-  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-TRADE): auction_sessions'
-  spec_refs:
-    sc: []
-    api: []
-    tech: []
-    bang:
-    - auction_sessions
-    fr: []
-    adr: []
-    nfr: []
-  labels:
-  - type:story
-  - spec-gap
-  owner: PM
-  priority: 3
-  premise_refs:
-  - P-04
-  gap_refs:
-  - G-FG05-05
-  mo_ta: Story này dựng bảng khung phiên せり (đấu giá) mà API-211 ghi, SC-040 và API-212 đọc để chọn phiên. Bảng chỉ giữ ngày, ca và giờ của phiên; hệ thống không điều hành phiên.
-  pham_vi: Bảng `auction_sessions` (chủ migration, vùng D-TRADE); dòng do API-211 của SC-041 ghi, SC-040 và API-212 đọc.
-  luong_chinh:
-  - BE-1 đối chiếu cột của bảng với SKM_DB và chốt ràng buộc duy nhất theo ngày và ca (G-FG05-05).
-  - BE-1 viết migration và giá trị mặc định của trạng thái phiên.
-  - BE-1 nạp dữ liệu mẫu hai phiên của một ngày cho TEST của SC-040 và SC-041.
-  tieu_chi_nghiem_thu:
-  - Khi ghi phiên thứ hai trùng ngày và ca thì cơ sở dữ liệu từ chối, khớp mã 409 của API-211.
-  - Khi tạo phiên không nêu trạng thái thì phiên mang trạng thái mặc định prepared.
-  dinh_nghia_xong:
-  - Ràng buộc duy nhất theo ngày và ca ghi lại vào SKM_DB (G-FG05-05).
-- key: DATA-FG05/DB
-  cha: DATA-FG05
-  tracker: devtask
-  title_vi: Tạo bảng auction_sessions
-  spec_refs:
-    sc: []
-    api: []
-    tech: []
-    bang:
-    - auction_sessions
-    fr: []
-    adr: []
-    nfr: []
-  labels:
-  - type:devtask
-  - team:backend
-  owner: BE-1
-  priority: 3
-  premise_refs:
-  - P-04
-  gap_refs:
-  - G-FG05-05
-  mo_ta: Viết migration bảng auction_sessions trên kho mã hệ đích theo SKM_DB, thêm ràng buộc duy nhất theo ngày và ca.
-  pham_vi: ''
-  luong_chinh: []
-  tieu_chi_nghiem_thu:
-  - Hai phiên cùng ngày cùng ca bị từ chối; trạng thái mặc định prepared.
-  - Migration chạy trước SC-040/DB vì auction_results có khoá ngoại tới bảng này.
-  dinh_nghia_xong: []
-- key: DATA-FG05/TEST
-  cha: DATA-FG05
-  tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-TRADE): auction_sessions'
-  spec_refs:
-    sc: []
-    api: []
-    tech: []
-    bang: []
-    fr: []
-    adr: []
-    nfr: []
-  labels:
-  - type:testdesign
-  owner: QA
-  priority: 3
-  premise_refs: []
-  gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử ràng buộc của bảng auction_sessions.
-  pham_vi: ''
-  luong_chinh: []
-  tieu_chi_nghiem_thu:
-  - 'Ghi hai phiên cùng ngày cùng ca: lần hai bị cơ sở dữ liệu từ chối.'
-  - 'Xoá một phiên đã có kết quả せり (đấu giá): bị khoá ngoại chặn.'
-  dinh_nghia_xong: []
 - key: INV-FG05-TAI-SERI
   cha: FG-05
   tracker: investigation
   title_vi: Số lần tái せり tối đa cho mỗi lô
-  han: Trước sprint của SC-040/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_SYSTEM_DESIGN.md A4 (LAB-4)
   spec_refs:

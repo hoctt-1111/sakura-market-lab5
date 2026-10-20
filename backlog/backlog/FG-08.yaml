@@ -50,6 +50,7 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -57,19 +58,20 @@ items:
   - P-12
   gap_refs:
   - G-FG08-04
-  mo_ta: '照合事務 (nhóm đối soát) xem bảng 日次照合 (đối soát ngày): mỗi 業務日 (ngày nghiệp vụ) có số giao dịch, số lần giao, số ngoại lệ, tổng tiền và giờ lập. Bảng do tác vụ nền EV3 lập sau khi hết ngày; chỗ lệch giữa ba nguồn được mở thành tranh chấp chứ không tự sửa số.'
-  pham_vi: Màn SC-070 (SPEC-SKM-134) ở văn phòng, chỉ xem; tác vụ EV3 thêm dòng `daily_reconciliations` (migration thuộc DATA-FG08) và mở `disputes`; đọc `transactions`, `transaction_cancellations`, `deliveries`, `delivery_exceptions`; API đọc chưa có spec, SC-070/BE viết rồi làm (P-01).
+  mo_ta: '照合事務 (nhóm đối soát) xem bảng 日次照合 (đối soát ngày): mỗi 業務日 (ngày nghiệp vụ) có số giao dịch, số lần giao, số ngoại lệ, tổng tiền và giờ lập. Bảng do tác vụ nền EV3 lập khi hết ngày rồi báo 照合事務; chỗ lệch giữa ba nguồn thành tranh chấp, không tự sửa số. EV3 không khoá ngày; khoá là việc của 照合事務 ở SC-071.'
+  pham_vi: Màn SC-070 ở văn phòng, chỉ xem; tác vụ EV3 thêm dòng `daily_reconciliations` (migration thuộc DATA-FG08) và mở `disputes`; đọc `transactions`, `transaction_cancellations`, `deliveries`, `delivery_exceptions`; API đọc chưa có spec, SC-070/BE viết rồi làm (P-01).
   luong_chinh:
   - Hết 業務日, tác vụ EV3 đếm giao dịch còn hiệu lực, lần giao và ngoại lệ của ngày, cộng tổng tiền rồi thêm một dòng đối soát.
   - Khi ba nguồn lệch nhau, tác vụ mở tranh chấp cho ngày đó; ngày chưa khoá được tới khi tranh chấp đóng.
   - Lỗi thì tác vụ thử lại theo tham số; hết lượt thì dừng và đẩy cảnh báo vào SC-122 (P-14).
   - Người đối soát lọc theo khoảng ngày và xem dòng mới nhất của từng ngày.
   tieu_chi_nghiem_thu:
-  - Khi EV3 chạy lại cho cùng 業務日 thì có thêm dòng mới, dòng cũ giữ nguyên và màn hiện dòng có giờ lập mới nhất.
+  - Khi EV3 chạy lại cùng 業務日 thì thêm dòng mới, dòng cũ giữ nguyên, màn hiện dòng có giờ lập mới nhất.
   - Khi giao dịch đã có dòng huỷ thì không được tính vào số giao dịch và tổng tiền của ngày (G-FG08-04).
   - Khi ba nguồn lệch thì có một tranh chấp đang mở cho ngày đó.
-  - Khi tác vụ hết số lần thử thì không có dòng đối soát mới, ngày không bị khoá và SC-122 có một cảnh báo (P-14).
+  - Khi tác vụ hết lượt thử thì không có dòng đối soát mới, ngày không bị khoá và SC-122 có một cảnh báo (P-14).
   - Khi người gọi không mang vai 照合事務 thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-070 ghi cách đếm giao dịch còn hiệu lực và luật lệch của EV3 theo G-FG08-04.
 - key: SC-070/FE
@@ -88,6 +90,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs: []
@@ -117,6 +120,7 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -148,6 +152,7 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -159,6 +164,7 @@ items:
   - 'Ngày có giao dịch đã huỷ: số giao dịch và tổng tiền không tính giao dịch đó.'
   - 'Giả lập lỗi tới khi hết lượt thử: không có dòng mới, ngày không khoá, SC-122 có cảnh báo.'
   - 'Chạy lại cho cùng ngày: thêm dòng mới, dòng cũ giữ nguyên, màn hiện dòng mới nhất.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-071
   cha: FG-08
@@ -168,10 +174,12 @@ items:
   spec_refs:
     sc:
     - SC-071
-    api: []
+    api:
+    - API-221
     tech: []
     bang:
     - business_day_locks
+    - transactions
     fr:
     - FR-CORR-03
     - FR-SETTLE-02
@@ -179,7 +187,9 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:aitai
   - constraint:hitl
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -188,24 +198,25 @@ items:
   gap_refs:
   - G-FG08-01
   - G-FG08-03
-  mo_ta: '照合事務 (nhóm đối soát) hoặc 照合部門長 (trưởng bộ phận đối soát) khoá một 業務日 (ngày nghiệp vụ) sau khi xem bảng đối soát; khoá rồi thì chỉ còn đường điều chỉnh có duyệt của FG-06. Khoá là quyết định của người; máy kiểm điều kiện rồi ghi ai khoá, lúc nào, vì sao.
+  mo_ta: '照合事務 (nhóm đối soát) hoặc 照合部門長 (trưởng bộ phận đối soát) khoá một 業務日 (ngày nghiệp vụ) sau khi xem bảng đối soát; khoá rồi thì chỉ còn đường điều chỉnh có duyệt của FG-06.
 
 
     Ràng buộc đặc thù: Khoá 業務日 là quyết định của người đối soát; máy chỉ kiểm điều kiện rồi ghi người khoá từ phiên, giờ máy chủ và lý do.'
   pham_vi:
-  - Màn SC-071 (SPEC-SKM-135) ở văn phòng; bảng `business_day_locks` (chủ migration, chỉ thêm dòng).
-  - Lệnh khoá ngày và dịch vụ kiểm ngày đã khoá chưa có spec, SC-071/BE viết rồi làm; chốt hoá đơn tháng cho FG-09 tách thành story API-213, gọi riêng (G-FG08-01).
+  - Màn SC-071 ở văn phòng; bảng `business_day_locks` (chủ migration, chỉ thêm dòng).
+  - Khoá gọi chế độ `businessDay` + `reason` của SKM_BILLING_CLOSE (thiết kế đích LAB-4 0.4.1), chỉ ghi `business_day_locks`, `audit_log`; chốt tháng là story API-213 (G-FG08-01).
   luong_chinh:
   - Người đối soát chọn 業務日, nhập lý do rồi bấm Khoá.
   - Máy chủ kiểm ngày đã có bảng đối soát, không còn tranh chấp mở hay ngoại lệ giao hàng chờ xác nhận, và chưa bị khoá.
-  - Máy chủ thêm một dòng business_day_locks với người khoá lấy từ phiên, giờ máy chủ, và ghi audit_log.
+  - Máy chủ thêm một dòng business_day_locks với người khoá từ phiên, giờ máy chủ, và ghi audit_log.
   tieu_chi_nghiem_thu:
-  - Khi người đối soát bấm Khoá thì hệ thống ghi người khoá của phiên, giờ máy chủ và lý do; người và giờ gửi từ trình duyệt bị bỏ qua.
+  - Khi bấm Khoá thì hệ thống ghi người khoá của phiên, giờ máy chủ và lý do; người và giờ gửi từ trình duyệt bị bỏ qua.
   - Khi ngày còn tranh chấp mở, ngoại lệ chờ xác nhận, chưa có bảng đối soát hoặc đã khoá thì lệnh khoá bị từ chối, không ghi dòng nào.
   - Khi mất kết nối thì màn báo không khoá được và không lưu cục bộ (ADR-010).
   - Khi API-223, SC-060 hay SC-063 ghi vào ngày đã khoá thì bị chặn bằng mã ngày đã khoá (P-24) và có dòng audit_log.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SC-071, API-213 cập nhật theo G-FG08-01, G-FG08-02 và đáp của INV-FG08-KHOA-NGAY.
+  - Spec SC-071, API-213 cập nhật theo G-FG08-01, G-FG08-02 và đáp INV-FG08-KHOA-NGAY.
 - key: SC-071/FE
   cha: SC-071
   tracker: devtask
@@ -222,7 +233,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:aitai
   - constraint:hitl
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs: []
@@ -245,17 +258,21 @@ items:
   title_vi: 'Phía máy chủ: Khoá ngày nghiệp vụ'
   spec_refs:
     sc: []
-    api: []
+    api:
+    - API-221
     tech: []
     bang:
     - business_day_locks
+    - transactions
     fr: []
     adr: []
     nfr: []
   labels:
   - type:devtask
   - team:backend
+  - constraint:aitai
   - constraint:hitl
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -265,7 +282,7 @@ items:
   - G-FG08-01
   - G-FG08-02
   - G-FG08-08
-  mo_ta: 'Viết spec rồi làm lệnh khoá ngày trên module settle và dịch vụ kiểm ngày đã khoá cho module khác gọi; lệnh chốt hoá đơn tháng tách sang story API-213 (G-FG08-01).
+  mo_ta: 'Làm chế độ khoá ngày (`businessDay` + `reason`) của SKM_BILLING_CLOSE trên module settle, phần LAB-4 0.4.1 mới thiết kế, và dịch vụ kiểm ngày đã khoá cho module khác gọi; chốt hoá đơn tháng thuộc story API-213 (G-FG08-01).
 
 
     Ràng buộc đặc thù: Lệnh khoá ghi người của phiên, giờ máy chủ và lý do vào business_day_locks cùng audit_log; không tác vụ nền nào tự khoá ngày thay người.'
@@ -292,7 +309,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:aitai
   - constraint:hitl
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -316,7 +335,8 @@ items:
   spec_refs:
     sc:
     - SC-071
-    api: []
+    api:
+    - API-221
     tech: []
     bang: []
     fr:
@@ -326,7 +346,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:aitai
   - constraint:hitl
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -338,6 +360,7 @@ items:
   - 'Gửi lệnh khoá kèm người khoá và giờ giả: dòng khoá lưu người của phiên và giờ máy chủ.'
   - 'Khoá ngày còn tranh chấp mở: bị từ chối; đóng tranh chấp rồi khoá: thành công và có dòng audit_log.'
   - 'Sau khi khoá, gọi API huỷ giao dịch của ngày đó: bị chặn bằng mã ngày đã khoá, audit_log ghi lần chặn.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-072
   cha: FG-08
@@ -483,6 +506,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -506,6 +530,7 @@ items:
   - Khi tranh chấp đã đóng thì màn chỉ cho xem, không cho sửa.
   - Khi mọi tranh chấp của một 業務日 (ngày nghiệp vụ) đã đóng thì SC-071 cho khoá ngày đó.
   - Khi người gọi không mang vai 照合事務 thì máy chủ trả 403 M_05.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-073 thêm ô người phụ trách, ngày hẹn, kết quả và nút Đóng theo G-FG08-06.
 - key: SC-073/FE
@@ -525,6 +550,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:hitl
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs: []
@@ -558,6 +584,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:hitl
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -592,6 +619,7 @@ items:
   labels:
   - type:testdesign
   - constraint:hitl
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -603,6 +631,7 @@ items:
   - 'Gửi yêu cầu đóng kèm người đóng và giờ giả: bản ghi lưu người của phiên và giờ máy chủ.'
   - 'Đóng khi chưa có kết quả cuối: bị từ chối, tranh chấp vẫn mở.'
   - 'Đổi người phụ trách rồi đổi lại: lịch sử có đủ từng lần đổi với giá trị trước và sau.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: API-214
   cha: FG-08
@@ -699,7 +728,7 @@ items:
 - key: DATA-FG08
   cha: FG-08
   tracker: story
-  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-SETTLE): daily_reconciliations, disputes, monthly_closings'
+  title_vi: Tạo bảng daily_reconciliations, disputes, monthly_closings
   spec_refs:
     sc: []
     api: []
@@ -768,7 +797,7 @@ items:
 - key: DATA-FG08/TEST
   cha: DATA-FG08
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-SETTLE): daily_reconciliations, disputes, monthly_closings'
+  title_vi: 'Ca kiểm thử: Bảng chưa có màn ghi của FG-08'
   spec_refs:
     sc: []
     api: []
@@ -825,7 +854,7 @@ items:
 - key: INV-FG08-KHOA-NGAY
   cha: FG-08
   tracker: investigation
-  title_vi: Người khoá 業務日, việc mở lại ngày đã khoá và thứ tự với chốt hoá đơn tháng
+  title_vi: Ai khoá 業務日, mở lại ngày đã khoá, thứ tự với chốt tháng
   han: 19/10/2026 (checkpoint BTC)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_SYSTEM_DESIGN.md EV3, A7 (LAB-4)
@@ -852,7 +881,7 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG08-03
-  mo_ta: 業務日 (ngày nghiệp vụ) do người bấm khoá ở SC-071 hay do tác vụ nền EV3 tự khoá sau khi đối soát khớp? Ngày đã khoá có được mở lại không, nếu có thì ai mở và hệ thống ghi gì? Chốt hoá đơn tháng (API-213) có phải chờ mọi ngày trong tháng khoá xong mới chạy không?
+  mo_ta: 'LAB-4 bản 0.4.1 đã chốt người khoá: 照合事務 (nhóm đối soát) bấm khoá 業務日 (ngày nghiệp vụ) ở SC-071 (FR-SETTLE-02); tác vụ nền EV3 chỉ dựng bảng 日次照合 (đối soát ngày) rồi báo 照合事務, không khoá. Còn hai ý cần chốt: ngày đã khoá có được mở lại không, nếu có thì ai mở và hệ thống ghi gì? Chốt hoá đơn tháng (API-213) có phải chờ mọi ngày trong tháng khoá xong mới chạy không?'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu: []
@@ -874,16 +903,17 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
   premise_refs: []
   gap_refs:
   - G-FG08-01
-  mo_ta: Lệnh chốt hoá đơn tháng gom giao dịch せり (đấu giá) và 相対 (giao dịch thỏa thuận) của một tháng thành hoá đơn theo bên mua, loại 直販 (bán trực tiếp) vì đã trả tiền ngay. Spec LAB-4 gắn lệnh này vào nút Lưu của SC-071 nên mỗi lần khoá một 業務日 (ngày nghiệp vụ) sẽ chốt cả tháng; story này tách nó thành việc riêng, gọi độc lập với khoá ngày (G-FG08-01). Hoá đơn là đầu vào của 完納奨励金 (thưởng thanh toán đủ hạn) ở FG-09.
-  pham_vi: API-213 SKM_BILLING_CLOSE trên module settle; ghi `monthly_closings` (migration thuộc DATA-FG08) và `invoices` (migration thuộc DATA-FG09). Màn gọi và vai được chạy chốt sổ chốt cùng PM; thứ tự với khoá ngày chờ INV-FG08-KHOA-NGAY.
+  mo_ta: Lệnh chốt hoá đơn tháng gom giao dịch せり (đấu giá) và 相対 (giao dịch thỏa thuận) của một tháng thành hoá đơn theo bên mua, loại 直販 (bán trực tiếp) vì đã trả tiền ngay. LAB-4 0.4.1 tách riêng chế độ `businessDay` mà SC-071 gọi để khoá 業務日 (ngày nghiệp vụ), không sinh hoá đơn; story này chỉ làm chế độ chốt tháng `period` (G-FG08-01). Hoá đơn là đầu vào của 完納奨励金 (thưởng thanh toán đủ hạn) ở FG-09.
+  pham_vi: API-213 SKM_BILLING_CLOSE trên module settle; ghi `monthly_closings` (migration thuộc DATA-FG08) và `invoices` (migration thuộc DATA-FG09). Vai kích theo LAB-4 là 照合事務局 (ban đối soát, ROLE-SETTLEMENT), màn kích chưa có, chờ Q-23.
   luong_chinh:
-  - Người được giao việc chốt sổ chọn tháng áp dụng rồi gửi lệnh chốt.
+  - Người có vai chốt sổ chọn tháng rồi gửi lệnh chốt.
   - Máy chủ kiểm định dạng tháng, tháng chưa chốt và quy tắc hạn thanh toán đã có.
   - Máy chủ gom giao dịch せり và 相対 còn hiệu lực của tháng theo bên mua, bỏ 直販 và giao dịch có dòng huỷ.
   - Máy chủ ghi một dòng chốt tháng và các hoá đơn trong cùng giao dịch CSDL; FG-09 dùng mã kỳ của lần chốt này.
@@ -892,8 +922,9 @@ items:
   - Khi chốt thành công thì mỗi bên mua có đúng một hoá đơn và tổng hoá đơn bằng tổng giao dịch còn hiệu lực của tháng.
   - Khi lỗi ghi ở bất kỳ bước nào thì không còn dòng chốt hay hoá đơn nào, trả 500 M_25.
   - Khi người đối soát khoá một 業務日 ở SC-071 thì không có lệnh chốt tháng nào chạy kèm.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec API-213 ghi lệnh gọi độc lập với khoá ngày, màn gọi, vai được chạy và thứ tự với khoá ngày theo đáp của INV-FG08-KHOA-NGAY.
+  - Spec API-213 ghi màn gọi chế độ `period` và thứ tự với khoá ngày theo đáp của INV-FG08-KHOA-NGAY.
 - key: API-213/BE
   cha: API-213
   tracker: devtask
@@ -912,6 +943,7 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -942,6 +974,7 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -953,4 +986,38 @@ items:
   - 'Chốt một tháng có giao dịch せり, 相対, 直販 và một giao dịch đã huỷ: hoá đơn chỉ gồm giao dịch せり, 相対 còn hiệu lực, mỗi bên mua một hoá đơn.'
   - 'Chốt lại tháng đã chốt: trả 409, số hoá đơn không đổi.'
   - 'Khoá một 業務日 ở SC-071: không có dòng chốt tháng hay hoá đơn mới nào.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  dinh_nghia_xong: []
+- key: INV-FG08-LUAT-DOI-SOAT
+  cha: FG-08
+  tracker: investigation
+  title_vi: Giao dịch nào vào 日次照合表 và thế nào là lệch
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_DAILY_RECONCILIATION_SPEC.md §3 · SKM_SYSTEM_DESIGN.md EV3 (LAB-4)
+  spec_refs:
+    sc:
+    - SC-070
+    api: []
+    tech: []
+    bang:
+    - daily_reconciliations
+    fr:
+    - FR-SETTLE-01
+    adr: []
+    nfr: []
+    sd:
+    - EV3
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG08-04
+  mo_ta: 日次照合表 (bảng đối soát ngày) đếm những giao dịch nào, giao dịch đã huỷ và 直販 (bán trực tiếp) có tính không? Các nguồn lệch nhau thế nào thì coi là lệch và mở tranh chấp, và khi tác vụ EV3 chạy lại cùng ngày thì dòng nào là bản dùng? FR-SETTLE-01 và EV3 không nói, mà đây là luật nghiệp vụ của chợ nên khách trả lời qua BrSE. Trong lúc chờ, SC-070/BE loại giao dịch có dòng huỷ, lấy dòng có giờ lập mới nhất làm bản dùng và viết luật lệch theo A8, P-13.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
   dinh_nghia_xong: []

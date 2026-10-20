@@ -46,6 +46,7 @@ items:
     dinh_nghia_xong: []          # chỉ phần thêm ngoài mẫu trong team.yaml
     nguoi_tra_loi: "Khách"       # chỉ issue điều tra
     han: "2026-10-31"            # chỉ issue điều tra
+    nguon: "spec.md mục 4 · rfp p.12"  # chỉ issue điều tra, tuỳ chọn: in ở mục «Nguồn», mỗi chỗ một dòng
 ```
 
 - `spec_refs` luôn có 7 khoá `sc, api, tech, bang, fr, adr, nfr` (danh sách, có thể rỗng); thêm tuỳ chọn `khuon, ac, sd, hoi`. Leaf DB ghi bảng nó tạo ở `bang` — bảng đó được ghi «chủ migration» ở các leaf khác.
@@ -96,13 +97,14 @@ repo: acme/shop
 project_owner: acme
 project_number: 5
 seed_dir: seed                 # đường dẫn tương đối tính từ thư mục chứa file cấu hình
-evidence_dir: evidence
+evidence_dir: bang-chung
 khuon: khuon-issue.md          # thứ tự mục thân; mẫu ở templates/
 spec_registry: spec/registry   # tuỳ chọn, xem mục 8
 nhip_phut: 40
 nhip_gio: 450
 co_chan: [../khac/BREAK_RUNNING]
-than: {tran: 2500, cho_trong: "_(chưa viết)_", cjk_toi_da: 11, dinh_nghia_xong_story_theo_nhan: {"constraint:hitl": ["…"]}}
+than: {tran: 2500, cho_trong: "_(chưa viết)_", cjk_toi_da: 11, dinh_nghia_xong_story_theo_nhan: {"constraint:hitl": ["…"]},
+       nguon_doi: [["\\bHANDOFF\\.md\\b", "ghi chú bàn giao"]]}   # tuỳ chọn: đổi chữ ở mục «Nguồn» của điều tra
 van: {khoang: {story: {luong_chinh: [3, 7]}}, can_chu: {story: [mo_ta, pham_vi]}}
 spec: {loai_man: {一覧: "一覧 (danh sách)"}, tang: {}, thiet_bi: {office: "văn phòng"}, ngoai_bang: [giao-dien],
        ghi_chu_validation: "", trien_khai: {tieu_de: "Thiết kế hệ thống mục 10", ten: {thu_tu: "thứ tự triển khai"}}}

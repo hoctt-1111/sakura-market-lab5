@@ -4,7 +4,7 @@ Kiểm: Project `public: true` (bỏ qua với `check --cho-phep-rieng`) · đ�
 labels.yaml · số item theo tracker bằng seed · mọi khoá seed có trên board (thiếu gộp theo epic) · không item lạ, không key
 trùng · từng khoá: title, nhãn, Owner, Priority (theo priority_map), người phụ trách, cha (= số của khoá cha trên board),
 không mồ côi, map khớp số, băm thân trong map bằng thân dựng lại từ seed (và bằng băm thân trên board khi ảnh chụp có
-`--body`). Bản thừa đã xử lý (đã đóng, nhãn `spec-gap`, cạnh issue khác cùng key) — loại khỏi so, in riêng.
+`--body`). Bản thừa đã xử lý (đã đóng, nhãn thừa `da-thay-the`, cạnh issue khác cùng key) — loại khỏi so, in riêng.
 """
 import re
 

@@ -214,16 +214,17 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-12
   gap_refs:
   - G-FG12-02
   - G-FG12-03
   - G-FG12-06
-  mo_ta: 運用管理者 (quản lý vận hành) tra nhật ký từng lần gửi thông báo để biết hệ thống đã báo cho ai, lúc nào, có tới nơi không. Nhật ký chỉ thêm dòng, mỗi dòng mang sự kiện, kênh gửi, giờ gửi, số lần thử lại và trạng thái cuối. Bảng còn thiếu người nhận và giờ phát sinh sự kiện, nên DATA-FG12 bổ sung (G-FG12-02).
+  mo_ta: 運用管理者 (quản lý vận hành) tra nhật ký từng lần gửi thông báo để biết hệ thống đã báo cho ai, lúc nào, có tới nơi không. Nhật ký chỉ thêm dòng, mỗi dòng mang sự kiện, kênh gửi, giờ gửi, số lần thử lại và trạng thái cuối. Bảng thiếu người nhận và giờ phát sinh sự kiện, DATA-FG12 bổ sung (G-FG12-02).
   pham_vi:
   - Màn SC-121 (SPEC-SKM-161) ở văn phòng, chỉ đọc `notification_log` (migration thuộc DATA-FG12/DB); API đọc chưa có spec, SC-121/BE viết rồi làm (P-01).
   - Hàm gửi EV2 của module notify (thử lại, ghi nhật ký) cũng làm ở SC-121/BE (G-FG12-06).
@@ -237,6 +238,7 @@ items:
   - Khi lọc theo 業務日 thì chỉ hiện dòng có giờ gửi thuộc ngày đó theo giờ Nhật.
   - Khi xem một dòng thì biết người nhận và độ trễ từ lúc sự kiện phát sinh tới lúc gửi xong (G-FG12-02).
   - Khi 運用管理者 chưa có dòng trong ma trận quyền thì API đọc trả 403 M_05 (P-12).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-121 đổi nhãn cột kênh thành kênh gửi và thêm cột người nhận (G-FG12-03, G-FG12-02).
 - key: SC-121/FE
@@ -255,8 +257,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-2
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs:
   - G-FG12-03
@@ -285,8 +288,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-01
   gap_refs:
@@ -316,8 +320,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử nhật ký gửi thông báo và đường thử lại của email.
@@ -327,6 +332,7 @@ items:
   - 'Giả lập máy gửi email lỗi liên tục: có đúng 3 lần thử lại, một dòng nhật ký trạng thái lỗi và một cảnh báo ở SC-122.'
   - 'Gửi thành công một thông báo cho hai người nhận: có hai dòng, mỗi dòng đúng người nhận và kênh.'
   - 'Gửi lệnh sửa hoặc xoá một dòng nhật ký qua API: không có đường nào làm được, dòng giữ nguyên.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-122
   cha: FG-12
@@ -369,7 +375,7 @@ items:
   tieu_chi_nghiem_thu:
   - Khi bấm Đã xử lý thì hệ thống ghi người xử lý của phiên, giờ máy chủ và ghi chú; người và giờ gửi từ trình duyệt bị bỏ qua.
   - Khi một thông báo hỏng sau 3 lần thử lại thì có đúng một cảnh báo mới trỏ về dòng nhật ký đó (AC-7).
-  - Khi EV3 hết lượt thử thì có một cảnh báo và ngày nghiệp vụ không bị khoá (P-14).
+  - Khi EV3 hết lượt thử thì có một cảnh báo; ngày đó chưa có bảng đối soát nên SC-071 chưa cho khoá (P-14).
   - Khi cảnh báo đã xử lý thì không đánh dấu lại được; máy không tự đóng cảnh báo nào.
   - Khi 運用管理者 chưa có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
   dinh_nghia_xong:
@@ -543,7 +549,7 @@ items:
 - key: DATA-FG12/TEST
   cha: DATA-FG12
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (chưa đặt vùng): notification_log, alert_queue'
+  title_vi: 'Ca kiểm thử: Tạo bảng notification_log, alert_queue'
   spec_refs:
     sc: []
     api: []
@@ -570,7 +576,7 @@ items:
   cha: FG-12
   tracker: investigation
   title_vi: Danh mục sự kiện thông báo và sự kiện nào ở mức Critical
-  han: Trước sprint của SC-120/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_SYSTEM_DESIGN.md EV2 (LAB-4)
   spec_refs:

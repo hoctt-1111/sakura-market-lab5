@@ -37,6 +37,7 @@ field_map:
   Spent time: Spent time
   Start Date: Start Date
   Due Date: Due Date
+  Done Date: Done Date
 
 # Định nghĩa xong dùng chung theo loại issue — đặt một lần ở đây, không chép vào từng bản ghi seed.
 # `dinh_nghia_xong` của từng issue chỉ ghi phần thêm ngoài mẫu.
@@ -52,7 +53,7 @@ dinh_nghia_xong_mau:
     - Giả định trong PREMISE và các issue bị ảnh hưởng đã cập nhật theo câu trả lời.
   FE:
     - Màn dựng đủ item, trạng thái rỗng, lỗi và đang tải theo spec màn LAB-4.
-    - Pull request có người thứ hai duyệt và đã gộp vào nhánh chính.
+    - Yêu cầu gộp mã (pull request) có người thứ hai duyệt và đã gộp vào nhánh chính.
     - Kiểm thử thành phần chạy xanh trong CI.
   BE:
     - Mã trạng thái và mã lỗi trả về đúng spec API LAB-4.
@@ -71,8 +72,9 @@ dinh_nghia_xong_mau:
     - Bí mật không nằm trong repo mã nguồn.
     - README có hướng dẫn dựng lại từ đầu.
 
-# Bốn ràng buộc đặc thù của Product A — P4 chốt câu chữ. `vi_sao` hiện ở mục «Ràng buộc đặc thù» của thân issue khi
-# agent không viết câu riêng, và ở bảng «Hạng mục chịu ràng buộc đặc thù» của task-breakdown.md; giữ ngắn vì thân ≤ 2.500 ký tự.
+# Ràng buộc đặc thù của Product A (bốn gốc P4 chốt câu chữ; constraint:jst thêm ở P3 theo chuẩn v1 S-8).
+# `vi_sao` hiện ở mục «Ràng buộc đặc thù» của thân issue khi agent không viết câu riêng, và ở bảng «Hạng mục chịu
+# ràng buộc đặc thù» của task-breakdown.md; giữ ngắn vì thân ≤ 2.500 ký tự.
 rang_buoc:
   - nhan: constraint:incentive
     ten: 完納奨励金 (thưởng thanh toán đủ hạn)
@@ -86,3 +88,27 @@ rang_buoc:
   - nhan: constraint:hitl
     ten: Người quyết, máy chỉ ghi nhận
     vi_sao: Kết quả chỉ có hiệu lực khi một người xác nhận; issue phải nêu ai xác nhận, lúc nào và hệ thống ghi gì.
+  - nhan: constraint:jst
+    ten: 業務日 (ngày nghiệp vụ) theo giờ Nhật
+    vi_sao: Chợ mở 02:00 JST; ngày nghiệp vụ tính theo giờ Nhật, không theo giờ máy (đội chạy ở UTC+7).
+
+# Chuẩn cấu trúc ticket v1 — user chốt 18/10/2026 (U7, P1 §B S-1…S-12). P4–P6 chỉ đọc khoá này.
+cau_truc:
+  phien_ban: v1
+  tracker:
+    epic: {cham_swp: tong-con, nhom_gio: "-", vai: PM}
+    story: {cham_swp: tong-con, nhom_gio: "-", vai: PM}
+    investigation: {cham_swp: truc-tiep, nhom_gio: inv, vai: "BrSE (ai: khach) · BE-1 (ai: tech_lead)"}
+  leaf:
+    FE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "FE-1 FG lẻ · FE-2 FG chẵn"}
+    BE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 FG lẻ · BE-2 FG chẵn"}
+    DB: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 FG lẻ · BE-2 FG chẵn"}
+    INFRA: {cham_swp: truc-tiep, nhom_gio: dev, vai: Infra}
+    TEST: {cham_swp: truc-tiep, nhom_gio: test, vai: QA}
+  status_gia_lap: [New, Planning, In Progress, In Review, QA Testing, Pending, Closed]
+  doi_cha: []
+  dong_thua:   # user chốt 18/10: LAB-4 0.4.1 đổi chủ migration, đóng kèm lý do và nhãn thừa riêng, không xoá
+    - {key: DATA-FG05, ly_do: "Bảng auction_sessions nay có màn ghi (SC-041, nút 開催登録 đăng ký phiên, theo LAB-4 0.4.1), nên không còn nhóm bảng chưa có màn ghi của FG-05; việc tạo bảng chuyển sang SC-041/DB."}
+    - {key: DATA-FG05/DB, ly_do: "Migration bảng auction_sessions chuyển sang SC-041/DB (SC-041 ghi bảng này theo LAB-4 0.4.1)."}
+    - {key: DATA-FG05/TEST, ly_do: "Ca kiểm thử tạo bảng auction_sessions chuyển theo SC-041 (leaf TEST của SC-041)."}
+    - {key: SC-063/DB, ly_do: "Nút 登録 (đăng ký) của SC-060 nay ghi cả delivery_exceptions theo LAB-4 0.4.1; SC-060 đứng trước SC-063 nên làm chủ migration bảng này, việc chuyển sang SC-060/DB."}

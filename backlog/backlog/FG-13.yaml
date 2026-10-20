@@ -53,9 +53,10 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-12
   gap_refs:
@@ -74,6 +75,7 @@ items:
   - Khi mở một dòng thì màn hiện giá trị trước và sau; hai khối này không chứa dữ liệu cá nhân thô, mật khẩu hay mã bí mật.
   - Khi người xem chưa mang vai có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
   - Màn và API không có lệnh nào sửa hay xoá dòng audit_log.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-130 có bốn ô lọc và khung giá trị trước, sau theo G-FG13-01.
 - key: SC-130/FE
@@ -92,8 +94,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-1
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs:
   - G-FG13-01
@@ -121,8 +124,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
-  priority: 3
+  priority: 2
   premise_refs:
   - P-01
   - P-06
@@ -154,8 +158,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử bốn trục tra cứu và tính chỉ đọc của vết kiểm toán.
@@ -165,6 +170,7 @@ items:
   - 'Một giao dịch có một lần chốt bị từ chối và một lần huỷ: lọc theo mã giao dịch hiện đủ hai dòng.'
   - 'Một module cố thêm thẳng dòng audit_log không qua hàm ghi: kiểm thử kiến trúc trong CI báo lỗi.'
   - 'Gọi API tra bằng tài khoản chưa có dòng trong ma trận quyền: 403 M_05, không trả dòng nào.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-131
   cha: FG-13
@@ -655,13 +661,13 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Tài khoản CSDL của module audit chỉ có quyền thêm và đọc; tài khoản khác không thêm được dòng.
-  - audit_log có chỉ mục theo thời điểm tạo, theo cặp đối tượng và mã đối tượng, theo người làm, để SC-130 tra trong mức p95 không quá 2 giây (N4).
+  - audit_log có chỉ mục theo thời điểm tạo, theo cặp đối tượng và mã đối tượng, theo người làm, để SC-130 tra trong mức p95 không quá 2 giây (N4, NFR-PERF-01 áp cho mọi màn tra cứu).
   - access_log có chỉ mục theo người dùng và theo đối tượng.
   dinh_nghia_xong: []
 - key: DATA-FG13/TEST
   cha: DATA-FG13
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-AUDIT): audit_log, access_log'
+  title_vi: 'Ca kiểm thử: Tạo bảng audit_log, access_log'
   spec_refs:
     sc: []
     api: []
@@ -687,8 +693,8 @@ items:
 - key: INV-FG13-YEU-CAU-XOA
   cha: FG-13
   tracker: investigation
-  title_vi: Cách xử lý yêu cầu xoá dữ liệu cá nhân khi dữ liệu nằm ở bảng chỉ thêm
-  han: Trước sprint của SC-132/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  title_vi: Yêu cầu xoá dữ liệu cá nhân nằm ở bảng chỉ thêm
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DB.md §4.39 personal_data_requests (LAB-4) · rfp p.54
   spec_refs:

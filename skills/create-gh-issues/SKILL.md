@@ -38,7 +38,7 @@ Schema đầy đủ, bảng file bằng chứng và khoá cấu hình: [docs/see
 
 ```bash
 S=skills/create-gh-issues/scripts
-CHUNG="--repo acme/shop --project-owner acme --project-number 5 --seed-dir seed --evidence-dir evidence --khuon skills/create-gh-issues/templates/khuon-issue.md"
+CHUNG="--repo acme/shop --project-owner acme --project-number 5 --seed-dir seed --evidence-dir bang-chung --khuon skills/create-gh-issues/templates/khuon-issue.md"
 ```
 
 1. Kiểm seed trước (không gọi mạng):
@@ -47,13 +47,13 @@ CHUNG="--repo acme/shop --project-owner acme --project-number 5 --seed-dir seed 
    `python3 $S/gh_issues.py render --key SC-031 $CHUNG`
 3. Tạo nhãn repo — chạy không `--create` để xem lệnh trước:
    `python3 $S/gh_issues.py labels $CHUNG` rồi `python3 $S/gh_issues.py labels --create $CHUNG`
-4. Chạy thử lô đầu, ghi thân ra `evidence/bodies/` để quét:
+4. Chạy thử lô đầu, ghi thân ra `bang-chung/bodies/` để quét:
    `python3 $S/gh_issues.py push --lo E15 --dry-run --ghi-than $CHUNG`
    Kết quả thật ở LAB-5 khi chạy lệnh này kèm `--cap-nhat` (map đã có sẵn 3 khoá của lô):
    `E15: tạo mới 8 · nhận lại 3 · lỗi 0 · bước dở 0 · cập nhật 3`
    `dry-run E15: 11 khoá · addProjectV2ItemById 8 · sua-issue 3 · sub_issues 8 · tao-issue 8 · updateProjectV2ItemFieldValue 8 · 35 lệnh ghi ≈ 0.9 phút …`
-5. Quét `evidence/bodies/` bằng gate của dự án (RFP, bí mật, tên người…). Đạt rồi mới đẩy thật:
-   `python3 $S/gh_issues.py push --lo E15 --da-quet --lenh-quet "python3 tools/quet-than.py evidence/bodies" $CHUNG` (lệnh quét là của dự án bạn)
+5. Quét `bang-chung/bodies/` bằng gate của dự án (RFP, bí mật, tên người…). Đạt rồi mới đẩy thật:
+   `python3 $S/gh_issues.py push --lo E15 --da-quet --lenh-quet "python3 tools/quet-than.py bang-chung/bodies" $CHUNG` (lệnh quét là của dự án bạn)
 6. Đẩy các lô còn lại (trong mỗi lô: epic → story/điều tra → leaf, cha luôn trước con):
    `python3 $S/gh_issues.py push --lo FG-01,FG-02 --da-quet $CHUNG`
    Thân trong seed đã đổi sau khi đẩy: thêm `--cap-nhat`. Chỉ đặt lại field: `--chi-field`.
@@ -70,7 +70,7 @@ Mã thoát: 0 xong hoặc PASS · 1 lỗi GitHub, FAIL hoặc từ chối đăng
 - Chạy lại không trùng: trước mỗi lượt thật, liệt kê issue của repo và nhận các key đã có. Lệnh tạo không rõ kết quả (hết giờ, 5xx) thì liệt kê lại rồi mới quyết tạo lại. Nối cha bị 422 thì hỏi cha hiện tại: đúng thì nhận, khác thì dừng (không dùng `replace_parent`).
 - Cờ `PUSH_RUNNING` trong thư mục bằng chứng: đặt khi chạy, gỡ khi xong; còn cờ thì lượt khác từ chối. Cờ chặn ngoài (`--co-chan`, mặc định `BREAK_RUNNING`) làm push và snapshot dừng.
 - Không ghi token ở đâu cả; log JSONL chỉ có giờ, thao tác, mã HTTP, điểm còn lại.
-- Không xoá gì. Issue trùng thì đóng tay bản thừa và gắn nhãn `spec-gap`; lần chạy sau tự bỏ qua bản đó.
+- Không xoá gì. Issue trùng thì đóng tay bản thừa và gắn nhãn `da-thay-the` (tách khỏi `spec-gap` = chỗ hở); lần chạy sau tự bỏ qua bản đó.
 
 ## Giới hạn
 
@@ -89,10 +89,10 @@ Giao cho agent theo đúng thứ tự, mỗi bước dừng lại báo kết qu�
 Dùng skill create-gh-issues với file cấu hình gh-issues.yaml.
 1. check --seed --van: phải PASS, báo dòng đếm epic/story/leaf.
 2. push --lo <lô thử> --dry-run --ghi-than: báo số khoá, số lệnh ghi theo loại, giờ ước.
-3. Chạy gate quét thân của dự án trên evidence/bodies/; đỏ thì dừng, báo file và dòng.
+3. Chạy gate quét thân của dự án trên bang-chung/bodies/; đỏ thì dừng, báo file và dòng.
 4. Chờ tôi duyệt, rồi push --lo <lô thử> --da-quet; báo dòng «tạo mới · nhận lại · lỗi · bước dở».
 5. snapshot --body rồi check --snapshot --lo <lô thử>: phải PASS.
-6. Đẩy các lô còn lại từng lô một, sau mỗi lô lặp bước 5. Gặp DỪNG thì không thử lại mù: đọc evidence/log/, báo tôi.
+6. Đẩy các lô còn lại từng lô một, sau mỗi lô lặp bước 5. Gặp DỪNG thì không thử lại mù: đọc bang-chung/log/, báo tôi.
 Không xoá gì, không sửa title trên web, không chạy hai lượt push cùng lúc.
 ```
 

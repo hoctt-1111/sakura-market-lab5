@@ -165,7 +165,6 @@ items:
     - API-217
     tech: []
     bang:
-    - business_rules
     - rule_versions
     fr:
     - FR-INC-02
@@ -244,7 +243,6 @@ items:
     - API-217
     tech: []
     bang:
-    - business_rules
     - rule_versions
     fr: []
     adr: []
@@ -274,13 +272,12 @@ items:
 - key: SC-091/DB
   cha: SC-091
   tracker: devtask
-  title_vi: Tạo bảng business_rules, rule_versions
+  title_vi: Tạo bảng rule_versions
   spec_refs:
     sc: []
     api: []
     tech: []
     bang:
-    - business_rules
     - rule_versions
     fr: []
     adr: []
@@ -352,7 +349,6 @@ items:
     - API-218
     tech: []
     bang:
-    - business_rules
     - rule_versions
     fr:
     - FR-INC-02
@@ -427,7 +423,6 @@ items:
     - API-218
     tech: []
     bang:
-    - business_rules
     - rule_versions
     fr: []
     adr: []
@@ -503,9 +498,10 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs:
   - G-FG10-04
@@ -522,6 +518,7 @@ items:
   - Khi không còn bản đã duyệt nào khác của cùng khoá có hiệu lực tới 業務日 hiện tại thì trả 422 M_17, bản giữ nguyên.
   - Khi lùi thành công thì dòng cũ còn nguyên với trạng thái đã lùi, và lần đọc kế tiếp dùng bản trước.
   - Khi lùi một bản incentive mà FG-09 đã 確定 (xác nhận cuối) thưởng theo bản đó thì dòng thưởng giữ nguyên ngày hiệu lực của bản cũ.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-093 thay bảy ô nhập bắt buộc bằng nhãn chỉ đọc và thêm ô lý do (G-FG10-04).
 - key: SC-093/FE
@@ -540,8 +537,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-03
   gap_refs:
@@ -570,8 +568,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-2
-  priority: 3
+  priority: 2
   premise_refs:
   - P-05
   gap_refs:
@@ -601,8 +600,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử lùi bản, nhắm vào việc chợ không lúc nào thiếu bản có hiệu lực.
@@ -612,6 +612,7 @@ items:
   - 'Khoá có hai bản đã duyệt: lùi bản mới thì bản cũ có hiệu lực lại, dòng bản mới còn với trạng thái đã lùi.'
   - 'Khoá chỉ có một bản đã duyệt: lùi bị 422 M_17, bản giữ nguyên.'
   - 'Lùi bản incentive đã dùng cho thưởng đã 確定 (xác nhận cuối) ở FG-09: dòng thưởng giữ nguyên ngày hiệu lực của bản cũ.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: TECH-303
   cha: FG-10
@@ -717,11 +718,42 @@ items:
   - Lùi bản duy nhất còn hiệu lực bị từ chối; lùi bản mới nhất khi có hai bản thì bản cũ trở lại.
   - Hàm kiểm được duyệt trả từ chối khi người duyệt trùng người lập, với mọi vai.
   dinh_nghia_xong: []
+- key: INV-Q-24
+  cha: FG-10
+  tracker: investigation
+  title_vi: Cách đếm trần 4 lần đổi bản quy tắc mỗi năm
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md:167 (LAB-4) · Q-24 (LAB-01), mức quan trọng
+  spec_refs:
+    sc:
+    - SC-092
+    api: []
+    tech:
+    - TECH-303
+    bang:
+    - rule_versions
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC4
+  labels:
+  - type:investigation
+  owner: BrSE
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Trần 4 lần đổi bản quy tắc mỗi năm tính theo năm dương lịch hay năm tài chính, và bản đã ロールバック (lùi) có tính vào số lần không? RFP cho trần mà không nói hai điều này; đây là quy chế của chợ nên bên làm không tự nới hay siết, khách trả lời qua BrSE trước khi làm SC-092/BE. Trong lúc chờ, máy chủ đếm mọi lần duyệt có 発効日 (ngày hiệu lực) trong cùng năm dương lịch, tính cả bản đã lùi, và lùi một bản không trả lại lượt (P-45).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
 - key: INV-Q-09
   cha: FG-10
   tracker: investigation
   title_vi: Số người giữ vai lập và vai duyệt bản quy tắc
-  han: Trước sprint của SC-092/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md §6.2 Q-09 (LAB-4)
   spec_refs:

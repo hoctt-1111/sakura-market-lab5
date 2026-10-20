@@ -21,13 +21,13 @@ epic:
   - P-02
   - P-04
   gap_refs: []
-  mo_ta: 'Nhóm việc này dựng nền kỹ thuật cho hệ đích Java 21, Spring Boot 3 chạy thành một khối triển khai trên AWS vùng Tokyo: kho mã cùng CI, hai môi trường dev và staging, khung ghi chỉ-thêm dùng chung và API kiểm sống. Mọi sub-issue BE, DB của FG-01…FG-14 đặt mã và migration vào kho này, nên PLT-01 và PLT-02 phải xong trước các sub-issue đó. Nền tảng là lựa chọn của giai đoạn thiết kế (ADR-008, ADR-015), chưa phải điều khoản hợp đồng với khách.'
+  mo_ta: 'Nhóm việc này dựng nền kỹ thuật cho hệ đích Java 21, Spring Boot 3 chạy thành một khối triển khai trên AWS vùng Tokyo: kho mã cùng CI, môi trường phát triển (dev) và môi trường thử, khung ghi chỉ-thêm dùng chung và API kiểm sống. Mọi sub-issue BE, DB của FG-01…FG-14 đặt mã và migration vào kho này, nên PLT-01 và PLT-02 phải xong trước các sub-issue đó. Nền tảng là lựa chọn của giai đoạn thiết kế (ADR-008, ADR-015), chưa phải điều khoản hợp đồng với khách.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Mọi story con của E15 đã đóng.
-  - Khi một pull request làm đỏ kiểm thử hoặc vi phạm luật mỗi bảng chỉ một module được ghi thì CI chặn gộp.
-  - Khi dựng lại dev hoặc staging từ cấu hình trong repo thì môi trường lên đủ thành phần và API-220 trả 200.
+  - Khi một yêu cầu gộp mã làm đỏ kiểm thử hoặc vi phạm luật mỗi bảng chỉ một module được ghi thì CI chặn gộp.
+  - Khi dựng lại dev hoặc môi trường thử từ cấu hình trong repo thì môi trường lên đủ thành phần và API-220 trả 200.
   - Khi ứng dụng chạy lệnh sửa hay xoá trực tiếp trên một bảng chỉ-thêm thì CSDL từ chối.
   dinh_nghia_xong: []
 items:
@@ -56,7 +56,7 @@ items:
   - P-04
   gap_refs:
   - G-E15-01
-  mo_ta: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, một khối triển khai chia module theo vùng dữ liệu (ADR-008, ADR-009), cùng luồng CI chạy ở mỗi pull request. Mọi sub-issue BE và DB đặt mã, migration vào kho này (P-02); prototype LAB-3 chỉ còn là tài liệu tham chiếu nghiệp vụ.
+  mo_ta: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, một khối triển khai chia module theo vùng dữ liệu (ADR-008, ADR-009), cùng luồng CI chạy ở mỗi yêu cầu gộp mã. Mọi sub-issue BE và DB đặt mã, migration vào kho này (P-02); prototype LAB-3 chỉ còn là tài liệu tham chiếu nghiệp vụ.
   pham_vi:
   - Kho mã tách khỏi kho spec LAB-4, README hai kho trỏ nhau (P-02).
   - Các module theo mục thành phần của thiết kế hệ thống, lớp api-gateway và module migration của ADR-016 (G-E15-01); không có module cho cân hay máy in (ADR-012).
@@ -65,9 +65,9 @@ items:
   - Infra tạo repo, bảo vệ nhánh chính, cấp quyền đẩy mã cho đội.
   - Infra dựng khung dự án, mỗi module một gói, module chỉ gọi nhau qua hàm công khai.
   - 'Infra thêm luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc, quét bí mật.'
-  - Một thành viên mở một pull request có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
+  - Một thành viên mở một yêu cầu gộp mã có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
   tieu_chi_nghiem_thu:
-  - Khi pull request có kiểm thử đỏ thì CI đỏ và nhánh chính không nhận gộp.
+  - Khi yêu cầu gộp mã có kiểm thử đỏ thì CI đỏ và nhánh chính không nhận gộp.
   - Khi module gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ (ADR-009).
   - Khi mã chứa bí mật hay chuỗi kết nối thì bước quét làm CI đỏ (NFR-SEC-04).
   - Khi người mới làm theo README thì chạy được kiểm thử và một migration rỗng trên máy mình.
@@ -96,7 +96,7 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: Dựng khung dự án Java 21, Spring Boot 3 theo danh sách module của thiết kế hệ thống và luồng CI chạy ở mỗi pull request.
+  mo_ta: Dựng khung dự án Java 21, Spring Boot 3 theo danh sách module của thiết kế hệ thống và luồng CI chạy ở mỗi yêu cầu gộp mã.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -107,7 +107,7 @@ items:
 - key: PLT-02
   cha: E15
   tracker: story
-  title_vi: Môi trường AWS dev và staging
+  title_vi: Môi trường AWS dev và môi trường thử
   spec_refs:
     sc: []
     api: []
@@ -126,27 +126,27 @@ items:
   - P-19
   gap_refs:
   - G-E15-03
-  mo_ta: Infra dựng dev và staging trên AWS, chỉ ở vùng ap-northeast-1 (ADR-015). Dev chỉ chứa dữ liệu giả cho lập trình và kiểm thử tự động; staging giống production ở quy mô nhỏ, chỉ nhận dữ liệu đã che, dùng cho nghiệm thu và các buổi diễn tập.
+  mo_ta: Infra dựng dev và môi trường thử trên AWS, chỉ ở vùng ap-northeast-1 (ADR-015). Dev chỉ chứa dữ liệu giả cho lập trình và kiểm thử tự động; môi trường thử giống production ở quy mô nhỏ, chỉ nhận dữ liệu đã che, dùng cho nghiệm thu và các buổi diễn tập.
   pham_vi:
   - 'Thành phần theo bảng dịch vụ của ADR-015: máy ứng dụng sau cân bằng tải có TLS, PostgreSQL có bản dự phòng đồng bộ, Cognito, S3, Secrets Manager, CloudWatch, CloudTrail.'
   - Một bộ cấu hình hạ tầng dạng mã cho cả hai môi trường, chỉ khác tham số.
-  - Quy trình che dữ liệu cho staging (G-E15-03); nơi lưu lạnh thêm khi INV-Q-19 có đáp (P-19).
+  - Quy trình che dữ liệu cho môi trường thử (G-E15-03); nơi lưu lạnh thêm khi INV-Q-19 có đáp (P-19).
   luong_chinh:
-  - Infra viết cấu hình hạ tầng cho dev và staging trong repo.
+  - Infra viết cấu hình hạ tầng cho dev và môi trường thử trong repo.
   - Infra đặt khoá và bí mật trong Secrets Manager, không để trong mã hay bản dựng (NFR-SEC-04).
-  - 'Infra nối CI của PLT-01: bản đã gộp tự lên dev, lên staging khi có người duyệt.'
-  - Infra nạp dữ liệu giả vào dev và dữ liệu đã che vào staging.
+  - 'Infra nối CI của PLT-01: bản đã gộp tự lên dev, lên môi trường thử khi có người duyệt.'
+  - Infra nạp dữ liệu giả vào dev và dữ liệu đã che vào môi trường thử.
   tieu_chi_nghiem_thu:
-  - Khi dựng lại staging từ cấu hình trong repo trên tài khoản trống thì môi trường lên đủ, không có bước tay ngoài README.
+  - Khi dựng lại môi trường thử từ cấu hình trong repo trên tài khoản trống thì môi trường lên đủ, không có bước tay ngoài README.
   - Khi rà tài nguyên thì máy chạy, CSDL, sao lưu và nhật ký đều ở ap-northeast-1.
-  - Khi kiểm dữ liệu thì dev không có bản ghi thật, staging không còn trường cá nhân chưa che.
+  - Khi kiểm dữ liệu thì dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che.
   - Khi gọi API-220 trên hai môi trường sau lần triển khai đầu thì đều trả 200.
   dinh_nghia_xong:
   - Quy trình che dữ liệu có Tech Lead duyệt và ghi trong README hạ tầng (G-E15-03).
 - key: PLT-02/INFRA
   cha: PLT-02
   tracker: devtask
-  title_vi: 'Hạ tầng: Môi trường AWS dev và staging'
+  title_vi: 'Hạ tầng: Môi trường AWS dev và môi trường thử'
   spec_refs:
     sc: []
     api: []
@@ -164,12 +164,12 @@ items:
   premise_refs: []
   gap_refs:
   - G-E15-03
-  mo_ta: Viết cấu hình hạ tầng và dựng dev, staging theo bảng dịch vụ của ADR-015, chỉ ở vùng Tokyo, cùng quy trình nạp dữ liệu giả và dữ liệu đã che.
+  mo_ta: Viết cấu hình hạ tầng và dựng dev, môi trường thử theo bảng dịch vụ của ADR-015, chỉ ở vùng Tokyo, cùng quy trình nạp dữ liệu giả và dữ liệu đã che.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Một bộ cấu hình dựng được cả hai môi trường từ tài khoản trống, chỉ khác tham số.
-  - 'CSDL staging dùng cùng kiểu cấu hình với production: bản dự phòng đồng bộ và khôi phục theo thời điểm.'
+  - 'CSDL của môi trường thử dùng cùng kiểu cấu hình với production: bản dự phòng đồng bộ và khôi phục theo thời điểm.'
   - Script che dữ liệu chạy lại được và cho cùng kết quả trên cùng bản nguồn.
   dinh_nghia_xong: []
 - key: PLT-03
@@ -263,8 +263,8 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Trên staging, vai của ứng dụng chạy UPDATE hay DELETE vào bảng chỉ-thêm thì bị từ chối.
-  - Pull request vi phạm luật kiểm kiến trúc bị CI chặn gộp.
+  - Trên môi trường thử, vai của ứng dụng chạy UPDATE hay DELETE vào bảng chỉ-thêm thì bị từ chối.
+  - Yêu cầu gộp mã vi phạm luật kiểm kiến trúc bị CI chặn gộp.
   - Quyền được cấp bằng script trong repo, chạy lại không lỗi.
   dinh_nghia_xong: []
 - key: API-220
@@ -358,6 +358,6 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - 'CSDL bình thường: trả 200, thân chỉ có status ok.'
-  - 'Ngắt CSDL trên staging: trả 500 status error, thân không có chi tiết lỗi; nhật ký máy chủ có dòng lỗi.'
+  - 'Ngắt CSDL trên môi trường thử: trả 500 status error, thân không có chi tiết lỗi; nhật ký máy chủ có dòng lỗi.'
   - 'Gọi không có phiên: vẫn trả kết quả kiểm sống, không bị 401.'
   dinh_nghia_xong: []

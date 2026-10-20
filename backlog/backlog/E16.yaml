@@ -20,12 +20,12 @@ epic:
   premise_refs:
   - P-04
   gap_refs: []
-  mo_ta: Nhóm việc này chuyển dữ liệu chợ đang vận hành trên file số (bảng đối soát, danh sách người tham gia, tổng hợp giao hàng) sang hệ đích theo ADR-016. Dòng gốc được giữ trong bảng đệm, số bản ghi và số tiền được so trước và sau khi nạp, còn mỗi chênh lệch phải có người của chợ quyết; máy không tự chọn bên đúng. Trước ngày chạy thật phải có ít nhất một buổi diễn tập trên staging.
+  mo_ta: Nhóm việc này chuyển dữ liệu chợ đang vận hành trên file số (bảng đối soát, danh sách người tham gia, tổng hợp giao hàng) sang hệ đích theo ADR-016. Dòng gốc được giữ trong bảng đệm, số bản ghi và số tiền được so trước và sau khi nạp, còn mỗi chênh lệch phải có người của chợ quyết; máy không tự chọn bên đúng. Trước ngày chạy thật phải có ít nhất một buổi diễn tập trên môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Mọi story con của E16 đã đóng.
-  - Khi buổi diễn tập trên staging kết thúc thì số bản ghi và tổng tiền của từng nguồn khớp với đích, hoặc mỗi chênh lệch đều có người quyết và giờ quyết.
+  - Khi buổi diễn tập trên môi trường thử kết thúc thì số bản ghi và tổng tiền của từng nguồn khớp với đích, hoặc mỗi chênh lệch đều có người quyết và giờ quyết.
   - Khi một lô nạp phải hoàn tác thì dữ liệu được đảo bằng bút toán đảo, không dòng nào bị xoá.
   - Câu hỏi về danh sách nguồn, độ sâu lịch sử và người quyết chênh lệch (G-E16-01) đã có đáp, hoặc khách xác nhận giữ biên giả định.
   dinh_nghia_xong: []
@@ -301,11 +301,11 @@ items:
   premise_refs: []
   gap_refs:
   - G-E16-03
-  mo_ta: Đội dự án chạy ít nhất một buổi diễn tập di trú đầy đủ trên staging với dữ liệu đã che, theo đúng ba đợt nạp, rồi lập biên bản đối chiếu số bản ghi và số tiền trước–sau. Tiêu chí cho chạy thật hay dừng và cách hoàn tác phải được viết và duyệt trước buổi diễn tập đầu (G-E16-03).
-  pham_vi: Staging của PLT-02 với dữ liệu đã che (G-E15-03); công cụ của MIG-02; ba đợt nạp theo FIG-022 (người tham gia, quyền; rồi lô, giao dịch; rồi tất toán, báo cáo); thời điểm đóng băng dữ liệu nguồn, biên bản đối chiếu và tiêu chí dừng.
+  mo_ta: Đội dự án chạy ít nhất một buổi diễn tập di trú đầy đủ trên môi trường thử với dữ liệu đã che, theo đúng ba đợt nạp, rồi lập biên bản đối chiếu số bản ghi và số tiền trước–sau. Tiêu chí cho chạy thật hay dừng và cách hoàn tác phải được viết và duyệt trước buổi diễn tập đầu (G-E16-03).
+  pham_vi: Môi trường thử của PLT-02 với dữ liệu đã che (G-E15-03); công cụ của MIG-02; ba đợt nạp theo FIG-022 (người tham gia, quyền; rồi lô, giao dịch; rồi tất toán, báo cáo); thời điểm đóng băng dữ liệu nguồn, biên bản đối chiếu và tiêu chí dừng.
   luong_chinh:
   - PM và Tech Lead viết tiêu chí chạy thật hay dừng và cách hoàn tác; khách duyệt qua BrSE.
-  - Infra nạp bản che của file nguồn vào staging và đóng băng bản dùng cho buổi diễn tập.
+  - Infra nạp bản che của file nguồn vào môi trường thử và đóng băng bản dùng cho buổi diễn tập.
   - BE chạy ba đợt nạp theo thứ tự và đo thời gian từng đợt.
   - BE lập biên bản đối chiếu theo nguồn; người của chợ quyết các chênh lệch.
   - BE hoàn tác thử một lô bằng bút toán đảo và đối chiếu số trên khung nhìn.
@@ -367,11 +367,11 @@ items:
   premise_refs:
   - P-04
   gap_refs: []
-  mo_ta: 'Chuẩn bị CSDL staging cho buổi diễn tập: điểm khôi phục trước diễn tập, migration đủ 45 bảng và bản đóng băng của dữ liệu nguồn đã che.'
+  mo_ta: 'Chuẩn bị CSDL của môi trường thử cho buổi diễn tập: điểm khôi phục trước diễn tập, migration đủ 45 bảng và bản đóng băng của dữ liệu nguồn đã che.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Trước buổi diễn tập có điểm khôi phục của staging và đã thử khôi phục được.
+  - Trước buổi diễn tập có điểm khôi phục của môi trường thử và đã thử khôi phục được.
   - Migration của 45 bảng chạy trên CSDL trống không lỗi trước khi nạp (P-04).
   - Dữ liệu nguồn dùng cho diễn tập là bản đã che, không còn trường cá nhân thật.
   dinh_nghia_xong: []
@@ -399,12 +399,12 @@ items:
   tieu_chi_nghiem_thu:
   - 'Một nguồn lệch tổng tiền: lô không hoàn tất cho tới khi người của chợ quyết, biên bản ghi người và giờ.'
   - 'Hoàn tác một lô: tổng trên khung nhìn về số trước lô, số dòng bảng thô tăng thêm đúng số dòng đảo.'
-  - Sau buổi diễn tập, dữ liệu staging không có trường cá nhân chưa che.
+  - Sau buổi diễn tập, dữ liệu ở môi trường thử không có trường cá nhân chưa che.
   dinh_nghia_xong: []
 - key: INV-Q-01
   cha: E16
   tracker: investigation
-  title_vi: Danh sách nguồn di trú, độ sâu lịch sử cần nạp và người quyết chênh lệch
+  title_vi: Nguồn di trú, độ sâu lịch sử cần nạp, ai quyết chênh lệch
   han: Trước khi khoá quy tắc ánh xạ ở MIG-01
   nguoi_tra_loi: Khách, qua BrSE
   nguon: ADR-016 §1 (LAB-4) · Q-01 (LAB-01)

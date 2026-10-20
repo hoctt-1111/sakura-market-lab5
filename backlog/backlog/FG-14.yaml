@@ -470,6 +470,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -477,7 +478,7 @@ items:
   - P-12
   gap_refs:
   - G-FG14-05
-  mo_ta: '照合事務 (nhóm đối soát) xem các khoá nghiệp vụ bị trùng mà hệ thống phát hiện, như mã lô hay mã giao dịch, và xử lý chúng trước khi chốt sổ. Hệ thống chặn bản trùng trước khi nhận một lần nạp hay một thao tác chốt và ghi một dòng phát hiện, còn chọn bản đúng là việc của người. Spec chưa nói nơi phát hiện và chưa có đường ghi kết quả xử lý (G-FG14-05).
+  mo_ta: '照合事務 (nhóm đối soát) xem các khoá nghiệp vụ bị trùng mà hệ thống phát hiện, như mã lô hay mã giao dịch, và xử lý chúng trước khi chốt sổ. Spec chưa nói nơi phát hiện và chưa có đường ghi kết quả xử lý (G-FG14-05).
 
 
     Ràng buộc đặc thù: Máy chặn bản trùng và ghi dòng phát hiện, người đối soát chọn bản đúng; hệ thống thêm dòng kết quả với người của phiên và giờ máy chủ, không tự gộp hay xoá.'
@@ -493,6 +494,7 @@ items:
   - Khi còn dòng chưa xử lý của một 業務日 thì màn đánh dấu ngày đó là cần xử lý trước khi khoá.
   - Máy không tự gộp hay tự xoá bản trùng nào.
   - Khi người gọi không mang vai được phép thì máy chủ trả 403 M_05; vai hệ đích theo P-12.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-143 đổi nhãn cột khoá, ghi nơi phát hiện và đường ghi kết quả theo G-FG14-05.
 - key: SC-143/FE
@@ -512,6 +514,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:hitl
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs: []
@@ -545,6 +548,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:hitl
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -579,6 +583,7 @@ items:
   labels:
   - type:testdesign
   - constraint:hitl
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -590,6 +595,7 @@ items:
   - 'Nạp một tệp có hai dòng cùng mã lô: một dòng vào bảng, dòng còn lại bị từ chối và có một dòng phát hiện.'
   - 'Ghi kết quả kèm người và giờ giả: dòng lưu người của phiên và giờ máy chủ.'
   - 'Bản ghi bị từ chối được hoàn tác: dòng phát hiện vẫn còn.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-150
   cha: FG-14
@@ -744,7 +750,7 @@ items:
   - P-12
   gap_refs:
   - G-FG14-07
-  mo_ta: '受入担当者 (người nhận lô), 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) xử lý các thao tác ghi tạm lúc mất kết nối bị xung đột với dữ liệu máy chủ khi đồng bộ lại. Chỉ ba thao tác được ghi tạm; chốt giao dịch và khoá ngày luôn đòi kết nối (ADR-010). Khi xung đột, máy không tự trộn: người chọn bản giữ, hệ thống ghi ai chọn, lúc nào (G-FG14-07).
+  mo_ta: '受入担当者 (người nhận lô), 配送部門 (bộ phận giao hàng) và 照合事務 (nhóm đối soát) xử lý các thao tác ghi tạm lúc mất kết nối bị xung đột với dữ liệu máy chủ khi đồng bộ lại. Chỉ ba thao tác được ghi tạm; chốt giao dịch và khoá ngày luôn đòi kết nối (ADR-010).
 
 
     Ràng buộc đặc thù: Khi đồng bộ lại bị xung đột, máy không tự trộn; người xử chọn bản giữ, hệ thống ghi người của phiên, giờ máy chủ và bản đã chọn, bản bỏ vẫn tra lại được.'
@@ -856,14 +862,14 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Ngắt kết nối trên staging lúc ghi lần giao, ghi tiếp ở máy chủ cho cùng giao dịch rồi nối lại: thao tác chờ người xử, không bản nào bị ghi đè.'
+  - 'Ngắt kết nối trên môi trường thử lúc ghi lần giao, ghi tiếp ở máy chủ cho cùng giao dịch rồi nối lại: thao tác chờ người xử, không bản nào bị ghi đè.'
   - 'Gửi thao tác chốt giao dịch từ hàng đợi cục bộ: bị từ chối.'
   - 'Gửi lệnh xử lý kèm người và giờ giả: hàng đợi lưu người của phiên và giờ máy chủ.'
   dinh_nghia_xong: []
 - key: DATA-FG14
   cha: FG-14
   tracker: story
-  title_vi: 'Tạo bảng chưa có màn ghi (chưa đặt vùng): retention_policies, duplicate_key_findings, sync_queue'
+  title_vi: Tạo bảng retention_policies, duplicate_key_findings, sync_queue
   spec_refs:
     sc: []
     api: []
@@ -935,7 +941,7 @@ items:
 - key: DATA-FG14/TEST
   cha: DATA-FG14
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (chưa đặt vùng): retention_policies, duplicate_key_findings, sync_queue'
+  title_vi: 'Ca kiểm thử: Bảng chưa có màn ghi của FG-14'
   spec_refs:
     sc: []
     api: []

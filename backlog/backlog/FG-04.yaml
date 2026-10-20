@@ -57,6 +57,7 @@ items:
   - type:story
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -78,6 +79,7 @@ items:
   - Khi bên mua không có quyền 相対 thì trả 403 M_01; giấy tạm dừng, 失効 (mất hiệu lực) hoặc quá hạn tại ngày chốt thì trả 422 M_21.
   - Khi chốt thành công thì có đúng một dòng transactions; lỗi ghi thì hoàn tác cả hai, trả 500 M_25.
   - Khi mất kết nối lúc chốt thì màn báo không chốt được (ADR-010); vai được phép ghi lấy theo P-12.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-030, TECH-301 cập nhật theo đáp của G-FG04-03, G-FG04-01.
 - key: SC-030/FE
@@ -98,6 +100,7 @@ items:
   - team:frontend
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs:
@@ -132,6 +135,7 @@ items:
   - team:backend
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -167,6 +171,7 @@ items:
   - team:backend
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -203,6 +208,7 @@ items:
   - type:testdesign
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -216,6 +222,7 @@ items:
   - 'Bên mua 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn trước ngày chốt và 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) hết hạn trước ngày chốt: cả hai bị từ chối 422 M_21, transactions không thêm dòng.'
   - Số lượng vượt phần còn lại của lô bị từ chối 422 M_09; bằng đúng phần còn lại thì chốt được.
   - 'Gây lỗi ở bước đổi trạng thái lô: giao dịch cũng không được ghi.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-031
   cha: FG-04
@@ -237,6 +244,7 @@ items:
   labels:
   - type:story
   - constraint:aitai
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -257,6 +265,7 @@ items:
   - Khi ngày sai định dạng, ngày bắt đầu sau ngày kết thúc hay số trang sai thì trả 400.
   - Khi giao dịch đã huỷ thì dòng mang cờ đã huỷ, không còn nút huỷ.
   - Khi đọc lỗi thì trả 500 M_11; người ngoài hai vai (P-12) nhận 403.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec SC-031 có nút huỷ theo dòng và quy ước cỡ trang đã chốt (G-FG04-04, G-19).
 - key: SC-031/FE
@@ -276,6 +285,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:aitai
+  - constraint:jst
   owner: FE-2
   priority: 2
   premise_refs: []
@@ -308,6 +318,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:aitai
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs: []
@@ -341,6 +352,7 @@ items:
   labels:
   - type:testdesign
   - constraint:aitai
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -354,6 +366,7 @@ items:
   - 'Khoảng ngày có cả giao dịch aitai và seri: trả đủ hai kênh, không sót dòng nào.'
   - Giao dịch đã huỷ mang cờ đã huỷ; ngày bắt đầu sau ngày kết thúc trả 400.
   - Tài khoản ngoài hai vai được phép nhận 403.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: SC-032
   cha: FG-04
@@ -1100,6 +1113,7 @@ items:
   - type:story
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   - spec-gap
   owner: PM
   priority: 2
@@ -1122,6 +1136,7 @@ items:
   - Khi trạng thái tư cách còn hoạt động nhưng hạn của đúng loại giấy đã qua trước ngày chốt thì trả 422 M_21.
   - Khi ma trận quyền vừa đổi thì lần gọi kế tiếp áp ngay giá trị mới.
   - Ngày so hạn là 業務日 giờ Nhật, cùng hàm với ngày giao dịch (G-FG04-02).
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec TECH-301 sửa mốc so hạn từ «hôm nay» sang 業務日 (G-FG04-02).
 - key: TECH-301/BE
@@ -1143,6 +1158,7 @@ items:
   - team:backend
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: BE-2
   priority: 2
   premise_refs:
@@ -1177,6 +1193,7 @@ items:
   - type:testdesign
   - constraint:aitai
   - constraint:two-tier
+  - constraint:jst
   owner: QA
   priority: 2
   premise_refs: []
@@ -1190,6 +1207,7 @@ items:
   - 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn ngày trước ngày chốt bị từ chối; hạn đúng bằng ngày chốt thì được.
   - 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) đang tạm dừng bị từ chối 422; bên mua 買出人 (người mua lẻ) bị từ chối 403.
   - 'Đổi ma trận quyền rồi gọi lại: kết quả theo giá trị mới.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: DATA-FG04
   cha: FG-04
@@ -1262,7 +1280,7 @@ items:
 - key: DATA-FG04/TEST
   cha: DATA-FG04
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-TRADE): reservations'
+  title_vi: 'Ca kiểm thử: Tạo bảng reservations'
   spec_refs:
     sc: []
     api: []
@@ -1385,10 +1403,10 @@ items:
 - key: INV-LOT-HUY
   cha: FG-04
   tracker: investigation
-  title_vi: Trạng thái lô và phạm vi huỷ giao dịch 相対 (huỷ một phần, kênh せり)
+  title_vi: Trạng thái lô và phạm vi huỷ giao dịch 相対 (một phần, kênh せり)
   han: 20/10/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
-  nguon: HANDOFF.md mục Next Steps 3 (đầu vào còn treo cho LAB-5)
+  nguon: SKM_TRADE_CANCEL_CREATE_API.md:82 (LAB-4), câu hỏi mở về trạng thái lô sau khi huỷ
   spec_refs:
     sc:
     - SC-034
@@ -1418,11 +1436,45 @@ items:
   tieu_chi_nghiem_thu:
   - Khi khách trả lời thì P-21 và bảng chuyển trạng thái lô của SC-020/DB cập nhật, SC-034 sửa tiêu chí theo đáp.
   dinh_nghia_xong: []
+- key: INV-Q-22
+  cha: FG-04
+  tracker: investigation
+  title_vi: 買出人 có được mua qua 相対 không, hạn tham gia quản lý thế nào
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: PREMISE.md:42 (LAB-4) · Q-22 (LAB-01), mức quan trọng
+  spec_refs:
+    sc:
+    - SC-011
+    - SC-014
+    - SC-030
+    api:
+    - API-209
+    tech:
+    - TECH-301
+    bang:
+    - participants
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  - constraint:two-tier
+  owner: BrSE
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 買出人 (người mua lẻ tại chợ) có được làm bên mua của 相対取引 (giao dịch thỏa thuận) không? Hạn tham gia của 卸売業者 (bán buôn đầu mối) và 買出人 quản lý dựa trên gì, cảnh báo trước bao lâu? RFP có trường 買出人 ở giao dịch 相対 nhưng chỉ quy định tư cách cho 仲卸 và 売買参加者, nên TECH-301/BE chưa chốt được luật kiểm bên mua; khách trả lời qua BrSE. Trong lúc chờ, máy chủ trả 403 khi bên mua là 買出人 và hạn tham gia là một ngày hết hạn ở participants.qualified_until (P-43).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
 - key: INV-LOT-KHA-DUNG
   cha: FG-04
   tracker: investigation
   title_vi: Lượng khả dụng của lô khi bán một phần 相対
-  han: Trước sprint của SC-030/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_BUYER_ELIGIBILITY_TECH.md §4.2 (LAB-4)
   spec_refs:
@@ -1455,7 +1507,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Cách gán bên bán 売り手 cho giao dịch 相対 ở hệ đích
-  han: Trước sprint của SC-030/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_TRADE_ENTRY_SPEC.md §6.3 (LAB-4)
   spec_refs:

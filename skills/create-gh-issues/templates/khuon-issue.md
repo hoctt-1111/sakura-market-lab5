@@ -66,6 +66,7 @@ Mọi issue trên Project sinh từ seed `<seed-dir>/backlog/<epic>.yaml` qua `s
 | Người trả lời · Mốc | máy từ seed (owner, hạn) | 1 dòng |
 | Issue bị ảnh hưởng | máy từ `anh_huong` của P-xx | danh sách key |
 | Định nghĩa xong | máy (mẫu INV) | có câu trả lời ghi trong issue, PREMISE cập nhật, issue ảnh hưởng được sửa hoặc xác nhận giữ |
+| Nguồn | máy từ seed (`nguon`) | chỗ trong tài liệu nguồn đặt ra câu hỏi, mỗi chỗ một dòng; tên tệp bỏ đuôi, khoá registry viết lại thành câu (`than.nguon_doi`) |
 
 ## 3. Giới hạn kỹ thuật
 - Thân ≤ 2.500 ký tự; mục trống thì bỏ cả tiêu đề mục (trừ mục bắt buộc của tracker).

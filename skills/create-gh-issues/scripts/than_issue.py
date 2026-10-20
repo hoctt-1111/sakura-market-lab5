@@ -12,7 +12,7 @@ import than_spec
 from khuon import doc_khuon, thu_tu
 from lib import LoiBoSinh, doc_json, doc_yaml, doc_yaml_neu_co
 from seed_doc import VAN
-from than_khoi import NHAN_RB, cau_dau, cho_ho, dinh_nghia_xong, lam_sach, loai_mau, rang_buoc, tien_de
+from than_khoi import NHAN_RB, cau_dau, cho_ho, dinh_nghia_xong, lam_sach, loai_mau, nguon_inv, rang_buoc, tien_de
 
 TRAN_GITHUB = 65536
 CHO_MAC_DINH = "_(chưa viết)_"
@@ -118,7 +118,8 @@ def _muc(it: dict, ctx: Ctx, cau: str | None) -> list[tuple[str, list[str] | Non
         hoi = _van(it.get("mo_ta")) or [f"Cần chốt: {it['title_vi']}." + (f" {lam_sach(p['cho_de_ngo'])}" if p and p.get("cho_de_ngo") else "")]
         muc = {"Câu hỏi": hoi, "Giả định đang dùng": [cau_dau(p.get("sau") or p.get("chot") or "")] if p else None,
                "Người trả lời · Mốc": [f"{it.get('nguoi_tra_loi', '')} · {it.get('han', '')}".strip(" ·")] or None,
-               "Issue bị ảnh hưởng": bullet([ctx.so_issue(k) for k in p.get("anh_huong") or []]) if p else None, "Định nghĩa xong": bullet(xong)}
+               "Issue bị ảnh hưởng": bullet([ctx.so_issue(k) for k in p.get("anh_huong") or []]) if p else None, "Định nghĩa xong": bullet(xong),
+               "Nguồn": nguon_inv(it.get("nguon"), ctx) or None}
     elif loai == "story":
         muc = {"Mô tả": bb(_van(it.get("mo_ta"))), "Phạm vi": bb(_van(it.get("pham_vi"))),
                "Luồng chính": bb(_van(it.get("luong_chinh"), so=True)), "Tiêu chí nghiệm thu": bb(gach("tieu_chi_nghiem_thu")),

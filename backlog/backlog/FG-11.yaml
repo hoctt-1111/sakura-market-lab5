@@ -1979,30 +1979,32 @@ items:
     - KH-181
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-23
   gap_refs:
   - G-FG11-01
   - G-FG11-02
   - G-FG11-12
-  mo_ta: 'KH-181 làm một lần phần chung của 13 màn SC-100…SC-112: bộ lọc kỳ, chu kỳ, trạng thái lần chạy, bảng kết quả có phân trang, kết xuất CSV và lịch sử lần chạy. Mỗi màn nối vào bằng một bộ cột và một truy vấn cố định viết trong mã; người dùng chỉ chọn giá trị lọc. Không có chỗ thêm báo cáo, thêm cột hay lưu mẫu, vì FR-RPT-03 loại trừ công cụ tự tạo báo cáo (P-23).'
-  pham_vi: Khuôn SKM_RPT_TEMPLATE_LIST (SPEC-SKM-181) ở văn phòng; `report_definitions` (12 báo cáo, nạp bằng migration) và `report_runs` (mỗi lần kết xuất một dòng), migration thuộc DATA-FG11; API dùng chung chưa có spec, KH-181/BE viết rồi làm (P-01).
+  mo_ta: 'Phần chung của 13 màn SC-100…SC-112, làm một lần: bộ lọc, bảng kết quả phân trang, kết xuất CSV, lịch sử lần chạy. Mỗi màn chỉ khai một bộ cột và một truy vấn cố định trong mã; người dùng chỉ chọn giá trị lọc. FR-RPT-03 loại trừ công cụ tự tạo báo cáo nên không có chỗ thêm báo cáo, thêm cột hay lưu mẫu (P-23).'
+  pham_vi: Ở văn phòng; `report_definitions` (12 báo cáo, nạp bằng migration) và `report_runs`, migration thuộc DATA-FG11; API dùng chung chưa có spec, KH-181/BE viết rồi làm (P-01).
   luong_chinh:
-  - Người dùng mở màn báo cáo; máy chủ kiểm vai có trong danh sách vai xem được của báo cáo.
-  - Người dùng chọn kỳ (bắt buộc), chu kỳ, bộ lọc riêng và bấm Lọc; máy chủ chạy truy vấn cố định, trả trang kết quả.
-  - Người dùng bấm Kết xuất CSV; máy chủ chạy lại đúng điều kiện, ghi tệp và thêm một dòng report_runs mang người của phiên, giờ máy chủ, trạng thái.
-  - Người dùng tải tệp từ lịch sử lần chạy.
+  - Mở màn báo cáo; máy chủ kiểm vai xem được.
+  - Chọn kỳ (bắt buộc), chu kỳ, bộ lọc riêng rồi bấm Lọc; máy chủ chạy truy vấn cố định, trả trang kết quả.
+  - Bấm Kết xuất CSV; máy chủ chạy lại đúng điều kiện, ghi tệp và thêm một dòng report_runs có người của phiên, giờ máy chủ, trạng thái.
+  - Tải tệp từ lịch sử lần chạy.
   tieu_chi_nghiem_thu:
   - Khi bỏ trống kỳ hoặc ngày bắt đầu sau ngày kết thúc thì máy chủ trả 400, không ghi report_runs (P-03).
   - Khi mã báo cáo ngoài danh mục thì trả 404 M_14; API không có tham số chọn cột hay đổi công thức.
-  - Khi vai không nằm trong danh sách vai xem được thì trả 403 M_05, kể cả khi gọi thẳng API.
+  - Khi vai không được xem báo cáo thì trả 403 M_05, kể cả khi gọi thẳng API.
   - Khi kết xuất xong thì tệp khớp bảng đang xem và mang thời điểm tạo, 業務日 (ngày nghiệp vụ), người chạy, mã lần chạy (G-FG11-12).
   - Khi kết xuất lỗi thì có thêm một dòng report_runs trạng thái lỗi, không có tệp.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SPEC-SKM-181 ghi cách màn khai bộ cột, truy vấn và luật của ô kỳ (P-03, G-FG11-01).
+  - Spec SPEC-SKM-181 ghi cách khai bộ cột, truy vấn và luật ô kỳ (P-03, G-FG11-01).
 - key: KH-181/FE
   cha: KH-181
   tracker: devtask
@@ -2020,8 +2022,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-1
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs:
   - G-FG11-01
@@ -2050,8 +2053,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
-  priority: 3
+  priority: 2
   premise_refs:
   - P-01
   - P-11
@@ -2086,8 +2090,9 @@ items:
     - KH-181
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử phần chung của khuôn báo cáo, chạy trên SC-101 làm màn mẫu.
@@ -2097,6 +2102,7 @@ items:
   - 'Gửi yêu cầu kết xuất kèm tên người và giờ giả: dòng report_runs lưu người của phiên và giờ máy chủ.'
   - Gọi API với mã báo cáo ngoài danh mục nhận 404 M_14; gửi thêm tham số tên cột thì cột trả về không đổi.
   - Tài khoản có vai mở được khuôn nhưng không nằm trong danh sách vai xem được của báo cáo nhận 403 M_05.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: KH-182
   cha: FG-11
@@ -2118,9 +2124,10 @@ items:
     - KH-182
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-17
   - P-23
@@ -2128,21 +2135,22 @@ items:
   - G-FG11-05
   - G-FG11-06
   - G-FG11-08
-  mo_ta: 'KH-182 làm một lần phần chung của SC-113 và SC-114: chọn một 業務日 (ngày nghiệp vụ) đã khoá, xem trước, chạy xuất ra tệp CSV một chiều và tra lịch sử lô. Mỗi ngày đã khoá có đúng một lô với mã do máy sinh; chạy lại cùng mã lô trả đúng tệp cũ (ADR-014, P-17). Hệ thống chỉ giao tệp, không gọi API của sản phẩm kế toán nào, không nhận dữ liệu ngược về.'
-  pham_vi: Khuôn SKM_RPT_TEMPLATE_EXPORT (SPEC-SKM-182) ở văn phòng; `export_batches` (định danh lô) và `report_runs` (mỗi lần chạy một dòng), migration thuộc DATA-FG11; đọc `business_day_locks`, `transactions`; API chưa có spec, KH-182/BE viết rồi làm (P-01).
+  mo_ta: 'Phần chung của SC-113 và SC-114, làm một lần: xuất tệp CSV một chiều cho một 業務日 (ngày nghiệp vụ) đã khoá và tra lịch sử lô. Mỗi ngày đã khoá có đúng một lô, mã do máy sinh (ADR-014, P-17); hệ thống không gọi API kế toán, không nhận dữ liệu về.'
+  pham_vi: Ở văn phòng; `export_batches` (định danh lô) và `report_runs`, migration thuộc DATA-FG11; đọc `business_day_locks`, `transactions`; API chưa có spec, KH-182/BE viết rồi làm (P-01).
   luong_chinh:
-  - Người dùng chọn một 業務日 và định dạng; máy chủ kiểm ngày đã có dòng khoá.
-  - Máy chủ dựng bản xem trước, mỗi người tham gia một dòng, kèm tổng tiền và tổng thuế.
-  - Người dùng bấm Chạy xuất; ngày chưa có lô thì máy chủ sinh mã lô, ghi export_batches, tệp CSV theo cấu hình (P-11) và một dòng report_runs.
-  - Ngày đã có lô thì máy chủ trả tệp đã lưu; lần chạy lỗi gửi thông báo lỗi xuất (FR-NOTIFY-01), chạy lại dưới cùng mã lô.
+  - Chọn 業務日 và định dạng.
+  - 'Máy chủ dựng bản xem trước: mỗi người tham gia một dòng, có tổng tiền, tổng thuế.'
+  - 'Bấm Chạy xuất: ngày chưa có lô thì máy chủ sinh mã lô, ghi export_batches, tệp CSV theo cấu hình (P-11), một dòng report_runs.'
+  - Ngày đã có lô thì trả tệp đã lưu; chạy lỗi thì báo lỗi xuất (FR-NOTIFY-01), chạy lại cùng mã lô.
   tieu_chi_nghiem_thu:
-  - Khi chọn 業務日 chưa khoá thì máy chủ từ chối, không sinh mã lô, không ghi bảng nào (ADR-014).
-  - Khi xuất thành công thì tệp có mã lô, 業務日, mã người tham gia, tổng tiền, số thuế, trạng thái dòng, kèm thời điểm tạo và người chạy.
-  - Khi chạy lại cùng mã lô thì tệp giống hệt tệp đã giao lần đầu, ngày đó không có lô thứ hai.
-  - Khi trình duyệt gửi mã lô, người chạy hay giờ chạy thì máy chủ bỏ qua và tự gán.
-  - Khi người dùng không có vai được phép thì máy chủ trả 403 M_05.
+  - Khi chọn 業務日 chưa khoá thì máy chủ từ chối, không sinh mã lô, không ghi gì (ADR-014).
+  - Khi xuất thành công thì tệp có mã lô, 業務日, mã người tham gia, tổng tiền, số thuế, trạng thái dòng, thời điểm tạo, người chạy.
+  - Khi chạy lại cùng mã lô thì tệp giống hệt lần đầu, ngày đó không có lô thứ hai.
+  - Khi trình duyệt gửi mã lô, người hay giờ chạy thì máy chủ bỏ qua, tự gán.
+  - Khi vai không được phép thì máy chủ trả 403 M_05.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SPEC-SKM-182 sửa ô kỳ thành một 業務日, ô mã lô thành chỉ hiển thị (G-FG11-05, G-FG11-06).
+  - 'Spec SPEC-SKM-182: ô kỳ là một 業務日, ô mã lô chỉ hiển thị (G-FG11-05, G-FG11-06).'
 - key: KH-182/FE
   cha: KH-182
   tracker: devtask
@@ -2160,8 +2168,9 @@ items:
   labels:
   - type:devtask
   - team:frontend
+  - constraint:jst
   owner: FE-1
-  priority: 3
+  priority: 2
   premise_refs:
   - P-11
   gap_refs:
@@ -2190,8 +2199,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
-  priority: 3
+  priority: 2
   premise_refs:
   - P-01
   - P-11
@@ -2227,8 +2237,9 @@ items:
     - KH-182
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: 'Thiết kế ca kiểm thử phần chung của khuôn xuất kế toán: chặn ngày chưa khoá, đủ 6 trường, chạy lại cùng mã lô.'
@@ -2238,11 +2249,12 @@ items:
   - 'Chạy xuất cho 業務日 (ngày nghiệp vụ) chưa có dòng khoá: bị từ chối, export_batches và report_runs không thêm dòng.'
   - 'Chạy xuất hai lần cho cùng một ngày đã khoá: cùng một mã lô, hai tệp giống hệt nhau.'
   - 'Gửi kèm mã lô, người chạy và giờ giả: lô lưu mã do máy sinh, người của phiên và giờ máy chủ.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: DATA-FG11
   cha: FG-11
   tracker: story
-  title_vi: 'Tạo bảng chưa có màn ghi (vùng D-SETTLE): report_definitions, report_runs, export_batches'
+  title_vi: Tạo bảng report_definitions, report_runs, export_batches
   spec_refs:
     sc: []
     api: []
@@ -2257,9 +2269,10 @@ items:
     nfr: []
   labels:
   - type:story
+  - constraint:jst
   - spec-gap
   owner: PM
-  priority: 3
+  priority: 2
   premise_refs:
   - P-04
   - P-06
@@ -2277,6 +2290,7 @@ items:
   - Khi chạy migration trên cơ sở dữ liệu trống thì ba bảng được tạo đủ, không còn ô kiểu «—» (P-06).
   - Khi ghi lô thứ hai cho cùng một 業務日 hoặc trùng mã lô thì cơ sở dữ liệu từ chối.
   - Khi sửa hoặc xoá dòng report_runs, export_batches thì bị chặn ở mức quyền cơ sở dữ liệu.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - SKM_DB ghi lại cột mới của export_batches và report_runs (G-FG11-07, G-FG11-12).
 - key: DATA-FG11/DB
@@ -2298,8 +2312,9 @@ items:
   labels:
   - type:devtask
   - team:backend
+  - constraint:jst
   owner: BE-1
-  priority: 3
+  priority: 2
   premise_refs:
   - P-04
   - P-06
@@ -2317,7 +2332,7 @@ items:
 - key: DATA-FG11/TEST
   cha: DATA-FG11
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tạo bảng chưa có màn ghi (vùng D-SETTLE): report_definitions, report_runs, export_batches'
+  title_vi: 'Ca kiểm thử: Bảng chưa có màn ghi của FG-11'
   spec_refs:
     sc: []
     api: []
@@ -2328,8 +2343,9 @@ items:
     nfr: []
   labels:
   - type:testdesign
+  - constraint:jst
   owner: QA
-  priority: 3
+  priority: 2
   premise_refs: []
   gap_refs: []
   mo_ta: Thiết kế ca kiểm thử ràng buộc của ba bảng danh mục báo cáo, lần chạy và lô xuất kế toán.
@@ -2339,6 +2355,7 @@ items:
   - 'Ghi lô thứ hai cho cùng một 業務日 (ngày nghiệp vụ) hoặc trùng mã lô: cơ sở dữ liệu từ chối.'
   - 'Sửa hoặc xoá một dòng report_runs hay export_batches: bị chặn ở mức quyền cơ sở dữ liệu.'
   - 'Đếm report_definitions sau migration: đúng 12 dòng, mã RPT-01…RPT-12.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
 - key: INV-Q-04
   cha: FG-11
@@ -2376,7 +2393,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Chỉ số đã công bố dùng cho báo cáo tháng RPT-10, RPT-11
-  han: Trước sprint của SC-110/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT10_PARTICIPANT_MONTHLY_SPEC.md §6.2 Q-17 (LAB-4)
   spec_refs:
@@ -2409,7 +2426,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Mục tiêu số ngày xử lý tranh chấp cho báo cáo RPT-09
-  han: Trước sprint của SC-109/BE — ngày chốt khi xếp Sprint ở đầu việc 4
+  han: 03/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT09_DISPUTE_SLA_SPEC.md §6.2 Q-18 (LAB-4)
   spec_refs:
@@ -2433,6 +2450,37 @@ items:
   gap_refs:
   - G-FG11-10
   mo_ta: Khách đặt mục tiêu xử lý một tranh chấp trong bao nhiêu ngày làm việc, và ngày làm việc đếm theo lịch nào? Báo cáo RPT-09 so thời gian xử lý với mục tiêu này; LAB-4 tạm lấy 3 ngày làm việc theo giả định GD-13 (câu Q-18).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-FG11-BAO-CAO-NGAY
+  cha: FG-11
+  tracker: investigation
+  title_vi: Báo cáo ngày do người chạy hay hệ tự lập khi hết 業務日
+  han: 03/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: SKM_RPT_TEMPLATE_LIST_SPEC.md §5 · SKM_SYSTEM_DESIGN.md EV1–EV3 (LAB-4)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr:
+    - FR-RPT-01
+    adr: []
+    nfr: []
+    khuon:
+    - KH-181
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 1
+  premise_refs: []
+  gap_refs:
+  - G-FG11-02
+  mo_ta: Báo cáo ngày do người dùng chạy, hay hệ thống tự lập khi hết 業務日 (ngày nghiệp vụ)? FR-RPT-01 đặt việc lập báo cáo ngày vào lúc kết thúc ngày, nhưng ba sự kiện EV1–EV3 không có tác vụ này và khuôn KH-181 chỉ có nút Lọc và Kết xuất CSV; đây là cách hiểu cần khách xác nhận. Trong lúc chờ, mỗi lần 照合事務 (nhóm đối soát) kết xuất CSV là một lần chạy ghi report_runs; khách cần tự sinh theo lịch thì thêm một sự kiện gọi lại truy vấn của từng màn, không làm lại khuôn.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu: []

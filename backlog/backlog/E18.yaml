@@ -23,7 +23,7 @@ epic:
   - P-15
   - P-19
   gap_refs: []
-  mo_ta: 'Nhóm việc này biến 14 yêu cầu phi chức năng N1–N14 của thiết kế hệ thống thành việc đo hoặc kiểm được: khả dụng trong cửa sổ dịch vụ, chạy suy giảm và khôi phục, hiệu năng theo hồ sơ tải, bảo mật, lưu trữ, giám sát vận hành, thao tác bàn phím và tương thích trình duyệt, tablet. Mỗi nhóm có ca đo chạy trên staging trước phát hành; chỗ RFP chưa cho số thì hệ thống đọc từ tham số cấu hình và có issue điều tra đi kèm.'
+  mo_ta: 'Nhóm việc này biến 14 yêu cầu phi chức năng N1–N14 của thiết kế hệ thống thành việc đo hoặc kiểm được: khả dụng trong cửa sổ dịch vụ, chạy suy giảm và khôi phục, hiệu năng theo hồ sơ tải, bảo mật, lưu trữ, giám sát vận hành, thao tác bàn phím và tương thích trình duyệt, tablet. Mỗi nhóm có ca đo chạy trên môi trường thử trước phát hành; chỗ RFP chưa cho số thì hệ thống đọc từ tham số cấu hình và có issue điều tra đi kèm.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -59,20 +59,20 @@ items:
   - G-E18-01
   - G-FG14-07
   - G-E18-02
-  mo_ta: 'Story này gom ba yêu cầu khả dụng: đạt 99,5% mỗi tháng tính trong cửa sổ dịch vụ 02:00–10:00 giờ Nhật, làm tiếp được khi mất kết nối ngắn ở hiện trường, và khôi phục sau sự cố trong RTO 4 giờ, RPO 15 phút. Theo ADR-010, chỉ ba thao tác nhập ở hiện trường được lưu cục bộ rồi đồng bộ; chốt giao dịch và khoá ngày luôn cần mạng.'
+  mo_ta: 'Story này gom ba yêu cầu khả dụng: đạt 99,5% mỗi tháng tính trong cửa sổ dịch vụ 02:00–10:00 giờ Nhật, làm tiếp được khi mất kết nối ngắn ở hiện trường, và khôi phục trong RTO 4 giờ, RPO 15 phút khi mất một AZ (vùng sẵn sàng) hoặc instance CSDL ở ap-northeast-1, gồm cả khôi phục về một thời điểm; mất cả Region nằm ngoài phạm vi (AD-02, AD-03). Theo ADR-010, chỉ ba thao tác nhập ở hiện trường được lưu cục bộ rồi đồng bộ; chốt giao dịch và khoá ngày luôn cần mạng.'
   pham_vi:
   - NFR-AVL-01, NFR-AVL-02, NFR-AVL-03 (N1–N3); sao lưu hằng ngày và bản dự phòng đồng bộ cùng vùng của PLT-02; đồng hồ đo gọi API-220.
   - 'Ba thao tác lưu cục bộ theo AD-04 của LAB-01: nhập lô ở SC-020, ghi 目利き (thẩm định bằng mắt) ở SC-023, ghi lần giao ở SC-060 (G-FG14-07); điều giải xung đột ở SC-151.'
   luong_chinh:
   - Infra cấu hình đồng hồ đo chỉ tính trong cửa sổ dịch vụ; bảo trì đặt ngoài cửa sổ.
   - Infra bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ.
-  - QA ngắt kết nối thiết bị hiện trường trên staging, làm ba thao tác ghi tạm rồi thử chốt giao dịch và khoá ngày.
-  - Infra diễn tập khôi phục trên staging, đo thời gian và lượng dữ liệu mất; PM ghi số đo vào story.
+  - QA ngắt kết nối thiết bị hiện trường trên môi trường thử, làm ba thao tác ghi tạm rồi thử chốt giao dịch và khoá ngày.
+  - Infra diễn tập khôi phục trên môi trường thử, đo thời gian và lượng dữ liệu mất; PM ghi số đo vào story.
   tieu_chi_nghiem_thu:
   - Khi tính khả dụng thì chỉ các phút trong cửa sổ dịch vụ được tính, bảo trì ngoài cửa sổ không bị trừ.
   - Khi mất kết nối thì ba thao tác nhập được lưu tạm và đồng bộ lại khi có mạng; chốt 相対取引 (giao dịch thỏa thuận) và khoá ngày bị chặn, màn báo rõ đang mất kết nối.
   - Khi đồng bộ gặp xung đột thì dòng đó chờ người xử ở SC-151, không tự trộn.
-  - Khi diễn tập khôi phục thì thời gian không quá 4 giờ, dữ liệu mất không quá 15 phút, và số đo thật ghi vào story.
+  - Khi diễn tập khôi phục ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm thì thời gian không quá 4 giờ, dữ liệu mất không quá 15 phút, và số đo thật ghi vào story.
   dinh_nghia_xong:
   - Danh sách ba thao tác nằm ở ràng buộc của bảng sync_queue và ở PREMISE, không chỉ trong mã (G-FG14-07); tiêu chí lưu tạm đã có ở FE của ba màn (G-E18-01).
 - key: NFR-AVL/TEST
@@ -96,7 +96,7 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử chạy suy giảm và khôi phục trên staging.
+  mo_ta: Thiết kế ca kiểm thử chạy suy giảm và khôi phục trên môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -128,12 +128,12 @@ items:
   premise_refs: []
   gap_refs:
   - G-E18-02
-  mo_ta: Cấu hình đồng hồ đo khả dụng trong cửa sổ dịch vụ, sao lưu và bản dự phòng đồng bộ, rồi diễn tập khôi phục trên staging để đo RTO, RPO thật.
+  mo_ta: Cấu hình đồng hồ đo khả dụng trong cửa sổ dịch vụ, sao lưu và bản dự phòng đồng bộ, rồi diễn tập khôi phục trên môi trường thử để đo RTO, RPO thật.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Đồng hồ đo dùng API-220 và chỉ tính trong 02:00–10:00 giờ Nhật.
-  - Diễn tập khôi phục ít nhất một lần trên staging trước phát hành, ghi thời gian và lượng dữ liệu mất vào story (G-E18-02).
+  - Diễn tập khôi phục ít nhất một lần trên môi trường thử trước phát hành, cho ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm, ghi thời gian và lượng dữ liệu mất vào story (G-E18-02).
   - Sao lưu, nhật ký và bản dự phòng chỉ nằm trong vùng Nhật.
   dinh_nghia_xong: []
 - key: NFR-PERF
@@ -162,11 +162,11 @@ items:
   pham_vi:
   - NFR-PERF-01 (N4), NFR-PERF-02 (N5); hồ sơ tải 180 tài khoản, 60 người đồng thời.
   - Danh sách thao tác tra cứu và tác vụ lõi cần đo do Tech Lead duyệt (G-E18-03); đề xuất tác vụ lõi là nhập lô, chốt giao dịch và ghi giao hàng.
-  - Staging của PLT-02; công cụ tạo tải k6 hoặc tương đương.
+  - Môi trường thử của PLT-02; công cụ tạo tải k6 hoặc tương đương.
   luong_chinh:
   - Tech Lead chốt danh sách thao tác tra cứu và tác vụ lõi cần đo.
   - QA dựng kịch bản tải theo FIG-LOAD-01 cho mức ngày thường và mức cao điểm.
-  - QA chạy tải trên staging trước mỗi lần phát hành, ghi p95 từng thao tác và độ trễ tác vụ lõi.
+  - QA chạy tải trên môi trường thử trước mỗi lần phát hành, ghi p95 từng thao tác và độ trễ tác vụ lõi.
   - BE xem truy vấn chậm, nhất là khung nhìn tổng hợp của bảng chỉ-thêm, sửa rồi đo lại.
   - PM ghi kết quả vào story và giữ lại bản phát hành khi chưa đạt.
   tieu_chi_nghiem_thu:
@@ -328,7 +328,7 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử bảo mật mức toàn hệ thống trên staging.
+  mo_ta: Thiết kế ca kiểm thử bảo mật mức toàn hệ thống trên môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -458,7 +458,7 @@ items:
   luong_chinh:
   - 'Infra đặt cảnh báo cho bốn nhóm: API-220 hỏng, tác vụ nền hoặc lô xuất thất bại, gửi thông báo thất bại, sự kiện bảo mật.'
   - Mỗi cảnh báo thêm một dòng alert_queue để người vận hành thấy ở SC-122; SC-150 hiện số đếm theo nhóm (G-FG14-06).
-  - QA gây lỗi từng nhóm trên staging và xem cảnh báo có tới không.
+  - QA gây lỗi từng nhóm trên môi trường thử và xem cảnh báo có tới không.
   - Tech Lead rà một lần đổi bản quy tắc ở FG-10, xác nhận bản cũ và giao dịch đã chốt không đổi.
   tieu_chi_nghiem_thu:
   - Khi API-220 trả 500 trên một máy ứng dụng thì có cảnh báo nhóm tình trạng sống ở SC-122.
@@ -522,7 +522,7 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Mỗi nhóm có ít nhất một cảnh báo đã được gây thử trên staging.
+  - Mỗi nhóm có ít nhất một cảnh báo đã được gây thử trên môi trường thử.
   - Ngưỡng của từng cảnh báo là tham số cấu hình; giá trị khởi tạo do Tech Lead duyệt và ghi trong README vận hành.
   - Nhật ký giám sát và vết thao tác hạ tầng chỉ nằm trong vùng Nhật.
   dinh_nghia_xong: []

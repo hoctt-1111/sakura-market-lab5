@@ -21,12 +21,12 @@ epic:
   - P-04
   - P-17
   gap_refs: []
-  mo_ta: 'Nhóm việc này đưa hệ đích lên production: dựng môi trường và quy trình phát hành, viết kế hoạch hoàn nguyên có đường bù riêng cho hai bước không hoàn tác được, diễn tập phát hành trên staging rồi bàn giao vận hành cho khách. Mọi lần phát hành đặt ngoài cửa sổ dịch vụ 02:00–10:00 giờ Nhật, vì hệ chỉ có một khối triển khai nên lần triển khai nào cũng dừng cả khối (ADR-009).'
+  mo_ta: 'Nhóm việc này đưa hệ đích lên production: dựng môi trường và quy trình phát hành, viết kế hoạch hoàn nguyên có đường bù riêng cho hai bước không hoàn tác được, diễn tập phát hành trên môi trường thử rồi bàn giao vận hành cho khách. Mọi lần phát hành đặt ngoài cửa sổ dịch vụ 02:00–10:00 giờ Nhật, vì hệ chỉ có một khối triển khai nên lần triển khai nào cũng dừng cả khối (ADR-009).'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Mọi story con của E19 đã đóng.
-  - Khi diễn tập phát hành trên staging thì mọi bước chạy hết, các đường lùi được thử và có biên bản.
+  - Khi diễn tập phát hành trên môi trường thử thì mọi bước chạy hết, các đường lùi được thử và có biên bản.
   - Khi khoá 業務日 (ngày nghiệp vụ) hoặc gửi tệp xuất kế toán đã chạy thật thì kế hoạch hoàn nguyên không có bước xoá nào, chỉ có đường bù.
   - Khách nhận tài liệu vận hành và ký biên bản bàn giao.
   dinh_nghia_xong: []
@@ -56,7 +56,7 @@ items:
   - G-E19-01
   - G-E19-02
   - G-A-DB-d2-chi-27-bang
-  mo_ta: Infra dựng production từ cùng bộ cấu hình với staging, chỉ khác tham số, và viết quy trình phát hành một bản dựng đã qua staging. Thứ tự ở mục triển khai của LAB-4 là thứ tự làm tài liệu (G-E19-01), nên story này viết lại thứ tự cho hệ viết mới; lần phát hành nào cũng đặt ngoài cửa sổ dịch vụ và báo trước người dùng (G-E19-02).
+  mo_ta: Infra dựng production từ cùng bộ cấu hình với môi trường thử, chỉ khác tham số, và viết quy trình phát hành một bản dựng đã qua môi trường thử. Thứ tự ở mục triển khai của LAB-4 là thứ tự làm tài liệu (G-E19-01), nên story này viết lại thứ tự cho hệ viết mới; lần phát hành nào cũng đặt ngoài cửa sổ dịch vụ và báo trước người dùng (G-E19-02).
   pham_vi: 'Production ở ap-northeast-1 theo ADR-015 (nhiều máy ứng dụng, CSDL có bản dự phòng đồng bộ, sao lưu, giám sát). Thứ tự phát hành: migration cả 45 bảng (P-04), bản ứng dụng, dữ liệu di trú của E16, rồi mới mở cho người dùng; không bước nào coi 18 bảng của prototype là đã có.'
   luong_chinh:
   - Infra dựng production bằng cấu hình trong repo, bật bản dự phòng, sao lưu, giám sát và chặn dữ liệu ra ngoài vùng Nhật.
@@ -64,9 +64,9 @@ items:
   - Infra đưa đúng bản dựng đã diễn tập ở REL-03 lên, chạy migration rồi triển khai ứng dụng; BE nạp dữ liệu di trú theo kết quả MIG-03.
   - QA chạy kiểm khói gồm API-220 và một lượt mỗi luồng lõi; PM quyết mở cho người dùng.
   tieu_chi_nghiem_thu:
-  - Khi so cấu hình production với staging thì chỉ khác các tham số đã khai, không có tài nguyên dựng tay.
+  - Khi so cấu hình production với môi trường thử thì chỉ khác các tham số đã khai, không có tài nguyên dựng tay.
   - Khi phát hành thì thời điểm nằm ngoài cửa sổ dịch vụ và người dùng đã được báo trước.
-  - Khi triển khai thì bản chạy trên production đúng là bản đã diễn tập trên staging.
+  - Khi triển khai thì bản chạy trên production đúng là bản đã diễn tập trên môi trường thử.
   - Khi kiểm khói sau phát hành đỏ thì hệ chưa mở cho người dùng và kế hoạch hoàn nguyên của REL-02 được chạy.
   dinh_nghia_xong:
   - Quy trình và thứ tự phát hành ghi trong README vận hành, có Tech Lead duyệt.
@@ -119,12 +119,12 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Dựng production và bước triển khai production trong luồng CI, dùng cùng bộ cấu hình với staging.
+  mo_ta: Dựng production và bước triển khai production trong luồng CI, dùng cùng bộ cấu hình với môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Production dựng được từ cấu hình trong repo, chỉ khác tham số so với staging.
-  - Bước triển khai production cần người duyệt và chỉ nhận bản dựng đã qua staging.
+  - Production dựng được từ cấu hình trong repo, chỉ khác tham số so với môi trường thử.
+  - Bước triển khai production cần người duyệt và chỉ nhận bản dựng đã qua môi trường thử.
   - Sau khi triển khai, API-220 trả 200 trên mọi máy ứng dụng.
   dinh_nghia_xong: []
 - key: REL-02
@@ -158,7 +158,7 @@ items:
   - Tech Lead liệt kê từng bước phát hành, ghi bước đó hoàn tác được không và bằng cách nào.
   - 'PM đặt mốc không quay lại trên lịch: sau lần khoá ngày hoặc lần xuất kế toán thật đầu tiên chỉ còn đường bù.'
   - BE giữ migration ở dạng chỉ thêm bảng, thêm cột, để bản ứng dụng trước vẫn chạy được trên lược đồ mới.
-  - QA chạy thử từng đường lùi trên staging trong buổi diễn tập của REL-03.
+  - QA chạy thử từng đường lùi trên môi trường thử trong buổi diễn tập của REL-03.
   - Khách duyệt kế hoạch qua BrSE trước ngày phát hành.
   tieu_chi_nghiem_thu:
   - Khi lùi bản ứng dụng thì bản trước chạy được trên lược đồ CSDL hiện tại và không mất dữ liệu đã ghi.
@@ -221,13 +221,13 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Lùi về bản trước bằng một lệnh có ghi vết, không dựng lại bản.
-  - Trước mỗi lần phát hành có điểm khôi phục CSDL và đã thử khôi phục trên staging.
+  - Trước mỗi lần phát hành có điểm khôi phục CSDL và đã thử khôi phục trên môi trường thử.
   - Bước lùi không chạy lệnh xoá nào trên bảng chỉ-thêm.
   dinh_nghia_xong: []
 - key: REL-03
   cha: E19
   tracker: story
-  title_vi: Diễn tập phát hành trên staging
+  title_vi: Diễn tập phát hành trên môi trường thử
   spec_refs:
     sc: []
     api: []
@@ -246,11 +246,11 @@ items:
   premise_refs: []
   gap_refs:
   - G-E19-04
-  mo_ta: 'Đội chạy toàn bộ quy trình phát hành của REL-01 trên staging với dữ liệu đã che, gồm cả nạp dữ liệu di trú và thử các đường lùi của REL-02. Mục «cách biết là hỏng» của LAB-4 chỉ nói về cổng kiểm của bộ tài liệu (G-E19-04), nên story này đặt dấu hiệu hỏng cho hệ đang chạy: API-220, kiểm khói các luồng lõi và cảnh báo của bốn nhóm giám sát.'
-  pham_vi: Staging của PLT-02; bản dựng ứng viên; kế hoạch của REL-01, REL-02; diễn tập di trú MIG-03; cảnh báo của NFR-OPS; thời gian từng bước so với 16 giờ ngoài cửa sổ dịch vụ mỗi ngày (ADR-009).
+  mo_ta: 'Đội chạy toàn bộ quy trình phát hành của REL-01 trên môi trường thử với dữ liệu đã che, gồm cả nạp dữ liệu di trú và thử các đường lùi của REL-02. Mục «cách biết là hỏng» của LAB-4 chỉ nói về cổng kiểm của bộ tài liệu (G-E19-04), nên story này đặt dấu hiệu hỏng cho hệ đang chạy: API-220, kiểm khói các luồng lõi và cảnh báo của bốn nhóm giám sát.'
+  pham_vi: Môi trường thử của PLT-02; bản dựng ứng viên; kế hoạch của REL-01, REL-02; diễn tập di trú MIG-03; cảnh báo của NFR-OPS; thời gian từng bước so với 16 giờ ngoài cửa sổ dịch vụ mỗi ngày (ADR-009).
   luong_chinh:
   - PM lên lịch diễn tập như một lần phát hành thật, kể cả báo trước.
-  - Infra triển khai bản dựng ứng viên lên staging theo đúng quy trình REL-01 và đo thời gian từng bước.
+  - Infra triển khai bản dựng ứng viên lên môi trường thử theo đúng quy trình REL-01 và đo thời gian từng bước.
   - BE nạp dữ liệu di trú đã che; QA chạy kiểm khói và theo dõi cảnh báo.
   - Infra thử lùi bản ứng dụng và khôi phục CSDL theo REL-02.
   - 'PM ghi biên bản: các bước, thời gian, dấu hiệu hỏng gặp phải, quyết định đi tiếp hay sửa.'
@@ -264,7 +264,7 @@ items:
 - key: REL-03/TEST
   cha: REL-03
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Diễn tập phát hành trên staging'
+  title_vi: 'Ca kiểm thử: Diễn tập phát hành trên môi trường thử'
   spec_refs:
     sc: []
     api: []
@@ -285,14 +285,14 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Kiểm khói sau triển khai trên staging: đạt, hoặc diễn tập dừng và ghi hỏng.'
+  - 'Kiểm khói sau triển khai trên môi trường thử: đạt, hoặc diễn tập dừng và ghi hỏng.'
   - 'Gây lỗi API-220 giữa chừng: diễn tập ghi hỏng và chạy đường lùi.'
   - 'So số đọc qua khung nhìn trước và sau khi lùi bản: không đổi.'
   dinh_nghia_xong: []
 - key: REL-03/INFRA
   cha: REL-03
   tracker: devtask
-  title_vi: 'Hạ tầng: Diễn tập phát hành trên staging'
+  title_vi: 'Hạ tầng: Diễn tập phát hành trên môi trường thử'
   spec_refs:
     sc: []
     api: []
@@ -310,13 +310,13 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Chạy quy trình phát hành và các đường lùi trên staging như một lần thật, đo thời gian từng bước.
+  mo_ta: Chạy quy trình phát hành và các đường lùi trên môi trường thử như một lần thật, đo thời gian từng bước.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Mọi bước chạy từ luồng triển khai, không có thao tác tay ngoài kế hoạch.
   - Thời gian từng bước ghi vào biên bản diễn tập.
-  - Lùi bản và khôi phục CSDL thành công trên staging.
+  - Lùi bản và khôi phục CSDL thành công trên môi trường thử.
   dinh_nghia_xong: []
 - key: REL-04
   cha: E19
@@ -350,7 +350,7 @@ items:
   - 'PM tổ chức buổi huấn luyện: đọc SC-150, SC-122 và chạy một lần khôi phục thử.'
   - Khách ký biên bản bàn giao qua BrSE.
   tieu_chi_nghiem_thu:
-  - Khi người vận hành của khách làm theo tài liệu thì tự chạy được một lần khôi phục thử trên staging.
+  - Khi người vận hành của khách làm theo tài liệu thì tự chạy được một lần khôi phục thử trên môi trường thử.
   - Khi có cảnh báo ở SC-122 thì người nhận đã có tên trong danh sách bàn giao.
   - Khi bàn giao xong thì tài khoản và quyền của đội dự án trên production đã rút hoặc chuyển cho khách, có danh sách đối chiếu.
   - Khi ký bàn giao thì biên bản có người nhận phía khách và ngày ký.

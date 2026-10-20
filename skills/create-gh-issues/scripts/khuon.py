@@ -15,7 +15,7 @@ MAC_DINH = {
     "epic": ["Mục tiêu", "Phạm vi", "Tiêu chí hoàn thành epic", "Ràng buộc đặc thù", "Spec nguồn"],
     "story": ["Mô tả", "Phạm vi", "Luồng chính", "Tiêu chí nghiệm thu", "Định nghĩa xong", "Ràng buộc đặc thù",
               "Dữ liệu từ spec", "Tiền đề", "Chỗ hở", "Spec nguồn"],
-    "investigation": ["Câu hỏi", "Giả định đang dùng", "Người trả lời · Mốc", "Issue bị ảnh hưởng", "Định nghĩa xong"],
+    "investigation": ["Câu hỏi", "Giả định đang dùng", "Người trả lời · Mốc", "Issue bị ảnh hưởng", "Định nghĩa xong", "Nguồn"],
     "FE": _LEAF, "BE": _LEAF, "DB": _LEAF, "INFRA": _LEAF,
     "TEST": ["Mô tả", "Ca kiểm thử bắt buộc", "Định nghĩa xong", "Dữ liệu từ spec", "Spec nguồn"],
 }
