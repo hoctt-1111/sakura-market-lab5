@@ -13,7 +13,7 @@ Iteration trên Project: «Sprint 1» (field Iteration «Sprint»), 20/10/2026 �
 <!-- gen:progress-trang-thai:start -->
 | Trạng thái | Số issue | Tổng SWP | Trong Sprint | Ghi chú |
 | --- | --- | --- | --- | --- |
-| New | 444 | 1.228 | 0 | leaf/INV 331 · story/epic 113 |
+| New | 444 | 1.233 | 0 | leaf/INV 331 · story/epic 113 |
 | In Progress | 29 | 0 | 0 | story/epic 29 |
 | Pending | 18 | 37 | 18 | leaf/INV 18 |
 | Closed | 22 | 60 | 22 | leaf/INV 22 |
@@ -74,13 +74,15 @@ Xong 60/97 SWP (62%) ở ảnh chụp.
 
 ## Rủi ro trễ
 
+Tên file nguồn nêu trong các bảng (quy ước giờ, quy ước sprint, kết quả trích SWP, script tính, nhật ký giờ) là file làm việc nằm ngoài repo nộp; mọi số trong file này sinh tự động từ các file đó và có cổng kiểm đối chiếu.
+
 <!-- gen:progress-rui-ro:start -->
 | Rủi ro | Issue | Ảnh hưởng tới mốc nào | Hành động | Ai làm, khi nào |
 | --- | --- | --- | --- | --- |
-| Năng lực đội không đủ cho backlog: QA một người gánh 1.533 giờ leaf TEST, cần 33 sprint so với 6 sprint của kế hoạch (BE-1 cần 24); giả định năng lực 56 giờ mỗi vai mỗi sprint (8 giờ × 10 ngày × 0,7) và chỉ xếp tới 85% năng lực (quy-uoc-sprint.yaml) | [#445](https://github.com/hoctt-1111/sakura-market-lab5/issues/445) | Phát hành production cuối Sprint 6 (11/01/2027) | Thêm QA-2 và BE-3 từ Sprint 2, chuyển ca hồi quy lặp lại sang tự động; khách không duyệt thêm người thì giãn mốc theo số sprint vai nghẽn | PM đề xuất, khách quyết, 2026-11-02 |
+| Năng lực đội không đủ cho backlog: QA một người gánh 1.540 giờ leaf TEST, cần 33 sprint so với 6 sprint của kế hoạch (BE-1 cần 24); giả định năng lực 56 giờ mỗi vai mỗi sprint (8 giờ × 10 ngày × 0,7) và chỉ xếp tới 85% năng lực (quy-uoc-sprint.yaml) | [#445](https://github.com/hoctt-1111/sakura-market-lab5/issues/445) | Phát hành production cuối Sprint 6 (11/01/2027) | Thêm QA-2 và BE-3 từ Sprint 2, chuyển ca hồi quy lặp lại sang tự động; khách không duyệt thêm người thì giãn mốc theo số sprint vai nghẽn | PM đề xuất, khách quyết, 2026-11-02 |
 | INV-Q-23 (mức chặn) chưa có trả lời: ranh giới kỳ tính 完納奨励金 và đường nhập 入金 chặn toàn bộ FG-09 | [#497](https://github.com/hoctt-1111/sakura-market-lab5/issues/497) | FG-09 vào Sprint 3 (bắt đầu 17/11/2026) | BrSE hỏi lại khách trong buổi họp tuần; quá hạn thì FG-09 dời sang Sprint 4 và làm theo giả định GD-17 đã ghi ở PREMISE | BrSE, 2026-10-31 |
 | Thư viện ghi chỉ-thêm đứng ở Pending vì Tech Lead chưa chốt nơi giữ dòng đảo; mọi module ghi giao dịch phụ thuộc thư viện này | [#8](https://github.com/hoctt-1111/sakura-market-lab5/issues/8), [#513](https://github.com/hoctt-1111/sakura-market-lab5/issues/513) | Module ghi giao dịch 相対 và せり ở Sprint 2 | Tech Lead chốt phương án trong buổi rà thiết kế, BE-1 làm tiếp ngay ngày sau | Tech Lead, 2026-10-31 |
-| Câu hỏi gửi khách qua BrSE (INV loại khách) chưa có trả lời ở ảnh chụp ngày thứ chín, kéo tỷ lệ xong Sprint 1 xuống dưới mục tiêu 80% | [#435](https://github.com/hoctt-1111/sakura-market-lab5/issues/435), [#270](https://github.com/hoctt-1111/sakura-market-lab5/issues/270), [#306](https://github.com/hoctt-1111/sakura-market-lab5/issues/306), [#140](https://github.com/hoctt-1111/sakura-market-lab5/issues/140) | Đầu Sprint 2 (03/11/2026) | Gom các câu còn mở thành một danh sách hỏi gửi khách một lần kèm giả định đang dùng, xin trả lời trong năm ngày làm việc | BrSE, 2026-10-31 |
+| Câu hỏi gửi khách qua BrSE (INV loại khách) chưa có trả lời ở ảnh chụp ngày thứ chín, kéo tỷ lệ xong Sprint 1 xuống dưới mục tiêu 80% (tỷ lệ xong mục tiêu đặt trong kịch bản giả lập) | [#435](https://github.com/hoctt-1111/sakura-market-lab5/issues/435), [#270](https://github.com/hoctt-1111/sakura-market-lab5/issues/270), [#306](https://github.com/hoctt-1111/sakura-market-lab5/issues/306), [#140](https://github.com/hoctt-1111/sakura-market-lab5/issues/140) | Đầu Sprint 2 (03/11/2026) | Gom các câu còn mở thành một danh sách hỏi gửi khách một lần kèm giả định đang dùng, xin trả lời trong năm ngày làm việc | BrSE, 2026-10-31 |
 | P-22 quá hạn từ 08/10: Tech Lead chưa chốt xử lý khi lưu kết quả chờ của bước tính thưởng thất bại, chặn nhánh lỗi của TECH-304 | [#19](https://github.com/hoctt-1111/sakura-market-lab5/issues/19), [#31](https://github.com/hoctt-1111/sakura-market-lab5/issues/31) | FG-09 vào Sprint 3 (17/11/2026) | Chốt theo giả định P-22 (trả SAVE_FAILED) trừ khi Tech Lead phản đối; ghi quyết định vào issue điều tra | Tech Lead, 2026-11-03 |
 | Ca nghiệm thu 02:31 JST chưa chạy được: môi trường thử chưa đặt máy chạy kiểm thử ở múi giờ UTC+7 | [#505](https://github.com/hoctt-1111/sakura-market-lab5/issues/505) | Nghiệm thu E17 trước phát hành | Infra thêm cấu hình múi giờ cho máy chạy kiểm thử trên môi trường thử; QA chạy lại ca | Infra, QA, 2026-11-03 |
 

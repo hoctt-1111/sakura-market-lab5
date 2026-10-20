@@ -4,7 +4,7 @@
 
 - AI làm phần lớn khối việc: break backlog từ thiết kế LAB-4, chấm SWP (Standard Work Point, điểm khối lượng chuẩn) bằng skill `tkm:estimate-swp`, quy giờ, xếp Sprint, giả lập Sprint và ghi field lên Project. Con người quyết ở các cổng: chuẩn cấu trúc ticket, epic thử trước khi đẩy đồng loạt, mẫu SWP, cách quy giờ, mọi lượt ghi lên GitHub.
 - Chấm SWP chạy ở mức cao nhất của skill: mỗi issue có hai người chấm là hai model khác nhau, độc lập; chỗ hai bên lệch nhau được đưa lên cho người kiểm trước. Số mục chấm, số mẫu và kết quả kiểm nằm ở các bảng bên dưới.
-- Phần chưa tốt cần nói thẳng: hệ số đổi SWP ra giờ khớp kém ở mức từng màn; tổng dùng được, giờ từng issue là ước thô. Mẫu kiểm theo epic mới được duyệt một phần, phần còn lại ghi «chờ review đồng loạt» trong `estimate.md`.
+- Phần chưa tốt cần nói thẳng: hệ số đổi SWP ra giờ khớp kém ở mức từng màn; tổng dùng được, giờ từng issue là ước thô. Hai chỗ sửa điểm sau kiểm mẫu đều là đặc thù của đúng issue nên không lan; nếu skill lệch có hệ thống ở một nhóm issue thì bộ mẫu hiện tại chưa đủ lớn để thấy.
 - Bảy sự cố thật do chính agent gây ra được ghi ở mục Review, kèm ai phát hiện và cách phòng; tất cả đã xử lý, ba lỗi code có ca kiểm giữ lại, bốn lỗi cách làm hoặc dữ liệu được chặn bằng đổi quy trình.
 
 ## Skill và prompt cho từng việc
@@ -24,12 +24,12 @@ Ghi SWP đã chốt lên trường point bằng Agent: Agent đọc file SWP đ�
 | Pha | Field ghi | Lệnh thành công | Lệnh lỗi |
 | --- | --- | --- | --- |
 | tao-done-date | tạo field Done Date | 1 | 0 |
-| swp | Story Point ← SWP đã chốt | 513 | 0 |
-| gio | Estimated time ← giờ chốt | 513 | 0 |
+| swp | Story Point ← SWP đã chốt | 519 | 0 |
+| gio | Estimated time ← giờ chốt | 519 | 0 |
 | sprint | Sprint, Start Date, Due Date | 120 | 0 |
 | gia-lap | Status, Done Date, Spent time (giả lập) | 207 | 0 |
 
-Tổng 1354 lệnh ghi thành công, mỗi lệnh một item·field, so trước khi ghi.
+Tổng 1366 lệnh ghi thành công, mỗi lệnh một item·field, so trước khi ghi.
 <!-- gen:ai-ghi-field:end -->
 
 Pha giả lập có số lệnh lớn hơn số ô của kịch bản: kịch bản được sửa một lần sau khi phát hiện mâu thuẫn (mục Sự cố), rồi ghi lại đúng phần ô đổi và xoá hai ngày Done Date cũ; các pha khác mỗi ô ghi một lần.
@@ -59,10 +59,10 @@ Con người review ở các bước: chốt chuẩn cấu trúc ticket theo t�
 | Mục chấm trực tiếp | 371 |
 | Mẫu skill chọn | 5 |
 | Mẫu một mỗi epic | 19 |
-| Mẫu giữ điểm skill | 24 |
-| Mẫu sửa điểm | 0 |
-| Mẫu đã duyệt | 5 |
-| Mẫu chờ review đồng loạt | 19 |
+| Mẫu giữ điểm skill | 22 |
+| Mẫu sửa điểm | 2 |
+| Mẫu đã duyệt | 24 |
+| Mẫu chờ review đồng loạt | 0 |
 | Issue sửa theo luật lan | 0 |
 | INV chấm theo luật cố định | 0 |
 <!-- gen:ai-review-swp:end -->
@@ -107,16 +107,18 @@ Chỗ chưa tốt khi làm thật: chấm hai người tốn token gấp đôi; 
 | Chọn mẫu theo «AI kém chắc nhất» có thể lệch về loại việc ít giá trị | Bản đầu có đa số mẫu là issue điều tra | Phân tầng mẫu theo loại việc trước, rồi mới xếp theo độ chắc |
 | Câu «vì sao» phải tính trước rồi mới viết | Bốn câu ban đầu suy đoán sai nguyên nhân | Viết lý do chênh từ bảng phân rã số, không từ trí nhớ |
 
+Tên file nguồn nêu trong các bảng (quy ước giờ, quy ước sprint, kết quả trích SWP, script tính, nhật ký giờ) là file làm việc nằm ngoài repo nộp; mọi số trong file này sinh tự động từ các file đó và có cổng kiểm đối chiếu.
+
 Giờ người, giờ agent và giờ máy đo theo nhật ký:
 
 <!-- gen:ai-gio:start -->
 | Loại giờ | Đo (phút) | Ước (phút) | Tổng (giờ) |
 | --- | --- | --- | --- |
-| agent (AI chạy) | 179 | 456 | 10,6 |
-| người (đọc, duyệt, quyết) | 0 | 55 | 0,9 |
-| máy (lệnh ghi, gate, chụp) | 168 | 0 | 2,8 |
+| agent (AI chạy) | 179 | 586 | 12,8 |
+| người (đọc, duyệt, quyết) | 0 | 92 | 1,5 |
+| máy (lệnh ghi, gate, chụp) | 171 | 0 | 2,9 |
 | dùng chung với lab khác | 0 | 0 | 0 |
-| Tổng | 347 | 511 | 14,3 |
+| Tổng | 350 | 678 | 17,1 |
 
 Nguồn: nhật ký giờ theo chặng (`nhat-ky-gio.tsv`); cột Đo lấy từ mốc giờ trong nhật ký lệnh và giờ bắt đầu/kết thúc lượt agent, cột Ước là ước của người ghi.
 <!-- gen:ai-gio:end -->

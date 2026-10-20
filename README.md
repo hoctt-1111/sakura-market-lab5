@@ -21,14 +21,14 @@ Repo này giữ phần chia việc của LAB-5 cho hệ quản lý chợ thủy 
 Repo và Project đều công khai: người ngoài mở được bằng trình duyệt mà không cần đăng nhập. Cột Assignees (người được giao) của mọi issue là cùng một tài khoản, tài khoản của học viên; người phụ trách giả định nằm ở field «Owner» và ghi theo vai (PM, BrSE, FE-1, FE-2, BE-1, BE-2, QA, Infra), không phải tên người thật.
 
 <!-- gen:readme-che-do-xem:start -->
-Project có 2 chế độ xem (đo ngày 18/10/2026): «EPIC» (Table); «STORY» (Table).
+Project có 3 chế độ xem (đo ngày 20/10/2026): «BOARD» (Board, cột theo Status); «SPRINT» (Roadmap); «EPIC» (Table, nhóm theo Parent issue).
 <!-- gen:readme-che-do-xem:end -->
 
 <!-- gen:readme-link:start -->
 - Repo: https://github.com/hoctt-1111/sakura-market-lab5
 - GitHub Project: https://github.com/users/hoctt-1111/projects/3
 - Báo cáo HTML của skill chấm SWP: `reports/estimate-swp-github-hoctt-1111-projects-3-20261019-224426.html`
-- Kiểm công khai: đã mở thử repo và Project bằng cửa sổ ẩn danh lúc 13:39 ngày 13/10/2026.
+- Kiểm công khai: đã mở thử repo và Project bằng cửa sổ ẩn danh lúc 14:51 ngày 20/10/2026.
 <!-- gen:readme-link:end -->
 
 ## Cấu trúc repo
