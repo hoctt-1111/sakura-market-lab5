@@ -30,7 +30,7 @@ Project có 3 chế độ xem (đo ngày 21/10/2026): «BOARD» (Board, cột th
 - Repo: https://github.com/hoctt-1111/sakura-market-lab5
 - GitHub Project: https://github.com/users/hoctt-1111/projects/3
 - Báo cáo HTML của skill chấm SWP: `reports/estimate-swp-github-hoctt-1111-projects-3-20261019-224426.html`, `reports/swp-bo-sung-20261021.html`
-- Kiểm công khai: đã mở thử repo và Project bằng cửa sổ ẩn danh lúc 14:51 ngày 20/10/2026.
+- Kiểm công khai: đã mở thử repo và Project bằng cửa sổ ẩn danh lúc 20:56 ngày 21/10/2026.
 <!-- gen:readme-link:end -->
 
 ## Cấu trúc repo
