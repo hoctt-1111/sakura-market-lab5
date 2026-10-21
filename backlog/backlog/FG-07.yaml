@@ -743,7 +743,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Dung sai 精算 giữa số đã giao và số giao dịch
-  han: 20/10/2026 (trước Sprint 1, trước khi viết migration D2)
+  han: 09/11/2026 (trước Sprint 1, trước khi viết migration D2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-SD1]
   spec_refs:
@@ -774,7 +774,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Danh mục lý do và người xác nhận ngoại lệ giao hàng
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DELIVERY_EXCEPTION_SPEC.md §3, A-2, A-3 (LAB-4)
   spec_refs:
@@ -806,7 +806,7 @@ items:
   cha: FG-07
   tracker: investigation
   title_vi: Số cần giao sau 訂正 khi giao thiếu hoặc huỷ một phần
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_DELIVERY_EXCEPTION_SPEC.md:180 (LAB-4) · Q-SD1 mục c
   spec_refs:

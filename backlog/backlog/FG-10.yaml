@@ -448,6 +448,7 @@ items:
   - Giá trị đang hiệu lực đọc ngay trước khi đổi để ghi vào phần trước của nhật ký.
   - Đếm số lần duyệt trong năm và đổi trạng thái trong cùng giao dịch, để hai lần duyệt đồng thời không vượt trần.
   - Lỗi lý do dùng mã chung thêm theo G-FG09-09; người duyệt lấy từ phiên, quyền gọi theo vai đích của 照合部門長 (trưởng bộ phận đối soát) và 承認者 (người duyệt).
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: SC-092/TEST
   cha: SC-092
@@ -478,6 +479,7 @@ items:
   - 'Người lập tự duyệt, kể cả với tài khoản có vai duyệt: 422 M_26, bản vẫn là nháp.'
   - 'Khoá đã có 4 lần duyệt trong năm: lần thứ năm bị 422 M_20; bản có 発効日 (ngày hiệu lực) sang năm sau thì duyệt được.'
   - 'Duyệt một bản, lùi nó rồi lập và duyệt lại trong cùng năm: lần duyệt đầu vẫn được tính vào trần (G-FG10-03).'
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: SC-093
   cha: FG-10
@@ -582,6 +584,7 @@ items:
   tieu_chi_nghiem_thu:
   - Danh sách ứng viên loại chính bản đang lùi trước khi tìm; mốc so là 業務日 (ngày nghiệp vụ) giờ Nhật thay cho hôm nay (G-FG10-07).
   - Không có lệnh xoá dòng nào; phần trước của nhật ký là giá trị đang hiệu lực, phần sau là bản trở lại hiệu lực.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: SC-093/TEST
   cha: SC-093
@@ -613,6 +616,7 @@ items:
   - 'Khoá chỉ có một bản đã duyệt: lùi bị 422 M_17, bản giữ nguyên.'
   - 'Lùi bản incentive đã dùng cho thưởng đã 確定 (xác nhận cuối) ở FG-09: dòng thưởng giữ nguyên ngày hiệu lực của bản cũ.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: TECH-303
   cha: FG-10
@@ -722,7 +726,7 @@ items:
   cha: FG-10
   tracker: investigation
   title_vi: Cách đếm trần 4 lần đổi bản quy tắc mỗi năm
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md:167 (LAB-4) · Q-24 (LAB-01), mức quan trọng
   spec_refs:
@@ -753,7 +757,7 @@ items:
   cha: FG-10
   tracker: investigation
   title_vi: Số người giữ vai lập và vai duyệt bản quy tắc
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RATE_VERSION_APPROVAL_SPEC.md §6.2 Q-09 (LAB-4)
   spec_refs:

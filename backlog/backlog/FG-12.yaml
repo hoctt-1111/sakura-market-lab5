@@ -362,24 +362,24 @@ items:
   - P-14
   gap_refs:
   - G-FG12-04
-  mo_ta: '運用管理者 (quản lý vận hành) xử lý các cảnh báo vận hành theo mức khẩn: thông báo vẫn lỗi sau 3 lần thử lại (FR-NOTIFY-02) và tác vụ đối soát ngày EV3 hết lượt thử (P-14). Máy chỉ đưa cảnh báo vào hàng đợi; người xử lý rồi đánh dấu đã xử lý, hệ thống ghi ai làm, lúc nào. Spec màn mới có bộ lọc và bảng, chưa có nút xử lý nên story bổ sung (G-FG12-04).
+  mo_ta: '運用管理者 (quản lý vận hành) xử lý cảnh báo vận hành theo mức khẩn: thông báo vẫn lỗi sau 3 lần thử lại (FR-NOTIFY-02) và tác vụ đối soát ngày EV3 hết lượt thử (P-14). Cảnh báo đi hai trạng thái 未処理 (chưa xử lý) → 処理済 (đã xử lý) theo P-48.
 
 
-    Ràng buộc đặc thù: Máy chỉ đưa cảnh báo vào hàng đợi; người xử lý bấm Đã xử lý kèm ghi chú, hệ thống ghi người của phiên và giờ máy chủ, không cảnh báo nào tự đóng.'
+    Ràng buộc đặc thù: Máy chỉ đưa cảnh báo vào hàng đợi; người xử lý bấm «処理済にする» (đánh dấu đã xử lý) kèm ghi chú bắt buộc; không cảnh báo nào tự đóng.'
   pham_vi: Màn SC-122 (SPEC-SKM-162) ở văn phòng; bảng `alert_queue` (migration thuộc DATA-FG12/DB, sửa được, mỗi lần đổi ghi `audit_log`); nơi thêm dòng là SC-121/BE (thông báo hỏng) và SC-070/BE (EV3 hết lượt). API đọc và lệnh đánh dấu đã xử lý chưa có spec, SC-122/BE viết rồi làm (P-01).
   luong_chinh:
   - Module notify hoặc tác vụ nền thêm một dòng alert_queue mang loại, mức khẩn, nguồn và giờ tạo.
-  - 運用管理者 mở SC-122, lọc theo 業務日 (ngày nghiệp vụ) và trạng thái; dòng chưa xử lý đứng trước, mức khẩn cao hơn ở trên.
-  - Người dùng xử lý xong ngoài màn (gửi lại, chạy lại tác vụ) rồi bấm Đã xử lý kèm ghi chú.
-  - Máy chủ ghi người của phiên và giờ máy chủ vào dòng cảnh báo, thêm một dòng `audit_log`.
+  - 運用管理者 mở SC-122, lọc theo 業務日 (ngày nghiệp vụ) và trạng thái (mặc định 未処理); dòng 未処理 đứng trước, mức khẩn cao hơn ở trên.
+  - Xử lý xong ngoài màn (gửi lại, chạy lại tác vụ) thì bấm «処理済にする», nhập ghi chú bắt buộc.
+  - Máy chủ đổi trạng thái sang 処理済, ghi người của phiên, giờ máy chủ, ghi chú và thêm một dòng `audit_log`.
   tieu_chi_nghiem_thu:
-  - Khi bấm Đã xử lý thì hệ thống ghi người xử lý của phiên, giờ máy chủ và ghi chú; người và giờ gửi từ trình duyệt bị bỏ qua.
+  - Khi bấm «処理済にする» mà ghi chú trống thì không gửi được; gửi được thì ghi 処理済, người của phiên, giờ máy chủ, ghi chú; người và giờ từ trình duyệt bị bỏ qua.
   - Khi một thông báo hỏng sau 3 lần thử lại thì có đúng một cảnh báo mới trỏ về dòng nhật ký đó (AC-7).
   - Khi EV3 hết lượt thử thì có một cảnh báo; ngày đó chưa có bảng đối soát nên SC-071 chưa cho khoá (P-14).
-  - Khi cảnh báo đã xử lý thì không đánh dấu lại được; máy không tự đóng cảnh báo nào.
+  - Khi cảnh báo đã 処理済 thì không đánh dấu lại được, không có bước quay về 未処理; máy không tự đóng cảnh báo nào.
   - Khi 運用管理者 chưa có dòng trong ma trận quyền thì API trả 403 M_05 (P-12).
   dinh_nghia_xong:
-  - Spec SC-122 có nút Đã xử lý, cột nguồn và cách suy trạng thái theo G-FG12-04.
+  - Spec SC-122 có thao tác «処理済にする», hai trạng thái và ba cột thêm của alert_queue theo P-48.
 - key: SC-122/FE
   cha: SC-122
   tracker: devtask
@@ -402,16 +402,17 @@ items:
   premise_refs: []
   gap_refs:
   - G-FG12-04
-  mo_ta: 'Dựng màn hàng đợi cảnh báo ở văn phòng: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng có huy hiệu mức khẩn, nút Đã xử lý kèm ô ghi chú ở từng dòng chưa xử lý.
+  mo_ta: 'Dựng màn hàng đợi cảnh báo ở văn phòng: lọc 業務日 (ngày nghiệp vụ) và trạng thái, bảng có huy hiệu mức khẩn, nút «処理済にする» (đánh dấu đã xử lý) kèm ô ghi chú ở từng dòng 未処理 (chưa xử lý).
 
 
-    Ràng buộc đặc thù: Nút Đã xử lý đi kèm ô ghi chú; người xử lý và giờ xử lý chỉ hiện sau khi máy chủ ghi, màn không có ô nhập hai giá trị này.'
+    Ràng buộc đặc thù: Nút «処理済にする» đi kèm ô ghi chú bắt buộc; người xử lý và giờ xử lý chỉ hiện sau khi máy chủ ghi, màn không có ô nhập hai giá trị này.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Dòng chưa xử lý đứng trước; trong nhóm đó mức khẩn cao hơn ở trên.
   - Người xử lý và giờ xử lý chỉ hiển thị sau khi máy chủ ghi, không có ô nhập.
   - Khi không còn cảnh báo nào khớp bộ lọc thì màn hiện trạng thái rỗng.
+  - Ô lọc trạng thái có đúng hai giá trị 未処理, 処理済, mặc định 未処理; bảng có cột nguồn và ghi chú xử lý; ghi chú ngoài 5–500 ký tự sau khi bỏ khoảng trắng hai đầu thì nút không gửi (P-48).
   dinh_nghia_xong: []
 - key: SC-122/BE
   cha: SC-122
@@ -447,7 +448,7 @@ items:
   tieu_chi_nghiem_thu:
   - Lệnh đánh dấu chỉ nhận dòng còn mở, ghi người của phiên, giờ máy chủ và `audit_log` trong cùng giao dịch CSDL.
   - Hàm thêm cảnh báo nhận loại, mức khẩn và mã dòng nguồn; gọi hai lần cho cùng nguồn chỉ sinh một cảnh báo.
-  - Trạng thái mở hay đã xử lý suy từ giờ xử lý; ô lọc trạng thái dùng đúng quy tắc đó (G-FG12-04).
+  - Trạng thái đọc từ cột trạng thái (未処理, 処理済), không suy từ giờ xử lý; lệnh đánh dấu từ chối ghi chú ngoài 5–500 ký tự sau khi bỏ khoảng trắng bằng 400 và ghi trạng thái, người, giờ, ghi chú trong một lần (P-48).
   dinh_nghia_xong: []
 - key: SC-122/TEST
   cha: SC-122
@@ -477,6 +478,7 @@ items:
   - 'Giả lập email lỗi ở mọi lần: sau đúng 3 lần thử lại có một cảnh báo trỏ về dòng nhật ký, thông báo trong ứng dụng vẫn còn.'
   - 'Gửi lệnh đánh dấu kèm người và giờ giả: dòng cảnh báo lưu người của phiên và giờ máy chủ.'
   - 'Gửi lệnh đánh dấu cho cảnh báo đã xử lý: bị từ chối, dòng không đổi.'
+  - 'Ghi chú trống, chỉ khoảng trắng hoặc 4 ký tự: bị từ chối 400, dòng vẫn 未処理; lọc 処理済 chỉ ra dòng đã đánh dấu; môi trường thử seed tạm một dòng ma trận cho 運用管理者 vì vai chưa gán (P-12, P-48).'
   dinh_nghia_xong: []
 - key: DATA-FG12
   cha: FG-12
@@ -503,7 +505,7 @@ items:
   - G-FG12-02
   - G-FG12-04
   mo_ta: 'Hai bảng notification_log (nhật ký gửi, chỉ thêm dòng) và alert_queue (hàng đợi cảnh báo, sửa được) không có màn nào ghi: module notify và tác vụ nền thêm dòng, SC-121 chỉ đọc, SC-122 chỉ đánh dấu đã xử lý. Story này dựng hai bảng trên kho mã hệ đích và bổ sung các cột mà FR-NOTIFY-01, FR-NOTIFY-02 cần nhưng SKM_DB chưa có (P-06).'
-  pham_vi: Bảng `notification_log` và `alert_queue` (chủ migration, chưa thuộc vùng dữ liệu nào trong SKM_DB); thêm người nhận, giờ phát sinh sự kiện, mức khẩn cho notification_log (G-FG12-02) và nguồn, ghi chú xử lý cho alert_queue (G-FG12-04).
+  pham_vi: Bảng `notification_log` và `alert_queue` (chủ migration, chưa thuộc vùng dữ liệu nào trong SKM_DB); thêm người nhận, giờ phát sinh sự kiện, mức khẩn cho notification_log (G-FG12-02) và trạng thái, nguồn, ghi chú xử lý cho alert_queue (P-48).
   luong_chinh:
   - BE chốt cột thêm và kiểu từng cột với Tech Lead, ghi vào SKM_DB trước khi viết migration (P-06).
   - BE viết migration hai bảng; notification_log bị chặn sửa và xoá ở mức quyền CSDL.
@@ -545,6 +547,7 @@ items:
   - Tài khoản CSDL của ứng dụng không có quyền sửa, xoá trên notification_log.
   - Có chỉ mục theo giờ gửi và trạng thái cuối để SC-121 lọc theo ngày.
   - alert_queue có ràng buộc duy nhất theo dòng nguồn, nên một nguồn chỉ sinh một cảnh báo.
+  - alert_queue thêm cột trạng thái (未処理 mặc định, 処理済), nguồn và ghi chú xử lý; giữ xu_ly_luc, boi (P-48).
   dinh_nghia_xong: []
 - key: DATA-FG12/TEST
   cha: DATA-FG12
@@ -576,7 +579,7 @@ items:
   cha: FG-12
   tracker: investigation
   title_vi: Danh mục sự kiện thông báo và sự kiện nào ở mức Critical
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_SYSTEM_DESIGN.md EV2 (LAB-4)
   spec_refs:

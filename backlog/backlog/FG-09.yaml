@@ -67,16 +67,16 @@ items:
   - P-22
   gap_refs:
   - G-FG09-01
-  mo_ta: '照合事務 (nhóm đối soát) chọn kỳ đã chốt sổ, bấm 判定 (xét) để máy gợi ý 完納奨励金 (thưởng thanh toán đủ hạn) cho từng hoá đơn, rồi 確定 (xác nhận cuối) từng dòng đủ điều kiện kèm lý do. Ô số tiền chỉ đọc; mỗi lần 確定 một hoá đơn.
+  mo_ta: '照合事務 (nhóm đối soát) bấm 判定 (xét) để máy gợi ý 完納奨励金 (thưởng thanh toán đủ hạn) cho từng hoá đơn của kỳ đã chốt sổ, rồi 確定 (xác nhận cuối) từng dòng kèm lý do.
 
     Ràng buộc đặc thù: Số gợi ý nhân 110/100 trước rồi làm tròn xuống yên, theo suất của bản quy tắc hiệu lực tại hạn thanh toán; trả sau hạn được 0.'
   pham_vi: Màn SC-080 (SPEC-SKM-138); API-215 (判定), API-216 (確定) theo TECH-304; bảng `incentives` (chủ migration), đọc `invoices`, `payments`, bản quy tắc của FG-10.
   luong_chinh:
   - 照合事務 chọn kỳ đã chốt sổ; màn hiện kết quả cũ nếu có.
-  - 照合事務 bấm 判定; máy chủ tính theo TECH-304, lưu dòng gợi ý chưa có người xác nhận.
+  - Bấm 判定 thì máy chủ tính theo TECH-304, lưu dòng gợi ý chưa có người xác nhận.
   - Màn hiện cờ 判定, số tiền đủ điều kiện, suất, hệ số thuế, số tiền, lý do từng dòng.
-  - 照合事務 chọn một dòng đủ điều kiện, nhập lý do, bấm 確定.
-  - Máy chủ ghi người bấm, giờ máy chủ, nhật ký trước, sau; dòng khoá lại.
+  - Chọn một dòng đủ điều kiện, nhập lý do, bấm 確定.
+  - Máy chủ ghi người bấm, giờ máy chủ, nhật ký; dòng khoá lại.
   tieu_chi_nghiem_thu:
   - Khi tích số tiền đủ điều kiện, suất và 110/100 có phần lẻ thì số gợi ý là tích đó làm tròn xuống yên một lần ở cuối.
   - Khi hoá đơn trả sau hạn, dù một ngày nghiệp vụ, thì số tiền gợi ý bằng 0.
@@ -118,6 +118,7 @@ items:
   - Khi chưa chọn kỳ thì nút 判定 không gọi API; lý do trống hoặc ngoài 5–500 ký tự thì 確定 không gọi API.
   - Khi API trả 404 M_13, 409 M_03, 422 M_12 hoặc 500 M_25 thì dòng giữ nguyên và hiện đúng câu báo của mã.
   - Hệ số thuế hiện cố định 110/100, không có ô sửa; lượt 判定 báo lưu thất bại thì không dòng nào của lượt đó được 確定.
+  - Cột suất áp cho dòng giữ nhãn 交付率 theo FR-INC-01, kèm chú giải vi «suất chi thưởng áp cho dòng», en «Incentive rate applied to this row», ja «適用した奨励率»; cột mức giữ nhãn 交付率区分 (P-50).
   dinh_nghia_xong: []
 - key: SC-080/BE
   cha: SC-080
@@ -158,6 +159,7 @@ items:
   - Bước 確定 cập nhật cột xác nhận và ghi nhật ký kiểm toán (lý do, trước, sau gồm số tiền và ngày hiệu lực bản quy tắc) trong một giao dịch CSDL; lỗi thì không ghi gì, trả 500 M_25.
   - Lưu dòng gợi ý thất bại thì API-215 trả 500 SAVE_FAILED thay vì bỏ qua như prototype (P-22).
   - Mã kỳ của API-215 theo kỳ hoá đơn mà FG-08 sinh ra (G-FG09-02); lỗi lý do dùng mã riêng thêm vào bảng mã lỗi chung (G-FG09-09); vai gọi được theo giả định P-12.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: SC-080/DB
   cha: SC-080
@@ -229,6 +231,7 @@ items:
   - 'Chạy 判定 rồi không bấm 確定: mọi dòng của kỳ vẫn trống người và thời điểm xác nhận; gửi 確定 kèm người và giờ giả thì lưu người của phiên và giờ máy chủ; 確定 dòng chưa 判定, không đủ điều kiện, đã 確定 lần lượt nhận 404 M_13, 422 M_12, 409 M_03, không dòng nào đổi.'
   - 'Ca INC-EDGE-01 (取引率, tức tỷ lệ giao dịch, đúng ngưỡng tối thiểu thì áp đúng bản quy tắc có hiệu lực): chờ INV-GD-03 chốt tiêu chí xếp mức rồi mới viết số kỳ vọng; trước đó ca ghi «chờ đáp», không tính là đạt.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: SC-081
   cha: FG-09
@@ -308,6 +311,7 @@ items:
   tieu_chi_nghiem_thu:
   - Dòng gợi ý và dòng đã 確定 phân biệt bằng nhãn trạng thái, không chỉ bằng ô người xác nhận để trống.
   - Mở được theo mã hoá đơn từ SC-080 và SC-082; mã không tồn tại thì hiện 404 M_14.
+  - Cột suất áp cho dòng giữ nhãn 交付率 theo FR-INC-01, kèm chú giải vi «suất chi thưởng áp cho dòng», en «Incentive rate applied to this row», ja «適用した奨励率»; cột mức giữ nhãn 交付率区分 (P-50).
   dinh_nghia_xong: []
 - key: SC-081/BE
   cha: SC-081
@@ -741,7 +745,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Cách tính 適格金額 và bảng 交付率
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách
   nguon: PREMISE.md (LAB-4) §4.1 dòng 3
   spec_refs:
@@ -770,7 +774,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Xử lý khi lưu kết quả chờ của bước tính thưởng thất bại
-  han: 19/10/2026 (checkpoint; hạn cũ 08/10/2026 đã qua)
+  han: 19/10/2026 (hạn gốc trong thiết kế LAB-4; hạn trước đó 08/10/2026)
   nguoi_tra_loi: Tech Lead
   nguon: detail-flows.yaml › details[SKM_INCENTIVE_EVALUATE_CONFIRM].cau_hoi_mo[1]
   spec_refs:
@@ -835,7 +839,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Ai xác nhận 次期差分 và cách đưa chênh lệch vào kỳ sau
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_INCENTIVE_NEXT_DIFF_SPEC.md §3 (LAB-4)
   spec_refs:
@@ -868,7 +872,7 @@ items:
   cha: FG-09
   tracker: investigation
   title_vi: Bảng incentives chỉ thêm dòng hay cho ghi đè dòng chưa 確定
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Tech Lead
   nguon: data-model.md FG-09 (cột Lưu trữ) · SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md §4.2 (LAB-4)
   spec_refs:

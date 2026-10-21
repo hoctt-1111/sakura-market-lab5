@@ -32,6 +32,7 @@ epic:
   - Khi chốt một giao dịch 相対 với bên mua có giấy hết hạn tại ngày chốt thì hệ thống từ chối, hiện lý do và không tạo dòng giao dịch nào.
   - Khi huỷ một giao dịch 相対 chưa khoá ngày thì có đúng một dòng huỷ, lượng của lô được hoàn, dòng giao dịch gốc không bị sửa.
   - Các issue điều tra của FG-04 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
+  - Giao dịch 相対 chỉ sang 確定 (đã chốt) khi một người khác người nhập duyệt; dòng 確認待ち chưa đổi trạng thái lô nhưng đã trừ vào lượng khả dụng (P-46, P-30).
   dinh_nghia_xong: []
 items:
 - key: SC-030
@@ -65,23 +66,23 @@ items:
   gap_refs:
   - G-FG04-01
   - G-FG04-03
-  mo_ta: '取引運用 (nhóm vận hành giao dịch) ghi một 相対取引 (giao dịch thỏa thuận) khi hai bên đã thương lượng xong; giá do người quyết, màn chỉ hiện giá tham chiếu trung bình 3 ngày gần nhất. Lúc chốt, máy chủ kiểm tư cách của bên mua chứ không phải người nhập.
+  mo_ta: '取引運用 (nhóm vận hành giao dịch) ghi 相対取引 (giao dịch thỏa thuận) đã thương lượng; giá do người quyết.
 
     Ràng buộc đặc thù: 仲卸 (trung gian bán buôn) phải còn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) phải còn 承認 (chấp thuận) tại ngày chốt; kiểm ở máy chủ.'
-  pham_vi: Màn SC-030 (SPEC-SKM-118); API-208 theo luồng TECH-301; bảng `transactions` (chủ migration), đổi trạng thái `lots`.
+  pham_vi: Màn SC-030 (SPEC-SKM-118); API-208 theo TECH-301; bảng `transactions` (chủ migration), đổi trạng thái `lots`.
   luong_chinh:
-  - Người vận hành chọn lô kênh 相対 hoặc lô せり (đấu giá) ế đã chuyển sang 相対, chọn bên mua, nhập đơn giá, số lượng.
-  - Máy chủ kiểm lô, số lượng, trạng thái lô, quyền 相対 và hạn giấy của bên mua theo TECH-301.
-  - Máy chủ ghi giao dịch kênh aitai, ngày là 業務日 (ngày nghiệp vụ), và đổi trạng thái lô trong cùng giao dịch CSDL.
-  - Bị từ chối thì màn chuyển sang SC-033.
+  - Chọn lô 相対 (kể cả lô せり (đấu giá) ế đã chuyển), bên mua, đơn giá, số lượng rồi gửi.
+  - Máy chủ kiểm lô, số lượng, tư cách theo TECH-301, ghi giao dịch và sự kiện 提出 (sang 確認待ち); bị từ chối thì sang SC-033.
+  - Người khác người nhập 承認 (kiểm tư cách lần nữa, sang 確定; lô hết thì sang đã bán) hoặc 却下 kèm lý do (sang 取消).
   tieu_chi_nghiem_thu:
   - Khi số lượng vượt phần còn lại của lô thì trả 422 M_09, không ghi gì.
-  - Khi bên mua không có quyền 相対 thì trả 403 M_01; giấy tạm dừng, 失効 (mất hiệu lực) hoặc quá hạn tại ngày chốt thì trả 422 M_21.
-  - Khi chốt thành công thì có đúng một dòng transactions; lỗi ghi thì hoàn tác cả hai, trả 500 M_25.
-  - Khi mất kết nối lúc chốt thì màn báo không chốt được (ADR-010); vai được phép ghi lấy theo P-12.
+  - Khi bên mua không có quyền 相対 thì trả 403 M_01; giấy tạm dừng, 失効 (mất hiệu lực) hay quá hạn thì trả 422 M_21.
+  - Khi gửi thì có dòng giao dịch và sự kiện 提出; khi duyệt thì có sự kiện 承認 mang người duyệt, giờ máy chủ; lỗi thì hoàn tác, trả 500 M_25.
+  - Khi người duyệt trùng người nhập thì trả 422 SELF_CONFIRM_FORBIDDEN, vai không được duyệt thì 403 M_05.
+  - Khi mất kết nối lúc gửi thì màn báo không gửi được (ADR-010); vai được ghi theo P-12.
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
-  - Spec SC-030, TECH-301 cập nhật theo đáp của G-FG04-03, G-FG04-01.
+  - Spec SC-030, TECH-301 theo đáp của G-FG04-01, G-FG04-03.
 - key: SC-030/FE
   cha: SC-030
   tracker: devtask
@@ -115,6 +116,7 @@ items:
   - Khi đơn giá không phải số nguyên từ 1 đến 12 chữ số, hoặc số lượng ≤ 0, quá 2 chữ số lẻ hay vượt khối lượng lô thì màn chặn gửi.
   - Khi API trả 403, 409 hoặc 422 thì màn chuyển sang SC-033 và giữ dữ liệu đã nhập.
   - Ô đặt trước ẩn khi bảng đặt trước chưa có (P-20).
+  - Màn chỉ có nút gửi, không lưu nháp; mở dòng 確認待ち từ SC-031 thì màn chỉ đọc, có nút 承認 và 却下 kèm ô lý do bắt buộc, chỉ hiện với vai được duyệt (P-46, P-47).
   dinh_nghia_xong: []
 - key: SC-030/BE
   cha: SC-030
@@ -143,15 +145,19 @@ items:
   gap_refs:
   - G-FG04-01
   - G-FG04-03
-  mo_ta: 'Làm API-208 trên module trade: kiểm đầu vào, kiểm lô và số lượng, gọi dịch vụ kiểm tư cách của TECH-301/BE, rồi ghi giao dịch và đổi trạng thái lô trong một giao dịch CSDL.
+  mo_ta: 'Làm API-208 (gửi) và hai lệnh 承認, 却下 trên module trade: kiểm đầu vào, lô và số lượng, gọi dịch vụ kiểm tư cách của TECH-301/BE, ghi giao dịch kèm sự kiện 提出; lúc 承認 mới đổi trạng thái lô.
 
     Ràng buộc đặc thù: API không tự kiểm giấy mà gọi dịch vụ của TECH-301/BE, để mọi đường chốt dùng chung một luật hai tầng.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Ghi transactions trước, đổi trạng thái lô sau, cùng một giao dịch CSDL; lỗi ở lệnh nào cũng hoàn tác cả hai.
+  - Gửi ghi transactions và sự kiện 提出 trong một giao dịch CSDL; 承認 ghi sự kiện 承認 (người duyệt, giờ máy chủ, basis_* chụp và trade_no cấp lúc đó, không ghi vào transactions) cùng việc đổi lô khi phần còn lại tính từ dòng 確定, 更正 bằng 0, trong một giao dịch CSDL khác; 却下 ghi sự kiện 却下 kèm lý do, không đổi lô.
   - Ngày giao dịch lấy theo 業務日 (ngày nghiệp vụ) giờ Nhật, không theo UTC như prototype.
   - Bên bán do máy chủ gán theo câu trả lời của G-FG04-03; API không nhận tham số bên bán.
+  - Lệnh 承認, 却下 viết spec theo khuôn P-01, chỉ nhận giao dịch đang 確認待ち (khác thì 409 RECORD_STATE_INVALID), chặn tự duyệt (422 SELF_CONFIRM_FORBIDDEN), đọc vai duyệt từ ma trận (P-47); dòng 確認待ち chỉ tính khi kiểm bán quá lô lúc gửi (P-30).
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
+  - Thêm hai hàng 422 SELF_CONFIRM_FORBIDDEN và 409 RECORD_STATE_INVALID, kèm câu ja, en, vi của P-46, vào bảng mã lỗi chung của LAB-4.
+  - Mọi lệnh đổi trạng thái giao dịch kiểm trạng thái hiện tại trong lúc khoá dòng giao dịch (SELECT … FOR UPDATE); người ghi thứ hai cùng lúc nhận 409 RECORD_STATE_INVALID (P-46).
   dinh_nghia_xong: []
 - key: SC-030/DB
   cha: SC-030
@@ -178,7 +184,7 @@ items:
   - P-04
   gap_refs:
   - G-FG04-07
-  mo_ta: 'Viết migration bảng transactions trên kho mã hệ đích, dùng chung cho mọi kênh và chỉ thêm dòng.
+  mo_ta: 'Viết migration bảng transactions (dùng chung mọi kênh) và bảng transaction_status_events (P-46) trên kho mã hệ đích, cả hai chỉ thêm dòng (ngoại lệ duy nhất là delivery_status).
 
     Ràng buộc đặc thù: Cột kênh phân biệt 相対 (giao dịch thỏa thuận) và せり (đấu giá) trong cùng một bảng, không tách bảng theo kênh.'
   pham_vi: ''
@@ -186,6 +192,8 @@ items:
   tieu_chi_nghiem_thu:
   - Đơn giá có ràng buộc > 0, số lượng lưu hai chữ số lẻ, số tiền là cột dẫn xuất.
   - Cột reservation_id để trống được; khoá ngoại tới reservations chỉ thêm khi DATA-FG04/DB chạy (G-FG04-07).
+  - 'Thêm bảng transaction_status_events (thiết kế đích chưa build, ghi vào SKM_DB): mã giao dịch, trạng thái trước, sau, thao tác, người làm, giờ, lý do bắt buộc khi 却下; dòng 承認 mang basis_kind, basis_no, basis_expires_on, trade_no (duy nhất); chỉ mục duy nhất một phần trên mã giao dịch khi trạng thái trước là 確認待ち (P-46).'
+  - transactions không có cột trạng thái và không có bốn cột căn cứ giấy, mã giao dịch; migration này tạo delivery_status (cột thiết kế đích) và chặn sửa, xoá mọi cột trừ delivery_status, cột duy nhất LAB-4 cho ghi lại (SKM_DB.md:766), SC-061/BE ghi cột này.
   dinh_nghia_xong: []
 - key: SC-030/TEST
   cha: SC-030
@@ -221,8 +229,16 @@ items:
   tieu_chi_nghiem_thu:
   - 'Bên mua 仲卸 (trung gian bán buôn) có 許可 (giấy phép) hết hạn trước ngày chốt và 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) hết hạn trước ngày chốt: cả hai bị từ chối 422 M_21, transactions không thêm dòng.'
   - Số lượng vượt phần còn lại của lô bị từ chối 422 M_09; bằng đúng phần còn lại thì chốt được.
-  - 'Gây lỗi ở bước đổi trạng thái lô: giao dịch cũng không được ghi.'
+  - 'Gây lỗi ở bước đổi trạng thái lô lúc 承認: sự kiện 承認 cũng không được ghi.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Người nhập tự duyệt dòng của mình: 422 SELF_CONFIRM_FORBIDDEN, trạng thái vẫn 確認待ち; người khác có vai duyệt (tài khoản thứ hai, P-47): sự kiện 承認 mang người đó và giờ máy chủ.'
+  - '却下 một dòng 確認待ち: sự kiện 却下 có lý do, trạng thái 取消, lô không đổi, lượng giữ được trả lại; 承認 lại dòng đó bị 409 RECORD_STATE_INVALID.'
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
+  - 'Hai bản 確認待ち cùng lô có tổng vượt lô: bản thứ hai bị 422 M_09 (P-30).'
+  - 'Duyệt xong: basis_* và trade_no nằm ở dòng sự kiện 承認, dòng transactions không đổi (P-46).'
+  - 'Gửi 承認 và 却下 song song cho cùng một dòng 確認待ち: chỉ một lệnh thành công, lệnh kia 409 RECORD_STATE_INVALID.'
+  - 'Vai không có quyền duyệt bấm 承認: 403 M_05, trạng thái không đổi.'
+  - 'Hai bản 確認待ち giữ hết lô, bản đầu 承認, bản sau 却下: lô chưa sang đã bán, phần dư còn khả dụng (P-30).'
   dinh_nghia_xong: []
 - key: SC-031
   cha: FG-04
@@ -299,6 +315,7 @@ items:
   tieu_chi_nghiem_thu:
   - Dòng kênh seri và dòng đã huỷ không có nút huỷ.
   - Điều kiện lọc được giữ khi chuyển trang.
+  - Ô lọc trạng thái có tập giá trị 確認待ち, 確定, 更正, 取消 (mặc định tất cả); cờ đã huỷ đọc từ dòng huỷ; bảng có cột 確認者 (người duyệt) và giờ duyệt; dòng 確認待ち mở sang SC-030 ở chế độ xác nhận; nút huỷ chỉ ở dòng 確定 chưa huỷ (P-46).
   dinh_nghia_xong: []
 - key: SC-031/BE
   cha: SC-031
@@ -333,6 +350,8 @@ items:
   - Trả đúng 10 cột của SC-031 cộng mã giao dịch và cờ đã huỷ.
   - Cỡ trang, thứ tự sắp xếp và khoảng ngày mặc định theo quy ước chung của dự án (G-19).
   - Vai được đọc là 取引運用 (nhóm vận hành giao dịch) và 照合事務 (nhóm đối soát) theo giả định P-12.
+  - Trả thêm trạng thái (sự kiện mới nhất; không có sự kiện thì 確定), 確認者 và giờ duyệt, nhận bộ lọc trạng thái 確認待ち, 確定, 更正, 取消 (P-46).
+  - Cột trade_no và basis_* đọc từ dòng sự kiện 承認 mới nhất, không từ transactions; giao dịch đang 確認待ち trả trade_no rỗng và màn hiện «—» (P-46).
   dinh_nghia_xong: []
 - key: SC-031/TEST
   cha: SC-031
@@ -470,6 +489,7 @@ items:
   tieu_chi_nghiem_thu:
   - Trả 404 khi không có giao dịch, 500 M_11 khi đọc lỗi.
   - Vai được đọc gồm 取引運用 (nhóm vận hành giao dịch), 照合事務 (nhóm đối soát) và 内部監査 (kiểm toán nội bộ) theo ma trận quyền (P-12).
+  - Cột trade_no và basis_* đọc từ dòng sự kiện 承認 mới nhất, không từ transactions; giao dịch đang 確認待ち trả trade_no rỗng và màn hiện «—» (P-46).
   dinh_nghia_xong: []
 - key: SC-032/TEST
   cha: SC-032
@@ -742,6 +762,7 @@ items:
   - Ngày đã khoá và giao dịch đã huỷ trả 409 với hai mã mới trong bảng mã lỗi chung (P-24).
   - Lỗi ở bước hoàn lượng thì dòng huỷ cũng không được ghi, trả 500 M_25.
   - Lượng hoàn khớp cách giữ lượng khả dụng đã chốt (G-FG04-01).
+  - 'Chỉ huỷ giao dịch có trạng thái 確定, khác thì 409 RECORD_STATE_INVALID; huỷ chỉ ghi dòng huỷ, không ghi sự kiện trạng thái: đây là luồng FR-AITAI-03, không phải mũi tên của FIG-012 (P-46).'
   dinh_nghia_xong: []
 - key: SC-034/DB
   cha: SC-034
@@ -806,6 +827,7 @@ items:
   - 'Huỷ giao dịch aitai ngày chưa khoá: một dòng huỷ, lô nhận lại đúng số lượng, dòng giao dịch gốc không đổi.'
   - 'Huỷ lần hai và huỷ giao dịch thuộc ngày đã khoá: trả 409 với đúng mã mới của P-24, lượng lô không đổi.'
   - 'Huỷ giao dịch kênh seri: bị từ chối.'
+  - 'Huỷ giao dịch đang 確認待ち hoặc 更正: 409 RECORD_STATE_INVALID, không có dòng huỷ (P-46).'
   dinh_nghia_xong: []
 - key: API-207
   cha: FG-04
@@ -874,6 +896,7 @@ items:
   tieu_chi_nghiem_thu:
   - Đổi trạng thái chỉ theo bảng chuyển trạng thái đã chốt ở SC-020/DB, không so chuỗi trực tiếp.
   - Mọi nhánh thành công và bị từ chối đều có dòng nhật ký kiểm toán.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: API-207/TEST
   cha: API-207
@@ -903,6 +926,7 @@ items:
   tieu_chi_nghiem_thu:
   - 'Lô unlisted lên kênh aitai: trạng thái listed, kênh aitai, SC-030 chọn được lô.'
   - Gửi kênh tender trả 400; lô đã listed gửi lại trả 409.
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: API-209
   cha: FG-04
@@ -972,6 +996,7 @@ items:
   - Kiểm quy tắc chạy đầu tiên; quy tắc tắt thì không đọc lô hay người mua.
   - Tư cách người mua lẻ chỉ kiểm trạng thái vì không có cột hạn (G-FG04-06).
   - Trần tiền đọc từ cấu hình, không viết cứng.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: API-209/TEST
   cha: API-209
@@ -1001,6 +1026,7 @@ items:
   tieu_chi_nghiem_thu:
   - 'Quy tắc tắt: yêu cầu hợp lệ vẫn trả 403 M_28, không có dòng giao dịch.'
   - 'Quy tắc bật: người mua không phải 買出人 (người mua lẻ) trả 422 M_07; vượt trần trả 422 M_19.'
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: API-210
   cha: FG-04
@@ -1065,6 +1091,7 @@ items:
   tieu_chi_nghiem_thu:
   - Khoảng ngày cho phép kiểm ở máy chủ, không tin ngày từ trình duyệt.
   - Chỉ vai 仲卸 (trung gian bán buôn) và 売買参加者 (người tham gia mua bán) gọi được.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: API-210/TEST
   cha: API-210
@@ -1094,6 +1121,7 @@ items:
   tieu_chi_nghiem_thu:
   - Ngày mong muốn ở biên trên của khoảng 3 ngày được nhận; qua biên một ngày trả 422.
   - 'Gắn đặt trước vào giao dịch 相対 (giao dịch thỏa thuận) ở SC-030: đặt trước chuyển fulfilled cùng lượt ghi.'
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: TECH-301
   cha: FG-04
@@ -1135,7 +1163,7 @@ items:
   - Khi bên mua là 卸売業者 (bán buôn đầu mối) hay 買出人 (người mua lẻ) thì trả 403 M_01, kể cả khi người gọi có đủ quyền.
   - Khi trạng thái tư cách còn hoạt động nhưng hạn của đúng loại giấy đã qua trước ngày chốt thì trả 422 M_21.
   - Khi ma trận quyền vừa đổi thì lần gọi kế tiếp áp ngay giá trị mới.
-  - Ngày so hạn là 業務日 giờ Nhật, cùng hàm với ngày giao dịch (G-FG04-02).
+  - 'Ngày so hạn là 業務日 giờ Nhật của lần gọi: lúc gửi là ngày gửi, lúc 承認 là ngày duyệt (G-FG04-02, P-46).'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Spec TECH-301 sửa mốc so hạn từ «hôm nay» sang 業務日 (G-FG04-02).
@@ -1174,6 +1202,7 @@ items:
   - Đọc ma trận quyền mỗi lần gọi, không lưu đệm.
   - Ca bị từ chối có dòng nhật ký kiểm toán gắn bên mua.
   - Ràng buộc mỗi người tham gia chỉ có một bộ cột giấy theo loại được giữ đúng.
+  - Dịch vụ được gọi lúc gửi và lúc 承認, mỗi lần so với 業務日 của chính lần đó; căn cứ giấy chụp lúc 承認 vào dòng sự kiện 承認, không ghi vào transactions (P-46).
   dinh_nghia_xong: []
 - key: TECH-301/TEST
   cha: TECH-301
@@ -1208,6 +1237,7 @@ items:
   - 売買参加者 (người tham gia mua bán) có 承認 (chấp thuận) đang tạm dừng bị từ chối 422; bên mua 買出人 (người mua lẻ) bị từ chối 403.
   - 'Đổi ma trận quyền rồi gọi lại: kết quả theo giá trị mới.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Giấy còn hạn lúc gửi nhưng hết hạn trước ngày duyệt: lần duyệt bị từ chối 422 M_21, dòng vẫn 確認待ち (P-46).'
   dinh_nghia_xong: []
 - key: DATA-FG04
   cha: FG-04
@@ -1309,7 +1339,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Điều kiện và hạn mức bán cho bên thứ ba 第三者販売
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-11]
   spec_refs:
@@ -1340,7 +1370,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Chợ có tập quán đặt trước 事前予約 hay không
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-21]
   spec_refs:
@@ -1373,7 +1403,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: 買出人 có luôn trả ngay khi mua trực tiếp không
-  han: 20/10/2026 (trước Sprint 1, hạn đề xuất)
+  han: 09/11/2026 (trước Sprint 1, hạn đề xuất)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: PREMISE.md (LAB-4) §4.1 dòng 1
   spec_refs:
@@ -1404,7 +1434,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Trạng thái lô và phạm vi huỷ giao dịch 相対 (một phần, kênh せり)
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_TRADE_CANCEL_CREATE_API.md:82 (LAB-4), câu hỏi mở về trạng thái lô sau khi huỷ
   spec_refs:
@@ -1440,7 +1470,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: 買出人 có được mua qua 相対 không, hạn tham gia quản lý thế nào
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: PREMISE.md:42 (LAB-4) · Q-22 (LAB-01), mức quan trọng
   spec_refs:
@@ -1470,11 +1500,44 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu: []
   dinh_nghia_xong: []
+- key: INV-FG04-XAC-NHAN
+  cha: FG-04
+  tracker: investigation
+  title_vi: Vai được duyệt bản ghi 相対 và せり ở bước chờ xác nhận
+  han: 23/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: rfp p.39 FIG-012 · rfp p.40 FR-AITAI-02, FR-SERI-02 · góp ý BTC LAB-4 trục B
+  spec_refs:
+    sc:
+    - SC-030
+    - SC-040
+    api: []
+    tech: []
+    bang:
+    - auction_results
+    - transactions
+    fr:
+    - FR-AITAI-02
+    - FR-SERI-02
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - constraint:aitai
+  owner: BrSE
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: ''
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
 - key: INV-LOT-KHA-DUNG
   cha: FG-04
   tracker: investigation
   title_vi: Lượng khả dụng của lô khi bán một phần 相対
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_BUYER_ELIGIBILITY_TECH.md §4.2 (LAB-4)
   spec_refs:
@@ -1507,7 +1570,7 @@ items:
   cha: FG-04
   tracker: investigation
   title_vi: Cách gán bên bán 売り手 cho giao dịch 相対 ở hệ đích
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_AITAI_TRADE_ENTRY_SPEC.md §6.3 (LAB-4)
   spec_refs:

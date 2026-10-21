@@ -361,3 +361,29 @@ items:
   - 'Ngắt CSDL trên môi trường thử: trả 500 status error, thân không có chi tiết lỗi; nhật ký máy chủ có dòng lỗi.'
   - 'Gọi không có phiên: vẫn trả kết quả kiểm sống, không bị 401.'
   dinh_nghia_xong: []
+- key: INV-PM-LICH-DOI
+  cha: E15
+  tracker: investigation
+  title_vi: PM chốt với khách lịch sprint và số người theo vai
+  han: 09/11/2026 (trước Sprint 1, kickoff)
+  nguoi_tra_loi: PM
+  nguon: lab-01/registry/schedule.yaml:58 kickoff 09/11/2026 · lab-05/registry/uoc-luong/doi-theo-lab1.json (đội theo FTE LAB-1) · P-51, P-52
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  owner: PM
+  priority: 1
+  premise_refs: []
+  gap_refs: []
+  mo_ta: ''
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []

@@ -806,7 +806,7 @@ items:
   cha: FG-02
   tracker: investigation
   title_vi: Ngưỡng cảnh báo 失効間近 và cách cấu hình
-  han: 20/10/2026 (trước Sprint 1, hạn đề xuất)
+  han: 09/11/2026 (trước Sprint 1, hạn đề xuất)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: PREMISE.md (LAB-4) §4.1 dòng 2
   spec_refs:
@@ -833,7 +833,7 @@ items:
   cha: FG-02
   tracker: investigation
   title_vi: Bảng chuyển trạng thái tư cách và trạng thái 再審査
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_QUALIFICATION_CHANGE_SPEC.md §3 (LAB-4) · rfp p.37 FIG-010
   spec_refs:

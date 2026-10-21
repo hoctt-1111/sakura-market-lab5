@@ -137,6 +137,7 @@ items:
   - Khi tàu, chuyến hoặc loài không tồn tại thì trả cùng một mã trạng thái theo P-24 (G-FG03-03).
   - Khi tách lô thì mọi dòng lô ghi trong một giao dịch CSDL; một dòng lỗi thì không dòng nào được ghi.
   - Nhật ký kiểm toán ghi sau khi biết kết quả ghi chuyến, không ghi trước như prototype.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: SC-020/DB
   cha: SC-020
@@ -202,6 +203,7 @@ items:
   - Một dòng lô có cỡ ngoài L/M/S hoặc hạng ngoài A/B/C làm cả lần tách bị từ chối, bảng lots không thêm dòng nào.
   - Tổng khối lượng lệch quá 5% vẫn tạo lô và trả cảnh báo; lệch đúng 5% thì không có cảnh báo.
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: SC-021
   cha: FG-03
@@ -1032,7 +1034,7 @@ items:
   cha: FG-03
   tracker: investigation
   title_vi: Bản chính của hạng độ tươi, lots hay lot_evaluations
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_LOT_SPLIT_CREATE_API.md (freshnessGrade) · SKM_DB.md §4.11 lot_evaluations (LAB-4)
   spec_refs:

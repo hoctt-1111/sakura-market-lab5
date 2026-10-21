@@ -694,7 +694,7 @@ items:
   cha: FG-13
   tracker: investigation
   title_vi: Yêu cầu xoá dữ liệu cá nhân nằm ở bảng chỉ thêm
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DB.md §4.39 personal_data_requests (LAB-4) · rfp p.54
   spec_refs:

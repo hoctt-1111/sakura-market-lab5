@@ -1,8 +1,8 @@
 # Chỗ hở hoặc mâu thuẫn của spec LAB-4 (phát hiện trên bản nộp 12/10/2026) — bản gộp P4 của ba nguồn: P2 (phần đầu file), P1 tự động
 # (gaps/p1-tu-dong.yaml) và 19 agent P3 (gaps/<epic>.yaml). File nguồn giữ nguyên; mã có ở đây thắng bản nguồn (gap_gop.py).
 # Mốc con trỏ: repo hoctt-1111/sakura-market-lab4-spec, nhánh main, commit df4a6b0 (gói 0.4.1), nộp ngày 17/10/2026.
-# Con trỏ `file:dòng` trong `spec` ghi đường dẫn đầy đủ tính từ gốc repo đó (không có thư mục = file ở gốc), trừ `data-model.md`
-# (tên duy nhất; bộ sinh md cắt đoạn `docs/` của references/docs/…); kiểm bằng lab-05/tools/kiem-con-tro-lab4.py. Con trỏ không
+# Con trỏ `file:dòng` trong `spec` ghi đường dẫn đầy đủ tính từ gốc repo đó (không có thư mục = file ở gốc), kể cả
+# `references/docs/system-design/data-model.md` (bộ sinh md giữ nguyên thư mục này, P9); kiểm bằng lab-05/tools/kiem-con-tro-lab4.py. Con trỏ không
 # kèm câu trích; số dòng đã dời theo nội dung dòng cũ. Spec ghi bằng mục (§, mục N) giữ tên file trần.
 # xu_ly ∈ {"premise:P-xx", "gia_dinh:P-xx", "issue:<key>", "de-mo"}; dòng trùng nội dung ghi `trung: <mã giữ lại>`
 # và mang cùng xu_ly với dòng đó. Mã G không đánh lại; `phat_hien` giữ nơi phát hiện.
@@ -32,7 +32,7 @@ g:
     ly_do: Bảy ô đã có kiểu UUID với căn cứ ở §0.6, chỉ thiếu ghi chú chờ chốt, nên sub-issue DB dùng thẳng kiểu đó; người giữ bộ spec LAB-4 thêm ghi chú cho đồng bộ ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
     phat_hien: p2
   - ma: G-04
-    spec: '`data-model.md:189` (bảng B của §0.7)'
+    spec: '`references/docs/system-design/data-model.md:189` (bảng B của §0.7)'
     mo_ta: Một số ô ở bảng B suy kiểu theo cột có tên gần giống của bảng đã build, ví dụ dinh_dang theo payments.method, nên «đối chiếu đã build» thực chất là đối chiếu theo tên (reviewer LAB-4, L4).
     xu_ly: premise:P-06
     ly_do: P-06 bắt sub-issue DB chốt lại mọi ô còn ghi «chốt ở LAB-5», kể cả các ô suy theo tên này, trước khi viết migration.
@@ -411,8 +411,8 @@ g:
   - ma: G-FG05-01
     spec: SKM_SERI_RESULT_ENTRY_SPEC.md §6.3 · SKM_DB.md §4.17 auction_results
     mo_ta: "Bảng auction_results thiếu cột số lượng và thời điểm mà FR-SERI-02 đòi lưu. Bản 0.4.1 thêm created_at do máy chủ gán (`specs/system-design/database-design/SKM_DB.md:910`), còn số lượng vẫn chưa có cột; prototype lấy số lượng bằng cả lô khi sinh giao dịch."
-    xu_ly: issue:SC-040/DB
-    ly_do: "Thiếu số lượng thì giao dịch せり không đối được với phần đã giao; SC-040/DB thêm cột số lượng và dùng created_at của 0.4.1 cho thời điểm, SC-040/BE ghi số lượng theo cả lô tới khi có ô nhập."
+    xu_ly: premise:P-46
+    ly_do: "P-46 sửa thiết kế theo sơ đồ FIG-012 và FR-SERI-02: SC-040/DB thêm số lượng trúng và dùng created_at của 0.4.1 cho thời điểm; SC-040/BE ghi số lượng từ ô nhập ở màn thay cho cả lô; người duyệt và giờ duyệt lưu ở transaction_status_events của giao dịch kênh せり khi người khác người nhập 承認 (P-47)."
     phat_hien: FG-05
   - ma: G-FG05-02
     spec: SKM_SERI_UNSOLD_TO_AITAI_TECH.md §4.3 · data-model.md FG-05 (auction_results append-only)
@@ -569,7 +569,7 @@ g:
     phat_hien: FG-08
   - ma: G-FG08-07
     spec: SKM_PAYMENT_CREATE_API.md (screen_id, mục 2, response 7) · data-model.md (invoices, payments) · ADR-003
-    mo_ta: "API-214 không gắn màn nào và sửa trạng thái hoá đơn tại chỗ. Spec để trống màn gọi, không nói vai nào ghi tiền về, và cập nhật invoices.status sau mỗi lần ghi, trong khi bảng invoices được khai chỉ thêm dòng; bản 0.4.1 vẫn để đường nhập 入金 (tiền về) chờ Q-23 (`data-model.md:326`)."
+    mo_ta: "API-214 không gắn màn nào và sửa trạng thái hoá đơn tại chỗ. Spec để trống màn gọi, không nói vai nào ghi tiền về, và cập nhật invoices.status sau mỗi lần ghi, trong khi bảng invoices được khai chỉ thêm dòng; bản 0.4.1 vẫn để đường nhập 入金 (tiền về) chờ Q-23 (`references/docs/system-design/data-model.md:326`)."
     xu_ly: "issue:INV-Q-23"
     ly_do: "Ai ghi tiền về và qua đường nào do khách trả lời ở Q-23 (mức chặn), INV-Q-23 theo dõi câu này; phần chỉ thêm dòng không phải chờ: API-214/BE tính trạng thái hoá đơn từ tổng payments lúc đọc theo ADR-003 thay vì UPDATE."
     phat_hien: FG-08
@@ -588,7 +588,7 @@ g:
   # ----- P3 FG-09 (gaps/FG-09.yaml) -----
   - ma: G-FG09-01
     spec: SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md §4.2, §4.5 · data-model.md FG-09 (cột Lưu trữ) · ADR-003 Hợp đồng 1
-    mo_ta: "Bảng incentives xếp loại chỉ thêm nhưng luồng 判定 (xét) và 確定 (xác nhận) vẫn sửa tại chỗ. Ở bản 0.4.1, data-model vẫn xếp incentives là append-only (`data-model.md:328`), còn TECH-304 cho 判定 ghi đè dòng chưa 確定 và cho 確定, 却下 (bác) cập nhật dòng đó (`specs/full-payment-incentive/technical-design/SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:163`)."
+    mo_ta: "Bảng incentives xếp loại chỉ thêm nhưng luồng 判定 (xét) và 確定 (xác nhận) vẫn sửa tại chỗ. Ở bản 0.4.1, data-model vẫn xếp incentives là append-only (`references/docs/system-design/data-model.md:328`), còn TECH-304 cho 判定 ghi đè dòng chưa 確定 và cho 確定, 却下 (bác) cập nhật dòng đó (`specs/full-payment-incentive/technical-design/SKM_INCENTIVE_EVALUATE_CONFIRM_TECH.md:163`)."
     xu_ly: "issue:INV-FG09-GHI-DE"
     ly_do: "Hai tài liệu LAB-4 nói ngược nhau về một bảng tiền, nên Tech Lead chốt ở INV-FG09-GHI-DE: đổi loại lưu trữ của incentives, hay giữ chỉ thêm và ghi kết quả 確定 thành dòng mới; SC-080/DB viết migration theo kết quả, đề xuất ghi đè dòng chưa 確定, ghi một lần cột xác nhận rồi chặn mọi sửa."
     phat_hien: FG-09
@@ -785,8 +785,8 @@ g:
   - ma: G-FG12-04
     spec: SKM_OPS_ALERT_QUEUE_SPEC.md (mục 3, 4.1, 5) · SKM_DB.md §4.37 alert_queue · FR-NOTIFY-02
     mo_ta: SC-122 không có đường xử lý cảnh báo. Mô tả màn nói xử lý hàng đợi theo mức khẩn và bảng có cột giờ xử lý, người thực hiện, nhưng màn chỉ có bộ lọc và nút Lọc; ô lọc trạng thái không có cột tương ứng trong alert_queue, và bảng không có cột nguồn để biết cảnh báo sinh từ đâu.
-    xu_ly: issue:SC-122/BE
-    ly_do: Không có nút xử lý thì cảnh báo không bao giờ đóng và SC-150 luôn báo việc mở; SC-122/BE làm lệnh đánh dấu đã xử lý ghi người của phiên, giờ máy chủ và suy trạng thái từ giờ xử lý, DATA-FG12/DB thêm cột nguồn và ghi chú.
+    xu_ly: premise:P-48
+    ly_do: "P-48 chốt hai trạng thái 未処理 → 処理済, thao tác «処理済にする» do 運用管理者 bấm kèm ghi chú bắt buộc, và ba cột thêm của alert_queue (trạng thái, nguồn, ghi chú xử lý); SC-122/BE làm lệnh đánh dấu, DATA-FG12/DB thêm cột, trạng thái đọc từ cột chứ không suy từ giờ xử lý."
     phat_hien: FG-12
   - ma: G-FG12-05
     spec: SKM_NOTIFICATION_SETTING_SPEC.md (A-3, A-4, B-1 ở mục 5) · SKM_SYSTEM_DESIGN.md EV2 · P-09
@@ -1037,3 +1037,10 @@ g:
     xu_ly: "issue:INV-FG07-SO-CAN-GIAO"
     ly_do: "Số cần giao quyết lúc nào giao dịch 完了 và số tính 精算, chạm cả FG-06 lẫn FG-07, nên Tech Lead chốt cách tính ở INV-FG07-SO-CAN-GIAO và gửi khách xác nhận cùng Q-SD1 trước khi SC-063/BE và SC-050/BE làm; đề xuất số cần giao bằng số lượng giao dịch trừ phần đã 訂正 có duyệt."
     phat_hien: "FG-07"
+  # ----- P1 lượt 21/10: góp ý BTC LAB-4 chưa đối được với repo nộp -----
+  - ma: G-21
+    spec: '`specs/system-design/api-design/rules-and-rates/SKM_RULE_VERSION_ROLLBACK_API.md:11` · `specs/system-design/api-design/_index.md:25`'
+    mo_ta: "BTC nhận xét ở trục Q của LAB-4 rằng có ba bản sao SKM_RULE_VERSION_ROLLBACK_API cùng mã và file index trỏ tới bản cũ. Repo nộp chỉ có một file này ở cả ba lần nộp (3ab06e6, 7c0df5c, df4a6b0); dòng SPEC-SKM-219 của file index trỏ đúng file đó, phiên bản 0.4.1; backlog (SC-093/BE, TECH-303) bám file này."
+    xu_ly: de-mo
+    ly_do: "BTC nhận xét có ba bản sao SKM_RULE_VERSION_ROLLBACK_API; repo nộp df4a6b0 chỉ có 1 file (3ab06e6 và 7c0df5c cũng vậy), file index trỏ đúng file đó; hỏi lại BTC bản đã chấm (có thể là gói tải về khác repo) trước khi đóng dòng này. BTC chỉ ra bản khác thì đối chiếu lại spec_refs của SC-093/BE với bản đó."
+    phat_hien: lab4-btc

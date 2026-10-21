@@ -2393,7 +2393,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Chỉ số đã công bố dùng cho báo cáo tháng RPT-10, RPT-11
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT10_PARTICIPANT_MONTHLY_SPEC.md §6.2 Q-17 (LAB-4)
   spec_refs:
@@ -2426,7 +2426,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Mục tiêu số ngày xử lý tranh chấp cho báo cáo RPT-09
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT09_DISPUTE_SLA_SPEC.md §6.2 Q-18 (LAB-4)
   spec_refs:
@@ -2458,7 +2458,7 @@ items:
   cha: FG-11
   tracker: investigation
   title_vi: Báo cáo ngày do người chạy hay hệ tự lập khi hết 業務日
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_RPT_TEMPLATE_LIST_SPEC.md §5 · SKM_SYSTEM_DESIGN.md EV1–EV3 (LAB-4)
   spec_refs:

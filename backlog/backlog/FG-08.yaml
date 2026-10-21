@@ -697,6 +697,7 @@ items:
   - Người ghi lấy từ phiên; quyền gọi theo vai hệ đích, chốt cùng PM (P-05, G-FG08-07).
   - Ngày trả so với hôm nay theo giờ Nhật, không theo UTC.
   - Không có lệnh UPDATE nào lên invoices; trạng thái tính từ tổng payments (ADR-003).
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: API-214/TEST
   cha: API-214
@@ -724,6 +725,7 @@ items:
   - 'Trả một phần rồi trả nốt: trạng thái lần lượt là trả một phần rồi đã trả.'
   - 'Ngày trả ở tương lai hoặc số tiền không dương: trả 400, không có dòng payments mới.'
   - 'Mã hoá đơn không tồn tại: trả 404.'
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: DATA-FG08
   cha: FG-08
@@ -824,7 +826,7 @@ items:
   cha: FG-08
   tracker: investigation
   title_vi: Thời gian chờ và số lần thử lại của batch đối soát ngày
-  han: 19/10/2026 (checkpoint BTC)
+  han: 19/10/2026 (hạn gốc trong thiết kế LAB-4)
   nguoi_tra_loi: Tech Lead
   nguon: system-design.yaml › cau_hoi_mo[Q-SD2]
   spec_refs:
@@ -855,7 +857,7 @@ items:
   cha: FG-08
   tracker: investigation
   title_vi: Ai khoá 業務日, mở lại ngày đã khoá, thứ tự với chốt tháng
-  han: 19/10/2026 (checkpoint BTC)
+  han: 19/10/2026 (hạn gốc trong thiết kế LAB-4)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_SYSTEM_DESIGN.md EV3, A7 (LAB-4)
   spec_refs:
@@ -958,6 +960,7 @@ items:
   - Giao dịch 直販 (bán trực tiếp) và giao dịch có dòng huỷ không vào hoá đơn (P-08, cùng luật đếm của SC-070/BE).
   - Hạn thanh toán của hoá đơn đọc từ bản quy tắc có hiệu lực; chưa có quy tắc thì trả 500 RULE_MISSING, không ghi gì.
   - Lỗi ghi ở bước nào cũng hoàn tác cả lần chốt, trả 500 M_25; người chạy lấy từ phiên.
+  - Lệnh ghi thất bại trả 500 mã SAVE_FAILED (M_25) kèm câu của M_25 «Lưu thất bại», không dùng câu chung của M_06 (P-49).
   dinh_nghia_xong: []
 - key: API-213/TEST
   cha: API-213
@@ -987,12 +990,13 @@ items:
   - 'Chốt lại tháng đã chốt: trả 409, số hoá đơn không đổi.'
   - 'Khoá một 業務日 ở SC-071: không có dòng chốt tháng hay hoá đơn mới nào.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  - 'Gây lỗi ở lệnh ghi: phản hồi 500 có đúng mã SAVE_FAILED (M_25) và đúng câu «Lưu thất bại»; ca so cả mã lẫn câu (P-49).'
   dinh_nghia_xong: []
 - key: INV-FG08-LUAT-DOI-SOAT
   cha: FG-08
   tracker: investigation
   title_vi: Giao dịch nào vào 日次照合表 và thế nào là lệch
-  han: 03/11/2026 (trước Sprint 2)
+  han: 23/11/2026 (trước Sprint 2)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: SKM_DAILY_RECONCILIATION_SPEC.md §3 · SKM_SYSTEM_DESIGN.md EV3 (LAB-4)
   spec_refs:

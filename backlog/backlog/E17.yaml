@@ -31,6 +31,71 @@ epic:
   - Không kịch bản nào được đánh đạt nhờ dữ liệu sửa tay trong CSDL trong lúc chạy.
   dinh_nghia_xong: []
 items:
+- key: UAT-01
+  cha: E17
+  tracker: story
+  title_vi: Theo dõi lỗi UAT hằng tuần — công cụ và quy trình
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  - constraint:hitl
+  owner: PM
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'QA dựng công cụ và quy trình theo dõi lỗi trong cửa sổ UAT (kiểm thử chấp nhận của khách): ghi lỗi, phân loại hằng tuần cùng ba SME (chuyên gia nghiệp vụ) phía khách, kiểm lại sau khi sửa và tổng hợp trạng thái mỗi tuần. Đây là hạng mục EF-22 của LAB-1 (QA, 14 man-day), nay thành issue để ước và xếp sprint.
+
+    Ràng buộc đặc thù: Chỉ SME phía khách quyết đóng lỗi sau khi kiểm lại; công cụ chỉ ghi và đếm, không tự đóng lỗi nào.'
+  pham_vi: 'Sáu tuần UAT với ba SME, trung bình 4 giờ mỗi tuần (RFP 10-05, p.57); công cụ ghi lỗi dùng chung với khách và quy trình theo dõi, kiểm lại, tổng hợp hằng tuần (RFP 13-03, p.65). Không gồm việc sửa lỗi, việc đó đi theo issue của màn hay luồng bị lỗi. Nguồn: EF-22 ở lab-01/registry/effort-other.yaml:163.'
+  luong_chinh:
+  - 'Trước UAT: QA chốt mẫu ghi lỗi, luồng trạng thái và mẫu tổng hợp tuần, mở quyền cho ba SME và BrSE.'
+  - 'Trong UAT: SME hoặc QA ghi lỗi gồm mã lỗi, màn hoặc kịch bản AC, bước tái hiện, kết quả mong đợi và thực tế, mức nghiêm trọng, người ghi, ngày ghi.'
+  - 'Mỗi tuần: QA chủ trì buổi phân loại cùng SME và BrSE, gán mức ưu tiên và người sửa; lỗi đi mới → đang sửa → chờ kiểm lại → đóng, hoặc từ chối kèm lý do.'
+  - 'Sau khi sửa: QA kiểm lại trên môi trường thử, SME xác nhận mới được đóng; kiểm lại không đạt thì lỗi quay về đang sửa.'
+  - 'Cuối tuần: QA gửi bảng tổng hợp (lỗi mở, đóng, theo mức nghiêm trọng, số lần mở lại) cho PM và khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi ghi một lỗi thiếu trường bắt buộc (mã, nơi xảy ra, bước tái hiện, mức nghiêm trọng, người ghi, ngày) thì công cụ không lưu.
+  - Khi lỗi sang đóng thì có tên SME xác nhận và ngày xác nhận; QA hay dev không tự đóng được.
+  - Khi lỗi bị từ chối thì có lý do và người quyết; khi kiểm lại không đạt thì lỗi về đang sửa và số lần mở lại tăng.
+  - Mỗi tuần trong cửa sổ UAT có một biên bản phân loại và một bảng tổng hợp gửi khách; sáu tuần đủ sáu bản.
+  - Khi hết cửa sổ UAT thì mọi lỗi mức nghiêm trọng cao nhất đã đóng, hoặc có quyết định của người phụ trách nghiệp vụ phía khách ghi trong biên bản.
+  dinh_nghia_xong:
+  - Mẫu ghi lỗi, luồng trạng thái và mẫu tổng hợp tuần được khách duyệt qua BrSE trước tuần UAT đầu.
+- key: UAT-01/TEST
+  cha: UAT-01
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Theo dõi lỗi UAT hằng tuần — công cụ và quy trình'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm cho công cụ và quy trình theo dõi lỗi UAT, chạy trước khi mở cho SME.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Ghi thử một lỗi thiếu lần lượt từng trường bắt buộc: công cụ không lưu.'
+  - 'Đi đủ luồng mới → đang sửa → chờ kiểm lại → đóng với tên SME; tài khoản QA thử đóng thẳng: bị chặn.'
+  - 'Kiểm lại không đạt: lỗi về đang sửa, số lần mở lại tăng 1; từ chối không ghi lý do: bị chặn.'
+  - 'Dựng bảng tổng hợp tuần từ dữ liệu thử: số đếm theo trạng thái và mức nghiêm trọng khớp danh sách lỗi.'
+  dinh_nghia_xong: []
 - key: AC-1
   cha: E17
   tracker: story
@@ -847,6 +912,7 @@ items:
   - 'Bấm 登録 (đăng ký) kết quả 落札 (trúng giá) ở SC-040: người tạo là người của phiên, thời điểm theo JST của máy chủ.'
   - 'Gọi thẳng API-212 kèm người tạo và thời điểm giả: bản ghi giữ người của phiên và giờ máy chủ.'
   - 'Rà danh sách API của hệ: không đường nào nhận kết quả せり từ máy hay từ ảnh.'
+  - 'Chuẩn bị: hai tài khoản cùng vai do SC-003/DB nạp; người thứ hai 承認 thì sự kiện 承認 mang người đó, người nhập tự duyệt bị 422 SELF_CONFIRM_FORBIDDEN (P-47).'
   dinh_nghia_xong: []
 - key: AC-12
   cha: E17

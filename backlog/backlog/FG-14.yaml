@@ -968,7 +968,7 @@ items:
   cha: FG-14
   tracker: investigation
   title_vi: Quy trình duyệt xoá cứng và kho lưu lạnh
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-19]
   spec_refs:

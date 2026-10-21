@@ -100,4 +100,4 @@ Agent không được tự thêm `--da-quet` khi chưa có kết quả quét th�
 
 ## Nguồn gốc
 
-Xây cho LAB-5 (dự án mẫu Sakura Market, chương trình AIDD for Leaders của Sun*): đẩy backlog 19 epic, 496 khoá từ seed YAML lên GitHub Project, mỗi khoá một issue có sub-issue, Owner, Priority. Bản này tách khỏi công cụ của bài lab: mọi tên repo, số Project, id field và đường dẫn đều đến từ tham số; bộ dựng thân cho ra đúng từng byte thân issue của bài lab khi dùng cùng seed, registry spec và cấu hình.
+Xây cho LAB-5 (dự án mẫu Sakura Market, chương trình AIDD for Leaders của Sun*): đẩy toàn bộ backlog (19 epic, mọi khoá của seed YAML) lên GitHub Project, mỗi khoá một issue có sub-issue, Owner, Priority. Bản này tách khỏi công cụ của bài lab: mọi tên repo, số Project, id field và đường dẫn đều đến từ tham số; bộ dựng thân cho ra đúng từng byte thân issue của bài lab khi dùng cùng seed, registry spec và cấu hình.

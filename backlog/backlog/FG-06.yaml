@@ -58,7 +58,7 @@ items:
   gap_refs:
   - G-FG06-03
   - G-18
-  mo_ta: 権限付与済みユーザー (người dùng được cấp quyền lập ở ma trận của luồng sửa) chọn bản ghi đã chốt cần sửa, khai nội dung sửa, ghi lý do và đính bằng chứng để gửi duyệt. Bản ghi gốc không đổi cho tới khi yêu cầu được duyệt ở SC-052; người lập không tự chọn người duyệt.
+  mo_ta: 権限付与済みユーザー (người dùng được cấp quyền lập ở ma trận của luồng sửa) chọn bản ghi đã chốt cần sửa, khai nội dung sửa, ghi lý do và đính bằng chứng để gửi duyệt. Bản ghi gốc không đổi, cả trước và sau khi yêu cầu được duyệt ở SC-052; người lập không tự chọn người duyệt.
   pham_vi: Màn SC-050 (SPEC-SKM-125); API ghi yêu cầu viết mới ở SC-050/BE, vì FG-06 chưa có API nào (P-01); bảng `adjustment_requests` (chủ migration), bằng chứng lưu qua `attachments`.
   luong_chinh:
   - Người có quyền lập chọn loại đối tượng và bản ghi đã chốt cần sửa.
@@ -134,6 +134,8 @@ items:
   - Người lập lấy từ phiên, trạng thái đầu là chờ duyệt; API không nhận người duyệt từ body.
   - Quyền lập đọc ma trận của luồng sửa ở mỗi lần gọi; vai chưa có dòng thì bị chặn (P-16, P-12).
   - Mỗi yêu cầu ghi một dòng nhật ký kiểm toán.
+  - Yêu cầu sửa một giao dịch chỉ nhận giao dịch đang 確定 (khác thì 409 RECORD_STATE_INVALID) và ghi sự kiện 訂正申請 (sang 更正), dòng gốc giữ nguyên; đối tượng loại khác giữ luồng LAB-4 (P-46).
+  - Mọi lệnh đổi trạng thái giao dịch kiểm trạng thái hiện tại trong lúc khoá dòng giao dịch (SELECT … FOR UPDATE); người ghi thứ hai cùng lúc nhận 409 RECORD_STATE_INVALID (P-46).
   dinh_nghia_xong: []
 - key: SC-050/DB
   cha: SC-050
@@ -194,6 +196,7 @@ items:
   - 'Lập yêu cầu cho một giao dịch thuộc ngày đã khoá: có một yêu cầu chờ duyệt, giao dịch gốc không đổi.'
   - Tài khoản không có quyền lập ở ma trận của luồng sửa gọi thẳng API nhận 403.
   - 'Gửi kèm người lập hoặc trạng thái giả trong body: bản ghi lưu người của phiên và trạng thái chờ duyệt.'
+  - 'Lập yêu cầu sửa giao dịch đang 確定: có sự kiện 訂正申請, trạng thái 更正; giao dịch đang 確認待ち: 409 RECORD_STATE_INVALID (P-46).'
   dinh_nghia_xong: []
 - key: SC-051
   cha: FG-06
@@ -352,7 +355,7 @@ items:
   tieu_chi_nghiem_thu:
   - Khi người bấm duyệt chính là người lập thì máy chủ trả 422 M_26 như luồng duyệt bản quy tắc, yêu cầu giữ nguyên.
   - Khi duyệt loại đảo thì dòng đảo mang số tiền ngược dấu bản ghi gốc; loại chênh lệch thì mang đúng số đã khai; bản ghi gốc không đổi.
-  - Khi từ chối thì không sinh dòng nào; yêu cầu lưu người từ chối, thời điểm và lý do.
+  - Khi từ chối thì không sinh dòng adjustment_entries nào; yêu cầu lưu người từ chối, thời điểm và lý do.
   - Khi yêu cầu đã duyệt hoặc đã từ chối thì máy chủ không cho duyệt lại, trạng thái giữ nguyên.
   dinh_nghia_xong:
   - Số cấp duyệt và người giữ vai cập nhật theo đáp của INV-Q-02 (P-16).
@@ -416,7 +419,9 @@ items:
   tieu_chi_nghiem_thu:
   - Người duyệt lấy từ phiên; trùng người lập thì trả 422 M_26, không ghi gì.
   - Không có lệnh sửa hay xoá nào trên bản ghi gốc; báo cáo đọc dòng đảo, dòng chênh lệch qua khung nhìn tổng hợp mà SC-052/DB chốt (G-FG06-04).
-  - Lỗi ở bất kỳ lệnh ghi nào thì hoàn tác cả hai, trả 500 M_25.
+  - Lỗi ở bất kỳ lệnh ghi nào (dòng đảo hoặc chênh lệch, trạng thái yêu cầu, sự kiện 再確定) thì hoàn tác tất cả, trả 500 M_25.
+  - Duyệt hay từ chối yêu cầu sửa một giao dịch đều ghi sự kiện 再確定 đưa giao dịch về 確定; bút toán đảo, chênh lệch là dòng mới nối với gốc, dòng gốc không đổi (P-46, FR-CORR-02).
+  - Mọi lệnh đổi trạng thái giao dịch kiểm trạng thái hiện tại trong lúc khoá dòng giao dịch (SELECT … FOR UPDATE); người ghi thứ hai cùng lúc nhận 409 RECORD_STATE_INVALID (P-46).
   dinh_nghia_xong: []
 - key: SC-052/DB
   cha: SC-052
@@ -473,7 +478,9 @@ items:
   tieu_chi_nghiem_thu:
   - 'Người lập tự duyệt yêu cầu của mình, kể cả khi tài khoản có vai duyệt: bị từ chối 422 M_26, không sinh dòng nào.'
   - 'Duyệt loại đảo cho một giao dịch: có một dòng đảo trỏ về giao dịch, giao dịch gốc không đổi, tổng của giao dịch đọc qua khung nhìn tổng hợp bằng 0.'
-  - 'Từ chối kèm lý do: không có dòng mới; yêu cầu lưu người từ chối, thời điểm và lý do.'
+  - 'Từ chối kèm lý do: không có dòng adjustment_entries mới; yêu cầu lưu người từ chối, thời điểm và lý do.'
+  - 'Duyệt và từ chối yêu cầu sửa một giao dịch: cả hai ghi sự kiện 再確定, giao dịch về 確定, dòng gốc không đổi (P-46).'
+  - 'Sửa hai lần liên tiếp cùng một giao dịch (訂正申請 → 再確定, hai vòng): cả hai thành công, có hai cặp sự kiện 訂正申請, 再確定 (P-46).'
   dinh_nghia_xong: []
 - key: SC-053
   cha: FG-06
@@ -667,7 +674,7 @@ items:
   cha: FG-06
   tracker: investigation
   title_vi: Nơi giữ dòng đảo 赤伝 và khung nhìn chuẩn cho báo cáo
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Tech Lead
   nguon: ADR-003 §2 · SKM_DB.md §4.19 adjustment_entries (LAB-4)
   spec_refs:
@@ -698,7 +705,7 @@ items:
   cha: FG-06
   tracker: investigation
   title_vi: Phân quyền theo loại người tham gia hay vai nội bộ
-  han: 20/10/2026 (trước Sprint 1)
+  han: 09/11/2026 (trước Sprint 1)
   nguoi_tra_loi: Tech Lead
   nguon: SKM_CORRECTION_PERMISSION_MATRIX_SPEC.md §4.3 · SKM_DB.md §4.2 permission_matrix (LAB-4)
   spec_refs:

@@ -460,6 +460,8 @@ items:
   - Cột user_id lưu định danh Cognito, không trỏ auth.users của prototype (G-FG01-06).
   - Có cột trạng thái tài khoản cho dừng và mở lại quyền, ghi lại vào SKM_DB (G-FG01-05).
   - Dữ liệu khởi tạo có một tài khoản quản trị đầu tiên, đánh dấu tạm tới khi INV-Q-SD4 có đáp (G-FG01-04).
+  - Dữ liệu khởi tạo thêm hai dòng ma trận «được duyệt» (相対 cho 取引運用, せり cho せり進行役) và một tài khoản thứ hai cùng vai 運営担当者, mang dấu tạm như P-28, thay khi INV-FG04-XAC-NHAN có đáp (P-47).
+  - Hai dòng «được duyệt» chạy sau migration permission_matrix của SC-053/DB; mã thao tác hay cột «duyệt» theo đáp của INV-FG06-MA-TRAN-QUYEN (G-FG06-05).
   dinh_nghia_xong: []
 - key: SC-003/TEST
   cha: SC-003
@@ -1090,7 +1092,7 @@ items:
   cha: FG-01
   tracker: investigation
   title_vi: Ngưỡng hết phiên và khoá tạm khi đăng nhập sai
-  han: 19/10/2026 (checkpoint BTC)
+  han: 19/10/2026 (hạn gốc trong thiết kế LAB-4)
   nguoi_tra_loi: Khách, qua BrSE
   nguon: system-design.yaml › cau_hoi_mo[Q-SD3]
   spec_refs:

@@ -16,7 +16,7 @@ ngay_xet_qua_han: "2026-10-12"   # ngày lập seed P1; cố định để chạ
 owner_theo_tracker:
   epic: PM
   story: PM
-  investigation: {khach: BrSE, tech_lead: BE-1}
+  investigation: {khach: BrSE, tech_lead: BE-1, pm: PM}
 owner_theo_leaf:
   FE: {le: FE-1, chan: FE-2, xuyen_suot: FE-1}
   BE: {le: BE-1, chan: BE-2, xuyen_suot: BE-1}
@@ -24,7 +24,7 @@ owner_theo_leaf:
   TEST: QA
   INFRA: Infra
 
-sprint: {ten: Sprint, bat_dau: "2026-10-20", so_ngay: 14, so_luong: 6}
+sprint: {ten: Sprint, bat_dau: "2026-11-09", so_ngay: 14, so_luong: 6}   # P2 21/10: Sprint 1 = kickoff LAB-1 (P-51); 6 Iteration = 6 sprint đầu của 19
 
 # Khoá logic → tên field đúng như trên Project (148 viết hoa «Start Date», «Due Date»).
 field_map:
@@ -55,6 +55,7 @@ dinh_nghia_xong_mau:
     - Màn dựng đủ item, trạng thái rỗng, lỗi và đang tải theo spec màn LAB-4.
     - Yêu cầu gộp mã (pull request) có người thứ hai duyệt và đã gộp vào nhánh chính.
     - Kiểm thử thành phần chạy xanh trong CI.
+    - Màn danh sách có spec ghi tập giá trị của mọi ô lọc (giá trị chọn được và giá trị mặc định).
   BE:
     - Mã trạng thái và mã lỗi trả về đúng spec API LAB-4.
     - Kiểm thử đơn vị và kiểm thử tích hợp chạy xanh trong CI.
@@ -62,7 +63,8 @@ dinh_nghia_xong_mau:
   DB:
     - Script tạo bảng chạy được trên cơ sở dữ liệu trống và chạy lại không lỗi.
     - Kiểu cột, khoá và ràng buộc khớp đặc tả cơ sở dữ liệu LAB-4.
-    - Bảng chỉ-thêm bị chặn sửa và xoá ở mức quyền cơ sở dữ liệu.
+    - Bảng làm chủ không còn ô «—» ở cột kiểu và cột NOT NULL của SKM_DB (P-06).
+    - Bảng chỉ-thêm bị chặn sửa và xoá ở mức quyền cơ sở dữ liệu, trừ cột được spec khai là ngoại lệ.
   TEST:
     - Bộ ca kiểm thử phủ luồng chính, luồng lỗi và mọi tiêu chí nghiệm thu của story cha.
     - Ca kiểm thử có người thứ hai duyệt trước khi chạy.
@@ -98,7 +100,7 @@ cau_truc:
   tracker:
     epic: {cham_swp: tong-con, nhom_gio: "-", vai: PM}
     story: {cham_swp: tong-con, nhom_gio: "-", vai: PM}
-    investigation: {cham_swp: truc-tiep, nhom_gio: inv, vai: "BrSE (ai: khach) · BE-1 (ai: tech_lead)"}
+    investigation: {cham_swp: truc-tiep, nhom_gio: inv, vai: "BrSE (ai: khach) · BE-1 (ai: tech_lead) · PM (ai: pm)"}
   leaf:
     FE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "FE-1 FG lẻ · FE-2 FG chẵn"}
     BE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 FG lẻ · BE-2 FG chẵn"}
