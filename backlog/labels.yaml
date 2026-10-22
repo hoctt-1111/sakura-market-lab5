@@ -9,6 +9,8 @@ nhan:
   - {ten: "team:frontend", mau: "bfd4f2", mo_ta: "Bộ phận giao diện"}
   - {ten: "team:backend", mau: "c2e0c6", mo_ta: "Bộ phận API, nghiệp vụ, cơ sở dữ liệu"}
   - {ten: "team:infrastructure", mau: "d4c5f9", mo_ta: "Bộ phận hạ tầng, CI/CD, môi trường"}
+  - {ten: "team:pm", mau: "e6e6fa", mo_ta: "Quản lý dự án: vận hành sprint, báo cáo khách, cập nhật Project"}
+  - {ten: "team:brse", mau: "ffe4b5", mo_ta: "Cầu nối khách: chốt thiết kế, tài liệu người dùng tiếng Nhật"}
   - {ten: "constraint:incentive", mau: "b60205", mo_ta: "Ràng buộc đặc thù: 完納奨励金 (thưởng thanh toán đủ hạn) — tính, xác nhận, điều chỉnh theo bản quy tắc"}
   - {ten: "constraint:two-tier", mau: "e99695", mo_ta: "Ràng buộc đặc thù: hai tầng đặc quyền 許可 / 承認, kiểm lại tư cách lúc chốt giao dịch"}
   - {ten: "constraint:aitai", mau: "f9d0c4", mo_ta: "Ràng buộc đặc thù: 相対取引 (giao dịch thỏa thuận) là luồng chính, không thiết kế theo せり"}

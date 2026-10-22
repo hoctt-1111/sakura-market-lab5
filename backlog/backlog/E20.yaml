@@ -1,0 +1,856 @@
+# Seed epic E20 — sinh bởi gen-backlog-seed.py từ registry LAB-4 + xuyen-suot.yaml + team.yaml.
+# Chỉ sửa tay 5 trường văn (mo_ta, pham_vi, luong_chinh, tieu_chi_nghiem_thu, dinh_nghia_xong), gap_refs, premise_refs; trường khác sửa ở nguồn rồi chạy lại bộ sinh.
+epic:
+  key: E20
+  tracker: epic
+  title_vi: Quản lý dự án và chốt thiết kế
+  feature: ''
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:epic
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Nhóm việc này đưa phần quản lý dự án theo sprint và việc chốt thiết kế với khách vào backlog thành issue có giờ, thay vì để ngoài như bản trước. Review PM 21/10 chỉ ra hai hạng mục LAB-1 có trong estimate khách đã nhận nhưng không có issue nào: EF-30 (PM, 108 man-day quản lý xuyên suốt) và EF-01 (BrSE, 45 man-day chốt giả định và ma trận quyền). MGT-01 tới MGT-06 là sáu sprint đầu, trùng 6 Iteration của Project (P-51), mỗi sprint một story; DSG-01 tới DSG-04 rà spec LAB-4 với khách theo bốn nhóm chức năng trước khi nhóm vào sprint, đầu ra là spec sửa, PREMISE cập nhật và biên bản khách xác nhận.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mọi story con của E20 đã đóng.
+  - Khi một trong sáu sprint đầu kết thúc thì có biên bản hai cuộc họp, hai báo cáo tuần đã gửi khách, và Status, Spent time, Done Date trên Project khớp việc thật.
+  - Khi một nhóm chức năng vào sprint có lá dev thì story DSG của nhóm đã đóng, hoặc mọi INV mức chặn của nhóm đã có đáp.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev liên quan bắt đầu.
+  dinh_nghia_xong: []
+items:
+- key: MGT-01
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 1: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 1 (09/11/2026–22/11/2026, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. Sprint 1 trùng ngày khởi động theo lịch LAB-1 nên họp lập kế hoạch kiêm buổi khởi động với khách: chốt mẫu báo cáo tuần, lịch họp, kênh nhận câu hỏi; INV-PM-LICH-DOI (hạn 09/11/2026) có đáp ở buổi này.'
+  pham_vi: 'Sprint 1 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 09/11/2026: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 22/11/2026: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 22/11/2026 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi khách chốt ngày khởi động khác 09/11/2026 thì mọi ngày Sprint và hạn INV tương đối trên Project đã dời cùng một khoảng (P-51).
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-01/PM
+  cha: MGT-01
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 1: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 09/11/2026 và họp cuối sprint ngày 22/11/2026, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 22/11/2026, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: MGT-02
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 2: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 2 (23/11/2026–06/12/2026, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. INV có hạn «trước Sprint 2» (23/11/2026, P-51; ví dụ INV-UI-NGON-NGU) phải có đáp ở họp lập kế hoạch; chưa có thì story bị chặn không vào sprint và PM ghi hạn mới vào INV.'
+  pham_vi: 'Sprint 2 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 23/11/2026: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 06/12/2026: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 06/12/2026 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi một INV hạn 23/11/2026 chưa có đáp lúc họp lập kế hoạch thì story bị chặn không được xếp vào sprint và INV có hạn mới cùng lý do.
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-02/PM
+  cha: MGT-02
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 2: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 23/11/2026 và họp cuối sprint ngày 06/12/2026, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 06/12/2026, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: MGT-03
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 3: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 3 (07/12/2026–20/12/2026, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. Đã có hai sprint chạy, nên báo cáo tuần thêm số item đóng của hai sprint trước đặt cạnh năng lực P-52 để khách thấy sớm vai nghẽn; rủi ro trễ ghi vào biên bản, không chờ hết 6 Iteration.'
+  pham_vi: 'Sprint 3 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 07/12/2026: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 20/12/2026: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 20/12/2026 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi báo cáo tuần của sprint này gửi thì có số item đóng của hai sprint trước đặt cạnh năng lực theo P-52 và một câu nhận định vai nghẽn.
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-03/PM
+  cha: MGT-03
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 3: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 07/12/2026 và họp cuối sprint ngày 20/12/2026, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 20/12/2026, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: MGT-04
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 4: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 4 (21/12/2026–03/01/2027, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. Sprint trùng kỳ nghỉ cuối năm của khách và đội, nên ở họp lập kế hoạch PM chốt với khách ngày họp, ngày gửi báo cáo và số ngày làm việc thật trước khi xếp item; không xếp theo đủ 14 ngày.'
+  pham_vi: 'Sprint 4 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 21/12/2026: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 03/01/2027: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 03/01/2027 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi xếp item vào sprint thì năng lực tính theo số ngày làm việc đã chốt với khách, không theo đủ 14 ngày, và con số này ghi ở biên bản họp lập kế hoạch.
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-04/PM
+  cha: MGT-04
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 4: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 21/12/2026 và họp cuối sprint ngày 03/01/2027, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 03/01/2027, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: MGT-05
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 5: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 5 (04/01/2027–17/01/2027, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. Sprint đầu năm: PM rà mọi INV quá hạn chưa có đáp, đưa cả vào gói câu hỏi của sprint cùng đề nghị hạn mới, và rà item dời từ sprint trước kỳ nghỉ.'
+  pham_vi: 'Sprint 5 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 04/01/2027: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 17/01/2027: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 17/01/2027 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi họp lập kế hoạch xong thì không còn INV quá hạn nào thiếu hạn mới, và mọi item dời từ Sprint 4 có lý do ghi ở issue.
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-05/PM
+  cha: MGT-05
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 5: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 04/01/2027 và họp cuối sprint ngày 17/01/2027, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 17/01/2027, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: MGT-06
+  cha: E20
+  tracker: story
+  title_vi: 'Vận hành Sprint 6: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  - P-54
+  gap_refs: []
+  mo_ta: 'PM vận hành Sprint 6 (18/01/2027–31/01/2027, P-51): họp lập kế hoạch, họp cuối sprint, hai báo cáo tuần tiếng Nhật gửi khách, cập nhật Status, Spent time, Done Date trên Project, và gom câu hỏi còn mở của khách thành một gói gửi một lần. Là phần theo sprint của EF-30 LAB-1 (PM, 108 man-day), thành issue theo review PM 21/10. Sprint cuối của 6 Iteration trên Project (P-51): họp cuối sprint kiêm rà tổng sáu sprint với khách; PM tạo Iteration kế tiếp trên Project và lập story vận hành sprint sau trước khi sprint này đóng.'
+  pham_vi: 'Sprint 6 của 19 sprint, 14 ngày (P-51); năng lực theo số người mỗi Owner (P-52). Gồm biên bản hai cuộc họp, hai báo cáo tuần, field Project, một gói câu hỏi. Không gồm việc kỹ thuật của story và báo cáo nghiệm thu (E17). Nguồn: EF-30 (effort-other.yaml:219 của LAB-1).'
+  luong_chinh:
+  - 'Ngày 18/01/2027: PM chủ trì họp lập kế hoạch, chọn item theo năng lực P-52, kiểm INV chặn, đặt Sprint, Start Date, Due Date trên Project; biên bản ghi item vào sprint và lý do loại.'
+  - 'Cuối mỗi tuần: PM viết báo cáo tuần tiếng Nhật (tiến độ theo story, rủi ro, câu hỏi mở), BrSE đọc lại rồi gửi khách.'
+  - 'Trong sprint: PM gom câu hỏi khách còn mở (INV có hạn trong hoặc ngay sau sprint) thành một gói, gửi một lần cùng báo cáo tuần thứ nhất.'
+  - 'Ngày 31/01/2027: PM chủ trì họp cuối sprint, cập nhật Status, Spent time, Done Date; item chưa xong dời sprint sau kèm lý do ở issue; biên bản gửi khách qua BrSE.'
+  tieu_chi_nghiem_thu:
+  - Khi sprint kết thúc ngày 31/01/2027 thì mọi issue trong sprint có Status đúng việc thật, issue đã đóng có Spent time và Done Date.
+  - Khi một tuần kết thúc thì báo cáo tuần tiếng Nhật đã gửi khách, người thứ hai đã đọc, ngày gửi ghi ở issue.
+  - Khi có câu hỏi khách còn mở thì chúng đi trong một gói của sprint, mỗi câu trỏ một INV; item dời sprint có lý do ở issue.
+  - Khi sprint này đóng thì Project đã có Iteration cho sprint kế tiếp và biên bản rà tổng sáu sprint đã gửi khách.
+  dinh_nghia_xong:
+  - Biên bản họp lập kế hoạch và họp cuối sprint đính ở issue, gói câu hỏi có ngày gửi và danh sách INV.
+- key: MGT-06/PM
+  cha: MGT-06
+  tracker: devtask
+  title_vi: 'Quản lý: Vận hành Sprint 6: họp, báo cáo tuần khách'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-51
+  - P-52
+  gap_refs: []
+  mo_ta: Chủ trì họp lập kế hoạch ngày 18/01/2027 và họp cuối sprint ngày 31/01/2027, viết hai báo cáo tuần tiếng Nhật, cập nhật field trên Project và gửi một gói câu hỏi cho khách.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Hai biên bản họp và hai báo cáo tuần có ngày gửi và người nhận: khách qua BrSE (người phụ trách nghiệp vụ phía khách) và cả đội.'
+  - Ngày 31/01/2027, Status, Sprint, Spent time và Done Date của mọi issue trong sprint khớp việc thật.
+  - Gói câu hỏi gửi khách một lần trong sprint, mỗi câu trỏ một INV và INV ghi lại ngày gửi.
+  dinh_nghia_xong: []
+- key: DSG-01-1
+  cha: E20
+  tracker: story
+  title_vi: 'Chốt thiết kế FG-03–FG-05: lô, 相対, せり (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 1/2 của việc chốt thiết kế giao dịch với khách: Tech Lead (vị trí BE-1) cùng BrSE rà spec LAB-4 của ba nhóm FG-03 tiếp nhận lô, FG-04 相対取引 (giao dịch thỏa thuận) và FG-05 せり (đấu giá) trước khi nhóm vào sprint, để lá dev không làm trên giả định khách chưa thấy; điểm nặng là trạng thái bản ghi theo sơ đồ của khách và vai duyệt ở bước chờ xác nhận (P-46, P-47) và lượng khả dụng của lô khi bán một phần (P-30). Ba nhóm FG-06 tới FG-08 thuộc phần 2/2 (DSG-01-2). Đầu ra: spec sửa ở lần phát hành kế tiếp của kho spec LAB-4, PREMISE cập nhật, biên bản khách xác nhận, INV của ba nhóm có đáp. Là một phần theo nhóm của EF-01 LAB-1 (BrSE, 45 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Spec LAB-4 của FG-03, FG-04, FG-05; dòng PREMISE và chỗ hở G mà issue của ba nhóm trỏ; 10 INV của ba nhóm (1 của FG-03, 8 của FG-04, 1 của FG-05). Nguồn: EF-01 (effort-other.yaml:6 của LAB-1).'
+  luong_chinh:
+  - BE-1 gom dòng PREMISE, chỗ hở G và INV còn mở của FG-03 tới FG-05 thành danh sách điểm cần khách quyết, mỗi điểm kèm giả định đang dùng và phương án đề xuất.
+  - BrSE viết tài liệu rà soát tiếng Nhật cho ba nhóm, người thứ hai đọc, gửi khách trước họp.
+  - 'Họp với khách: BrSE dẫn, BE-1 giải thích kỹ thuật; khách quyết từng điểm, điểm chưa quyết ghi hạn mới.'
+  - BrSE viết biên bản tiếng Nhật, khách xác nhận; câu trả lời ghi vào từng INV kèm ngày và người trả lời.
+  - BE-1 sửa spec LAB-4 và PREMISE theo câu trả lời, ghi chú ở issue bị ảnh hưởng; PM đổi sprint nếu đáp khác giả định.
+  tieu_chi_nghiem_thu:
+  - Khi họp xong thì mỗi INV của ba nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới ghi ở issue.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev của FG-03 tới FG-05 bắt đầu.
+  - Khi biên bản gửi đi thì có xác nhận của khách kèm ngày và người thứ hai đã đọc.
+  dinh_nghia_xong:
+  - 'INV của ba nhóm đã đóng hoặc có hạn mới: INV-FG03-HANG-TUOI, INV-Q-11, INV-Q-21, INV-GD-01, INV-LOT-HUY, INV-Q-22, INV-FG04-XAC-NHAN, INV-LOT-KHA-DUNG, INV-FG04-BEN-BAN, INV-FG05-TAI-SERI.'
+- key: DSG-01-1/BE
+  cha: DSG-01-1
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt thiết kế FG-03–FG-05: lô, 相対, せり (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Gom dòng PREMISE, chỗ hở G và INV còn mở của FG-03 tới FG-05 thành danh sách điểm cần khách quyết kèm phương án đề xuất; sau họp sửa spec LAB-4 và PREMISE của ba nhóm theo câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Danh sách điểm cần quyết: mỗi điểm trỏ mã P, G hoặc INV của FG-03 tới FG-05, ghi giả định đang dùng và phương án đề xuất; gửi BrSE trước buổi họp.'
+  - 'Sau họp: spec LAB-4 và dòng PREMISE sửa theo câu trả lời, issue bị ảnh hưởng có ghi chú; chỗ khách chưa quyết giữ nguyên giả định và ghi hạn mới.'
+  dinh_nghia_xong: []
+- key: DSG-01-1/BRSE
+  cha: DSG-01-1
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Chốt thiết kế FG-03–FG-05: lô, 相対, せり (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: Viết tài liệu rà soát tiếng Nhật cho FG-03 tới FG-05 gửi khách trước họp, dẫn buổi họp, viết biên bản khách xác nhận và ghi câu trả lời vào từng INV của ba nhóm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu rà soát tiếng Nhật gửi người phụ trách nghiệp vụ phía khách trước họp, có người thứ hai đọc, ngày gửi ghi ở issue.
+  - Biên bản tiếng Nhật có xác nhận của khách kèm ngày; bản sao gửi PM và BE-1.
+  - Mỗi INV của FG-03 tới FG-05 có câu trả lời kèm ngày và người trả lời, hoặc hạn mới và lý do.
+  dinh_nghia_xong: []
+- key: DSG-01-2
+  cha: E20
+  tracker: story
+  title_vi: 'Chốt thiết kế FG-06–FG-08: sửa, giao, khoá (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 2/2, tiếp sau DSG-01-1: Tech Lead (vị trí BE-1) cùng BrSE rà với khách spec LAB-4 của FG-06 sửa sau chốt, FG-07 giao hàng và FG-08 đối soát ngày trước khi nhóm vào sprint; điểm nặng là cấp duyệt 赤伝 (bút toán đảo, P-16), dung sai 精算 (P-13) và ai khoá 業務日 (ngày nghiệp vụ). Cùng đầu ra như phần 1: spec sửa ở lần phát hành kế tiếp của kho spec LAB-4, PREMISE cập nhật, biên bản khách xác nhận, INV có đáp; phần này mang tiêu chí tổng của cả sáu nhóm FG-03 tới FG-08. Là một phần theo nhóm của EF-01 LAB-1 (BrSE, 45 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Spec LAB-4 của FG-06, FG-07, FG-08; dòng PREMISE và chỗ hở G mà issue của ba nhóm trỏ; 9 INV của ba nhóm (3 mỗi nhóm), trong đó INV-Q-SD2 là câu nội bộ, Tech Lead đáp. Nguồn: EF-01 (effort-other.yaml:6 của LAB-1).'
+  luong_chinh:
+  - BE-1 gom dòng PREMISE, chỗ hở G và INV còn mở của FG-06 tới FG-08 thành danh sách điểm cần khách quyết, mỗi điểm kèm giả định đang dùng và phương án đề xuất; INV-Q-SD2 Tech Lead tự đáp.
+  - BrSE viết tài liệu rà soát tiếng Nhật cho ba nhóm, người thứ hai đọc, gửi khách trước họp.
+  - 'Họp với khách: BrSE dẫn, BE-1 giải thích kỹ thuật; khách quyết từng điểm, điểm chưa quyết ghi hạn mới.'
+  - BrSE viết biên bản tiếng Nhật, khách xác nhận; câu trả lời ghi vào từng INV kèm ngày và người trả lời.
+  - BE-1 sửa spec LAB-4 và PREMISE theo câu trả lời, ghi chú ở issue bị ảnh hưởng; PM đổi sprint nếu đáp khác giả định.
+  tieu_chi_nghiem_thu:
+  - Khi họp xong thì mỗi INV của ba nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới ghi ở issue.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev của FG-06 tới FG-08 bắt đầu.
+  - Khi spec cần sửa thì bản sửa nằm ở lần phát hành kế tiếp của kho spec LAB-4 và issue liên quan trỏ đúng mã spec.
+  - Khi cả hai phần xong thì 19 INV của sáu nhóm FG-03 tới FG-08 đều đã đóng hoặc có hạn mới, và biên bản của cả hai buổi có xác nhận của khách kèm ngày.
+  dinh_nghia_xong:
+  - 'INV của ba nhóm đã đóng hoặc có hạn mới: INV-Q-02, INV-FG06-DONG-DAO, INV-FG06-MA-TRAN-QUYEN, INV-Q-SD1, INV-FG07-XAC-NHAN, INV-FG07-SO-CAN-GIAO, INV-Q-SD2, INV-FG08-KHOA-NGAY, INV-FG08-LUAT-DOI-SOAT.'
+- key: DSG-01-2/BE
+  cha: DSG-01-2
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt thiết kế FG-06–FG-08: sửa, giao, khoá (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Gom dòng PREMISE, chỗ hở G và INV còn mở của FG-06 tới FG-08 thành danh sách điểm cần khách quyết kèm phương án đề xuất, tự đáp INV-Q-SD2; sau họp sửa spec LAB-4 và PREMISE của ba nhóm theo câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Danh sách điểm cần quyết: mỗi điểm trỏ mã P, G hoặc INV của FG-06 tới FG-08, ghi giả định đang dùng và phương án đề xuất; gửi BrSE trước buổi họp.'
+  - INV-Q-SD2 có câu trả lời của Tech Lead kèm ngày, không chờ khách.
+  - 'Sau họp: spec LAB-4 và dòng PREMISE sửa theo câu trả lời, issue bị ảnh hưởng có ghi chú; chỗ khách chưa quyết giữ nguyên giả định và ghi hạn mới.'
+  dinh_nghia_xong: []
+- key: DSG-01-2/BRSE
+  cha: DSG-01-2
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Chốt thiết kế FG-06–FG-08: sửa, giao, khoá (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: Viết tài liệu rà soát tiếng Nhật cho FG-06 tới FG-08 gửi khách trước họp, dẫn buổi họp, viết biên bản khách xác nhận và ghi câu trả lời vào từng INV của ba nhóm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu rà soát tiếng Nhật gửi người phụ trách nghiệp vụ phía khách trước họp, có người thứ hai đọc, ngày gửi ghi ở issue.
+  - Biên bản tiếng Nhật có xác nhận của khách kèm ngày; bản sao gửi PM và BE-1.
+  - Mỗi INV của FG-06 tới FG-08 có câu trả lời kèm ngày và người trả lời, hoặc hạn mới và lý do.
+  dinh_nghia_xong: []
+- key: DSG-02
+  cha: E20
+  tracker: story
+  title_vi: 'Chốt thiết kế với khách: thưởng FG-09, FG-10'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Tech Lead (vị trí BE-1) cùng BrSE rà với khách spec LAB-4 của hai nhóm tài chính FG-09, FG-10: 完納奨励金 (thưởng thanh toán đủ hạn) và bản quy tắc, biểu suất có phiên bản trước khi nhóm vào sprint, để lá dev không làm trên giả định khách chưa thấy; nặng nhất là bảng 交付率 (suất chi thưởng) và 適格金額 (số tiền đủ điều kiện) đang theo giả định có nguồn GD-17 (P-10), ranh 対象期 (kỳ xét), cách đếm trần đổi bản quy tắc mỗi năm, số người giữ vai lập và duyệt; tiền thưởng sai một yên là tranh chấp nên phải chốt trước khi viết lá BE. Đầu ra: spec sửa ở lần phát hành kế tiếp của kho spec LAB-4, PREMISE cập nhật, biên bản khách xác nhận, INV có đáp. Là phần theo nhóm của EF-01 LAB-1 (BrSE, 45 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Spec LAB-4 của nhóm; dòng PREMISE, chỗ hở G mà issue của nhóm trỏ; 7 INV của nhóm; INV-TECH-304 là câu nội bộ, Tech Lead đáp. Nguồn: EF-01 (effort-other.yaml:6 của LAB-1).'
+  luong_chinh:
+  - BE-1 gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết, mỗi điểm kèm giả định đang dùng và phương án đề xuất.
+  - BrSE viết tài liệu rà soát tiếng Nhật, người thứ hai đọc, gửi khách trước họp.
+  - 'Họp với khách: BrSE dẫn, BE-1 giải thích kỹ thuật; khách quyết từng điểm, điểm chưa quyết ghi hạn mới.'
+  - BrSE viết biên bản tiếng Nhật, khách xác nhận; câu trả lời ghi vào từng INV kèm ngày và người trả lời.
+  - BE-1 sửa spec LAB-4 và PREMISE theo câu trả lời, ghi chú ở issue bị ảnh hưởng; PM đổi sprint nếu đáp khác giả định.
+  tieu_chi_nghiem_thu:
+  - Khi họp xong thì mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới ghi ở issue.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev của nhóm bắt đầu.
+  - Khi spec cần sửa thì bản sửa nằm ở lần phát hành kế tiếp của kho spec LAB-4 và issue liên quan trỏ đúng mã spec.
+  - Khi biên bản gửi đi thì có xác nhận của khách kèm ngày và người thứ hai đã đọc.
+  dinh_nghia_xong:
+  - 'INV của nhóm đã đóng hoặc có hạn mới: INV-GD-03, INV-TECH-304, INV-Q-23, INV-FG09-CHENH-LECH, INV-FG09-GHI-DE, INV-Q-24, INV-Q-09.'
+- key: DSG-02/BE
+  cha: DSG-02
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt thiết kế với khách: thưởng FG-09, FG-10'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết kèm phương án đề xuất; sau họp sửa spec LAB-4 và PREMISE theo câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Danh sách điểm cần quyết: mỗi điểm trỏ mã P, G hoặc INV, ghi giả định đang dùng và phương án đề xuất; gửi BrSE trước buổi họp.'
+  - 'Sau họp: spec LAB-4 và dòng PREMISE sửa theo câu trả lời, issue bị ảnh hưởng có ghi chú; chỗ khách chưa quyết giữ nguyên giả định và ghi hạn mới.'
+  dinh_nghia_xong: []
+- key: DSG-02/BRSE
+  cha: DSG-02
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Chốt thiết kế với khách: thưởng FG-09, FG-10'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: Viết tài liệu rà soát tiếng Nhật gửi khách trước họp, dẫn buổi họp, viết biên bản khách xác nhận và ghi câu trả lời vào từng INV của nhóm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu rà soát tiếng Nhật gửi người phụ trách nghiệp vụ phía khách trước họp, có người thứ hai đọc, ngày gửi ghi ở issue.
+  - Biên bản tiếng Nhật có xác nhận của khách kèm ngày; bản sao gửi PM và BE-1.
+  - Mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới và lý do.
+  dinh_nghia_xong: []
+- key: DSG-03
+  cha: E20
+  tracker: story
+  title_vi: 'Chốt thiết kế với khách: báo cáo FG-11 tới FG-14'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Tech Lead (vị trí BE-1) cùng BrSE rà với khách spec LAB-4 của bốn nhóm FG-11 tới FG-14: báo cáo và xuất kế toán, thông báo và cảnh báo, kiểm toán và dữ liệu cá nhân, lưu trữ và đồng bộ trước khi nhóm vào sprint, để lá dev không làm trên giả định khách chưa thấy; nặng nhất là kết nối hệ kế toán ngoài đang theo xuất tệp một chiều (P-17), chỉ số cho báo cáo tháng, báo cáo ngày do người chạy hay hệ tự lập, mức khẩn thông báo, xoá dữ liệu cá nhân trên bảng chỉ-thêm, kho lưu lạnh (P-19). Đầu ra: spec sửa ở lần phát hành kế tiếp của kho spec LAB-4, PREMISE cập nhật, biên bản khách xác nhận, INV có đáp. Là phần theo nhóm của EF-01 LAB-1 (BrSE, 45 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Spec LAB-4 của nhóm; dòng PREMISE, chỗ hở G mà issue của nhóm trỏ; 7 INV của nhóm. Nguồn: EF-01 (effort-other.yaml:6 của LAB-1).'
+  luong_chinh:
+  - BE-1 gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết, mỗi điểm kèm giả định đang dùng và phương án đề xuất.
+  - BrSE viết tài liệu rà soát tiếng Nhật, người thứ hai đọc, gửi khách trước họp.
+  - 'Họp với khách: BrSE dẫn, BE-1 giải thích kỹ thuật; khách quyết từng điểm, điểm chưa quyết ghi hạn mới.'
+  - BrSE viết biên bản tiếng Nhật, khách xác nhận; câu trả lời ghi vào từng INV kèm ngày và người trả lời.
+  - BE-1 sửa spec LAB-4 và PREMISE theo câu trả lời, ghi chú ở issue bị ảnh hưởng; PM đổi sprint nếu đáp khác giả định.
+  tieu_chi_nghiem_thu:
+  - Khi họp xong thì mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới ghi ở issue.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev của nhóm bắt đầu.
+  - Khi spec cần sửa thì bản sửa nằm ở lần phát hành kế tiếp của kho spec LAB-4 và issue liên quan trỏ đúng mã spec.
+  - Khi biên bản gửi đi thì có xác nhận của khách kèm ngày và người thứ hai đã đọc.
+  dinh_nghia_xong:
+  - 'INV của nhóm đã đóng hoặc có hạn mới: INV-Q-04, INV-Q-17, INV-Q-18, INV-FG11-BAO-CAO-NGAY, INV-FG12-MUC-KHAN, INV-FG13-YEU-CAU-XOA, INV-Q-19.'
+- key: DSG-03/BE
+  cha: DSG-03
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt thiết kế với khách: báo cáo FG-11 tới FG-14'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết kèm phương án đề xuất; sau họp sửa spec LAB-4 và PREMISE theo câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Danh sách điểm cần quyết: mỗi điểm trỏ mã P, G hoặc INV, ghi giả định đang dùng và phương án đề xuất; gửi BrSE trước buổi họp.'
+  - 'Sau họp: spec LAB-4 và dòng PREMISE sửa theo câu trả lời, issue bị ảnh hưởng có ghi chú; chỗ khách chưa quyết giữ nguyên giả định và ghi hạn mới.'
+  dinh_nghia_xong: []
+- key: DSG-03/BRSE
+  cha: DSG-03
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Chốt thiết kế với khách: báo cáo FG-11 tới FG-14'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: Viết tài liệu rà soát tiếng Nhật gửi khách trước họp, dẫn buổi họp, viết biên bản khách xác nhận và ghi câu trả lời vào từng INV của nhóm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu rà soát tiếng Nhật gửi người phụ trách nghiệp vụ phía khách trước họp, có người thứ hai đọc, ngày gửi ghi ở issue.
+  - Biên bản tiếng Nhật có xác nhận của khách kèm ngày; bản sao gửi PM và BE-1.
+  - Mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới và lý do.
+  dinh_nghia_xong: []
+- key: DSG-04
+  cha: E20
+  tracker: story
+  title_vi: 'Chốt thiết kế với khách: nền, FG-01, FG-02'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Tech Lead (vị trí BE-1) cùng BrSE rà với khách spec LAB-4 của phần nền E15 tới E19 cùng FG-01 (tài khoản, phiên, quyền) và FG-02 (tư cách người tham gia), nhóm vào sprint sớm nhất nên rà trước Sprint 1 (09/11/2026, P-51) trước khi nhóm vào sprint, để lá dev không làm trên giả định khách chưa thấy; nặng nhất là ngưỡng phiên và khoá tạm (P-15), vai nội bộ và bảy vai chưa gán trong ma trận quyền (P-12), ngưỡng 失効間近 (tư cách sắp hết hạn, P-09), trạng thái 再審査 (xét lại, P-29), ngôn ngữ giao diện (P-55), nguồn di trú, mẫu tablet, mã hoá tệp xuất và chuẩn tablet (P-11). Đầu ra: spec sửa ở lần phát hành kế tiếp của kho spec LAB-4, PREMISE cập nhật, biên bản khách xác nhận, INV có đáp. Là phần theo nhóm của EF-01 LAB-1 (BrSE, 45 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Spec LAB-4 của nhóm; dòng PREMISE, chỗ hở G mà issue của nhóm trỏ; 8 INV của nhóm. Nguồn: EF-01 (effort-other.yaml:6 của LAB-1).'
+  luong_chinh:
+  - BE-1 gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết, mỗi điểm kèm giả định đang dùng và phương án đề xuất.
+  - BrSE viết tài liệu rà soát tiếng Nhật, người thứ hai đọc, gửi khách trước họp.
+  - 'Họp với khách: BrSE dẫn, BE-1 giải thích kỹ thuật; khách quyết từng điểm, điểm chưa quyết ghi hạn mới.'
+  - BrSE viết biên bản tiếng Nhật, khách xác nhận; câu trả lời ghi vào từng INV kèm ngày và người trả lời.
+  - BE-1 sửa spec LAB-4 và PREMISE theo câu trả lời, ghi chú ở issue bị ảnh hưởng; PM đổi sprint nếu đáp khác giả định.
+  tieu_chi_nghiem_thu:
+  - Khi họp xong thì mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới ghi ở issue.
+  - Khi khách đáp khác giả định thì dòng PREMISE và issue bị ảnh hưởng được sửa trước khi lá dev của nhóm bắt đầu.
+  - Khi spec cần sửa thì bản sửa nằm ở lần phát hành kế tiếp của kho spec LAB-4 và issue liên quan trỏ đúng mã spec.
+  - Khi biên bản gửi đi thì có xác nhận của khách kèm ngày và người thứ hai đã đọc.
+  dinh_nghia_xong:
+  - 'INV của nhóm đã đóng hoặc có hạn mới: INV-Q-SD3, INV-Q-SD4, INV-GD-02, INV-FG02-TRANG-THAI, INV-UI-NGON-NGU, INV-Q-01, INV-Q-12, INV-GD-04.'
+- key: DSG-04/BE
+  cha: DSG-04
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Chốt thiết kế với khách: nền, FG-01, FG-02'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Gom dòng PREMISE, chỗ hở G và INV còn mở của nhóm thành danh sách điểm cần khách quyết kèm phương án đề xuất; sau họp sửa spec LAB-4 và PREMISE theo câu trả lời.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Danh sách điểm cần quyết: mỗi điểm trỏ mã P, G hoặc INV, ghi giả định đang dùng và phương án đề xuất; gửi BrSE trước buổi họp.'
+  - 'Sau họp: spec LAB-4 và dòng PREMISE sửa theo câu trả lời, issue bị ảnh hưởng có ghi chú; chỗ khách chưa quyết giữ nguyên giả định và ghi hạn mới.'
+  dinh_nghia_xong: []
+- key: DSG-04/BRSE
+  cha: DSG-04
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Chốt thiết kế với khách: nền, FG-01, FG-02'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: Viết tài liệu rà soát tiếng Nhật gửi khách trước họp, dẫn buổi họp, viết biên bản khách xác nhận và ghi câu trả lời vào từng INV của nhóm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Tài liệu rà soát tiếng Nhật gửi người phụ trách nghiệp vụ phía khách trước họp, có người thứ hai đọc, ngày gửi ghi ở issue.
+  - Biên bản tiếng Nhật có xác nhận của khách kèm ngày; bản sao gửi PM và BE-1.
+  - Mỗi INV của nhóm có câu trả lời kèm ngày và người trả lời, hoặc hạn mới và lý do.
+  dinh_nghia_xong: []

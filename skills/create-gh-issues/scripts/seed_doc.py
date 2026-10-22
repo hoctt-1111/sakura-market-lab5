@@ -13,8 +13,9 @@ from lib import LoiBoSinh
 TIEN_TO = {"epic": "[EPIC]", "story": "[STORY]", "devtask": "[DEV TASK]", "testdesign": "[TEST DESIGN]",
            "investigation": "[INVESTIGATION]"}
 TANG = {"epic": 0, "story": 1, "investigation": 1, "devtask": 2, "testdesign": 2}  # thứ tự đẩy: cha trước con
-LEAF_LOAI = ("FE", "BE", "DB", "TEST", "INFRA")
-LEAF_TRACKER = {"FE": "devtask", "BE": "devtask", "DB": "devtask", "INFRA": "devtask", "TEST": "testdesign"}
+LEAF_LOAI = ("FE", "BE", "DB", "TEST", "INFRA", "PM", "BRSE")  # 22/10, plan 261021-2151: thêm PM (quản lý sprint), BRSE (cầu nối khách)
+LEAF_TRACKER = {"FE": "devtask", "BE": "devtask", "DB": "devtask", "INFRA": "devtask", "PM": "devtask", "BRSE": "devtask",
+                "TEST": "testdesign"}
 VAN = ("mo_ta", "pham_vi", "luong_chinh", "tieu_chi_nghiem_thu", "dinh_nghia_xong")
 MANG_THEO = VAN + ("gap_refs", "premise_refs")  # trường người viết; `check --so` không so các trường này
 REF_GOC = ("sc", "api", "tech", "bang", "fr", "adr", "nfr")

@@ -56,7 +56,7 @@ items:
   - type:story
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -128,7 +128,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:jst
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01
@@ -162,7 +162,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:jst
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-06
@@ -229,7 +229,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -295,7 +295,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01
@@ -358,7 +358,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -423,7 +423,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01
@@ -488,7 +488,7 @@ items:
   - constraint:hitl
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -566,7 +566,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:jst
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01
@@ -634,7 +634,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -697,7 +697,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01

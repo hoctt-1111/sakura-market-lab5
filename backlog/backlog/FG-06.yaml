@@ -51,7 +51,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -89,7 +89,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-2
+  owner: FE-1
   priority: 3
   premise_refs:
   - P-03
@@ -216,7 +216,7 @@ items:
     nfr: []
   labels:
   - type:story
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -250,7 +250,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-2
+  owner: FE-1
   priority: 3
   premise_refs: []
   gap_refs: []
@@ -337,7 +337,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -375,7 +375,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-2
+  owner: FE-1
   priority: 3
   premise_refs:
   - P-03
@@ -500,7 +500,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -539,7 +539,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-2
+  owner: FE-1
   priority: 3
   premise_refs:
   - P-03

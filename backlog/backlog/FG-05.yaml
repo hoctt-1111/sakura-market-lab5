@@ -54,7 +54,7 @@ items:
   - constraint:hitl
   - constraint:two-tier
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -128,7 +128,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:two-tier
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-05
@@ -166,7 +166,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:two-tier
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-04
@@ -247,7 +247,7 @@ items:
   - constraint:hitl
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-12
@@ -326,7 +326,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:jst
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-01
@@ -366,7 +366,7 @@ items:
   - team:backend
   - constraint:hitl
   - constraint:jst
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-04
@@ -431,7 +431,7 @@ items:
   - type:story
   - constraint:aitai
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-18
@@ -474,7 +474,7 @@ items:
   - type:devtask
   - team:backend
   - constraint:aitai
-  owner: BE-1
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-18

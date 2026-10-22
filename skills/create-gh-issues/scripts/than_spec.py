@@ -17,6 +17,8 @@ THU_TU = {  # thứ tự dòng «Dữ liệu từ spec» theo loại issue
     "BE": ("api", "bang", "ghi_doc", "validation", "nhan", "cha", "epic"),
     "DB": ("bang", "ghi_doc", "nhan", "cha", "epic"),
     "INFRA": ("nhan", "cha", "epic"),
+    "PM": ("nhan", "cha", "epic"),  # 22/10, plan 261021-2151
+    "BRSE": ("fr", "nhan", "cha", "epic"),
     "TEST": ("validation", "fr", "api", "tang"),
 }
 TK_DAU = "trien_khai."

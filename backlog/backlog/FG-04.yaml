@@ -60,7 +60,7 @@ items:
   - constraint:two-tier
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -102,7 +102,7 @@ items:
   - constraint:aitai
   - constraint:two-tier
   - constraint:jst
-  owner: FE-2
+  owner: FE-1
   priority: 2
   premise_refs:
   - P-20
@@ -262,7 +262,7 @@ items:
   - constraint:aitai
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -302,7 +302,7 @@ items:
   - team:frontend
   - constraint:aitai
   - constraint:jst
-  owner: FE-2
+  owner: FE-1
   priority: 2
   premise_refs: []
   gap_refs:
@@ -407,7 +407,7 @@ items:
   labels:
   - type:story
   - constraint:aitai
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -446,7 +446,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:aitai
-  owner: FE-2
+  owner: FE-1
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -544,7 +544,7 @@ items:
   - constraint:aitai
   - constraint:two-tier
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 2
   premise_refs:
   - P-12
@@ -582,7 +582,7 @@ items:
   - team:frontend
   - constraint:aitai
   - constraint:two-tier
-  owner: FE-2
+  owner: FE-1
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -613,7 +613,7 @@ items:
   - team:backend
   - constraint:aitai
   - constraint:two-tier
-  owner: BE-2
+  owner: BE-1
   priority: 2
   premise_refs: []
   gap_refs:
@@ -681,7 +681,7 @@ items:
   labels:
   - type:story
   - constraint:aitai
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -716,7 +716,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:aitai
-  owner: FE-2
+  owner: FE-1
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -846,7 +846,7 @@ items:
   - type:story
   - constraint:aitai
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -945,7 +945,7 @@ items:
   - type:story
   - constraint:aitai
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -1044,7 +1044,7 @@ items:
   labels:
   - type:story
   - constraint:aitai
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -1143,7 +1143,7 @@ items:
   - constraint:two-tier
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-05
@@ -1256,7 +1256,7 @@ items:
   - type:story
   - constraint:aitai
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 2
   premise_refs:
   - P-20

@@ -46,7 +46,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -96,10 +96,184 @@ items:
   - 'Kiểm lại không đạt: lỗi về đang sửa, số lần mở lại tăng 1; từ chối không ghi lý do: bị chặn.'
   - 'Dựng bảng tổng hợp tuần từ dữ liệu thử: số đếm theo trạng thái và mức nghiêm trọng khớp danh sách lỗi.'
   dinh_nghia_xong: []
-- key: AC-1
+- key: QA-00
   cha: E17
   tracker: story
-  title_vi: Bên mua không có quyền 相対 bị chặn, có dòng audit denied
+  title_vi: Khung kiểm thử tích hợp và E2E
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: QA
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'QA dựng khung kiểm thử tích hợp và đầu cuối cho kho mã hệ đích: cách chạy ca tích hợp (API cùng CSDL thật) trong CI, cách chạy ca đầu cuối qua trình duyệt trên môi trường thử, bộ dữ liệu kiểm thử nạp lại được, và báo cáo kết quả gắn vào issue. Mười hai kịch bản AC1 tới AC12 của E17 và lá TEST của mọi story chạy trên khung này, nên QA-00 xong trước ca tích hợp đầu tiên. Là phần nền của EF-13 (QA, 70 man-day) và EF-14 (QA, 65 man-day) LAB-1, thành issue theo review PM 21/10.'
+  pham_vi: 'Kho mã hệ đích và CI của PLT-01; môi trường thử của PLT-02 với dữ liệu đã che (G-E15-03); bộ dữ liệu kiểm thử nền gồm bốn loại người tham gia của chợ, vài lô, một bản quy tắc có hiệu lực; mẫu ca tích hợp và mẫu ca đầu cuối; báo cáo kết quả theo mẫu định nghĩa xong TEST (môi trường, ngày chạy). Không gồm ca kiểm của story nào và không gồm đo NFR (E18). Nguồn: EF-13, EF-14 (effort-other.yaml:100, 107 của LAB-1); P-54.'
+  luong_chinh:
+  - QA cùng Tech Lead chọn cách chạy ca tích hợp với CSDL thật trong CI và công cụ chạy ca đầu cuối qua trình duyệt, kể cả cỡ màn tablet; ghi vào README kho mã.
+  - QA viết bộ dữ liệu kiểm thử nền nạp từ CSDL trống, chạy lại cho cùng kết quả, không chứa bản ghi thật.
+  - QA làm một ca tích hợp mẫu (gọi API, kiểm bảng) và một ca đầu cuối mẫu (đăng nhập, thao tác, kiểm CSDL), máy chạy đặt UTC+7 nhưng mọi so sánh ngày giờ theo JST.
+  - 'Infra nối vào CI của PLT-01: ca tích hợp chạy ở mỗi yêu cầu gộp mã; ca đầu cuối chạy theo lịch trên môi trường thử và trước mỗi lần bàn giao sprint.'
+  - QA làm báo cáo kết quả tự sinh (bản dựng, môi trường, ngày, số ca đạt và trượt) đính được vào issue.
+  tieu_chi_nghiem_thu:
+  - Khi một yêu cầu gộp mã làm đỏ một ca tích hợp thì CI đỏ và nhánh chính không nhận gộp.
+  - Khi nạp bộ dữ liệu nền hai lần từ CSDL trống thì hai lần cho cùng số dòng và cùng giá trị.
+  - Khi ca đầu cuối chạy trên máy đặt UTC+7 thì ngày giờ kiểm theo JST và ca mẫu xanh trên cỡ màn văn phòng lẫn tablet.
+  - Khi một lượt chạy xong thì báo cáo có bản dựng, môi trường, ngày chạy, số ca đạt và trượt, và đính được vào story.
+  dinh_nghia_xong:
+  - README kho mã có cách viết và chạy ca tích hợp, ca đầu cuối; lá TEST của story khác trỏ về đây.
+- key: QA-00/TEST
+  cha: QA-00
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khung kiểm thử tích hợp và E2E'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế bộ dữ liệu nền, ca tích hợp mẫu và ca đầu cuối mẫu, cùng cách đọc báo cáo kết quả cho lá TEST của mọi story.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bộ dữ liệu nền nạp hai lần từ CSDL trống cho cùng kết quả và không chứa trường cá nhân thật.
+  - Ca tích hợp mẫu đỏ khi cố ý sửa sai API mẫu và CI chặn gộp; ca đầu cuối mẫu xanh trên cỡ màn văn phòng và tablet với máy đặt UTC+7.
+  - Báo cáo kết quả của một lượt chạy có bản dựng, môi trường, ngày chạy, số ca đạt và trượt.
+  dinh_nghia_xong: []
+- key: REG-01-1
+  cha: E17
+  tracker: story
+  title_vi: Bảng phủ hồi quy và gom ca chạy một lệnh (1/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: QA
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 1/2 của bộ hồi quy REG-01: QA lập bảng phủ 14 nhóm chức năng FG-01 tới FG-14, gom ca từ lá TEST của story đã đóng và từ mười hai kịch bản AC1 tới AC12 cùng API-220 trên khung QA-00 thành bộ chạy được bằng một lệnh, và giữ bảng phủ cập nhật khi luồng chính đổi. Việc chạy trước phát hành và xử ca trượt nằm ở REG-01-2. Là phần của EF-14 LAB-1 (QA, 65 man-day), thành issue theo review PM 21/10.'
+  pham_vi: 'Bảng phủ 14 dòng, mỗi dòng một nhóm chức năng với luồng chính của story dẫn và ca hồi quy tương ứng; mười hai kịch bản AC; API-220; nhãn và lệnh chạy gộp. Không gồm lần chạy trước phát hành và quyết định khi trượt (REG-01-2); không gồm ca kiểm riêng của từng story và đo tải (E18). Nguồn: EF-14 của LAB-1; P-54.'
+  luong_chinh:
+  - 'QA lập bảng phủ: mỗi nhóm chức năng một dòng ghi luồng chính và ca hồi quy phủ nó; nhóm chưa có story đóng ghi «chưa phủ».'
+  - QA gom ca từ lá TEST của story đã đóng và từ AC1 tới AC12 vào bộ hồi quy, gắn nhãn để chạy được bằng một lệnh.
+  - QA chạy thử bộ hai lần trên cùng bản dựng để chắc lệnh gộp ổn định và báo cáo ra đúng khuôn.
+  - Khi một story đóng làm đổi luồng chính của nhóm chức năng, QA cập nhật ca hồi quy của nhóm đó trong cùng sprint.
+  tieu_chi_nghiem_thu:
+  - Khi một nhóm chức năng có story dẫn đã đóng mà bảng phủ chưa có ca hồi quy cho luồng chính thì bộ chưa được coi là đủ để phát hành.
+  - Khi chạy bộ bằng một lệnh thì ra báo cáo có số ca theo nhóm chức năng, số đạt và trượt, bản dựng và ngày chạy.
+  - Khi chạy bộ hai lần trên cùng bản dựng và cùng dữ liệu thì cùng kết quả, không ca chập chờn.
+  dinh_nghia_xong:
+  - Bảng phủ 14 nhóm chức năng đính ở issue.
+- key: REG-01-1/TEST
+  cha: REG-01-1
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Bảng phủ hồi quy và gom ca chạy một lệnh (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 1/2 REG-01: bảng phủ đủ dòng và lệnh chạy gộp ổn định.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bảng phủ 14 dòng, mỗi dòng trỏ luồng chính của story dẫn và ca hồi quy; dòng chưa phủ ghi rõ.
+  - 'Chạy bộ hai lần trên cùng bản dựng và cùng dữ liệu: cùng kết quả, không ca chập chờn.'
+  dinh_nghia_xong: []
+- key: REG-01-2
+  cha: E17
+  tracker: story
+  title_vi: Chạy hồi quy trước phát hành, xử ca trượt (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:story
+  owner: QA
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 2/2 của bộ hồi quy REG-01, dùng bộ REG-01-1 đã gom: trước mỗi phát hành lớn (đưa bản lên môi trường thử cho khách nghiệm thu, diễn tập REL-03, phát hành production REL-01) QA chạy bộ trên đúng bản dựng sẽ phát hành; có ca trượt thì PM quyết dừng hay chấp nhận kèm lý do. Kết quả bộ là điều kiện đi tiếp của phát hành; phần này mang tiêu chí tổng của REG-01.'
+  pham_vi: 'Lần chạy trước mỗi phát hành lớn trên môi trường thử với bản dựng sẽ phát hành; đường báo PM và quyết định khi trượt; báo cáo đính vào issue phát hành. Bảng phủ và lệnh gộp thuộc REG-01-1. Nguồn: EF-14 của LAB-1; P-54.'
+  luong_chinh:
+  - Trước mỗi phát hành lớn, QA chạy bộ trên đúng bản dựng sẽ phát hành, trên môi trường thử.
+  - QA đính báo cáo (số ca theo nhóm, đạt và trượt, bản dựng, ngày chạy) vào issue phát hành tương ứng.
+  - Có ca trượt thì QA báo PM; PM quyết dừng phát hành tới khi sửa, hoặc ghi quyết định chấp nhận kèm lý do vào issue phát hành.
+  - Sau mỗi lần phát hành lớn, QA cập nhật bảng phủ của REG-01-1 theo ca đã thêm hay đổi.
+  tieu_chi_nghiem_thu:
+  - Khi bộ hồi quy có ca trượt thì phát hành dừng, hoặc issue phát hành có quyết định chấp nhận của PM kèm lý do và ngày.
+  - Khi chạy trước REL-01 thì bản chạy đúng là bản dựng sẽ phát hành và báo cáo kết quả đính vào REL-01.
+  - Khi chạy trước lần đưa bản cho khách nghiệm thu hay trước REL-03 thì issue phát hành đó có báo cáo cùng khuôn.
+  dinh_nghia_xong:
+  - Bảng phủ 14 nhóm chức năng cập nhật ở mỗi lần phát hành lớn.
+- key: REG-01-2/TEST
+  cha: REG-01-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Chạy hồi quy trước phát hành, xử ca trượt (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 2/2 REG-01: bộ hồi quy chặn được phát hành khi có lỗi.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Chạy bộ trên một bản dựng có lỗi cố ý ở một nhóm chức năng: báo cáo đỏ đúng nhóm đó và bước phát hành dừng.'
+  - 'Ca trượt được chấp nhận: issue phát hành có quyết định của PM kèm lý do và ngày, không có thì bước phát hành vẫn dừng.'
+  dinh_nghia_xong: []
+- key: AC-1-1
+  cha: E17
+  tracker: story
+  title_vi: AC1 chuẩn bị dữ liệu và ca chốt bị chặn (1/2)
   spec_refs:
     sc: []
     api: []
@@ -116,31 +290,31 @@ items:
   - type:story
   - constraint:two-tier
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs:
   - P-12
   gap_refs:
   - G-E17-01
-  mo_ta: Kịch bản AC1 chứng minh lúc chốt 相対取引 (giao dịch thỏa thuận), máy chủ kiểm tư cách của bên mua chứ không tin giao diện. Bên mua chưa có 許可 (giấy phép) hay 承認 (chấp thuận) hợp lệ thì lần chốt bị từ chối, không có dòng giao dịch nào, và vết kiểm toán có một dòng bị từ chối. Kịch bản đi xuyên SC-030, API-208 và TECH-301 của FG-04.
-  pham_vi: Màn SC-030, API-208, luồng TECH-301; bảng `participants` (đọc), `transactions` (không được thêm dòng), `audit_log` (một dòng kết quả denied); quy tắc A1 của thiết kế hệ thống.
+  mo_ta: 'Phần 1/2 của kịch bản AC1: dựng dữ liệu trên môi trường thử và chạy ca chốt 相対取引 (giao dịch thỏa thuận) bị từ chối vì bên mua không có 許可 (giấy phép) hay 承認 (chấp thuận) hợp lệ. Phần này dừng ở mã lỗi và màn lý do; việc soi vết kiểm toán, gọi thẳng API và nghiệm thu với khách nằm ở AC-1-2.
+
+    Ràng buộc đặc thù: Tư cách bên mua xét ở hai tầng giấy và kiểm lại ở máy chủ lúc chốt, không tin trạng thái giao diện gửi lên.'
+  pham_vi: Màn SC-030, API-208, luồng TECH-301; bảng `participants` (đọc), `transactions` (không được thêm dòng); quy tắc A1 của thiết kế hệ thống. Không gồm kiểm `audit_log` và gọi thẳng API (AC-1-2).
   luong_chinh:
   - 'Chuẩn bị: QA tạo trên môi trường thử một bên mua không có giấy hợp lệ cho 相対, một lô còn hàng và một tài khoản của 取引運用 (nhóm vận hành giao dịch).'
   - 'Thực hiện: người vận hành nhập giao dịch 相対 cho bên mua đó ở SC-030 rồi bấm chốt.'
-  - 'Kiểm: API-208 trả 403 M_01 và màn hiện lý do ở SC-033.'
-  - QA đếm dòng transactions của lô và tìm dòng audit_log của lần chốt bị từ chối.
-  - Khách xem lại kết quả cùng BrSE và ký nghiệm thu.
+  - 'Kiểm: API-208 trả 403 M_01, màn hiện lý do ở SC-033 và số dòng transactions của lô không đổi.'
+  - QA ghi bộ dữ liệu đã dựng và kết quả vào issue để AC-1-2 chạy tiếp trên cùng dữ liệu.
   tieu_chi_nghiem_thu:
   - Khi bên mua không có giấy hợp lệ thì API-208 trả 403 M_01 và số dòng transactions của lô không đổi.
-  - Khi lần chốt bị từ chối thì audit_log có đúng một dòng kết quả denied, ghi người bấm của phiên, vai và giờ máy chủ.
-  - Khi gọi thẳng API-208 không qua màn thì kết quả vẫn như trên.
-  - Khách nghiệm thu qua BrSE; bằng chứng gồm ảnh màn lý do, dòng audit_log, số dòng giao dịch trước và sau, ghi vào story kèm ngày chạy.
+  - Khi lần chốt bị từ chối thì SC-033 hiện lý do từ chối, không hiện màn thành công.
+  - Khi phần này đóng thì issue có bộ dữ liệu đã dựng (bên mua, lô, tài khoản) để AC-1-2 dùng lại.
   dinh_nghia_xong:
-  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
-- key: AC-1/TEST
-  cha: AC-1
+  - Bộ dữ liệu chuẩn bị và ảnh màn lý do đính ở issue, AC-1-2 dùng lại không phải dựng lại.
+- key: AC-1-1/TEST
+  cha: AC-1-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Bên mua không có quyền 相対 bị chặn, audit ghi denied'
+  title_vi: 'Ca kiểm thử: AC1 chuẩn bị dữ liệu và ca chốt bị chặn (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -160,18 +334,92 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC1 trên môi trường thử với dữ liệu đã che.
+  mo_ta: 'Ca kiểm của phần 1/2 AC1: ca chốt bị chặn vì tư cách, kèm ca đối chứng với bên mua có giấy hợp lệ trên cùng lô.
+
+    Ràng buộc đặc thù: Ca đối chứng phải chứng minh lần chặn là do tầng giấy, không do lô hay quyền người nhập.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Bên mua không có giấy hợp lệ: 403 M_01, không thêm dòng transactions, có một dòng audit_log kết quả denied.'
-  - 'Gọi thẳng API-208 không qua SC-030: cùng kết quả như ca trên.'
+  - 'Bên mua không có giấy hợp lệ: 403 M_01, không thêm dòng transactions, SC-033 hiện lý do.'
   - 'Cùng lô với một bên mua có giấy hợp lệ: chốt được, chứng minh ca đầu bị chặn vì tư cách chứ không vì lô hay quyền người nhập.'
   dinh_nghia_xong: []
-- key: AC-2
+- key: AC-1-2
   cha: E17
   tracker: story
-  title_vi: Tư cách 失効 bị chặn lúc chốt
+  title_vi: AC1 kiểm audit, gọi thẳng API, nghiệm thu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC1
+    sd:
+    - A1
+  labels:
+  - type:story
+  - constraint:two-tier
+  - spec-gap
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-E17-01
+  mo_ta: 'Phần 2/2 của kịch bản AC1, chạy trên dữ liệu AC-1-1 đã dựng: soi vết kiểm toán của lần chốt bị từ chối, gọi thẳng API-208 không qua màn để chứng minh máy chủ tự kiểm, rồi khách nghiệm thu qua BrSE. Phần này mang tiêu chí tổng của AC1.
+
+    Ràng buộc đặc thù: Kiểm tư cách nằm ở máy chủ, nên gọi thẳng API phải cho cùng kết quả như qua màn.'
+  pham_vi: API-208 gọi thẳng; bảng `audit_log` (một dòng kết quả denied), `transactions` (đếm trước và sau); quy tắc A1; nghiệm thu với khách. Dữ liệu và ca qua màn thuộc AC-1-1.
+  luong_chinh:
+  - QA đếm dòng transactions của lô và tìm dòng audit_log của lần chốt bị từ chối ở AC-1-1.
+  - QA gọi thẳng API-208 cho cùng bên mua, không qua SC-030, rồi đếm lại transactions và audit_log.
+  - 'QA gom bằng chứng: ảnh màn lý do, dòng audit_log, số dòng giao dịch trước và sau, ngày chạy.'
+  - Khách xem lại kết quả cùng BrSE và ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi lần chốt bị từ chối thì audit_log có đúng một dòng kết quả denied, ghi người bấm của phiên, vai và giờ máy chủ.
+  - Khi gọi thẳng API-208 không qua màn thì kết quả vẫn là 403 M_01, không thêm dòng transactions và có thêm một dòng audit_log denied.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm ảnh màn lý do, dòng audit_log, số dòng giao dịch trước và sau, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-1-2/TEST
+  cha: AC-1-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC1 kiểm audit, gọi thẳng API, nghiệm thu (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC1
+    sd:
+    - A1
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 2/2 AC1: vết kiểm toán của lần chặn và đường gọi thẳng API-208.
+
+    Ràng buộc đặc thù: Dòng audit_log phải mang người của phiên và vai, không mang giá trị trình duyệt gửi lên.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Lần chốt bị từ chối ở AC-1-1: audit_log có đúng một dòng kết quả denied, ghi người của phiên, vai và giờ máy chủ.'
+  - 'Gọi thẳng API-208 không qua SC-030: 403 M_01, không thêm dòng transactions, thêm một dòng audit_log denied.'
+  dinh_nghia_xong: []
+- key: AC-2-1
+  cha: E17
+  tracker: story
+  title_vi: AC2 dữ liệu hai tầng giấy hết hạn, ca chặn (1/2)
   spec_refs:
     sc: []
     api: []
@@ -190,33 +438,112 @@ items:
   - constraint:two-tier
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-12
+  gap_refs:
+  - G-E17-01
+  mo_ta: 'Phần 1/2 của kịch bản AC2: dựng hai bên mua đang active mà hạn giấy đã qua, mỗi bên một tầng, rồi chạy ca chốt bị chặn. Hạn so với 業務日 (ngày nghiệp vụ) và lấy đúng cột của tầng giấy: 仲卸 (trung gian bán buôn) theo hạn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) theo hạn 承認 (chấp thuận). Ca phục hồi hạn, ca qua nửa đêm giờ Nhật và nghiệm thu nằm ở AC-2-2.
+
+    Ràng buộc đặc thù: Mỗi tầng giấy có bộ cột hạn riêng; máy chủ so hạn với 業務日 chứ không đọc cờ trạng thái.'
+  pham_vi: SC-030, API-208, TECH-301; bảng `participants` với hai bộ cột hạn của thiết kế đích; quy tắc A2, A3. Không gồm đường phục hồi qua SC-013 và ca giờ Nhật (AC-2-2).
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo hai bên mua đang active, một 仲卸 có hạn 許可 đã qua và một 売買参加者 có hạn 承認 đã qua so với 業務日 của lần chạy.'
+  - 'Thực hiện: người vận hành chốt một giao dịch 相対取引 (giao dịch thỏa thuận) với từng bên mua ở SC-030.'
+  - 'Kiểm: API-208 trả 422 M_21 cho cả hai, không có dòng transactions nào.'
+  - QA thử ghi một bên mua điền cả hai bộ cột hạn để thấy CSDL từ chối, rồi ghi dữ liệu đã dựng vào issue cho AC-2-2.
+  tieu_chi_nghiem_thu:
+  - Khi hạn của đúng tầng giấy đã qua tại 業務日 thì trả 422 M_21, bất kể cờ active.
+  - Khi dữ liệu của bên mua điền cả hai bộ cột 許可 và 承認 thì CSDL từ chối ghi, vì mỗi tầng chỉ có một bộ cột (A2).
+  - Khi phần này đóng thì issue có hạn giấy của hai bên mua và mã lỗi trả về để AC-2-2 dùng lại.
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  dinh_nghia_xong:
+  - Hai bên mua đã dựng và mã lỗi của từng lần chốt đính ở issue, AC-2-2 dùng lại không phải dựng lại.
+- key: AC-2-1/TEST
+  cha: AC-2-1
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC2 dữ liệu hai tầng giấy hết hạn, ca chặn (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC2
+    sd:
+    - A2
+    - A3
+  labels:
+  - type:testdesign
+  - constraint:two-tier
+  - constraint:jst
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 1/2 AC2: hai tầng giấy hết hạn mà trạng thái vẫn active đều bị chặn lúc chốt.
+
+    Ràng buộc đặc thù: Mỗi ca nhắm một tầng giấy và một bộ cột hạn, không gộp hai tầng vào một bên mua.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - '仲卸 (trung gian bán buôn) hết hạn 許可 (giấy phép), trạng thái active: 422 M_21, không thêm dòng giao dịch.'
+  - '売買参加者 (người tham gia mua bán) hết hạn 承認 (chấp thuận), trạng thái active: 422 M_21.'
+  - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
+  dinh_nghia_xong: []
+- key: AC-2-2
+  cha: E17
+  tracker: story
+  title_vi: AC2 ca phục hồi hạn, 02:31 JST, nghiệm thu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC2
+    sd:
+    - A2
+    - A3
+  labels:
+  - type:story
+  - constraint:two-tier
+  - constraint:jst
+  - spec-gap
+  owner: QA
   priority: 2
   premise_refs:
   - P-12
   gap_refs:
   - G-E17-01
   - G-FG04-02
-  mo_ta: 'Kịch bản AC2 chứng minh hạn giấy được so với ngày chốt chứ không đọc cờ trạng thái: bên mua có giấy đã quá hạn mà trạng thái vẫn active thì vẫn bị từ chối. Hạn lấy đúng cột của tầng giấy: 仲卸 (trung gian bán buôn) theo hạn 許可 (giấy phép), 売買参加者 (người tham gia mua bán) theo hạn 承認 (chấp thuận), nên 失効 (mất hiệu lực) không lọt qua chỉ vì tác vụ đổi trạng thái chưa chạy.'
-  pham_vi: SC-030, API-208, TECH-301; bảng `participants` với hai bộ cột hạn của thiết kế đích; quy tắc A2, A3; đường phục hồi qua SC-013.
+  mo_ta: 'Phần 2/2 của kịch bản AC2, chạy trên hai bên mua AC-2-1 đã dựng: dời hạn giấy sang sau 業務日 (ngày nghiệp vụ) để chốt lại được, chạy ca sau nửa đêm giờ Nhật khi ngày UTC còn là hôm trước, rồi khách nghiệm thu qua BrSE. Phần này mang tiêu chí tổng của AC2.
+
+    Ràng buộc đặc thù: Mốc so hạn là 業務日 theo giờ Nhật, đội chạy ở UTC+7 nên ca phải chạy ở giờ mà hai ngày lệch nhau.'
+  pham_vi: Đường phục hồi hạn qua SC-013; API-208 và TECH-301 ở ca giờ Nhật; quy tắc A2, A3; nghiệm thu với khách. Dữ liệu và ca chặn thuộc AC-2-1.
   luong_chinh:
-  - 'Chuẩn bị: QA tạo hai bên mua đang active, một 仲卸 có hạn 許可 đã qua và một 売買参加者 có hạn 承認 đã qua so với 業務日 (ngày nghiệp vụ) của lần chạy.'
-  - 'Thực hiện: người vận hành chốt một giao dịch 相対取引 (giao dịch thỏa thuận) với từng bên mua ở SC-030.'
-  - 'Kiểm: API-208 trả 422 M_21 cho cả hai, không có dòng transactions nào.'
-  - QA dời hạn của một bên sang sau 業務日 rồi chốt lại, để thấy lần từ chối trước là do hạn.
+  - QA dời hạn của một bên mua sang sau 業務日 qua SC-013 rồi chốt lại ở SC-030, để thấy lần từ chối ở AC-2-1 là do hạn.
+  - QA chạy lại ca chốt sau nửa đêm giờ Nhật, lúc ngày UTC của máy chủ còn là hôm trước, với bên mua có hạn đúng bằng 業務日.
+  - 'QA gom bằng chứng: hạn giấy của hai bên mua, mã lỗi trả về và số dòng giao dịch của từng lần chốt, ngày chạy.'
   - Khách và BrSE xem kết quả, ký nghiệm thu.
   tieu_chi_nghiem_thu:
-  - Khi hạn của đúng tầng giấy đã qua tại 業務日 thì trả 422 M_21, bất kể cờ active.
-  - Khi dữ liệu của bên mua điền cả hai bộ cột 許可 và 承認 thì CSDL từ chối ghi, vì mỗi tầng chỉ có một bộ cột (A2).
+  - Khi hạn đã dời sang sau 業務日 thì lần chốt lại thành công, chứng minh lần từ chối ở AC-2-1 là do hạn chứ không do dữ liệu khác.
   - Khi so hạn thì mốc là 業務日 theo giờ Nhật, không phải ngày theo giờ UTC của máy chủ (G-FG04-02).
   - Khách nghiệm thu qua BrSE; bằng chứng gồm hạn giấy của hai bên mua, mã lỗi trả về và số dòng giao dịch, ghi vào story kèm ngày chạy.
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong:
   - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
-- key: AC-2/TEST
-  cha: AC-2
+- key: AC-2-2/TEST
+  cha: AC-2-2
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Tư cách 失効 bị chặn lúc chốt'
+  title_vi: 'Ca kiểm thử: AC2 ca phục hồi hạn, 02:31 JST, nghiệm thu (2/2)'
   spec_refs:
     sc: []
     api: []
@@ -238,12 +565,13 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC2, nhắm vào việc kiểm hạn theo đúng tầng giấy và đúng 業務日 (ngày nghiệp vụ).
+  mo_ta: 'Ca kiểm của phần 2/2 AC2: phục hồi hạn qua SC-013 và ca so hạn sau nửa đêm giờ Nhật.
+
+    Ràng buộc đặc thù: Ca giờ Nhật chạy lúc ngày UTC và ngày JST khác nhau, nếu không ca không chứng minh được gì.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - '仲卸 (trung gian bán buôn) hết hạn 許可 (giấy phép), trạng thái active: 422 M_21, không thêm dòng giao dịch.'
-  - '売買参加者 (người tham gia mua bán) hết hạn 承認 (chấp thuận), trạng thái active: 422 M_21.'
+  - 'Dời hạn của một bên mua sang sau 業務日 (ngày nghiệp vụ) rồi chốt lại: chốt được, có dòng giao dịch.'
   - 'Chạy sau nửa đêm giờ Nhật khi ngày UTC còn là hôm trước: mốc so hạn là 業務日 giờ Nhật.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
@@ -267,7 +595,7 @@ items:
   - type:story
   - constraint:aitai
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs:
   - P-18
@@ -339,7 +667,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 3
   premise_refs: []
   gap_refs:
@@ -391,10 +719,10 @@ items:
   - 'Khoá đã có 4 lần duyệt trong năm, người khác duyệt bản thứ năm: 422 M_20.'
   - 'Lùi một bản rồi duyệt bản khác trong cùng năm: vẫn 422 M_20.'
   dinh_nghia_xong: []
-- key: AC-5
+- key: AC-5-1
   cha: E17
   tracker: story
-  title_vi: Kết quả 判定 chưa thành tiền khi chưa có người 確定; audit ghi người + thời điểm
+  title_vi: AC5 判定 và mọi đường không người xác nhận (1/2)
   spec_refs:
     sc: []
     api: []
@@ -413,7 +741,85 @@ items:
   - constraint:hitl
   - constraint:incentive
   - spec-gap
-  owner: PM
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-10
+  gap_refs:
+  - G-E17-01
+  - G-FG09-01
+  mo_ta: 'Phần 1/2 của kịch bản AC5: dựng hoá đơn trả đủ trong hạn và bản suất đang hiệu lực, chạy 判定 (xét) để có khoản 完納奨励金 (thưởng thanh toán đủ hạn) chưa xác nhận, rồi thử mọi đường không có thao tác người để chứng minh không đường nào tự chuyển sang đã xác nhận. Bước 確定 (xác nhận cuối) có người, đối chiếu số tiền và nghiệm thu nằm ở AC-5-2.
+
+    Ràng buộc đặc thù: Khoản thưởng chỉ thành tiền khi một người 確定, nên ca kiểm phải chứng minh không đường máy nào tự xác nhận.'
+  pham_vi: SC-080; API-215 (判定); TECH-304; bảng `incentives` (cột người và thời điểm xác nhận còn rỗng); quy tắc A6. Không gồm API-216 (確定) và đối chiếu số tiền (AC-5-2).
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo một hoá đơn trả đủ trong hạn và một bản suất đang hiệu lực, rồi chạy 判定 để có khoản thưởng chưa xác nhận.'
+  - 'Thực hiện: QA thử mọi đường không có thao tác người: chạy lại 判定, gọi các API khác, chờ tác vụ nền.'
+  - 'Kiểm: khoản thưởng vẫn chưa xác nhận, cột người xác nhận còn rỗng.'
+  - QA ghi hoá đơn, bản suất và khoản thưởng đã 判定 vào issue để AC-5-2 bấm 確定 trên đúng khoản đó.
+  tieu_chi_nghiem_thu:
+  - Khi chưa có thao tác 確定 thì không đường gọi nào làm khoản thưởng sang đã xác nhận.
+  - Khi chạy lại 判定 hay chờ tác vụ nền thì cột người xác nhận và thời điểm xác nhận vẫn rỗng.
+  - Khi phần này đóng thì issue có khoản thưởng đã 判定 và số tiền máy tính để AC-5-2 đối chiếu.
+  dinh_nghia_xong:
+  - Cách ghi bước 確定 trên bảng chỉ-thêm đã chốt ở SC-080/DB trước khi chạy (G-FG09-01).
+- key: AC-5-1/TEST
+  cha: AC-5-1
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC5 判定 và mọi đường không người xác nhận (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC5
+    sd:
+    - A6
+    - A9
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  - constraint:incentive
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 1/2 AC5: khoản thưởng đã 判定 (xét) không tự sang đã xác nhận qua bất kỳ đường máy nào.
+
+    Ràng buộc đặc thù: Ca phải liệt kê từng đường đã thử (判定 lại, API khác, tác vụ nền) và kết quả của từng đường.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Khoản thưởng đã 判定, không ai 確定 (xác nhận cuối): chạy lại 判定 và chờ tác vụ nền, trạng thái vẫn chưa xác nhận.'
+  - 'Gọi các API khác của FG-09 trong lúc chờ: cột người xác nhận và thời điểm xác nhận vẫn rỗng.'
+  dinh_nghia_xong: []
+- key: AC-5-2
+  cha: E17
+  tracker: story
+  title_vi: AC5 確定 có người, số tiền 110/100, nghiệm thu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC5
+    sd:
+    - A6
+    - A9
+  labels:
+  - type:story
+  - constraint:hitl
+  - constraint:incentive
+  - spec-gap
+  owner: QA
   priority: 2
   premise_refs:
   - P-10
@@ -421,28 +827,25 @@ items:
   gap_refs:
   - G-E17-01
   - G-FG09-01
-  mo_ta: 'Kịch bản AC5 chứng minh 完納奨励金 (thưởng thanh toán đủ hạn) chỉ thành tiền khi có người 確定 (xác nhận cuối): máy 判定 (xét) và tính số tiền, nhưng không đường nào tự chuyển khoản thưởng sang đã xác nhận. Số tiền nhân hệ số thuế 110/100 trước rồi mới cắt lẻ về yên.
+  mo_ta: 'Phần 2/2 của kịch bản AC5, chạy trên khoản thưởng AC-5-1 đã 判定 (xét): một người của 照合事務 (nhóm đối soát) bấm 確定 (xác nhận cuối) ở SC-080, hệ thống ghi người của phiên, giờ máy chủ và dòng audit_log; số tiền nhân hệ số thuế 110/100 trước rồi mới cắt lẻ về yên, khớp số tính tay. Khách và BrSE đối chiếu với cách tính của chợ rồi ký nghiệm thu; phần này mang tiêu chí tổng của AC5.
 
-    Ràng buộc đặc thù: Khoản thưởng chỉ thành tiền khi một người 確定, nên ca kiểm phải chứng minh không đường máy nào tự xác nhận.'
-  pham_vi: SC-080, SC-081; API-215 (判定), API-216 (確定); TECH-304; bảng `incentives` (cột người và thời điểm xác nhận), `audit_log`; quy tắc A6, A9.
+    Ràng buộc đặc thù: Người và giờ 確定 do máy chủ gán từ phiên; giá trị trình duyệt gửi kèm bị bỏ qua.'
+  pham_vi: SC-080, SC-081; API-216 (確定); TECH-304; bảng `incentives` (cột người và thời điểm xác nhận), `audit_log`; quy tắc A6, A9; nghiệm thu với khách. Dữ liệu và ca không người thuộc AC-5-1.
   luong_chinh:
-  - 'Chuẩn bị: QA tạo một hoá đơn trả đủ trong hạn và một bản suất đang hiệu lực, rồi chạy 判定 để có khoản thưởng chưa xác nhận.'
-  - 'Thực hiện 1: QA thử mọi đường không có thao tác người: chạy lại 判定, gọi các API khác, chờ tác vụ nền.'
-  - 'Kiểm 1: khoản thưởng vẫn chưa xác nhận, cột người xác nhận còn rỗng.'
-  - 'Thực hiện 2: một người của 照合事務 (nhóm đối soát) bấm 確定 ở SC-080.'
-  - 'Kiểm 2: có người của phiên, giờ máy chủ và dòng audit_log; số tiền khớp số tính tay theo công thức.'
+  - 'Thực hiện: một người của 照合事務 bấm 確定 ở SC-080 trên khoản thưởng AC-5-1 đã dựng.'
+  - 'Kiểm: có người của phiên, giờ máy chủ và dòng audit_log; số tiền khớp số tính tay theo công thức, có một hoá đơn trả quá hạn để thấy thưởng bằng 0.'
+  - QA gửi 確定 kèm người và giờ giả qua API-216 để thấy máy chủ vẫn lưu người của phiên và giờ máy chủ.
   - Khách và BrSE đối chiếu số tiền với cách tính của chợ, ký nghiệm thu.
   tieu_chi_nghiem_thu:
-  - Khi chưa có thao tác 確定 thì không đường gọi nào làm khoản thưởng sang đã xác nhận.
   - Khi người dùng 確定 thì hệ thống ghi người của phiên, giờ máy chủ và một dòng audit_log; người và giờ gửi từ trình duyệt bị bỏ qua.
   - Khi tính số tiền thì nhân hệ số thuế 110/100 trước, cắt lẻ về yên sau; hoá đơn trả quá hạn có thưởng bằng 0.
   - Khách nghiệm thu qua BrSE; bằng chứng gồm số tính tay, số của hệ thống, người và giờ 確定, dòng audit_log, ghi vào story kèm ngày chạy.
   dinh_nghia_xong:
-  - Cách ghi bước 確定 trên bảng chỉ-thêm đã chốt ở SC-080/DB trước khi chạy (G-FG09-01).
-- key: AC-5/TEST
-  cha: AC-5
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-5-2/TEST
+  cha: AC-5-2
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Chưa 確定 thì 判定 chưa thành tiền; audit ghi ai, lúc nào'
+  title_vi: 'Ca kiểm thử: AC5 確定 có người, số tiền 110/100, nghiệm thu (2/2)'
   spec_refs:
     sc: []
     api: []
@@ -464,18 +867,20 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC5, chứng minh kết quả 判定 (xét) luôn đi qua người 確定 (xác nhận cuối).
+  mo_ta: 'Ca kiểm của phần 2/2 AC5: bước 確定 (xác nhận cuối) có người và số tiền sau hệ số thuế.
+
+    Ràng buộc đặc thù: Số tiền kiểm bằng số tính tay độc lập, không lấy số của hệ thống làm chuẩn.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Khoản thưởng đã 判定, không ai 確定: chạy lại 判定 và chờ tác vụ nền, trạng thái vẫn chưa xác nhận.'
-  - 'Gửi 確定 kèm người và giờ giả: hệ thống lưu người của phiên và giờ máy chủ.'
+  - 'Gửi 確定 kèm người và giờ giả: hệ thống lưu người của phiên và giờ máy chủ, có một dòng audit_log.'
   - 'Hoá đơn cho số lẻ sau khi nhân hệ số thuế 110/100: số tiền là phần nguyên, khớp số tính tay.'
+  - 'Hoá đơn trả quá hạn: thưởng bằng 0.'
   dinh_nghia_xong: []
-- key: AC-6
+- key: AC-6-1
   cha: E17
   tracker: story
-  title_vi: Sửa sau khoá đi bằng bút toán đảo
+  title_vi: AC6 khoá ngày và hai lần ghi bị chặn (1/2)
   spec_refs:
     sc: []
     api: []
@@ -493,37 +898,32 @@ items:
   - type:story
   - constraint:hitl
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs:
-  - P-16
   - P-24
   gap_refs:
   - G-E17-01
-  - G-FG06-04
   - G-FG08-09
-  mo_ta: 'Kịch bản AC6 chứng minh 業務日 (ngày nghiệp vụ) đã khoá thì không sửa thẳng được: sai sót chỉ sửa qua yêu cầu điều chỉnh có duyệt, sinh dòng đảo hoặc dòng chênh lệch, dòng gốc giữ nguyên. Kịch bản đi xuyên FG-08 khoá ngày và FG-06 sửa bằng 赤伝 (bút toán đảo).
+  mo_ta: 'Phần 1/2 của kịch bản AC6: dựng giao dịch trong một 業務日 (ngày nghiệp vụ), người đối soát khoá ngày đó ở SC-071, rồi hai lần ghi thẳng vào ngày đã khoá (huỷ qua API-223 và ghi lần giao mới) đều bị chặn. Đường sửa qua yêu cầu điều chỉnh có duyệt và nghiệm thu nằm ở AC-6-2.
 
-    Ràng buộc đặc thù: Khoá ngày và duyệt điều chỉnh là hai bước người quyết; ca kiểm ghi ai khoá, ai duyệt và lúc nào.'
-  pham_vi: SC-071 (khoá ngày), API-223 (huỷ, bị chặn sau khoá), SC-050 và SC-052 (lập và duyệt điều chỉnh); bảng `business_day_locks`, `transactions`, `adjustment_requests`, `adjustment_entries`; quy tắc A7, A10.
+    Ràng buộc đặc thù: Khoá ngày là bước người quyết; ca kiểm ghi ai khoá và lúc nào, máy chỉ ghi nhận.'
+  pham_vi: SC-071 (khoá ngày), API-223 (huỷ, bị chặn sau khoá), đường ghi lần giao vào ngày đã khoá; bảng `business_day_locks`, `transactions`, `audit_log`; quy tắc A7. Không gồm SC-050, SC-052 và dòng điều chỉnh (AC-6-2).
   luong_chinh:
   - 'Chuẩn bị: QA tạo giao dịch trong một 業務日, rồi người đối soát khoá ngày đó ở SC-071.'
-  - 'Thực hiện 1: huỷ giao dịch qua API-223 và ghi một lần giao mới vào ngày đó.'
-  - 'Kiểm 1: cả hai bị chặn bằng mã ngày đã khoá (P-24) và có dòng audit_log.'
-  - 'Thực hiện 2: người dùng lập yêu cầu điều chỉnh ở SC-050, một người khác duyệt ở SC-052.'
-  - 'Kiểm 2: có dòng đảo hoặc dòng chênh lệch, dòng gốc không đổi, số đọc qua khung nhìn đã tính điều chỉnh.'
-  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  - 'Thực hiện: huỷ giao dịch qua API-223 và ghi một lần giao mới vào ngày đó.'
+  - 'Kiểm: cả hai bị chặn bằng mã ngày đã khoá (P-24), có dòng audit_log, dữ liệu không đổi.'
+  - QA ghi dòng khoá ngày, người khoá và giao dịch đã dựng vào issue để AC-6-2 lập điều chỉnh trên đúng giao dịch đó.
   tieu_chi_nghiem_thu:
   - Khi ghi thẳng vào ngày đã khoá thì bị chặn bằng mã ngày đã khoá, có dòng audit_log và dữ liệu không đổi.
-  - Khi yêu cầu điều chỉnh được duyệt thì có dòng adjustment_entries loại reverse hoặc delta, dòng gốc giữ nguyên.
-  - Khi người lập yêu cầu tự duyệt thì bị từ chối (P-16).
-  - 'Khách nghiệm thu qua BrSE; story ghi bằng chứng: dòng khoá ngày, hai lần bị chặn, dòng gốc trước và sau, dòng điều chỉnh, ngày chạy.'
+  - Khi khoá ngày ở SC-071 thì business_day_locks có dòng khoá ghi người khoá và giờ máy chủ, phân biệt được với mở lại.
+  - Khi phần này đóng thì issue có dòng khoá ngày và hai lần bị chặn để AC-6-2 dùng lại.
   dinh_nghia_xong:
-  - Nơi giữ dòng đảo (G-FG06-04) và cách bảng khoá ngày phân biệt khoá với mở lại (G-FG08-09) đã chốt trước khi chạy.
-- key: AC-6/TEST
-  cha: AC-6
+  - Cách bảng khoá ngày phân biệt khoá với mở lại (G-FG08-09) đã chốt trước khi chạy.
+- key: AC-6-1/TEST
+  cha: AC-6-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Sửa sau khoá đi bằng bút toán đảo'
+  title_vi: 'Ca kiểm thử: AC6 khoá ngày và hai lần ghi bị chặn (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -544,18 +944,95 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC6 cho đường sửa sau khoá 業務日 (ngày nghiệp vụ).
+  mo_ta: 'Ca kiểm của phần 1/2 AC6: hai đường ghi thẳng vào 業務日 (ngày nghiệp vụ) đã khoá đều bị chặn.
+
+    Ràng buộc đặc thù: Ca ghi rõ ai khoá ngày và lúc nào, lấy từ dòng khoá do máy chủ ghi.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - 'Huỷ giao dịch của ngày đã khoá qua API-223: bị chặn bằng mã ngày đã khoá, có dòng audit_log.'
+  - 'Ghi một lần giao mới vào ngày đã khoá: bị chặn bằng cùng mã, số dòng giao dịch và giao nhận không đổi.'
+  dinh_nghia_xong: []
+- key: AC-6-2
+  cha: E17
+  tracker: story
+  title_vi: AC6 điều chỉnh có duyệt sinh dòng đảo (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC6
+    sd:
+    - A10
+    - A7
+  labels:
+  - type:story
+  - constraint:hitl
+  - spec-gap
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-16
+  gap_refs:
+  - G-E17-01
+  - G-FG06-04
+  mo_ta: 'Phần 2/2 của kịch bản AC6, chạy trên giao dịch AC-6-1 đã khoá ngày: sai sót chỉ sửa qua yêu cầu điều chỉnh lập ở SC-050 và một người khác duyệt ở SC-052, sinh dòng đảo hoặc dòng chênh lệch theo cách 赤伝 (bút toán đảo) của FG-06, dòng gốc giữ nguyên. Khách nghiệm thu qua BrSE; phần này mang tiêu chí tổng của AC6.
+
+    Ràng buộc đặc thù: Duyệt điều chỉnh là bước người quyết, người lập và người duyệt là hai tài khoản; ca kiểm ghi ai duyệt và lúc nào.'
+  pham_vi: SC-050 và SC-052 (lập và duyệt điều chỉnh); bảng `adjustment_requests`, `adjustment_entries`, `transactions` (dòng gốc); quy tắc A10; nghiệm thu với khách. Khoá ngày và hai lần bị chặn thuộc AC-6-1.
+  luong_chinh:
+  - 'Thực hiện: người dùng lập yêu cầu điều chỉnh ở SC-050 cho giao dịch AC-6-1, một người khác duyệt ở SC-052.'
+  - 'Kiểm: có dòng đảo hoặc dòng chênh lệch, dòng gốc không đổi, số đọc qua khung nhìn đã tính điều chỉnh.'
+  - QA cho người lập tự duyệt yêu cầu để thấy bị từ chối, không sinh dòng điều chỉnh.
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi yêu cầu điều chỉnh được duyệt thì có dòng adjustment_entries loại reverse hoặc delta, dòng gốc giữ nguyên.
+  - Khi người lập yêu cầu tự duyệt thì bị từ chối (P-16).
+  - 'Khách nghiệm thu qua BrSE; story ghi bằng chứng: dòng khoá ngày, hai lần bị chặn, dòng gốc trước và sau, dòng điều chỉnh, ngày chạy.'
+  dinh_nghia_xong:
+  - Nơi giữ dòng đảo (G-FG06-04) đã chốt trước khi chạy; biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-6-2/TEST
+  cha: AC-6-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC6 điều chỉnh có duyệt sinh dòng đảo (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC6
+    sd:
+    - A10
+    - A7
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 2/2 AC6: điều chỉnh có duyệt sinh dòng đảo, dòng gốc không đổi, tự duyệt bị chặn.
+
+    Ràng buộc đặc thù: Ca tự duyệt chứng minh kết quả luôn đi qua một người duyệt khác người lập.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
   - 'Điều chỉnh có duyệt: thêm dòng reverse hoặc delta, số dòng và giá trị của dòng gốc không đổi.'
   - 'Người lập tự duyệt yêu cầu: bị từ chối, không sinh dòng điều chỉnh, chứng minh kết quả luôn đi qua người duyệt.'
   dinh_nghia_xong: []
-- key: AC-7
+- key: AC-7-1
   cha: E17
   tracker: story
-  title_vi: Thông báo thất bại thử lại đúng 3 lần rồi vào hàng đợi cảnh báo
+  title_vi: AC7 hỏng kênh email, thử lại đúng 3 lần (1/2)
   spec_refs:
     sc: []
     api: []
@@ -571,33 +1048,97 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E17-04
+  - G-FG12-02
+  mo_ta: 'Phần 1/2 của kịch bản AC7: Infra làm hỏng kênh email trên môi trường thử, hệ thống gửi lần đầu rồi thử lại đúng số lần cho phép, nhật ký gửi ghi trạng thái cuối thất bại, thông báo trong ứng dụng vẫn hiện và nghiệp vụ sinh sự kiện không dừng. Sự kiện mức Critical, cảnh báo sau 5 phút và nghiệm thu nằm ở AC-7-2.'
+  pham_vi: Module notify (FG-12) theo sự kiện EV2 với sự kiện thường; SC-121 (nhật ký gửi); bảng `notification_log`. Không gồm `alert_queue`, SC-122, SC-150 (AC-7-2).
+  luong_chinh:
+  - 'Chuẩn bị: Infra làm hỏng kênh email trên môi trường thử; QA tạo một bên tham gia có tư cách sắp hết hạn để sinh sự kiện thường.'
+  - 'Thực hiện: hệ thống gửi lần đầu rồi thử lại theo khoảng cách cấu hình (chưa có số); lần đầu và cả ba lần thử lại đều thất bại.'
+  - 'Kiểm: notification_log có trạng thái cuối thất bại, số lần thử lại bằng 3, không có lần gửi thứ năm; thông báo trong ứng dụng vẫn hiện.'
+  - QA ghi cấu hình kênh hỏng và các dòng notification_log vào issue để AC-7-2 chạy ca Critical trên cùng môi trường.
+  tieu_chi_nghiem_thu:
+  - Khi lần gửi đầu và cả ba lần thử lại đều thất bại thì notification_log có một dòng trạng thái cuối thất bại, số lần thử bằng 3, không có lần gửi thứ năm.
+  - Khi email lỗi thì thông báo trong ứng dụng vẫn hiện và nghiệp vụ sinh sự kiện vẫn hoàn tất.
+  - Khi phần này đóng thì issue có cấu hình kênh hỏng và dòng notification_log để AC-7-2 dùng lại.
+  dinh_nghia_xong:
+  - Tech Lead chốt cách đếm lần thử (G-FG12-02), kịch bản AC7 sửa theo đó (G-E17-04) trước khi chạy.
+- key: AC-7-1/TEST
+  cha: AC-7-1
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC7 hỏng kênh email, thử lại đúng 3 lần (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC7
+    sd:
+    - EV2
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 1/2 AC7: đếm lần thử lại khi email hỏng và nghiệp vụ không bị kéo theo.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Email hỏng, sự kiện thường: một lần gửi đầu và đúng 3 lần thử lại, một dòng nhật ký trạng thái cuối thất bại.'
+  - 'Email hỏng: thông báo trong ứng dụng vẫn hiện, giao dịch sinh sự kiện vẫn được ghi.'
+  dinh_nghia_xong: []
+- key: AC-7-2
+  cha: E17
+  tracker: story
+  title_vi: AC7 cảnh báo Critical sau 5 phút, nghiệm thu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC7
+    sd:
+    - EV2
+  labels:
+  - type:story
+  - spec-gap
+  owner: QA
   priority: 3
   premise_refs: []
   gap_refs:
   - G-E17-04
   - G-FG12-01
-  - G-FG12-02
   - G-FG14-06
-  mo_ta: 'Kịch bản AC7 chứng minh lỗi gửi thông báo không bị nuốt: khi kênh email hỏng, hệ thống gửi đúng số lần cho phép, ghi trạng thái cuối thất bại vào nhật ký gửi, và sự kiện mức Critical quá 5 phút thì người vận hành thấy cảnh báo. Thông báo trong ứng dụng vẫn hiện dù email lỗi, và nghiệp vụ sinh ra sự kiện không dừng lại.'
-  pham_vi: Module notify (FG-12) theo sự kiện EV2; SC-121 (nhật ký gửi), SC-122 (hàng đợi cảnh báo), SC-150 (bảng giám sát); bảng `notification_log`, `alert_queue`.
+  mo_ta: 'Phần 2/2 của kịch bản AC7, chạy trên môi trường AC-7-1 đã làm hỏng email: sự kiện mức Critical chưa gửi được sau 5 phút thì có dòng cảnh báo ở hàng đợi cảnh báo vận hành, hiện ở SC-122 và được đếm ở SC-150, không mất im lặng. Khách nghiệm thu qua BrSE; phần này mang tiêu chí tổng của AC7.'
+  pham_vi: Sự kiện Critical theo xếp mức của INV-FG12-MUC-KHAN (G-FG12-01); SC-122 (hàng đợi cảnh báo), SC-150 (bảng giám sát); bảng `alert_queue`; nghiệm thu với khách. Đếm lần thử lại thuộc AC-7-1.
   luong_chinh:
-  - 'Chuẩn bị: Infra làm hỏng kênh email trên môi trường thử; QA tạo một bên tham gia có tư cách sắp hết hạn và một sự kiện mà INV-FG12-MUC-KHAN xếp mức Critical (G-FG12-01).'
-  - 'Thực hiện: hệ thống gửi lần đầu rồi thử lại theo khoảng cách cấu hình (chưa có số); lần đầu và cả ba lần thử lại đều thất bại.'
-  - 'Kiểm 1: notification_log có trạng thái cuối thất bại, số lần thử lại bằng 3; thông báo trong ứng dụng vẫn hiện.'
-  - 'Kiểm 2: sau 5 phút, sự kiện Critical có một dòng alert_queue hiện ở SC-122 và được đếm ở SC-150.'
+  - 'Chuẩn bị: QA tạo một sự kiện mà INV-FG12-MUC-KHAN xếp mức Critical, trên môi trường thử còn hỏng email từ AC-7-1.'
+  - 'Kiểm: sau 5 phút, sự kiện Critical có một dòng alert_queue hiện ở SC-122 và được đếm ở SC-150.'
+  - 'QA gom bằng chứng: các dòng notification_log của AC-7-1, dòng cảnh báo, giờ sự kiện và giờ cảnh báo, ngày chạy.'
   - Khách và BrSE xem kết quả, ký nghiệm thu.
   tieu_chi_nghiem_thu:
-  - Khi lần gửi đầu và cả ba lần thử lại đều thất bại thì notification_log có một dòng trạng thái cuối thất bại, số lần thử bằng 3, không có lần gửi thứ năm.
   - Khi sự kiện mức Critical chưa gửi được sau 5 phút thì có cảnh báo ở hàng đợi cảnh báo vận hành, không mất im lặng.
-  - Khi email lỗi thì thông báo trong ứng dụng vẫn hiện và nghiệp vụ sinh sự kiện vẫn hoàn tất.
+  - Khi có dòng cảnh báo thì SC-122 hiện dòng đó và SC-150 đếm vào số lỗi gửi thông báo.
   - Khách nghiệm thu qua BrSE; bằng chứng gồm các dòng notification_log, dòng cảnh báo, giờ sự kiện và giờ cảnh báo, ghi vào story kèm ngày chạy.
   dinh_nghia_xong:
-  - Tech Lead chốt cách đếm lần thử (G-FG12-02) và nơi hiện cảnh báo, kịch bản AC7 sửa theo đó (G-E17-04).
-- key: AC-7/TEST
-  cha: AC-7
+  - Nơi hiện cảnh báo đã chốt (G-E17-04) trước khi chạy; biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-7-2/TEST
+  cha: AC-7-2
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Thông báo lỗi thử lại 3 lần rồi vào hàng đợi cảnh báo'
+  title_vi: 'Ca kiểm thử: AC7 cảnh báo Critical sau 5 phút, nghiệm thu (2/2)'
   spec_refs:
     sc: []
     api: []
@@ -616,13 +1157,12 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC7 cho việc gửi lại thông báo và cảnh báo khi email hỏng.
+  mo_ta: 'Ca kiểm của phần 2/2 AC7: cảnh báo vận hành cho sự kiện mức Critical không gửi được.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Email hỏng, sự kiện thường: một lần gửi đầu và đúng 3 lần thử lại, một dòng nhật ký trạng thái cuối thất bại.'
   - 'Email hỏng, sự kiện mức Critical: sau 5 phút có cảnh báo ở SC-122.'
-  - 'Email hỏng: thông báo trong ứng dụng vẫn hiện, giao dịch sinh sự kiện vẫn được ghi.'
+  - Dòng cảnh báo đó được đếm ở SC-150; giờ sự kiện và giờ cảnh báo cùng được ghi để đối chiếu mốc 5 phút.
   dinh_nghia_xong: []
 - key: AC-8
   cha: E17
@@ -644,7 +1184,7 @@ items:
   labels:
   - type:story
   - constraint:incentive
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs:
   - P-10
@@ -717,7 +1257,7 @@ items:
   labels:
   - type:story
   - constraint:jst
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs: []
   gap_refs: []
@@ -769,10 +1309,10 @@ items:
   - 'Đọc nhật ký kiểm toán của lần ghi 02:31 JST: giờ ghi theo JST, không theo UTC của máy chủ.'
   - Khi máy chạy kiểm thử đặt múi giờ UTC+7 và nhập lúc 02:31 JST thì 業務日 ghi đúng ngày JST và màn hiển thị giờ JST.
   dinh_nghia_xong: []
-- key: AC-10
+- key: AC-10-1
   cha: E17
   tracker: story
-  title_vi: 'Giao nhận nhiều lần: 完了, 一部引渡 hay 例外あり theo luỹ kế và ngoại lệ'
+  title_vi: AC10 giao hai lần và trả lại 10 kg (1/2)
   spec_refs:
     sc: []
     api: []
@@ -788,33 +1328,30 @@ items:
   labels:
   - type:story
   - constraint:hitl
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs:
   - P-13
   gap_refs: []
-  mo_ta: 'Kịch bản AC10 chứng minh giao dịch giao nhiều lần đổi trạng thái theo luỹ kế đã giao và ngoại lệ còn mở: thiếu là 一部引渡 (giao một phần), đủ là 完了 (xong), vượt có lý do là 例外あり (có ngoại lệ) tới khi 照合事務 (nhóm đối soát) đóng ngoại lệ, vượt không lý do bị chặn. Khớp nghĩa là dung sai 0, giả định nhà thầu chờ khách ở Q-SD1 (P-13).
+  mo_ta: 'Phần 1/2 của kịch bản AC10: giao dịch 相対取引 (giao dịch thỏa thuận) 100 kg được giao hai lần rồi trả lại 10 kg, trạng thái đổi theo luỹ kế đã giao: thiếu là 一部引渡 (giao một phần), đủ là 完了 (xong), trả lại mở ngoại lệ 返却 (trả lại) tới khi 照合事務 (nhóm đối soát) đóng. Khớp nghĩa là dung sai 0 (P-13). Hai ca giao vượt và nghiệm thu nằm ở AC-10-2.
 
-    Ràng buộc đặc thù: Ngoại lệ chỉ đóng khi 照合事務 bấm đóng kèm lý do; người đóng và giờ đóng do máy chủ gán, máy không tự khớp.'
-  pham_vi: SC-060 (ghi lần giao), SC-063 (ngoại lệ, đóng ngoại lệ); bảng `deliveries`, `delivery_exceptions`, `transactions` (trạng thái giao nhận), `audit_log`; quy tắc A8.
+    Ràng buộc đặc thù: Ngoại lệ 返却 chỉ đóng khi 照合事務 bấm đóng kèm lý do; người đóng và giờ đóng do máy chủ gán, máy không tự khớp.'
+  pham_vi: SC-060 (ghi lần giao), SC-063 (đóng ngoại lệ 返却); bảng `deliveries`, `delivery_exceptions`, `transactions` (trạng thái giao nhận), `audit_log`; quy tắc A8. Không gồm ca giao vượt 105 kg (AC-10-2).
   luong_chinh:
-  - 'Chuẩn bị: QA tạo các giao dịch 相対取引 (giao dịch thỏa thuận) 100 kg chưa giao lần nào (待機中, chờ giao), mỗi ca một giao dịch.'
-  - 'Ca 1: 配送部門 (bộ phận giao hàng) ghi lần giao 60 kg rồi 40 kg ở SC-060, sau đó ghi trả lại 10 kg; 照合事務 đóng ngoại lệ 返却 (trả lại).'
-  - 'Ca 2: ghi một lần giao 105 kg kèm lý do; 照合事務 đóng ngoại lệ ở SC-063 kèm lý do.'
-  - 'Ca 3: ghi một lần giao 105 kg không lý do.'
-  - QA đọc trạng thái, luỹ kế sau từng bước cùng các dòng delivery_exceptions, audit_log; khách và BrSE ký nghiệm thu.
+  - 'Chuẩn bị: QA tạo một giao dịch 相対取引 100 kg chưa giao lần nào (待機中, chờ giao).'
+  - 'Thực hiện: 配送部門 (bộ phận giao hàng) ghi lần giao 60 kg rồi 40 kg ở SC-060, sau đó ghi trả lại 10 kg.'
+  - 照合事務 đóng ngoại lệ 返却 ở SC-063 kèm lý do.
+  - QA đọc trạng thái, luỹ kế sau từng bước cùng các dòng delivery_exceptions và audit_log, ghi vào issue.
   tieu_chi_nghiem_thu:
-  - Khi giao 60 rồi 40 kg thì trạng thái là 一部引渡 (luỹ kế 60, còn 40) rồi 完了; trả lại 10 kg thì luỹ kế 90, 例外あり tới khi đóng ngoại lệ 返却, đóng xong là 一部引渡.
-  - Khi giao 105 kg có lý do thì trạng thái 例外あり, không 完了; có dòng ngoại lệ 引渡超過 (giao vượt) ở trạng thái 未処理 (chưa xử lý), người xác nhận và giờ JST do máy chủ gán.
-  - Khi 照合事務 đóng ngoại lệ đó thì trạng thái 完了, người đóng và giờ đóng do máy chủ gán, audit_log ghi lý do, trước và sau; số tính 精算 (quyết toán) là 100 kg (giả định nhà thầu, Q-SD1).
-  - Khi giao 105 kg không lý do thì máy chủ trả 422, không ghi dòng nào.
-  - Khách nghiệm thu qua BrSE; bằng chứng gồm các dòng deliveries, delivery_exceptions, trạng thái sau từng bước và dòng audit_log, ghi vào story kèm ngày chạy.
+  - Khi giao 60 rồi 40 kg thì trạng thái là 一部引渡 (luỹ kế 60, còn 40) rồi 完了.
+  - Khi trả lại 10 kg thì luỹ kế 90, trạng thái 例外あり (có ngoại lệ) tới khi đóng ngoại lệ 返却, đóng xong là 一部引渡.
+  - Khi 照合事務 đóng ngoại lệ 返却 thì người đóng và giờ đóng do máy chủ gán, audit_log ghi lý do, trước và sau.
   dinh_nghia_xong:
-  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
-- key: AC-10/TEST
-  cha: AC-10
+  - Trạng thái và luỹ kế sau từng bước đính ở issue kèm dòng delivery_exceptions, để AC-10-2 ghép vào bằng chứng nghiệm thu.
+- key: AC-10-1/TEST
+  cha: AC-10-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Trạng thái giao nhận nhiều lần theo luỹ kế'
+  title_vi: 'Ca kiểm thử: AC10 giao hai lần và trả lại 10 kg (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -834,18 +1371,91 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC10 cho trạng thái giao nhận nhiều lần, gồm ca chứng minh ngoại lệ chỉ đóng qua người của 照合事務 (nhóm đối soát).
+  mo_ta: 'Ca kiểm của phần 1/2 AC10: trạng thái giao nhận theo luỹ kế qua hai lần giao và một lần trả lại.
+
+    Ràng buộc đặc thù: Ngoại lệ 返却 (trả lại) chỉ đóng qua người của 照合事務 (nhóm đối soát), ca ghi người và giờ máy chủ gán.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - 'Giao dịch 100 kg giao 60 rồi 40 kg: 一部引渡 (giao một phần) rồi 完了 (xong); trả lại 10 kg: luỹ kế 90, 例外あり (có ngoại lệ) tới khi đóng ngoại lệ 返却, sau đó 一部引渡.'
-  - 'Giao 105 kg có lý do: 例外あり, ngoại lệ 未処理; không bước máy nào đưa về 完了 trước khi 照合事務 đóng; khi đóng kèm người và giờ giả thì máy chủ lưu người của phiên và giờ máy chủ.'
-  - 'Giao 105 kg không lý do: 422, số dòng deliveries không đổi.'
+  - 'Giao dịch 100 kg giao 60 rồi 40 kg: 一部引渡 (giao một phần) rồi 完了 (xong).'
+  - 'Trả lại 10 kg: luỹ kế 90, 例外あり (có ngoại lệ) tới khi đóng ngoại lệ 返却, sau đó 一部引渡; người đóng và giờ đóng do máy chủ gán.'
   dinh_nghia_xong: []
-- key: AC-11
+- key: AC-10-2
   cha: E17
   tracker: story
-  title_vi: Kết quả せり do người nhập; người xác nhận, thời điểm do máy chủ gán
+  title_vi: AC10 giao vượt có và không lý do (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC10
+    sd:
+    - A8
+  labels:
+  - type:story
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs:
+  - P-13
+  gap_refs: []
+  mo_ta: 'Phần 2/2 của kịch bản AC10: hai ca giao vượt trên giao dịch 相対取引 (giao dịch thỏa thuận) 100 kg, có lý do thì mở ngoại lệ 引渡超過 (giao vượt) tới khi 照合事務 (nhóm đối soát) đóng, không lý do thì bị chặn. Số tính 精算 (quyết toán) là 100 kg theo giả định dung sai 0 của Q-SD1 (P-13). Khách nghiệm thu qua BrSE; phần này mang tiêu chí tổng của AC10.
+
+    Ràng buộc đặc thù: Ngoại lệ giao vượt chỉ đóng khi 照合事務 bấm đóng kèm lý do; người đóng và giờ đóng do máy chủ gán, máy không tự khớp.'
+  pham_vi: SC-060 (ghi lần giao vượt), SC-063 (ngoại lệ 引渡超過, đóng ngoại lệ); bảng `deliveries`, `delivery_exceptions`, `transactions`, `audit_log`; quy tắc A8; nghiệm thu với khách. Ca giao hai lần và trả lại thuộc AC-10-1.
+  luong_chinh:
+  - 'Chuẩn bị: QA tạo hai giao dịch 相対取引 100 kg chưa giao lần nào (待機中, chờ giao), mỗi ca một giao dịch.'
+  - 'Ca có lý do: 配送部門 (bộ phận giao hàng) ghi một lần giao 105 kg kèm lý do; 照合事務 đóng ngoại lệ ở SC-063 kèm lý do.'
+  - 'Ca không lý do: ghi một lần giao 105 kg không lý do, máy chủ từ chối.'
+  - QA đọc trạng thái, dòng delivery_exceptions, audit_log của hai ca, ghép với kết quả AC-10-1; khách và BrSE ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi giao 105 kg có lý do thì trạng thái 例外あり, không 完了; có dòng ngoại lệ 引渡超過 ở trạng thái 未処理 (chưa xử lý), người xác nhận và giờ JST do máy chủ gán.
+  - Khi 照合事務 đóng ngoại lệ đó thì trạng thái 完了, người đóng và giờ đóng do máy chủ gán, audit_log ghi lý do, trước và sau; số tính 精算 là 100 kg (giả định nhà thầu, Q-SD1).
+  - Khi giao 105 kg không lý do thì máy chủ trả 422, không ghi dòng nào.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm các dòng deliveries, delivery_exceptions, trạng thái sau từng bước và dòng audit_log của cả hai phần, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-10-2/TEST
+  cha: AC-10-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC10 giao vượt có và không lý do (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC10
+    sd:
+    - A8
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 2/2 AC10: giao vượt có lý do mở ngoại lệ, không lý do bị chặn.
+
+    Ràng buộc đặc thù: Không bước máy nào đưa ngoại lệ về 完了 (xong) trước khi 照合事務 (nhóm đối soát) đóng; ca gửi người và giờ giả để thấy máy chủ gán lại.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Giao 105 kg có lý do: 例外あり (có ngoại lệ), ngoại lệ 未処理 (chưa xử lý); không bước máy nào đưa về 完了 trước khi 照合事務 đóng; khi đóng kèm người và giờ giả thì máy chủ lưu người của phiên và giờ máy chủ.'
+  - 'Giao 105 kg không lý do: 422, số dòng deliveries không đổi.'
+  dinh_nghia_xong: []
+- key: AC-11-1
+  cha: E17
+  tracker: story
+  title_vi: AC11 nhập kết quả せり, người và giờ máy chủ (1/2)
   spec_refs:
     sc: []
     api: []
@@ -861,31 +1471,29 @@ items:
   labels:
   - type:story
   - constraint:hitl
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: 'Kịch bản AC11 chứng minh kết quả せり (đấu giá) do người nhập: せり進行役 (người điều hành phiên) nhập kết quả 手やり (ra giá bằng tay) hoặc 符丁 (mật mã giá) của một lô ở SC-040, còn người ghi và thời điểm ghi do máy chủ gán từ phiên. Không API nào nhận kết quả せり từ máy hay từ ảnh (CAP-HUMAN-01).
+  mo_ta: 'Phần 1/2 của kịch bản AC11: せり進行役 (người điều hành phiên) nhập kết quả せり (đấu giá) của một lô ở SC-040, còn người ghi và thời điểm ghi do máy chủ gán từ phiên; màn không có ô nhập người ghi hay thời điểm. Gọi thẳng API-212 với giá trị giả, rà danh sách API và nghiệm thu nằm ở AC-11-2.
 
     Ràng buộc đặc thù: Màn không có ô nhập người ghi và thời điểm; giá trị trình duyệt gửi kèm bị bỏ qua.'
-  pham_vi: SC-040, API-212; bảng `auction_results` (cột người tạo và thời điểm tạo, cột thiết kế đích); quy tắc A9; năng lực CAP-HUMAN-01.
+  pham_vi: SC-040; bảng `auction_results` (cột người tạo và thời điểm tạo, cột thiết kế đích); quy tắc A9; năng lực CAP-HUMAN-01 ở đường qua màn. Không gồm gọi thẳng API-212 và rà API (AC-11-2).
   luong_chinh:
-  - 'Chuẩn bị: QA tạo một phiên せり của 業務日 (ngày nghiệp vụ), một lô chờ せり và tài khoản せり進行役.'
+  - 'Chuẩn bị: QA tạo một phiên せり của 業務日 (ngày nghiệp vụ), một lô chờ せり và hai tài khoản cùng vai せり進行役 do SC-003/DB nạp.'
   - 'Thực hiện: せり進行役 chọn kết quả 落札 (trúng giá), người trúng, đơn giá ở SC-040 rồi bấm 登録 (đăng ký).'
-  - 'Kiểm 1: auction_results có người tạo là người đang đăng nhập, thời điểm tạo là lúc bấm theo JST.'
-  - 'Kiểm 2: QA gọi API-212 kèm người và giờ giả, máy chủ vẫn lưu người của phiên và giờ máy chủ; QA rà danh sách API, không đường nào nhận kết quả từ máy hay ảnh.'
-  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  - 'Kiểm: auction_results có người tạo là người đang đăng nhập, thời điểm tạo là lúc bấm theo JST; màn không có ô nhập người tạo hay thời điểm.'
+  - QA ghi phiên, lô và dòng auction_results vào issue để AC-11-2 gọi API-212 trên cùng phiên.
   tieu_chi_nghiem_thu:
   - Khi bấm 登録 thì auction_results ghi người tạo là người của phiên và thời điểm bấm theo JST, cả hai do máy chủ gán.
-  - Khi trình duyệt gửi kèm người tạo hoặc thời điểm khác thì máy chủ bỏ qua, bản ghi vẫn mang người của phiên.
-  - Khi mở SC-040 thì màn không có ô nhập người tạo hay thời điểm; không API nào nhận kết quả せり từ máy hay từ ảnh.
-  - Khách nghiệm thu qua BrSE; bằng chứng gồm dòng auction_results, tài khoản đăng nhập, giờ bấm và danh sách API đã rà, ghi vào story kèm ngày chạy.
+  - Khi mở SC-040 thì màn không có ô nhập người tạo hay thời điểm.
+  - Khi người thứ hai 承認 thì sự kiện 承認 mang người đó; người nhập tự duyệt bị 422 SELF_CONFIRM_FORBIDDEN (P-47).
   dinh_nghia_xong:
-  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
-- key: AC-11/TEST
-  cha: AC-11
+  - Phiên, lô và dòng auction_results đã dựng đính ở issue, AC-11-2 dùng lại không phải dựng lại.
+- key: AC-11-1/TEST
+  cha: AC-11-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Kết quả せり do người nhập, máy chủ gán người xác nhận'
+  title_vi: 'Ca kiểm thử: AC11 nhập kết quả せり, người và giờ máy chủ (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -905,14 +1513,84 @@ items:
   priority: 2
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca nghiệm thu AC11, chứng minh kết quả せり (đấu giá) luôn do người nhập và người ghi do máy chủ gán từ phiên.
+  mo_ta: 'Ca kiểm của phần 1/2 AC11: kết quả せり (đấu giá) nhập qua màn, người ghi và giờ do máy chủ gán từ phiên.
+
+    Ràng buộc đặc thù: Hai tài khoản cùng vai để tách người nhập với người duyệt; ca tự duyệt phải bị chặn.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - 'Bấm 登録 (đăng ký) kết quả 落札 (trúng giá) ở SC-040: người tạo là người của phiên, thời điểm theo JST của máy chủ.'
+  - Hai tài khoản cùng vai do SC-003/DB nạp; người thứ hai 承認 thì sự kiện 承認 mang người đó, người nhập tự duyệt bị 422 SELF_CONFIRM_FORBIDDEN (P-47).
+  dinh_nghia_xong: []
+- key: AC-11-2
+  cha: E17
+  tracker: story
+  title_vi: AC11 gọi API-212 giả, rà API, nghiệm thu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC11
+    sd:
+    - A9
+  labels:
+  - type:story
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Phần 2/2 của kịch bản AC11, chạy trên phiên AC-11-1 đã dựng: QA gọi thẳng API-212 kèm người tạo và thời điểm giả, máy chủ vẫn lưu người của phiên và giờ máy chủ; QA rà danh sách API để chứng minh không đường nào nhận kết quả せり (đấu giá) từ máy hay từ ảnh (CAP-HUMAN-01). Khách nghiệm thu qua BrSE; phần này mang tiêu chí tổng của AC11.
+
+    Ràng buộc đặc thù: Người ghi và thời điểm do máy chủ gán từ phiên ở mọi đường vào, kể cả gọi thẳng API.'
+  pham_vi: API-212 gọi thẳng; danh sách API của hệ; bảng `auction_results`; quy tắc A9; năng lực CAP-HUMAN-01; nghiệm thu với khách. Đường qua màn SC-040 thuộc AC-11-1.
+  luong_chinh:
+  - QA gọi API-212 kèm người tạo và thời điểm giả trên phiên AC-11-1; máy chủ vẫn lưu người của phiên và giờ máy chủ.
+  - QA rà danh sách API của hệ, ghi lại từng đường vào kết quả せり và nguồn dữ liệu của nó; không đường nào nhận từ máy hay ảnh.
+  - 'QA gom bằng chứng: dòng auction_results, tài khoản đăng nhập, giờ bấm và danh sách API đã rà, ngày chạy.'
+  - Khách và BrSE xem kết quả, ký nghiệm thu.
+  tieu_chi_nghiem_thu:
+  - Khi trình duyệt gửi kèm người tạo hoặc thời điểm khác thì máy chủ bỏ qua, bản ghi vẫn mang người của phiên.
+  - Khi rà danh sách API thì không API nào nhận kết quả せり từ máy hay từ ảnh.
+  - Khách nghiệm thu qua BrSE; bằng chứng gồm dòng auction_results, tài khoản đăng nhập, giờ bấm và danh sách API đã rà, ghi vào story kèm ngày chạy.
+  dinh_nghia_xong:
+  - Biên bản nghiệm thu có tên người nghiệm thu phía khách và ngày ký.
+- key: AC-11-2/TEST
+  cha: AC-11-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: AC11 gọi API-212 giả, rà API, nghiệm thu (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    ac:
+    - AC11
+    sd:
+    - A9
+  labels:
+  - type:testdesign
+  - constraint:hitl
+  owner: QA
+  priority: 2
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Ca kiểm của phần 2/2 AC11: gọi thẳng API-212 với giá trị giả và rà mọi đường vào kết quả せり (đấu giá).
+
+    Ràng buộc đặc thù: Giá trị người và giờ gửi kèm phải bị bỏ qua ở API, không chỉ ở màn.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
   - 'Gọi thẳng API-212 kèm người tạo và thời điểm giả: bản ghi giữ người của phiên và giờ máy chủ.'
   - 'Rà danh sách API của hệ: không đường nào nhận kết quả せり từ máy hay từ ảnh.'
-  - 'Chuẩn bị: hai tài khoản cùng vai do SC-003/DB nạp; người thứ hai 承認 thì sự kiện 承認 mang người đó, người nhập tự duyệt bị 422 SELF_CONFIRM_FORBIDDEN (P-47).'
   dinh_nghia_xong: []
 - key: AC-12
   cha: E17
@@ -933,7 +1611,7 @@ items:
   labels:
   - type:story
   - constraint:hitl
-  owner: PM
+  owner: QA
   priority: 2
   premise_refs: []
   gap_refs: []

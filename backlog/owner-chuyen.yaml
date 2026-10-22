@@ -1,0 +1,172 @@
+# sinh bởi can-owner.py, không sửa tay; chạy lại can-owner.py --ghi rồi gen-backlog-seed.py.
+owner_chuyen:
+- story: API-202
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 1005.2 → 1000.2 giờ/người'
+- story: API-220
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 1007 → 1005.2 giờ/người'
+- story: DATA-FG12
+  loai:
+  - DB
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 1000.2 → 995.2 giờ/người'
+- story: DATA-FG13
+  loai:
+  - DB
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 995.2 → 990.2 giờ/người'
+- story: SC-001
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 443 → 433 giờ/người'
+- story: SC-002
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 990.2 → 985.2 giờ/người'
+- story: SC-002
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 433 → 423 giờ/người'
+- story: SC-004
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 985.2 → 980.2 giờ/người'
+- story: SC-010
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 980.2 → 975.2 giờ/người'
+- story: SC-012
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 975.2 → 970.2 giờ/người'
+- story: SC-033
+  loai:
+  - BE
+  sang: BE-1
+  ly_do: 'cân ±10%: BE-2 658.5 → 652 giờ/người'
+- story: SC-081
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 970.2 → 965.2 giờ/người'
+- story: SC-082
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 965.2 → 960.2 giờ/người'
+- story: SC-090
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 960.2 → 955.2 giờ/người'
+- story: SC-100
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 955.2 → 950.2 giờ/người'
+- story: SC-100
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 481 → 474.5 giờ/người'
+- story: SC-101
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 950.2 → 945.2 giờ/người'
+- story: SC-101
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 488 → 484.5 giờ/người'
+- story: SC-102
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 474.5 → 468 giờ/người'
+- story: SC-103
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 945.2 → 940.2 giờ/người'
+- story: SC-104
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 940.2 → 935.2 giờ/người'
+- story: SC-104
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 468 → 461.5 giờ/người'
+- story: SC-105
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 935.2 → 930.2 giờ/người'
+- story: SC-105
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 484.5 → 481 giờ/người'
+- story: SC-106
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 930.2 → 925.2 giờ/người'
+- story: SC-106
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 461.5 → 455 giờ/người'
+- story: SC-107
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 925.2 → 920.2 giờ/người'
+- story: SC-107
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 455 → 448.5 giờ/người'
+- story: SC-108
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 920.2 → 915.2 giờ/người'
+- story: SC-108
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 448.5 → 442 giờ/người'
+- story: SC-109
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 442 → 435.5 giờ/người'
+- story: SC-110
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 435.5 → 429 giờ/người'
+- story: SC-111
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 429 → 422.5 giờ/người'
+- story: SC-112
+  loai:
+  - FE
+  sang: FE-1
+  ly_do: 'cân ±10%: FE-2 422.5 → 416 giờ/người'

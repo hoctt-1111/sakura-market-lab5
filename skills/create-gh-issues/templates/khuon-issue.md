@@ -39,7 +39,7 @@ Mọi issue trên Project sinh từ seed `<seed-dir>/backlog/<epic>.yaml` qua `s
 | Chỗ hở | máy từ `gap_refs` | G-xx — tóm tắt một dòng |
 | Spec nguồn | máy từ `spec_refs` | mã SPEC-SKM, API, bảng, FR, ADR |
 
-### 2.3 Dev Task (leaf FE / BE / DB / INFRA) — `[DEV TASK] SC-031/BE API danh sách giao dịch`
+### 2.3 Dev Task (leaf FE / BE / DB / INFRA / PM / BRSE) — `[DEV TASK] SC-031/BE API danh sách giao dịch`
 | Mục | Ai viết | Độ dài |
 | --- | --- | --- |
 | Mô tả | agent (`mo_ta`) | 1–2 câu: phần việc của bộ phận này trong story |
@@ -48,6 +48,8 @@ Mọi issue trên Project sinh từ seed `<seed-dir>/backlog/<epic>.yaml` qua `s
 | Dữ liệu từ spec | máy từ seed | route API, bảng và vai trò (chủ migration hay chỉ đọc), item ghi/đọc, validation, nhãn ràng buộc, story cha, epic |
 | Ràng buộc đặc thù | agent, chỉ khi có nhãn `constraint:*` | 1 câu |
 | Spec nguồn | máy | mã |
+
+Lá PM (quản lý sprint, `team:pm`) và BRSE (cầu nối khách, `team:brse`) dùng cùng khuôn này; mẫu «Định nghĩa xong» lấy theo loại leaf trong `team.yaml`.
 
 ### 2.4 Test (leaf TEST) — `[TEST DESIGN] SC-031/TEST Kiểm thử danh sách giao dịch`
 | Mục | Ai viết | Độ dài |

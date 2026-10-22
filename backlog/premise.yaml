@@ -32,7 +32,7 @@ p:
     sau: "Issue PLT-01 dựng kho mã hệ đích Java 21, Spring Boot 3 cùng dây chuyền kiểm tự động khi đẩy mã; README của kho spec và kho mã trỏ nhau hai chiều, prototype LAB-3 chỉ còn là tài liệu tham chiếu."
     vi_sao: "Sai khác #25 ghi rõ kho mã hệ đích do LAB-5 tạo và hai kho chưa có liên kết hai chiều mà chuẩn đòi; không có issue này thì mọi sub-issue BE và DB không có chỗ đặt mã và migration."
     nguon: "`README.md:194` «Chưa có repo code của hệ đích (LAB-5 tạo)» · `PREMISE.md:228` «LAB-5 chia việc theo hệ đích này»"
-    anh_huong: [PLT-01, PLT-01/INFRA]
+    anh_huong: [PLT-01-1, PLT-01-2, PLT-01-3, PLT-01-1/INFRA, PLT-01-2/INFRA, PLT-01-3/INFRA]
   - ma: P-03
     nhom: thay_doi
     spec: "Kiểm tra đầu vào chi tiết của 18 spec ngoài 10 màn lõi (sai khác #29, `specs/_common/common-spec.md`)"
@@ -50,7 +50,7 @@ p:
     sau: "Kho mã hệ đích viết migration cho cả 45 bảng và làm mới cả 23 API; migration và route của prototype chỉ dùng để đối chiếu nghiệp vụ. Sub-issue DB có ở mọi issue làm chủ bảng, kể cả chủ của 18 bảng prototype đã có; riêng bảng đặt trước đi cùng API-210 và chờ giả định P-20."
     vi_sao: "LAB-4 chốt hệ đích Java trên AWS và nói LAB-5 không viết tiếp trên Supabase, nhưng D1 vẫn tính 18 bảng là xong theo migration Supabase; giữ D2, D3 như cũ thì 18 bảng và 20 API không có việc nào trong backlog dù hệ đích chưa có dòng mã nào."
     nguon: "`architecture/SKM_SYSTEM_DESIGN.md:402` «18 bảng đã build» · `architecture/SKM_SYSTEM_DESIGN.md:403` «Migration cho 27 bảng» · `architecture/SKM_SYSTEM_DESIGN.md:393` «D3 20 API đã build» · `PREMISE.md:228` «không viết tiếp trên Supabase» · `specs/system-design/database-design/SKM_DB.md:23` «18/45 bảng đã build ở LAB-3»"
-    anh_huong: [PLT-01, FG-01, FG-02, FG-03, FG-04, FG-05, FG-08, FG-09, FG-10, FG-13]
+    anh_huong: [PLT-01-1, PLT-01-2, PLT-01-3, FG-01, FG-02, FG-03, FG-04, FG-05, FG-08, FG-09, FG-10, FG-13]
   - ma: P-05
     nhom: thay_doi
     spec: "Dòng «Xác thực» của 17 spec API (`specs/system-design/api-design/*/*_API.md`, mục 2)"
@@ -89,7 +89,7 @@ p:
     sau: "MIG-02/DB thêm bảng đệm và bảng lô nạp vào SKM_DB với nhãn thiết kế chưa build rồi viết migration của chúng. Cột nguồn và mã lô được MIG-02/DB thêm bằng một migration chạy sau vào bảng đích của ba đợt nạp (người tham gia; lô, giao dịch và giao hàng; đối soát, hoá đơn và thanh toán), giá trị mặc định là dữ liệu của hệ, nên sub-issue DB của từng bảng đích không phải sửa."
     vi_sao: "Thiếu ba thứ này thì công cụ nạp không giữ được dòng gốc để đối chiếu, không hoàn tác được theo lô, và báo cáo không lọc được dữ liệu di trú như ADR-003 và ADR-016 đòi. Gom việc thêm cột vào một migration của MIG-02/DB để sub-issue DB của từng bảng không phải chờ quyết định di trú (chỗ hở G-E16-02)."
     nguon: "`adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:55` «Bảng nghiệp vụ mang» · `adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:52` «người tham gia và quyền» · `specs/system-design/database-design/SKM_DB.md:31` «Khởi tạo — 45 thực thể»"
-    anh_huong: [MIG-02/DB, SC-011/DB, SC-020/DB, DATA-FG03/DB, SC-030/DB, SC-060/DB, DATA-FG08/DB, DATA-FG09/DB]
+    anh_huong: [MIG-02-1/DB, MIG-02-2/DB, SC-011/DB, SC-020/DB, DATA-FG03/DB, SC-030/DB, SC-060/DB, DATA-FG08/DB, DATA-FG09/DB]
 
   # P-29, P-30: soát độc lập P6 (M2) dời từ nhóm giả định sang đây vì cả hai sửa điều spec LAB-4 đã viết. `cho_de_ngo`,
   # `anh_huong_uoc` giữ lại cho issue điều tra và cho bước ước lượng; bảng 1 của PREMISE.md không in hai trường này.
@@ -259,7 +259,7 @@ p:
     anh_huong_uoc: "SC-142 ước gồm màn hạn lưu trữ, tác vụ chuyển lớp và bước duyệt; đáp về người duyệt chỉ thêm dòng ma trận quyền, đáp về nơi lưu lạnh thêm việc hạ tầng ở PLT-02."
     vi_sao: "System Design LAB-4 ghi chưa có chức năng xoá, chỉ chuyển lớp lưu trữ, và người duyệt còn treo; chặn lệnh xoá khi chưa có người duyệt là cách giữ đúng yêu cầu phải duyệt của RFP."
     nguon: "`architecture/SKM_SYSTEM_DESIGN.md:67` «chỉ chuyển lớp lưu trữ (online → cold)» · `PREMISE.md:217` «Ai duyệt xoá vật lý dữ liệu sau hạn lưu trữ» · `rfp p.70` Phụ lục B: xoá vật lý phải được duyệt (diễn đạt lại)"
-    anh_huong: [SC-142, PLT-02]
+    anh_huong: [SC-142, PLT-02-3]
     inv: INV-Q-19
   - ma: P-20
     nhom: gia_dinh
@@ -392,7 +392,7 @@ p:
     anh_huong_uoc: "SC-120/DB và SC-121/BE ước theo cột mức và giờ phát sinh; có đáp thì chỉ điền giá trị, AC-7 và SC-150 chạy được ca Critical."
     vi_sao: "Tự xếp sự kiện vào mức Critical là đặt cam kết 5 phút thay khách. Để trống mà vẫn ghi giờ phát sinh thì không mất dữ liệu đo (chỗ hở G-FG12-01)."
     nguon: "`specs/system-design/database-design/SKM_DB.md:1544` «Critical ≤ 5 phút» · `specs/system-design/database-design/SKM_DB.md:1582` «chốt ở LAB-5 · bảng B»"
-    anh_huong: [SC-120/DB, SC-121/BE, AC-7]
+    anh_huong: [SC-120/DB, SC-121/BE, AC-7-1, AC-7-2]
     inv: INV-FG12-MUC-KHAN
   - ma: P-40
     nhom: gia_dinh
@@ -412,7 +412,7 @@ p:
     anh_huong_uoc: "E16 ước theo biên GD-02: {gio_epic:E16} giờ chốt cho tối đa 5 nguồn. Quy tắc tính lại khi kiểm kê ở MIG-01 ra số thật: mỗi nguồn vượt 5 cộng khoảng {gio_epic:E16:5} giờ (giờ E16 chia đều cho 5 nguồn, vì kiểm kê, ánh xạ, làm sạch, nạp và đối chiếu đều làm theo từng nguồn); vượt 200.000 dòng hoặc 3 năm thì không cộng theo tỷ lệ mà PM ước lại riêng bước nạp và đối chiếu (MIG-02, MIG-03), vì công ở đó phụ thuộc chất lượng dữ liệu hơn số dòng và LAB-1, LAB-4 không có số nào để quy đổi. PM tính lại trước khi khoá ánh xạ ở MIG-01, đúng tiêu chí của MIG-01."
     vi_sao: "Ba câu này quyết khối lượng của cả E16 mà chưa có đáp. Giữ biên LAB-4 đã ước và gắn quy tắc tính lại vào MIG-01 thì không tự nới hay thu phạm vi thay khách (chỗ hở G-E16-01)."
     nguon: "`adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:39` «≤5 nguồn, ≤200.000 dòng tổng» · `adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:40` «chưa phải số khách đã xác nhận» · `adr/ADR-016-di-tru-tu-file-so-theo-rc7.md:132` «đề xuất trưởng bộ phận 照合事務»"
-    anh_huong: [MIG-01, MIG-02, MIG-03]
+    anh_huong: [MIG-01, MIG-02-1, MIG-02-2, MIG-03]
     inv: INV-Q-01
   - ma: P-42
     nhom: gia_dinh
@@ -466,7 +466,7 @@ p:
     anh_huong_uoc: "SC-030/BE và SC-040/BE ước theo một lệnh duyệt dùng chung, kiểm khác tài khoản và đọc vai từ ma trận; khách đáp vai khác thì chỉ đổi dòng ma trận; khách cho người nhập tự duyệt thì bỏ điều kiện khác tài khoản và ca kiểm tương ứng, giữ cột người xác nhận. Khách đòi tái せり, chuyển 相対 cũng qua 確認待ち thì TECH-302/BE thêm lệnh duyệt cho hai loại này."
     vi_sao: "Góp ý BTC LAB-4 (trục B) đòi lưu 確認者 (người xác nhận) theo sơ đồ của khách, nhưng ai giữ vai duyệt là quy chế của chợ. Lấy hai người như luồng 赤伝 (P-16) để bước duyệt của sơ đồ có nghĩa, đặt vai ở ma trận quyền để câu trả lời của khách không làm sửa mã; hỏi khách ở INV-FG04-XAC-NHAN trước Sprint 2."
     nguon: "`rfp p.39` FIG-012, bước duyệt từ chờ xác nhận sang đã chốt (diễn đạt lại) · `rfp p.40` FR-AITAI-02, FR-SERI-02, người thực hiện của bước chốt (diễn đạt lại) · `specs/auction-result/screen-specification/SKM_SERI_RESULT_ENTRY_SPEC.md:105` «máy chủ gán = người đang đăng nhập» · `architecture/SKM_SYSTEM_DESIGN.md:312` «nhập kết quả» · `architecture/SKM_SYSTEM_DESIGN.md:321` «運営担当者 (giả định — chờ khách xác nhận)» · `tran-thai-hoc-feedback-lab04.html` (feedback LAB-4 của BTC, ngoài repo) «lưu người xác nhận (確認者) theo sơ đồ của khách»"
-    anh_huong: [SC-030/BE, SC-030/FE, SC-030/TEST, SC-040/BE, SC-040/TEST, TECH-302/BE, SC-003/DB, AC-11/TEST]
+    anh_huong: [SC-030/BE, SC-030/FE, SC-030/TEST, SC-040/BE, SC-040/TEST, TECH-302/BE, SC-003/DB, AC-11-1/TEST, AC-11-2/TEST]
     inv: INV-FG04-XAC-NHAN
 
   # P-51, P-52 (P2 21/10, U3 duyệt): lịch và đội của backlog neo estimate LAB-1.
@@ -484,12 +484,24 @@ p:
     nhom: gia_dinh
     spec: "Số người đứng sau mỗi Owner (vị trí vai) trên Project"
     cho_de_ngo: "Field Owner của Project là vị trí vai (BE-1, BE-2, FE-1, FE-2, QA, Infra, BrSE, PM), không nói mỗi vị trí mấy người; LAB-1 ước theo vai (Dev, QA, Infra, BrSE, PM, Tech Lead, Designer) và FTE theo tháng, không theo Owner. Bản trước tính 1 người mỗi vai nên QA và BE-1 cần nhiều hơn hẳn số sprint của kế hoạch (P-51)."
-    sau: "Owner là vị trí vai; so_nguoi = làm tròn lên FTE bình quân tháng 1–9 của LAB-1 (khởi động → đưa vào vận hành): BE-1 2, BE-2 1, FE-1 1, FE-2 1, QA 2, Infra 1, BrSE 1, PM 1. FTE Dev 3,35 tách cho 4 Owner Dev theo tỷ lệ giờ backlog của từng Owner, làm tròn từng Owner nên cộng 5 người. Năng lực một sprint = 56 giờ × so_nguoi (BrSE dùng brse_inv), xếp tới 85%. Tech Lead (0,80 FTE) và Designer (0,35) không có Owner trên Project. QA lấy bình quân cả 9 tháng (1,89 → 2 người), không lấy bình quân các tháng có テスト (3,62 → 4)."
+    sau: "Owner là vị trí vai; so_nguoi = làm tròn lên FTE bình quân tháng 1–9 của LAB-1 (khởi động → đưa vào vận hành): BE-1 2, BE-2 1, FE-1 1, FE-2 1, QA 2, Infra 1, BrSE 1, PM 1. FTE Dev 3,35 tách cho 4 Owner Dev theo tỷ lệ giờ backlog của từng Owner, làm tròn từng Owner nên cộng 5 người; sau khi chia Owner theo miền và cân (P-53, 22/10) tỷ lệ là BE-1 1,50 · BE-2 0,83 · FE-1 0,48 · FE-2 0,53 FTE, số người không đổi. Cầu nối tiếng Nhật xuyên suốt của BrSE (EF-31 của LAB-1) không tách thành issue, chỉ các câu hỏi khách và lá cầu nối ở DSG/DOC có giờ (quyết định 22/10). Năng lực một sprint = 56 giờ × so_nguoi (BrSE dùng brse_inv), xếp tới 85%. Tech Lead (0,80 FTE) và Designer (0,35) không có Owner trên Project. QA lấy bình quân cả 9 tháng (1,89 → 2 người), không lấy bình quân các tháng có テスト (3,62 → 4)."
     anh_huong_uoc: "Số sprint cần của từng vai với đội này và vai nghẽn in ở dòng cuối mục «Rủi ro trễ» của progress-report.md, tính lại từ giờ backlog mỗi lần dựng; số item và SWP Sprint 1 xếp theo năng lực này ở mục «Trạng thái» và «Burndown» cùng file. Khách chốt 1 người mỗi vai thì QA và BE-1 vượt số sprint của kế hoạch và phải giãn ngày đưa vào vận hành; chọn QA theo tháng có テスト (4 người) thì số sprint cần của QA giảm còn khoảng một nửa."
     vi_sao: "Owner giữ các lựa chọn cũ để không đổi field Project; số người lấy từ estimate khách đã nhận thay vì tự đặt, một cửa sổ tháng 1–9 cho mọi vai để không chọn số có lợi riêng cho vai nào. PM chốt với khách ở INV-PM-LICH-DOI ngày khởi động."
     nguon: "`lab-01/registry/effort-computed.yaml:34` «fte_theo_thang» · `lab-01/registry/effort-rates.yaml:20` «Dev: 0.80» · `lab-01/tools/build_effort_schedule.py:12` «\"テスト\"» · `lab-05/registry/uoc-luong/doi-theo-lab1.json` (fte_binh_quan, anh_xa_dev, so_nguoi) · `lab-05/registry/uoc-luong/quy-uoc-sprint.yaml` (so_nguoi)"
     anh_huong: [E15, E17]
     inv: INV-PM-LICH-DOI
+
+  # P-55 (22/10, plan đối ứng review PM/dev): ngôn ngữ giao diện — LAB-4 không có ADR, spec màn chỉ ghi nhãn tiếng Nhật.
+  - ma: P-55
+    nhom: gia_dinh
+    spec: "Ngôn ngữ của giao diện hệ đích"
+    cho_de_ngo: "Spec màn LAB-4 ghi nhãn item bằng tiếng Nhật kèm chú giải Việt cho người đọc spec, nhưng không có ADR hay yêu cầu nào nói giao diện chạy thật có một hay nhiều ngôn ngữ; prototype LAB-3 từng có ba ngôn ngữ ja/en/vi cho người chấm."
+    sau: "Giao diện hệ đích chỉ một ngôn ngữ tiếng Nhật, không dựng cơ chế đa ngôn ngữ; chuỗi hiển thị đặt tập trung trong khung giao diện UI-01 để đổi sau nếu khách yêu cầu. Câu báo lỗi theo mã M_nn giữ ba ngôn ngữ ở bảng mã lỗi của LAB-4 chỉ để đội đọc, màn hiện bản tiếng Nhật."
+    anh_huong_uoc: "Giờ của UI-01 và mọi lá FE không gồm việc đa ngôn ngữ. Khách đòi thêm tiếng Anh hay tiếng Việt cho đội vận hành thì thêm một story đa ngôn ngữ dưới E15 (khung chuỗi, tệp dịch, kiểm thử từng màn), ước bằng SWP riêng khi có câu trả lời."
+    vi_sao: "Chợ và người dùng đều ở Nhật, RFP viết bằng tiếng Nhật và không nêu người dùng nước ngoài; dựng đa ngôn ngữ khi chưa ai yêu cầu là việc thừa (YAGNI). Hỏi khách một lần ở INV-UI-NGON-NGU trước Sprint 2 để chốt."
+    nguon: "`specs/_common/common-spec.md` (nhãn item tiếng Nhật kèm chú giải) · `docs/adr/` của LAB-4 không có ADR về ngôn ngữ giao diện · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
+    anh_huong: [UI-01, DOC-01, DOC-02]
+    inv: INV-UI-NGON-NGU
 
   # ---------- Nhóm 3: hướng đã chốt ----------
   - ma: P-23
@@ -533,7 +545,7 @@ p:
     chot: "Story AC-3, AC-7 kiểm theo thiết kế chi tiết (cách thứ hai): lần đấu lại đầu được phép, lần vượt trả 409 M_23 và không ghi gì; thông báo gửi một lần rồi thử lại tối đa ba lần, cảnh báo vào alert_queue để SC-122 hiện và SC-150 đếm. Đề nghị sửa câu chữ hai kịch bản ở lần phát hành spec sau của LAB-4."
     vi_sao: "Kịch bản nghiệm thu chỉ có giá trị khi khớp hành vi đã thiết kế. Kiểm đúng chữ thì ca kiểm báo lỗi dù hệ làm đúng TECH-302, TECH-303 và EV2, hoặc nhóm phải làm sai thiết kế để ca kiểm qua (chỗ hở G-E17-02, G-E17-04). AC4 ra khỏi dòng này: bản 0.4.1 đã sửa kịch bản cho chặn lần đổi thứ năm ở bước duyệt, khớp TECH-303 (chỗ hở G-E17-03), nên story AC-4 kiểm đúng chữ của LAB-4."
     nguon: "`architecture/SKM_SYSTEM_DESIGN.feature:15` «đưa lô vào 再せり lần thứ hai» · `architecture/SKM_SYSTEM_DESIGN.md:197` «Tối đa 1 lần 再せり» · `architecture/SKM_SYSTEM_DESIGN.feature:20` «cố duyệt lần đổi thứ 5 trong cùng năm (máy chủ chặn ở bước duyệt)» · `architecture/SKM_SYSTEM_DESIGN.feature:35` «cả 3 lần thử đều thất bại» · `architecture/SKM_SYSTEM_DESIGN.md:143` «Tối đa 3 lần khi gửi email thất bại»"
-    anh_huong: [AC-3, AC-7]
+    anh_huong: [AC-3, AC-7-1, AC-7-2]
 
   # P-49 (21/10): góp ý BTC LAB-4 trục K, chốt câu báo của lỗi lưu cho 13 API.
   - ma: P-49
@@ -558,3 +570,56 @@ p:
     vi_sao: "Góp ý BTC LAB-4 (trục B): «Màn thưởng còn dán nhãn tỷ lệ giao (交付率) lên cột suất thưởng». FR-INC-01 (rfp p.42) tính 完納奨励金 (thưởng thanh toán đủ hạn) từ số tiền đủ điều kiện, 交付率 và bản quy tắc có hiệu lực, tức RFP dùng chính 交付率 làm đại lượng nhân; đổi nhãn sẽ lệch thuật ngữ của khách. Chỗ dễ nhầm mà BTC nêu được giải bằng chú giải và bằng nhãn riêng của cột mức."
     nguon: "`specs/full-payment-incentive/screen-specification/SKM_INCENTIVE_RUN_SPEC.md:74` «Suất áp cho dòng» · `specs/full-payment-incentive/screen-specification/SKM_INCENTIVE_DETAIL_SPEC.md:72` «Suất đã áp（交付率）» · `specs/full-payment-incentive/screen-specification/SKM_INCENTIVE_RUN_SPEC.md:72` «Mức 交付率 lúc 判定» · `rfp p.42` FR-INC-01: thưởng tính từ số tiền đủ điều kiện, 交付率 và bản quy tắc có hiệu lực (diễn đạt lại) · `tran-thai-hoc-feedback-lab04.html` (feedback LAB-4 của BTC, ngoài repo) «dán nhãn tỷ lệ giao (交付率) lên cột suất thưởng»"
     anh_huong: [SC-080/FE, SC-081/FE]
+
+  # P-53, P-54, P-56, P-57 (22/10): đối ứng bản soát của senior PM/dev ngày 21/10 — Owner theo miền, việc chưa có ticket,
+  # giờ INV theo mức, k quy giờ theo nhóm. Nguồn nội bộ không kèm đường dẫn.
+  - ma: P-53
+    nhom: huong_chot
+    spec: "Cách gán Owner (vị trí vai) cho sub-issue FE, BE, DB và cho story"
+    phuong_an_lab4:
+      - "Luật cũ của backlog (không có trong LAB-4): FG lẻ và epic xuyên suốt về người số 1, FG chẵn về người số 2; story và epic đều Owner PM."
+      - "Chia theo miền nghiệp vụ: một người làm trọn nhóm chức năng liền nhau, phần dư cân bằng công cụ; story Owner là người dẫn kỹ thuật."
+    chot: "Cách thứ hai. Miền giao dịch (FG-03 tới FG-08) về BE-2, FE-1; miền tài chính và nền (FG-01, FG-02, FG-09 tới FG-14, E15 tới E20) về BE-1 (hai người), FE-2; lá BE của DSG về BE-1 vì Tech Lead là người thứ nhất của BE-1 (giờ DSG/BE là định mức EF-01 của Tech Lead, còn so_nguoi BE-1 lấy từ FTE Dev của P-52, nên năng lực BE-1 gánh thêm phần này — ghi ở dòng rủi ro đầu tiên (năng lực theo vai) của báo cáo tiến độ). Sau đó công cụ can-owner chuyển trọn lá cùng loại của story nhỏ nhất từ vị trí nặng sang vị trí nhẹ tới khi lệch giờ mỗi người của hai vị trí cùng loại không quá 10%; 13 story chuyển (1 BE, 12 FE) ghi ở owner-chuyen.yaml kèm lý do. Story Owner = Owner của lá BE, không có thì FE, rồi TEST, INFRA, PM, BRSE; epic giữ PM."
+    vi_sao: "Luật lẻ/chẵn làm BE-2 (một người) gánh ngang hai người của BE-1 (bản soát 21/10: 742,5 so với 543 giờ mỗi người) và cắt một nhóm chức năng liền nhau cho hai người khác nhau. Chia theo miền giữ ngữ cảnh nghiệp vụ trong một người, công cụ cân phần dư nên số không phụ thuộc cảm tính; story có Owner thật thì bảng theo vai trên Project đọc được ai dẫn việc."
+    nguon: "`lab-05/registry/team.yaml` «owner_mien» · `lab-05/registry/owner-chuyen.yaml` (13 dòng, sinh bởi can-owner.py) · `lab-05/registry/uoc-luong/doi-theo-lab1.json` (anh_xa_dev sau khi cân) · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
+    anh_huong: [FG-04, FG-11, E20]
+  - ma: P-54
+    nhom: huong_chot
+    spec: "Việc quản lý dự án, chốt thiết kế với khách và việc kỹ thuật dùng chung chưa có ticket"
+    phuong_an_lab4:
+      - "Để ngoài backlog như bản nộp 21/10: quản lý, cầu nối khách, thiết kế là việc của vai PM, BrSE, Tech Lead, chỉ cộng giờ LAB-1 ở bảng so sánh; khung giao diện, khung máy chủ, khung kiểm thử, tài liệu người dùng nằm ngầm trong lá của từng màn."
+      - "Tách thành issue có giờ: một epic quản lý và chốt thiết kế, cộng story dùng chung đặt dưới epic nền tảng, nghiệm thu và phát hành."
+    chot: "Cách thứ hai. Epic E20 có sáu story vận hành sprint MGT-01 tới MGT-06 (một cho mỗi Iteration đang có, lá PM) và bốn story chốt thiết kế với khách DSG-01 tới DSG-04 (lá BE của Tech Lead và lá BRSE); dưới E15 thêm UI-01 khung giao diện và CMN-01 khung máy chủ; dưới E17 thêm QA-00 khung kiểm thử tích hợp và REG-01 hồi quy trước phát hành; dưới E19 thêm DOC-01, DOC-02 hướng dẫn người dùng theo vai. Cầu nối tiếng Nhật xuyên suốt của BrSE và việc thiết kế đã nằm trong gói LAB-4 vẫn ở ngoài backlog."
+    vi_sao: "Bản soát 21/10 chỉ ra hơn bốn nghìn giờ việc của LAB-1 (EF-01, EF-26, EF-30, EF-31 và phần thiết kế) không có ticket nên burndown không thấy, còn định nghĩa xong của lá FE và BE đòi kiểm thử chạy xanh trong CI mà không có việc dựng khung kiểm thử nào. Tách thành issue thì ước được, xếp sprint được và khách thấy việc chốt thiết kế trước khi nhóm chức năng vào sprint."
+    nguon: "`lab-01/registry/effort-other.yaml` (EF-01, EF-22, EF-26, EF-30, EF-31) · `lab-05/registry/team.yaml` «dinh_nghia_xong_mau» (FE, BE đòi kiểm thử chạy xanh trong CI) · `lab-05/registry/xuyen-suot.yaml` «xuyen_suot» (15 story mới) · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
+    anh_huong: [E20, UI-01, CMN-01, QA-00, REG-01-1, REG-01-2, DOC-01, DOC-02]
+  - ma: P-56
+    nhom: huong_chot
+    spec: "Giờ ước lượng của issue điều tra"
+    phuong_an_lab4:
+      - "Giờ cố định theo người trả lời như bản nộp 21/10: khách 3 giờ, Tech Lead 2 giờ, PM 3 giờ, không phân biệt câu hỏi chặn cả nhóm chức năng với câu hỏi một ô."
+      - "Ba mức theo tầm ảnh hưởng, công cụ xếp mức từ dữ liệu của backlog."
+    chot: "Cách thứ hai. Mức nặng khi câu hỏi nằm ở điều kiện vào sprint của một nhóm chức năng hoặc hạn ghi «mức chặn»; mức vừa khi câu hỏi chặn từ hai story trở lên (story trùng mã spec với câu hỏi); mức nhẹ còn lại. Giờ: khách và PM 3, 8, 16; Tech Lead 2, 6, 12. Công cụ inv-muc ghi mức của từng issue điều tra vào inv-muc.json, bộ quy giờ đọc từ đó."
+    vi_sao: "Một câu hỏi như ranh giới kỳ tính thưởng chặn cả FG-09, trả lời xong còn phải sửa spec và issue, không thể cùng 3 giờ với một câu hỏi về ngưỡng cảnh báo; xếp mức bằng công cụ từ quan hệ chặn trong backlog để không gõ tay."
+    nguon: "`lab-05/registry/uoc-luong/quy-uoc-gio.yaml` «inv_gio_co_dinh» · `lab-05/registry/uoc-luong/inv-muc.json` (sinh bởi inv-muc.py) · `lab-05/registry/uoc-luong/quy-uoc-sprint.yaml` «sau» · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
+    anh_huong: [INV-Q-23, INV-GD-03, INV-FG06-DONG-DAO]
+  - ma: P-57
+    nhom: huong_chot
+    spec: "Hệ số đổi SWP ra giờ cho việc ngoài màn hình"
+    phuong_an_lab4:
+      - "Một hệ số cho mọi lá phát triển như bản nộp 21/10: k hồi quy trên 72 màn của LAB-1 áp cả cho hạ tầng, di trú, yêu cầu phi chức năng, phát hành và nghiệm thu; kết quả các mảng này còn một phần năm tới một phần ba giờ LAB-1."
+      - "Hệ số theo nhóm việc, mỗi nhóm hiệu chuẩn trên đúng các hạng mục EF-xx của LAB-1 cùng tính chất."
+    chot: "Cách thứ hai. Lá của story có tiền tố PLT, MIG, REL, NFR, AC, UAT, REG, DSG, DOC, MGT vào nhóm riêng theo tiền tố, các lá khác giữ nhóm theo loại lá. Nhóm platform, mig, nfr, rel, e2e, dsg: k = tổng man-day của các EF-xx tương ứng nhân 8 chia tổng SWP của nhóm (định mức EF). Nhóm mgt: giờ mỗi issue = man-day EF-30 nhân 8 chia số sprint kế hoạch (định mức theo sprint), không theo SWP. Trường point trên Project vẫn chỉ ghi SWP."
+    vi_sao: "Hồi quy trên màn hình giải thích gần như không chút nào độ lệch giờ giữa các màn (R² so trung bình âm), nên k đó chỉ là mức trung bình của việc màn; đem áp cho dựng hai môi trường hay diễn tập di trú thì giờ còn một phần năm LAB-1 mà không có lý do nghiệp vụ. Hiệu chuẩn từng nhóm trên EF của LAB-1 giữ một quy ước tự động có nguồn, tổng theo nhóm so được với estimate khách đã nhận."
+    nguon: "`lab-05/registry/uoc-luong/quy-uoc-gio.yaml` «dinh-muc-ef» · `lab-05/registry/team.yaml` «nhom_gio_theo_tien_to» · `lab-01/registry/effort-other.yaml` (EF-04, EF-07, EF-23, EF-13, EF-15 tới EF-27, EF-30, EF-32) · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
+    anh_huong: [E15, E16, E17, E18, E19, E20]
+  - ma: P-58
+    nhom: huong_chot
+    spec: "Việc lớn hơn năng lực một sprint của vai phụ trách"
+    phuong_an_lab4:
+      - "Giữ mỗi hạng mục là một issue lá dù giờ vượt trần một sprint (85% × 56 giờ × số người của vai): tool xếp sprint coi lá là nguyên khối nên lá đó không vào sprint nào, hoặc phải nới quy tắc để một lá kéo dài nhiều sprint."
+      - "Tách story có lá vượt trần thành story con, mỗi story con một phần vừa một sprint, đủ mọi loại lá của story gốc; story gốc và lá gốc đóng thừa, không xoá."
+    chot: "Cách thứ hai (biến thể tách trọn story). Số phần = lớn nhất của ceil(giờ lá ÷ trần của vai) trong story, tính trên giờ sau khi người duyệt mẫu SWP ngày 22/10; lá của story con được chấm SWP lại bằng cùng quy trình (tkm:estimate-swp, hai người chấm, người duyệt mẫu) để có bằng chứng, nhưng Story Point chốt của lá con theo luật tổng phần bằng gốc: SWP lá gốc chia đều theo số phần, phần dư dồn cho phần skill chấm cao hơn, tối thiểu 1; mẫu người duyệt thắng luật. Lý do: skill chấm mỗi phần như một việc độc lập nên tổng các phần lớn hơn lá gốc (64 lá con 281 SWP so 27 lá gốc), trong khi giờ nhóm k theo định mức EF cố định, giờ dồn về story nhiều phần và 9 lá con vẫn vượt trần; luật này giữ tổng SWP nhóm và đưa giờ từng phần về đúng cách tính số phần. Tổng giờ của nhóm k theo định mức EF không đổi vì tách; chỉ chia phần."
+    vi_sao: "Sau khi hệ số k hiệu chuẩn theo nhóm (P-57), 19 lá hạ tầng, nghiệm thu, di trú và chốt thiết kế có giờ từ 54,5 tới 231, lớn hơn trần 47,6 hay 95,2 giờ một sprint của vai; để nguyên thì Sprint 1 không có lá nền tảng nào và kế hoạch sprint không phản ánh được việc. Tách theo sprint giữ nguyên tổng giờ, cho từng phần có tiêu chí xong riêng và đặt được Start/Due Date thật."
+    nguon: "`lab-05/registry/uoc-luong/quy-uoc-sprint.yaml` «nang_luc_gio, brse_inv, tran, so_nguoi» · `lab-05/registry/uoc-luong/gio-final.json` · `lab-05/registry/xuyen-suot.yaml` «tach_theo_sprint» · `lab-05/registry/team.yaml` «dong_thua» · quyết định người duyệt ngày 22/10 (nội bộ)"
+    anh_huong: [E15, E16, E17, E18, E19, E20]

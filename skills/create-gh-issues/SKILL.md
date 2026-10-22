@@ -9,7 +9,7 @@ Một lệnh Python (`scripts/gh_issues.py`) đọc thư mục seed YAML, dựng
 
 ## Khi nào dùng
 
-- Đã có backlog dạng YAML (epic → story/điều tra → leaf FE, BE, DB, TEST, INFRA) và cần đưa lên GitHub Project để cả đội theo dõi.
+- Đã có backlog dạng YAML (epic → story/điều tra → leaf FE, BE, DB, TEST, INFRA, PM, BRSE) và cần đưa lên GitHub Project để cả đội theo dõi.
 - Cần đẩy theo lô epic, dừng giữa chừng được, chạy lại không sinh issue trùng.
 - Cần kiểm board có khớp seed không (thiếu, lạ, trùng, lệch nhãn, lệch Owner/Priority, mồ côi, thân bị sửa tay).
 

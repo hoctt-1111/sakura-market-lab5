@@ -55,7 +55,7 @@ items:
   - type:story
   - constraint:jst
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 2
   premise_refs:
   - P-12
@@ -95,7 +95,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:jst
-  owner: FE-1
+  owner: FE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -133,7 +133,7 @@ items:
   gap_refs:
   - G-FG13-01
   - G-FG13-02
-  mo_ta: Viết spec rồi làm API tra audit_log trên module audit (P-01), cùng hàm ghi dùng chung mà mọi module gọi thay cho tự thêm dòng (G-FG13-02).
+  mo_ta: Viết spec rồi làm API tra audit_log trên module audit (P-01); hàm ghi dùng chung mà mọi module gọi thay cho tự thêm dòng nay làm ở CMN-01/BE, SC-130/BE chỉ gọi (G-FG13-02, chuyển chỗ làm ngày 22/10).
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -191,7 +191,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-12
@@ -227,7 +227,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-1
+  owner: FE-2
   priority: 3
   premise_refs:
   - P-03
@@ -349,7 +349,7 @@ items:
   - type:story
   - constraint:hitl
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 2
   premise_refs:
   - P-12
@@ -391,7 +391,7 @@ items:
   - type:devtask
   - team:frontend
   - constraint:hitl
-  owner: FE-1
+  owner: FE-2
   priority: 2
   premise_refs: []
   gap_refs:
@@ -489,7 +489,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-12
@@ -524,7 +524,7 @@ items:
   labels:
   - type:devtask
   - team:frontend
-  owner: FE-1
+  owner: FE-2
   priority: 3
   premise_refs: []
   gap_refs:
@@ -611,7 +611,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-04
@@ -649,7 +649,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-04

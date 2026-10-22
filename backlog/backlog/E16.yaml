@@ -46,7 +46,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-04
@@ -153,10 +153,10 @@ items:
   - 'Cột nguồn chưa có dòng ánh xạ: công cụ dừng và báo tên cột.'
   - 'Chạy hai lần cùng quy tắc trên cùng mẫu: hai kết quả giống nhau.'
   dinh_nghia_xong: []
-- key: MIG-02
+- key: MIG-02-1
   cha: E16
   tracker: story
-  title_vi: Công cụ nạp qua bảng đệm có đối chiếu
+  title_vi: Bảng đệm, lô nạp và đọc file vào đệm (1/2)
   spec_refs:
     sc: []
     api: []
@@ -169,36 +169,31 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-04
   gap_refs:
   - G-E16-02
-  - G-E16-04
-  - G-E16-05
-  mo_ta: 'BE làm module migration trong khối triển khai duy nhất (ADR-009): đọc file vào bảng đệm giữ dòng gốc, áp quy tắc của MIG-01, rồi ghi qua hàm công khai của module chủ, không ghi thẳng vào bảng đích. Mỗi lần nạp là một lô chỉ thêm; lô chỉ hoàn tất khi số bản ghi và tổng tiền khớp, hoặc mọi lệch đã có người quyết.'
+  mo_ta: 'Phần 1/2 của công cụ nạp qua bảng đệm (ADR-016): dựng bảng đệm, bảng lô nạp và cột dấu nguồn trong SKM_DB, rồi làm bước đọc file của module migration trong khối triển khai duy nhất (ADR-009): mỗi lần nạp mở một lô mới, dòng file vào bảng đệm nguyên giá trị kèm mã nguồn và mã lô. Phần này dừng ở dòng đã nằm trong đệm; áp quy tắc của MIG-01, ghi qua module chủ và đối chiếu thuộc phần 2/2 (MIG-02-2).'
   pham_vi:
-  - Bảng đệm, bảng lô nạp và cột dấu nguồn, chưa có trong 45 thực thể (G-E16-02).
-  - Hàm ghi công khai của module chủ từng bảng và khung ghi chỉ-thêm của PLT-03.
-  - Danh sách dòng xung đột và lệnh ghi quyết định cho người của chợ (G-E16-05).
+  - Bảng đệm, bảng lô nạp và cột dấu nguồn, mã lô ở bảng đích chỉ-thêm, chưa có trong 45 thực thể (G-E16-02).
+  - Bước mở lô và đọc file vào đệm của module migration; chưa gồm áp quy tắc, ghi bảng nghiệp vụ và đối chiếu.
   luong_chinh:
+  - BE viết migration cho bảng đệm, bảng lô nạp và cột dấu nguồn, mã lô ở bảng đích chỉ-thêm; Tech Lead duyệt trước khi viết mã đọc file.
   - Người vận hành di trú chọn nguồn và khoảng ngày; module tạo một lô mới.
   - Module đọc file vào bảng đệm, giữ nguyên dòng gốc, mã nguồn và số dòng.
-  - Module áp quy tắc; dòng đạt được ghi qua hàm của module chủ kèm dấu nguồn migrated và mã lô, dòng xung đột chờ người quyết.
-  - Module so số bản ghi và tổng tiền giữa nguồn và đích; còn lệch thì lô ở trạng thái chờ.
-  - Người của chợ quyết từng dòng xung đột; hệ thống ghi quyết định, người của phiên và giờ máy chủ.
+  - Lô dừng ở trạng thái đã vào đệm, chờ MIG-02-2 áp quy tắc và đối chiếu.
   tieu_chi_nghiem_thu:
-  - Khi số bản ghi hoặc tổng tiền nguồn khác đích mà còn dòng chưa quyết thì lô không sang hoàn tất.
-  - Khi người của chợ quyết một dòng xung đột thì bản ghi lưu quyết định, người của phiên và giờ máy chủ; máy không tự chọn bên đúng.
+  - Khi file đã đọc xong thì số dòng đệm của lô bằng số dòng của file và mỗi dòng đệm giữ nguyên giá trị gốc kèm mã nguồn, mã lô.
   - Khi nạp lại cùng nguồn thì có lô mới, lô cũ và dòng đệm cũ giữ nguyên.
-  - Khi module migration gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ.
+  - Khi bước đọc file chạy thì không bảng nghiệp vụ nào bị ghi; dòng chỉ nằm ở bảng đệm.
   dinh_nghia_xong:
   - SKM_DB có bảng lô nạp, bảng đệm và cột dấu nguồn mang nhãn thiết kế-chưa-build trước khi viết migration (G-E16-02).
-- key: MIG-02/BE
-  cha: MIG-02
+- key: MIG-02-1/BE
+  cha: MIG-02-1
   tracker: devtask
-  title_vi: 'Phía máy chủ: Công cụ nạp qua bảng đệm có đối chiếu'
+  title_vi: 'Phía máy chủ: Bảng đệm, lô nạp và đọc file vào đệm (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -214,21 +209,19 @@ items:
   owner: BE-1
   priority: 3
   premise_refs: []
-  gap_refs:
-  - G-E16-04
-  - G-E16-05
-  mo_ta: 'Làm module migration: đọc file vào bảng đệm, áp quy tắc MIG-01, ghi qua hàm công khai của module chủ, so số trước–sau và ghi quyết định của người cho dòng xung đột.'
+  gap_refs: []
+  mo_ta: 'Làm bước mở lô và đọc file vào bảng đệm của module migration: mỗi lần chạy tạo một lô mới, dòng file vào đệm nguyên giá trị kèm mã nguồn và mã lô; chưa áp quy tắc, chưa ghi bảng nghiệp vụ.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Không có lệnh ghi thẳng vào bảng nghiệp vụ; mọi lần ghi đi qua hàm của module chủ.
-  - Phép so chạy theo tổng lô, theo 業務日 (ngày nghiệp vụ) và theo người tham gia; lô chỉ hoàn tất khi khớp hoặc mọi lệch đã có người quyết (G-E16-04).
-  - Lệnh ghi quyết định lấy người từ phiên và giờ từ máy chủ, bỏ qua giá trị gửi lên (G-E16-05).
+  - Nạp lại cùng nguồn sinh lô mới; lô cũ và dòng đệm cũ không bị sửa.
+  - Số dòng đệm của lô bằng số dòng file; dòng đệm giữ nguyên giá trị gốc.
+  - Mã của bước đọc file không có lệnh ghi vào bảng nghiệp vụ.
   dinh_nghia_xong: []
-- key: MIG-02/DB
-  cha: MIG-02
+- key: MIG-02-1/DB
+  cha: MIG-02-1
   tracker: devtask
-  title_vi: 'Dữ liệu: Công cụ nạp qua bảng đệm có đối chiếu'
+  title_vi: 'Dữ liệu: Bảng đệm, lô nạp và đọc file vào đệm (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -246,7 +239,7 @@ items:
   premise_refs: []
   gap_refs:
   - G-E16-02
-  mo_ta: Viết migration cho bảng đệm và bảng lô nạp, thêm cột dấu nguồn và mã lô vào các bảng đích chỉ-thêm (G-E16-02).
+  mo_ta: Viết migration tạo bảng đệm và bảng lô nạp, thêm cột dấu nguồn và mã lô vào các bảng đích chỉ-thêm để MIG-02-2 ghi được dấu migrated (G-E16-02).
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -254,10 +247,10 @@ items:
   - Cột dấu nguồn chỉ nhận system hoặc migrated, mặc định là system.
   - Bảng đệm chịu cùng thời hạn lưu và quyền truy cập như bảng nghiệp vụ vì có dữ liệu cá nhân (DR-RET-01).
   dinh_nghia_xong: []
-- key: MIG-02/TEST
-  cha: MIG-02
+- key: MIG-02-1/TEST
+  cha: MIG-02-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Công cụ nạp qua bảng đệm có đối chiếu'
+  title_vi: 'Ca kiểm thử: Bảng đệm, lô nạp và đọc file vào đệm (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -272,13 +265,137 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử cho công cụ nạp, nhắm vào bước người quyết chênh lệch và việc nạp lại.
+  mo_ta: Thiết kế ca kiểm thử cho bước mở lô và đọc file vào đệm, chạy trên mẫu file đã che.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Đọc một file mẫu: số dòng đệm bằng số dòng file, giá trị từng ô không đổi, mỗi dòng mang mã nguồn và mã lô.'
+  - 'Nạp lại cùng nguồn: có lô mới, lô cũ và dòng đệm cũ không đổi.'
+  - 'Thử xoá dòng đệm hoặc sửa dòng lô nạp bằng tài khoản ứng dụng: bị chặn ở mức quyền CSDL.'
+  dinh_nghia_xong: []
+- key: MIG-02-2
+  cha: E16
+  tracker: story
+  title_vi: Áp quy tắc, ghi qua module chủ, đối chiếu (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-04
+  gap_refs:
+  - G-E16-04
+  - G-E16-05
+  mo_ta: 'Phần 2/2 của công cụ nạp qua bảng đệm (ADR-016), tiếp sau MIG-02-1 đã đưa dòng file vào đệm: module áp quy tắc ánh xạ và làm sạch của MIG-01 lên dòng đệm, ghi dòng đạt qua hàm công khai của module chủ, không ghi thẳng vào bảng đích, rồi so số bản ghi và tổng tiền giữa nguồn và đích. Lô chỉ hoàn tất khi khớp, hoặc mọi lệch đã có người của chợ quyết; máy không tự chọn bên đúng.'
+  pham_vi:
+  - Hàm ghi công khai của module chủ từng bảng và khung ghi chỉ-thêm của PLT-03.
+  - Phép so số bản ghi và tổng tiền theo tổng lô, theo ngày nghiệp vụ và theo người tham gia (G-E16-04).
+  - Danh sách dòng xung đột và lệnh ghi quyết định cho người của chợ (G-E16-05).
+  luong_chinh:
+  - Module áp quy tắc của MIG-01 lên dòng đệm của lô; dòng đạt được ghi qua hàm của module chủ kèm dấu nguồn migrated và mã lô, dòng xung đột chờ người quyết.
+  - Module so số bản ghi và tổng tiền giữa nguồn và đích; còn lệch thì lô ở trạng thái chờ.
+  - Người của chợ quyết từng dòng xung đột; hệ thống ghi quyết định, người của phiên và giờ máy chủ.
+  - Khi hết lệch hoặc mọi lệch đã có người quyết thì lô sang hoàn tất.
+  tieu_chi_nghiem_thu:
+  - Khi số bản ghi hoặc tổng tiền nguồn khác đích mà còn dòng chưa quyết thì lô không sang hoàn tất.
+  - Khi người của chợ quyết một dòng xung đột thì bản ghi lưu quyết định, người của phiên và giờ máy chủ; máy không tự chọn bên đúng.
+  - Khi module migration gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ.
+  - Khi lô hoàn tất thì mọi dòng ghi vào bảng đích mang dấu nguồn migrated và mã lô của lô đó.
+  dinh_nghia_xong:
+  - Mức so và chỗ người của chợ quyết dòng xung đột được chốt bằng văn bản ở issue trước khi đóng, thay cho giả định đang dùng (G-E16-04, G-E16-05).
+- key: MIG-02-2/BE
+  cha: MIG-02-2
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Áp quy tắc, ghi qua module chủ, đối chiếu (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E16-04
+  - G-E16-05
+  mo_ta: 'Làm phần áp quy tắc, ghi và đối chiếu của module migration: áp quy tắc MIG-01 lên dòng đệm, ghi qua hàm công khai của module chủ, so số trước–sau theo ba mức và ghi quyết định của người cho dòng xung đột.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không có lệnh ghi thẳng vào bảng nghiệp vụ; mọi lần ghi đi qua hàm của module chủ.
+  - Phép so chạy theo tổng lô, theo 業務日 (ngày nghiệp vụ) và theo người tham gia; lô chỉ hoàn tất khi khớp hoặc mọi lệch đã có người quyết (G-E16-04).
+  - Lệnh ghi quyết định lấy người từ phiên và giờ từ máy chủ, bỏ qua giá trị gửi lên (G-E16-05).
+  dinh_nghia_xong: []
+- key: MIG-02-2/DB
+  cha: MIG-02-2
+  tracker: devtask
+  title_vi: 'Dữ liệu: Áp quy tắc, ghi qua module chủ, đối chiếu (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-016
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Bổ sung cho bảng đệm trạng thái từng dòng (đạt, xung đột, đã quyết) và trường ghi quyết định, người quyết, giờ máy chủ; dựng truy vấn đối chiếu số bản ghi và tổng tiền giữa đệm và bảng đích.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dòng đệm có trạng thái đạt, xung đột hoặc đã quyết; dòng đã quyết giữ quyết định, người quyết và giờ máy chủ.
+  - Truy vấn đối chiếu cho số bản ghi và tổng tiền theo lô, theo ngày nghiệp vụ và theo người tham gia (G-E16-04).
+  - Dòng ghi vào bảng đích chỉ-thêm mang dấu nguồn migrated và mã lô; dòng có dấu system không bị đè.
+  dinh_nghia_xong: []
+- key: MIG-02-2/TEST
+  cha: MIG-02-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Áp quy tắc, ghi qua module chủ, đối chiếu (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử cho phần áp quy tắc, ghi qua module chủ và đối chiếu, nhắm vào bước người quyết chênh lệch.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - 'Mẫu có một dòng xung đột: lô ở trạng thái chờ cho tới khi một người quyết, bản ghi có người và giờ của phiên, chứng minh kết quả luôn đi qua người xác nhận.'
   - 'Gửi quyết định kèm người và giờ giả: hệ thống lưu người của phiên và giờ máy chủ.'
-  - 'Nạp lại cùng nguồn: có lô mới, lô cũ và dòng đệm cũ không đổi.'
+  - 'Nguồn và đích lệch tổng tiền ở một ngày nghiệp vụ: lô không hoàn tất và báo đúng ngày lệch.'
   dinh_nghia_xong: []
 - key: MIG-03
   cha: E16
@@ -296,7 +413,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs:

@@ -33,10 +33,10 @@ epic:
   - Các issue điều tra của E18 đã có câu trả lời, hoặc khách xác nhận giữ giả định đang dùng.
   dinh_nghia_xong: []
 items:
-- key: NFR-AVL
+- key: NFR-AVL-1
   cha: E18
   tracker: story
-  title_vi: Yêu cầu khả dụng
+  title_vi: Đồng hồ khả dụng, sao lưu và dự phòng (1/2)
   spec_refs:
     sc: []
     api: []
@@ -51,34 +51,29 @@ items:
     - NFR-AVL-03
   labels:
   - type:story
-  - spec-gap
-  owner: PM
+  owner: QA
   priority: 3
   premise_refs: []
-  gap_refs:
-  - G-E18-01
-  - G-FG14-07
-  - G-E18-02
-  mo_ta: 'Story này gom ba yêu cầu khả dụng: đạt 99,5% mỗi tháng tính trong cửa sổ dịch vụ 02:00–10:00 giờ Nhật, làm tiếp được khi mất kết nối ngắn ở hiện trường, và khôi phục trong RTO 4 giờ, RPO 15 phút khi mất một AZ (vùng sẵn sàng) hoặc instance CSDL ở ap-northeast-1, gồm cả khôi phục về một thời điểm; mất cả Region nằm ngoài phạm vi (AD-02, AD-03). Theo ADR-010, chỉ ba thao tác nhập ở hiện trường được lưu cục bộ rồi đồng bộ; chốt giao dịch và khoá ngày luôn cần mạng.'
+  gap_refs: []
+  mo_ta: 'Phần 1/2 của yêu cầu khả dụng (NFR-AVL-01, NFR-AVL-02, NFR-AVL-03): dựng đồng hồ đo khả dụng 99,5% mỗi tháng chỉ tính trong cửa sổ dịch vụ 02:00–10:00 giờ Nhật, bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ cùng vùng ap-northeast-1 trên môi trường thử của PLT-02. Phần này làm nền cho phần 2/2 (NFR-AVL-2): mất kết nối ở hiện trường và diễn tập khôi phục đo RTO 4 giờ, RPO 15 phút.'
   pham_vi:
-  - NFR-AVL-01, NFR-AVL-02, NFR-AVL-03 (N1–N3); sao lưu hằng ngày và bản dự phòng đồng bộ cùng vùng của PLT-02; đồng hồ đo gọi API-220.
-  - 'Ba thao tác lưu cục bộ theo AD-04 của LAB-01: nhập lô ở SC-020, ghi 目利き (thẩm định bằng mắt) ở SC-023, ghi lần giao ở SC-060 (G-FG14-07); điều giải xung đột ở SC-151.'
+  - NFR-AVL-01, NFR-AVL-02, NFR-AVL-03 (N1–N3) ở mặt đo và hạ tầng; đồng hồ đo gọi API-220; sao lưu hằng ngày và bản dự phòng đồng bộ cùng vùng của PLT-02.
+  - Chưa gồm lưu tạm ba thao tác hiện trường, điều giải xung đột ở SC-151 và diễn tập khôi phục (NFR-AVL-2).
   luong_chinh:
-  - Infra cấu hình đồng hồ đo chỉ tính trong cửa sổ dịch vụ; bảo trì đặt ngoài cửa sổ.
-  - Infra bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ.
-  - QA ngắt kết nối thiết bị hiện trường trên môi trường thử, làm ba thao tác ghi tạm rồi thử chốt giao dịch và khoá ngày.
-  - Infra diễn tập khôi phục trên môi trường thử, đo thời gian và lượng dữ liệu mất; PM ghi số đo vào story.
+  - Infra cấu hình đồng hồ đo gọi API-220, chỉ tính phút trong cửa sổ dịch vụ; bảo trì đặt ngoài cửa sổ.
+  - Infra bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ cùng vùng trên môi trường thử.
+  - QA dừng dịch vụ thử trong và ngoài cửa sổ, đối chiếu phút bị trừ trên đồng hồ.
+  - Infra ghi vị trí sao lưu, nhật ký và bản dự phòng vào README hạ tầng để NFR-AVL-2 diễn tập khôi phục.
   tieu_chi_nghiem_thu:
   - Khi tính khả dụng thì chỉ các phút trong cửa sổ dịch vụ được tính, bảo trì ngoài cửa sổ không bị trừ.
-  - Khi mất kết nối thì ba thao tác nhập được lưu tạm và đồng bộ lại khi có mạng; chốt 相対取引 (giao dịch thỏa thuận) và khoá ngày bị chặn, màn báo rõ đang mất kết nối.
-  - Khi đồng bộ gặp xung đột thì dòng đó chờ người xử ở SC-151, không tự trộn.
-  - Khi diễn tập khôi phục ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm thì thời gian không quá 4 giờ, dữ liệu mất không quá 15 phút, và số đo thật ghi vào story.
+  - Khi đọc đồng hồ thì số lấy từ API-220 và tỷ lệ tháng so được với mức 99,5%.
+  - Khi kiểm sao lưu và bản dự phòng thì sao lưu chạy hằng ngày, nhật ký liên tục có mặt và cả ba chỉ nằm trong vùng Nhật.
   dinh_nghia_xong:
-  - Danh sách ba thao tác nằm ở ràng buộc của bảng sync_queue và ở PREMISE, không chỉ trong mã (G-FG14-07); tiêu chí lưu tạm đã có ở FE của ba màn (G-E18-01).
-- key: NFR-AVL/TEST
-  cha: NFR-AVL
+  - Cửa sổ dịch vụ, chu kỳ sao lưu và vùng lưu ghi ở cấu hình hạ tầng dạng mã của PLT-02, không chỉnh tay trên bảng điều khiển.
+- key: NFR-AVL-1/TEST
+  cha: NFR-AVL-1
   tracker: testdesign
-  title_vi: 'Ca kiểm thử: Yêu cầu khả dụng'
+  title_vi: 'Ca kiểm thử: Đồng hồ khả dụng, sao lưu và dự phòng (1/2)'
   spec_refs:
     sc: []
     api: []
@@ -96,7 +91,108 @@ items:
   priority: 3
   premise_refs: []
   gap_refs: []
-  mo_ta: Thiết kế ca kiểm thử chạy suy giảm và khôi phục trên môi trường thử.
+  mo_ta: Thiết kế ca kiểm thử cho đồng hồ đo khả dụng và sao lưu trên môi trường thử.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Dừng dịch vụ ngoài cửa sổ dịch vụ: đồng hồ không trừ phút; dừng trong cửa sổ: phút dừng bị trừ.'
+  - 'Đọc đồng hồ qua API-220: số phút tính và tỷ lệ tháng khớp với nhật ký dừng dịch vụ của ca trên.'
+  - 'Kiểm vị trí sao lưu, nhật ký và bản dự phòng: cả ba trong vùng Nhật, bản sao lưu ngày gần nhất có mặt.'
+  dinh_nghia_xong: []
+- key: NFR-AVL-1/INFRA
+  cha: NFR-AVL-1
+  tracker: devtask
+  title_vi: 'Hạ tầng: Đồng hồ khả dụng, sao lưu và dự phòng (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-010
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Cấu hình đồng hồ đo khả dụng trong cửa sổ dịch vụ, bật sao lưu hằng ngày, nhật ký liên tục và bản dự phòng đồng bộ cùng vùng trên môi trường thử.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Đồng hồ đo dùng API-220 và chỉ tính trong 02:00–10:00 giờ Nhật.
+  - Sao lưu, nhật ký và bản dự phòng chỉ nằm trong vùng Nhật.
+  - Bản dự phòng là bản đồng bộ cùng vùng; cách dựng lại ghi ở README hạ tầng.
+  dinh_nghia_xong: []
+- key: NFR-AVL-2
+  cha: E18
+  tracker: story
+  title_vi: Mất kết nối và diễn tập khôi phục (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-010
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:story
+  - spec-gap
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E18-01
+  - G-FG14-07
+  - G-E18-02
+  mo_ta: 'Phần 2/2 của yêu cầu khả dụng, dựa trên đồng hồ, sao lưu và bản dự phòng đã dựng ở NFR-AVL-1: làm tiếp được khi mất kết nối ngắn ở hiện trường, và khôi phục trong RTO 4 giờ, RPO 15 phút khi mất một AZ (vùng sẵn sàng) hoặc instance CSDL ở ap-northeast-1, gồm cả khôi phục về một thời điểm; mất cả Region nằm ngoài phạm vi (AD-02, AD-03). Theo ADR-010, chỉ ba thao tác nhập ở hiện trường được lưu cục bộ rồi đồng bộ; chốt giao dịch và khoá ngày luôn cần mạng.'
+  pham_vi:
+  - 'Ba thao tác lưu cục bộ theo AD-04 của LAB-01: nhập lô ở SC-020, ghi 目利き (thẩm định bằng mắt) ở SC-023, ghi lần giao ở SC-060 (G-FG14-07); điều giải xung đột ở SC-151.'
+  - Diễn tập khôi phục trên môi trường thử cho ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm (G-E18-02).
+  luong_chinh:
+  - QA ngắt kết nối thiết bị hiện trường trên môi trường thử, làm ba thao tác ghi tạm rồi thử chốt giao dịch và khoá ngày.
+  - QA nối mạng lại, kiểm dòng đồng bộ; cho hai thiết bị sửa cùng bản ghi để dòng xung đột về SC-151.
+  - Infra diễn tập khôi phục trên môi trường thử cho hai ca, đo thời gian và lượng dữ liệu mất.
+  - PM ghi số đo thật vào story; chưa đạt 4 giờ hoặc 15 phút thì Infra sửa cấu hình và diễn tập lại.
+  tieu_chi_nghiem_thu:
+  - Khi mất kết nối thì ba thao tác nhập được lưu tạm và đồng bộ lại khi có mạng; chốt 相対取引 (giao dịch thỏa thuận) và khoá ngày bị chặn, màn báo rõ đang mất kết nối.
+  - Khi đồng bộ gặp xung đột thì dòng đó chờ người xử ở SC-151, không tự trộn.
+  - Khi diễn tập khôi phục ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm thì thời gian không quá 4 giờ, dữ liệu mất không quá 15 phút, và số đo thật ghi vào story.
+  dinh_nghia_xong:
+  - Danh sách ba thao tác nằm ở ràng buộc của bảng sync_queue và ở PREMISE, không chỉ trong mã (G-FG14-07); tiêu chí lưu tạm đã có ở FE của ba màn (G-E18-01).
+- key: NFR-AVL-2/TEST
+  cha: NFR-AVL-2
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Mất kết nối và diễn tập khôi phục (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr:
+    - NFR-AVL-01
+    - NFR-AVL-02
+    - NFR-AVL-03
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm thử chạy suy giảm khi mất kết nối ở hiện trường và đồng bộ lại, trên môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -104,10 +200,10 @@ items:
   - 'Ngắt kết nối lúc chốt giao dịch hoặc khoá ngày: thao tác bị chặn, màn báo mất kết nối, không lưu cục bộ.'
   - 'Hai thiết bị đồng bộ cùng một bản ghi: dòng xung đột chờ người xử ở SC-151.'
   dinh_nghia_xong: []
-- key: NFR-AVL/INFRA
-  cha: NFR-AVL
+- key: NFR-AVL-2/INFRA
+  cha: NFR-AVL-2
   tracker: devtask
-  title_vi: 'Hạ tầng: Yêu cầu khả dụng'
+  title_vi: 'Hạ tầng: Mất kết nối và diễn tập khôi phục (2/2)'
   spec_refs:
     sc: []
     api: []
@@ -128,13 +224,13 @@ items:
   premise_refs: []
   gap_refs:
   - G-E18-02
-  mo_ta: Cấu hình đồng hồ đo khả dụng trong cửa sổ dịch vụ, sao lưu và bản dự phòng đồng bộ, rồi diễn tập khôi phục trên môi trường thử để đo RTO, RPO thật.
+  mo_ta: Diễn tập khôi phục trên môi trường thử từ sao lưu và bản dự phòng của NFR-AVL-1 để đo RTO, RPO thật cho hai ca sự cố.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Đồng hồ đo dùng API-220 và chỉ tính trong 02:00–10:00 giờ Nhật.
   - Diễn tập khôi phục ít nhất một lần trên môi trường thử trước phát hành, cho ca mất một AZ hoặc instance CSDL và ca khôi phục về một thời điểm, ghi thời gian và lượng dữ liệu mất vào story (G-E18-02).
-  - Sao lưu, nhật ký và bản dự phòng chỉ nằm trong vùng Nhật.
+  - Ca khôi phục về một thời điểm dùng nhật ký liên tục; thời điểm chọn và dữ liệu sau khôi phục ghi vào story.
+  - Thời gian đo không quá 4 giờ, dữ liệu mất không quá 15 phút; chưa đạt thì ghi nguyên nhân và diễn tập lại.
   dinh_nghia_xong: []
 - key: NFR-PERF
   cha: E18
@@ -153,7 +249,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs:
@@ -252,7 +348,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-15
@@ -352,7 +448,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 3
   premise_refs:
   - P-19
@@ -447,7 +543,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: QA
   priority: 3
   premise_refs:
   - P-14
@@ -541,7 +637,7 @@ items:
     - NFR-USE-01
   labels:
   - type:story
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-11
@@ -632,7 +728,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-11

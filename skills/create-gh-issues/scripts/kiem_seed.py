@@ -87,7 +87,7 @@ def _kiem_cha(f: str, it: dict, theo_key: dict, con: dict, dem: dict, kq) -> Non
         goc = theo_key.get(cha, (None, {}))[1]
         if (goc.get("tracker") != "story" or theo_key[cha][0] != f or k != f"{cha}/{loai}"
                 or loai not in LEAF_LOAI or LEAF_TRACKER[loai] != tr):
-            kq.vi_pham(noi, None, f"{k}: leaf phải có cha là story cùng file, key `<story>/<FE|BE|DB|TEST|INFRA>`"
+            kq.vi_pham(noi, None, f"{k}: leaf phải có cha là story cùng file, key `<story>/<FE|BE|DB|TEST|INFRA|PM|BRSE>`"
                                   f" và tracker khớp loại (cha hiện tại: {cha})")
     else:
         kq.vi_pham(noi, None, f"{k}: tracker `{tr}` không thuộc tầng story hay leaf")

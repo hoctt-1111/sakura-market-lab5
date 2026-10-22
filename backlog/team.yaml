@@ -12,17 +12,27 @@ status_dau: New
 priority_map: {1: Urgent, 2: High, 3: Normal}
 ngay_xet_qua_han: "2026-10-12"   # ngày lập seed P1; cố định để chạy lại ra cùng byte
 
-# Owner theo vai (field single-select «Owner»). FG lẻ và epic xuyên suốt E15–E19 → người số 1, FG chẵn → người số 2.
+# Owner theo vai (field single-select «Owner»). Từ 22/10 (plan 261021-2151, P-53): lá FE/BE/DB chia theo MIỀN nghiệp vụ
+# (owner_mien), không theo FG lẻ/chẵn; story Owner = người dẫn (BE → FE → QA → Infra → PM theo lá có); epic giữ PM.
+# Ngoại lệ: lá BE của story DSG-xx → BE-1 (Tech Lead là slot BE-1 thứ nhất). owner_chuyen: story chuyển trọn lá FE/BE/DB sang
+# slot khác để cân ±10% giờ/người — sinh bởi tools/can-owner.py vào registry/owner-chuyen.yaml, bộ sinh seed đọc file đó.
 owner_theo_tracker:
   epic: PM
-  story: PM
+  story: PM            # dự phòng khi story không có lá; luật người dẫn ghi đè sau khi sinh lá
   investigation: {khach: BrSE, tech_lead: BE-1, pm: PM}
 owner_theo_leaf:
-  FE: {le: FE-1, chan: FE-2, xuyen_suot: FE-1}
-  BE: {le: BE-1, chan: BE-2, xuyen_suot: BE-1}
-  DB: {le: BE-1, chan: BE-2, xuyen_suot: BE-1}
+  FE: {mien: {giao_dich: FE-1, tai_chinh_nen: FE-2}}
+  BE: {mien: {giao_dich: BE-2, tai_chinh_nen: BE-1}}   # BE-1 có 2 người (P-52) nhận miền nặng hơn; can-owner cân phần dư
+  DB: {mien: {giao_dich: BE-2, tai_chinh_nen: BE-1}}
   TEST: QA
   INFRA: Infra
+  PM: PM
+  BRSE: BrSE
+owner_mien:
+  giao_dich: [FG-03, FG-04, FG-05, FG-06, FG-07, FG-08]
+  tai_chinh_nen: [FG-01, FG-02, FG-09, FG-10, FG-11, FG-12, FG-13, FG-14, E15, E16, E17, E18, E19, E20]
+owner_ngoai_le:
+  DSG: {BE: BE-1}
 
 sprint: {ten: Sprint, bat_dau: "2026-11-09", so_ngay: 14, so_luong: 6}   # P2 21/10: Sprint 1 = kickoff LAB-1 (P-51); 6 Iteration = 6 sprint đầu của 19
 
@@ -73,6 +83,12 @@ dinh_nghia_xong_mau:
     - Hạ tầng dựng bằng cấu hình nằm trong repo, không có bước làm tay mà không ghi lại.
     - Bí mật không nằm trong repo mã nguồn.
     - README có hướng dẫn dựng lại từ đầu.
+  PM:
+    - Biên bản họp sprint và báo cáo tuần đã gửi khách, có ngày gửi và người nhận.
+    - Trạng thái, Sprint và giờ trên Project khớp việc thật ở ngày cuối sprint.
+  BRSE:
+    - Câu hỏi và câu trả lời của khách ghi ở issue điều tra liên quan, kèm ngày và người trả lời.
+    - Tài liệu gửi khách bằng tiếng Nhật có người thứ hai đọc lại trước khi gửi.
 
 # Ràng buộc đặc thù của Product A (bốn gốc P4 chốt câu chữ; constraint:jst thêm ở P3 theo chuẩn v1 S-8).
 # `vi_sao` hiện ở mục «Ràng buộc đặc thù» của thân issue khi agent không viết câu riêng, và ở bảng «Hạng mục chịu
@@ -102,11 +118,16 @@ cau_truc:
     story: {cham_swp: tong-con, nhom_gio: "-", vai: PM}
     investigation: {cham_swp: truc-tiep, nhom_gio: inv, vai: "BrSE (ai: khach) · BE-1 (ai: tech_lead) · PM (ai: pm)"}
   leaf:
-    FE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "FE-1 FG lẻ · FE-2 FG chẵn"}
-    BE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 FG lẻ · BE-2 FG chẵn"}
-    DB: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 FG lẻ · BE-2 FG chẵn"}
+    FE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "FE-1 miền giao dịch · FE-2 miền tài chính, nền"}
+    BE: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 miền tài chính, nền (2 người) · BE-2 miền giao dịch (DSG/BE → BE-1)"}
+    DB: {cham_swp: truc-tiep, nhom_gio: dev, vai: "BE-1 miền tài chính, nền (2 người) · BE-2 miền giao dịch (DSG/BE → BE-1)"}
     INFRA: {cham_swp: truc-tiep, nhom_gio: dev, vai: Infra}
     TEST: {cham_swp: truc-tiep, nhom_gio: test, vai: QA}
+    PM: {cham_swp: truc-tiep, nhom_gio: mgt, vai: PM}       # 22/10: lá quản lý sprint (MGT-xx), giờ định mức theo sprint (EF-30)
+    BRSE: {cham_swp: truc-tiep, nhom_gio: dsg, vai: BrSE}   # 22/10: lá cầu nối ở DSG/DOC, giờ định mức EF-01/EF-26
+  # 22/10 (P-57): nhóm giờ theo TIỀN TỐ story thắng hậu tố lá — mọi lá của story PLT/MIG/REL/NFR/AC/UAT/REG/DSG/DOC/MGT
+  # vào nhóm k riêng hiệu chuẩn trên EF LAB-1 (quy-uoc-gio.yaml › k_<nhóm>); story không có tiền tố ở đây theo hậu tố (dev/test).
+  nhom_gio_theo_tien_to: {PLT: platform, MIG: mig, REL: rel, NFR: nfr, AC: e2e, UAT: e2e, REG: e2e, DSG: dsg, DOC: dsg, MGT: mgt}
   status_gia_lap: [New, Planning, In Progress, In Review, QA Testing, Pending, Closed]
   doi_cha: []
   dong_thua:   # user chốt 18/10: LAB-4 0.4.1 đổi chủ migration, đóng kèm lý do và nhãn thừa riêng, không xoá
@@ -114,3 +135,50 @@ cau_truc:
     - {key: DATA-FG05/DB, ly_do: "Migration bảng auction_sessions chuyển sang SC-041/DB (SC-041 ghi bảng này theo LAB-4 0.4.1)."}
     - {key: DATA-FG05/TEST, ly_do: "Ca kiểm thử tạo bảng auction_sessions chuyển theo SC-041 (leaf TEST của SC-041)."}
     - {key: SC-063/DB, ly_do: "Nút 登録 (đăng ký) của SC-060 nay ghi cả delivery_exceptions theo LAB-4 0.4.1; SC-060 đứng trước SC-063 nên làm chủ migration bảng này, việc chuyển sang SC-060/DB."}
+    # 22/10 (plan 261021-2151 P4b, P-58): 18 story có lá vượt trần một sprint của Owner (0,85 × 56 giờ × so_nguoi) tách trọn thành story con
+    # <key>-1…<key>-n (biến thể A, user chốt 22/10); story gốc và mọi lá gốc đóng thừa, không xoá. Số giờ từ gio-final.json sau U4 22/10.
+    - {key: AC-1, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-1-1, AC-1-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-1/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-1-1/TEST, AC-1-2/TEST."}
+    - {key: AC-2, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-2-1, AC-2-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-2/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-2-1/TEST, AC-2-2/TEST."}
+    - {key: AC-5, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-5-1, AC-5-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-5/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-5-1/TEST, AC-5-2/TEST."}
+    - {key: AC-6, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-6-1, AC-6-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-6/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-6-1/TEST, AC-6-2/TEST."}
+    - {key: AC-7, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-7-1, AC-7-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-7/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-7-1/TEST, AC-7-2/TEST."}
+    - {key: AC-10, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-10-1, AC-10-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-10/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-10-1/TEST, AC-10-2/TEST."}
+    - {key: AC-11, ly_do: "Tách theo sprint (P-58): lá TEST 99 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con AC-11-1, AC-11-2, mỗi story con một phần vừa một sprint."}
+    - {key: AC-11/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang AC-11-1/TEST, AC-11-2/TEST."}
+    - {key: DSG-01, ly_do: "Tách theo sprint (P-58): lá BRSE 54.5 giờ > trần 47.6 giờ của BrSE; việc chuyển sang 2 story con DSG-01-1, DSG-01-2, mỗi story con một phần vừa một sprint."}
+    - {key: DSG-01/BE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DSG-01-1/BE, DSG-01-2/BE."}
+    - {key: DSG-01/BRSE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DSG-01-1/BRSE, DSG-01-2/BRSE."}
+    - {key: MIG-02, ly_do: "Tách theo sprint (P-58): lá BE 160 giờ > trần 95.2 giờ của BE-1; việc chuyển sang 2 story con MIG-02-1, MIG-02-2, mỗi story con một phần vừa một sprint."}
+    - {key: MIG-02/BE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang MIG-02-1/BE, MIG-02-2/BE."}
+    - {key: MIG-02/DB, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang MIG-02-1/DB, MIG-02-2/DB."}
+    - {key: MIG-02/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang MIG-02-1/TEST, MIG-02-2/TEST."}
+    - {key: NFR-AVL, ly_do: "Tách theo sprint (P-58): lá INFRA 58 giờ > trần 47.6 giờ của Infra; việc chuyển sang 2 story con NFR-AVL-1, NFR-AVL-2, mỗi story con một phần vừa một sprint."}
+    - {key: NFR-AVL/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang NFR-AVL-1/INFRA, NFR-AVL-2/INFRA."}
+    - {key: NFR-AVL/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang NFR-AVL-1/TEST, NFR-AVL-2/TEST."}
+    - {key: PLT-01, ly_do: "Tách theo sprint (P-58): lá INFRA 138.5 giờ > trần 47.6 giờ của Infra; việc chuyển sang 3 story con PLT-01-1, PLT-01-2, PLT-01-3, mỗi story con một phần vừa một sprint."}
+    - {key: PLT-01/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang PLT-01-1/INFRA, PLT-01-2/INFRA, PLT-01-3/INFRA."}
+    - {key: PLT-02, ly_do: "Tách theo sprint (P-58): lá INFRA 231 giờ > trần 47.6 giờ của Infra; việc chuyển sang 5 story con PLT-02-1, PLT-02-2, PLT-02-3, PLT-02-4, PLT-02-5, mỗi story con một phần vừa một sprint."}
+    - {key: PLT-02/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang PLT-02-1/INFRA, PLT-02-2/INFRA, PLT-02-3/INFRA, PLT-02-4/INFRA, PLT-02-5/INFRA."}
+    - {key: PLT-03, ly_do: "Tách theo sprint (P-58): lá BE 138.5 giờ > trần 95.2 giờ của BE-1; INFRA 115.5 giờ > trần 47.6 giờ của Infra; việc chuyển sang 3 story con PLT-03-1, PLT-03-2, PLT-03-3, mỗi story con một phần vừa một sprint."}
+    - {key: PLT-03/BE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang PLT-03-1/BE, PLT-03-2/BE, PLT-03-3/BE."}
+    - {key: PLT-03/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang PLT-03-1/INFRA, PLT-03-2/INFRA, PLT-03-3/INFRA."}
+    - {key: REG-01, ly_do: "Tách theo sprint (P-58): lá TEST 158.5 giờ > trần 95.2 giờ của QA; việc chuyển sang 2 story con REG-01-1, REG-01-2, mỗi story con một phần vừa một sprint."}
+    - {key: REG-01/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REG-01-1/TEST, REG-01-2/TEST."}
+    - {key: REL-01, ly_do: "Tách theo sprint (P-58): lá INFRA 98.5 giờ > trần 47.6 giờ của Infra; việc chuyển sang 3 story con REL-01-1, REL-01-2, REL-01-3, mỗi story con một phần vừa một sprint."}
+    - {key: REL-01/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-01-1/INFRA, REL-01-2/INFRA, REL-01-3/INFRA."}
+    - {key: REL-01/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-01-1/TEST, REL-01-2/TEST, REL-01-3/TEST."}
+    - {key: REL-02, ly_do: "Tách theo sprint (P-58): lá INFRA 74 giờ > trần 47.6 giờ của Infra; việc chuyển sang 2 story con REL-02-1, REL-02-2, mỗi story con một phần vừa một sprint."}
+    - {key: REL-02/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-02-1/INFRA, REL-02-2/INFRA."}
+    - {key: REL-02/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-02-1/TEST, REL-02-2/TEST."}
+    - {key: REL-03, ly_do: "Tách theo sprint (P-58): lá INFRA 98.5 giờ > trần 47.6 giờ của Infra; việc chuyển sang 3 story con REL-03-1, REL-03-2, REL-03-3, mỗi story con một phần vừa một sprint."}
+    - {key: REL-03/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-03-1/INFRA, REL-03-2/INFRA, REL-03-3/INFRA."}
+    - {key: REL-03/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-03-1/TEST, REL-03-2/TEST, REL-03-3/TEST."}
+    - {key: REL-04, ly_do: "Tách theo sprint (P-58): lá INFRA 61.5 giờ > trần 47.6 giờ của Infra; việc chuyển sang 2 story con REL-04-1, REL-04-2, mỗi story con một phần vừa một sprint."}
+    - {key: REL-04/INFRA, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-04-1/INFRA, REL-04-2/INFRA."}
+    - {key: REL-04/TEST, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang REL-04-1/TEST, REL-04-2/TEST."}

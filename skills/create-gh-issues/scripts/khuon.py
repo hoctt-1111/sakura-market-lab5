@@ -1,4 +1,4 @@
-"""Thứ tự mục của thân issue theo loại (epic, story, investigation, FE, BE, DB, INFRA, TEST), đọc từ khuôn Markdown.
+"""Thứ tự mục của thân issue theo loại (epic, story, investigation, FE, BE, DB, INFRA, PM, BRSE, TEST), đọc từ khuôn Markdown.
 
 Khuôn (`--khuon`, mẫu ở templates/khuon-issue.md): mỗi tiêu đề `### …` mở một loại, bảng ngay dưới có cột đầu là tên mục,
 từ trên xuống là thứ tự trong thân. Loại nhận từ phần tiêu đề trước dấu «—»: có «(leaf A / B …)» thì là các loại leaf đó,
@@ -16,7 +16,7 @@ MAC_DINH = {
     "story": ["Mô tả", "Phạm vi", "Luồng chính", "Tiêu chí nghiệm thu", "Định nghĩa xong", "Ràng buộc đặc thù",
               "Dữ liệu từ spec", "Tiền đề", "Chỗ hở", "Spec nguồn"],
     "investigation": ["Câu hỏi", "Giả định đang dùng", "Người trả lời · Mốc", "Issue bị ảnh hưởng", "Định nghĩa xong", "Nguồn"],
-    "FE": _LEAF, "BE": _LEAF, "DB": _LEAF, "INFRA": _LEAF,
+    "FE": _LEAF, "BE": _LEAF, "DB": _LEAF, "INFRA": _LEAF, "PM": _LEAF, "BRSE": _LEAF,  # 22/10, plan 261021-2151
     "TEST": ["Mô tả", "Ca kiểm thử bắt buộc", "Định nghĩa xong", "Dữ liệu từ spec", "Spec nguồn"],
 }
 LEAF_RE = re.compile(r"\(leaf ([A-Z]+(?:\s*/\s*[A-Z]+)*)\)")

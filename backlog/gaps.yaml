@@ -29,7 +29,7 @@ g:
     spec: '`specs/system-design/database-design/SKM_DB.md:528` (cùng kiểu ở dòng 684, 713, 803, 970, 999, 1044)'
     mo_ta: Bảy ô khoá ngoại ghi «kiểu UUID theo data-model.md §0.6» và không mang ghi chú «chốt ở LAB-5» như các ô suy khác (reviewer LAB-4, L3).
     xu_ly: de-mo
-    ly_do: Bảy ô đã có kiểu UUID với căn cứ ở §0.6, chỉ thiếu ghi chú chờ chốt, nên sub-issue DB dùng thẳng kiểu đó; người giữ bộ spec LAB-4 thêm ghi chú cho đồng bộ ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
+    ly_do: Bảy ô đã có kiểu UUID với căn cứ ở §0.6, chỉ thiếu ghi chú chờ chốt, nên sub-issue DB dùng thẳng kiểu đó; người giữ bộ spec LAB-4 thêm ghi chú cho đồng bộ ở lần phát hành spec sau, nên dòng này để mở tới lúc đó. Mốc đóng là lần phát hành spec LAB-4 kế tiếp, trước 31/12/2026.
     phat_hien: p2
   - ma: G-04
     spec: '`references/docs/system-design/data-model.md:189` (bảng B của §0.7)'
@@ -41,7 +41,7 @@ g:
     spec: '`specs/_index.md:104`'
     mo_ta: '`specs/_index.md` không có hàng riêng cho từng API; ba API thiết kế đích chỉ nằm ở `_index.md` của api-design (reviewer LAB-4, L5).'
     xu_ly: de-mo
-    ly_do: Reviewer LAB-4 đã kết luận đây không phải lỗi vì chuẩn chỉ đặt mục lục ở bốn nơi và mục lục của api-design đã liệt kê đủ ba API, nên backlog không có việc nào; dòng này chỉ đóng khi chuẩn đổi và người giữ bộ spec LAB-4 thêm hàng cho từng API.
+    ly_do: Reviewer LAB-4 đã kết luận đây không phải lỗi vì chuẩn chỉ đặt mục lục ở bốn nơi và mục lục của api-design đã liệt kê đủ ba API, nên backlog không có việc nào; dòng này chỉ đóng khi chuẩn đổi và người giữ bộ spec LAB-4 thêm hàng cho từng API. Mốc đóng là lần phát hành spec LAB-4 kế tiếp, trước 31/12/2026.
     phat_hien: p2
   - ma: G-06
     spec: '`specs/system-design/api-design/negotiated-trade/SKM_TRADE_CANCEL_CREATE_API.md:66` (và dòng 67, 85)'
@@ -53,7 +53,7 @@ g:
     spec: '`SKM_TRADE_CANCEL_annotated.png`'
     mo_ta: Nhãn số 3, 4, 5 trên ảnh chú thích của SC-034 đè lên ký hiệu của ba nhãn chữ (reviewer LAB-4, L7).
     xu_ly: de-mo
-    ly_do: Lỗi chỉ nằm ở ảnh chú thích, không đổi nội dung item, nên SC-034/FE làm theo bảng item; người giữ bộ spec LAB-4 vẽ lại ảnh ở lần phát hành spec sau, nên dòng này để mở tới lúc đó.
+    ly_do: Lỗi chỉ nằm ở ảnh chú thích, không đổi nội dung item, nên SC-034/FE làm theo bảng item; người giữ bộ spec LAB-4 vẽ lại ảnh ở lần phát hành spec sau, nên dòng này để mở tới lúc đó. Mốc đóng là lần phát hành spec LAB-4 kế tiếp, trước 31/12/2026.
     phat_hien: p2
   - ma: G-08
     spec: '`specs/negotiated-trade/screen-specification/SKM_TRADE_CANCEL_SPEC.md:87` (đến dòng 91)'
@@ -896,7 +896,7 @@ g:
   - ma: G-E15-01
     spec: ADR-003 §4 (Hợp đồng 1) · ADR-009 §5 (hệ quả 3) · ADR-016 §2 (Nơi chạy) · SKM_SYSTEM_DESIGN.md §3
     mo_ta: Danh sách module được ghi từng bảng chỉ-thêm còn dùng tên của bộ cũ. Bảng «mỗi bảng một module ghi» của ADR-003 dùng các module billing, goods, settlement, platform và cả những bảng không còn trong 45 thực thể như receivable_entries, settlements; mục thành phần của thiết kế hệ thống lại có mười module khác tên, ADR-009 đòi một luật cho mỗi cặp trong tám vùng dữ liệu, còn ADR-016 thêm module migration không có trong mục thành phần.
-    xu_ly: issue:PLT-03/BE
+    xu_ly: issue:PLT-03-1/BE  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Luật kiểm kiến trúc trong CI chỉ chặn được khi có một danh sách nguồn đúng; PLT-03/BE lập danh sách bảng và module chủ từ mục thành phần và mô hình dữ liệu hiện hành, Tech Lead duyệt, rồi PLT-03/INFRA sinh luật từ danh sách đó, PLT-01 dựng đúng các module trong danh sách.
     phat_hien: E15
   - ma: G-E15-02
@@ -908,13 +908,13 @@ g:
   - ma: G-E15-03
     spec: ADR-016 §4 · infra-diagram.md (Ba môi trường) · SKM_SYSTEM_DESIGN.md N2
     mo_ta: Môi trường thử chỉ được nhận dữ liệu đã che nhưng chưa có quy tắc che. ADR-016 và bảng môi trường đòi môi trường thử, diễn tập di trú dùng dữ liệu đã che, nhưng không tài liệu nào nói trường nào phải che, che cách nào và ai duyệt bộ dữ liệu sau khi che.
-    xu_ly: issue:PLT-02/INFRA
+    xu_ly: issue:PLT-02-5/INFRA  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Không có quy tắc thì mỗi lần nạp môi trường thử che một kiểu và dữ liệu cá nhân của người tham gia có thể lọt vào môi trường thử; PLT-02/INFRA viết một script che dùng chung, danh sách trường cá nhân lấy theo FG-13, Tech Lead duyệt, rồi MIG-03 và E17 dùng lại.
     phat_hien: E15
   - ma: G-E15-04
     spec: ADR-003 §5 (hệ quả 1, 5) · ADR-016 §4, §5 (hệ quả 3) · SKM_DB.md §2
     mo_ta: Khung nhìn chuẩn mà mọi báo cáo phải đọc chưa được thiết kế. ADR-003 và ADR-016 bắt báo cáo đọc số hiện tại qua khung nhìn đã trừ dòng đảo và lọc theo dấu nguồn di trú, nhưng SKM_DB chỉ khai bảng, không khai khung nhìn nào.
-    xu_ly: issue:PLT-03/BE
+    xu_ly: issue:PLT-03-2/BE  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Đọc thẳng bảng thô thì tổng ra sai mà không báo lỗi; PLT-03/BE làm mẫu khung nhìn và ca kiểm so tổng thô với tổng khung nhìn, các story báo cáo của FG-11 đọc qua khung nhìn này.
     phat_hien: E15
   # ----- P3 E16 (gaps/E16.yaml) -----
@@ -939,13 +939,13 @@ g:
   - ma: G-E16-04
     spec: ADR-016 §2 (Đối chiếu, Chênh lệch) · MIG-03 (RFP)
     mo_ta: Phép so số bản ghi và số tiền trước–sau chưa có mức so. ADR-016 chỉ nói so giữa nguồn và đích, không nói so trên tổng lô, theo từng 業務日 (ngày nghiệp vụ) hay theo từng người tham gia, trong khi mỗi chênh lệch đều phải có người quyết.
-    xu_ly: issue:MIG-02/BE
+    xu_ly: issue:MIG-02-2/BE  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: So chỉ trên tổng lô thì hai lệch ngược dấu triệt tiêu nhau và lọt; so quá mịn thì người của chợ phải quyết quá nhiều dòng. MIG-02/BE so ở ba mức tổng lô, 業務日 và người tham gia, không đặt ngưỡng dung sai nào, rồi Tech Lead duyệt.
     phat_hien: E16
   - ma: G-E16-05
     spec: ADR-016 §2 (Chênh lệch), §5 (hệ quả 6) · SKM_SYSTEM_DESIGN.md (danh sách 72 màn)
     mo_ta: Không màn nào trong 72 màn cho người của chợ quyết dòng xung đột của di trú. ADR-016 đẩy dòng xung đột về người của chợ và ghi quyết định, người quyết, thời điểm, nhưng chưa nói người đó xem và quyết ở đâu.
-    xu_ly: issue:MIG-02/BE
+    xu_ly: issue:MIG-02-2/BE  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Không có chỗ quyết thì lô không bao giờ hoàn tất; MIG-02/BE làm danh sách dòng xung đột và lệnh ghi quyết định có người, giờ lấy từ phiên và máy chủ. Backlog chưa thêm sub-issue FE vì 72 màn không có màn này; nếu khách cần màn riêng thì thêm sub-issue FE cho MIG-02 khi INV-Q-01 có đáp.
     phat_hien: E16
   # ----- P3 E17 (gaps/E17.yaml) -----
@@ -978,13 +978,13 @@ g:
   - ma: G-E18-01
     spec: SKM_SYSTEM_DESIGN.md N2 · ADR-010 §2, §5 (hệ quả 3, 4) · AD-04 (LAB-01)
     mo_ta: Việc lưu tạm trên thiết bị của ba màn hiện trường chưa nằm trong issue nào. G-FG14-07 đã giao việc xử xung đột và ghi tên ba thao tác cho SC-151, nhưng phần giữ dữ liệu cục bộ khi mất mạng, nhắc người dùng đồng bộ và giới hạn thời gian giữ cục bộ của SC-020, SC-023, SC-060 chưa có tiêu chí ở sub-issue FE nào; N2 còn viết «tối đa 3 thao tác» như thể giới hạn số bản ghi chờ.
-    xu_ly: issue:NFR-AVL
+    xu_ly: issue:NFR-AVL-2  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Không có việc ở FE thì hàng đợi của SC-151 không bao giờ có dữ liệu để đồng bộ; NFR-AVL đọc «ba» là ba loại thao tác theo AD-04 và kiểm đầu cuối bằng ca ngắt kết nối, còn SC-020/FE, SC-023/FE, SC-060/FE mỗi leaf có tiêu chí lưu tạm khi mất mạng.
     phat_hien: E18
   - ma: G-E18-02
     spec: SKM_SYSTEM_DESIGN.md N3 · ADR-015 §5 · AD-03 (LAB-01)
     mo_ta: Diễn tập khôi phục được đòi «định kỳ» nhưng chưa có chu kỳ. N3 chỉ cho mức RTO 4 giờ, RPO 15 phút và cách đo là diễn tập; ADR-015 ghi cách đạt hai mức này mới là thiết kế, chưa diễn tập lần nào.
-    xu_ly: issue:NFR-AVL/INFRA
+    xu_ly: issue:NFR-AVL-2/INFRA  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Con số RTO không diễn tập thì không kiểm chứng được; NFR-AVL/INFRA diễn tập ít nhất một lần trên môi trường thử trước phát hành, còn chu kỳ sau phát hành là tham số vận hành do khách duyệt khi bàn giao ở REL-04.
     phat_hien: E18
   - ma: G-E18-03
@@ -1003,31 +1003,31 @@ g:
   - ma: G-E19-01
     spec: SKM_SYSTEM_DESIGN.md §10 (thứ tự triển khai, D1–D6) · P-04
     mo_ta: Thứ tự triển khai ở mục 10 là thứ tự làm bộ tài liệu LAB-4, không phải thứ tự đưa hệ đích lên production. Năm bước đi từ D2 migration 27 bảng sang D3–D6 là spec API, luồng chi tiết, spec màn và các file chia sẻ nội bộ, còn D1 coi 18 bảng đã có nhờ migration của prototype.
-    xu_ly: issue:REL-01
+    xu_ly: issue:REL-01-2  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Theo đúng mục 10 thì kế hoạch phát hành không có bước nào cho ứng dụng hay dữ liệu di trú, và 18 bảng bị bỏ qua; REL-01 viết thứ tự cho hệ viết mới (migration cả 45 bảng theo P-04, ứng dụng, dữ liệu di trú, mở cho người dùng).
     phat_hien: E19
   - ma: G-E19-02
     spec: SKM_SYSTEM_DESIGN.md §10 (downtime) · ADR-009 §5 (hệ quả 1)
     mo_ta: Mục 10 ghi không cần ngừng dịch vụ, trong khi ADR-009 nói lần triển khai nào cũng dừng cả khối. Câu đó dựa trên việc mọi bước chỉ thêm bảng, thêm tài liệu; còn ADR-009 nói sửa một dòng cũng phải chờ ra ngoài cửa sổ dịch vụ.
-    xu_ly: issue:REL-01
+    xu_ly: issue:REL-01-2  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Tin câu của mục 10 thì có thể phát hành trong giờ chợ chạy và cắt ngang giao dịch; REL-01 đặt mọi lần phát hành ngoài cửa sổ 02:00–10:00 giờ Nhật, báo trước người dùng, và coi câu không cần ngừng dịch vụ chỉ đúng với bộ tài liệu LAB-4.
     phat_hien: E19
   - ma: G-E19-03
     spec: SKM_SYSTEM_DESIGN.md §10 (hoàn nguyên) · ADR-016 §2 (Hoàn tác) · ADR-014 §2 (Chạy lại) · A7
     mo_ta: Hoàn nguyên ở mục 10 chỉ có cho tài liệu, và hai bước không hoàn tác được chưa có đường bù. Mục 10 nêu khoá 業務日 (ngày nghiệp vụ) và tệp xuất kế toán đã gửi là hai bước không quay lại được khi đã vận hành thật nhưng không nói xử lý thế nào, cũng chưa có đường lùi cho bản ứng dụng hay cho migration khi đã có dữ liệu thật.
-    xu_ly: issue:REL-02
+    xu_ly: issue:REL-02-2  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Không có kế hoạch viết trước thì lúc sự cố người vận hành dễ xoá bản khoá hoặc sinh lô xuất mới, đúng điều A7 và ADR-014 cấm; REL-02 viết đường lùi từng bước và đường bù cho hai bước kia (điều chỉnh có duyệt của FG-06, chạy lại cùng mã lô), khách duyệt trước ngày phát hành.
     phat_hien: E19
   - ma: G-E19-04
     spec: SKM_SYSTEM_DESIGN.md §10 (cách biết là hỏng)
     mo_ta: «Cách biết là hỏng» ở mục 10 chỉ dùng cổng kiểm của bộ tài liệu LAB-4. Ba dấu hiệu nêu ra đều là cổng kiểm cây spec và đối chiếu SKM_DB với SQL, không có dấu hiệu nào cho hệ đang chạy như API-220, kiểm khói hay cảnh báo vận hành.
-    xu_ly: issue:REL-03
+    xu_ly: issue:REL-03-2  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Diễn tập phát hành cần biết khi nào dừng; REL-03 lấy API-220, bộ kiểm khói của REL-01 và bốn nhóm cảnh báo của NFR-OPS-01 làm dấu hiệu hỏng, Tech Lead duyệt danh sách.
     phat_hien: E19
   - ma: G-E19-05
     spec: SKM_SYSTEM_DESIGN.md §10 (Deliverables D1–D6) · ADR-008 §5 (hệ quả 2) · ADR-011 §5 (hệ quả 3)
     mo_ta: Danh sách sản phẩm bàn giao D1–D6 không có mục nào cho vận hành. Sáu mục đều là migration của prototype hoặc tài liệu thiết kế; tài liệu vận hành, lịch sao lưu và diễn tập khôi phục, người xem nhật ký hành vi bất thường mà ADR-011 đòi, và câu trả lời thống nhất về tư cách của nền tảng mà ADR-008 đòi ghi vào tài liệu bàn giao đều chưa có chỗ.
-    xu_ly: issue:REL-04
+    xu_ly: issue:REL-04-1  # 22/10 P4b: story gốc tách theo sprint (P-58)
     ly_do: Thiếu các mục này thì khách nhận hệ mà không tự vận hành được và nhật ký bất thường thành dữ liệu không ai đọc; REL-04 gom chúng vào biên bản bàn giao có người nhận phía khách.
     phat_hien: E19
   # ----- P3 đầu việc 3–5 (18/10): việc LAB-4 0.4.1 giao lại cho LAB-5 -----

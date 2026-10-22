@@ -31,10 +31,10 @@ epic:
   - Khi ứng dụng chạy lệnh sửa hay xoá trực tiếp trên một bảng chỉ-thêm thì CSDL từ chối.
   dinh_nghia_xong: []
 items:
-- key: PLT-01
+- key: PLT-01-1
   cha: E15
   tracker: story
-  title_vi: Khung repo mã hệ đích và CI
+  title_vi: Kho mã, bảo vệ nhánh và quyền đẩy mã (1/3)
   spec_refs:
     sc: []
     api: []
@@ -48,35 +48,31 @@ items:
     nfr: []
   labels:
   - type:story
-  - spec-gap
-  owner: PM
+  owner: Infra
   priority: 3
   premise_refs:
   - P-02
-  - P-04
-  gap_refs:
-  - G-E15-01
-  mo_ta: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, một khối triển khai chia module theo vùng dữ liệu (ADR-008, ADR-009), cùng luồng CI chạy ở mỗi yêu cầu gộp mã. Mọi sub-issue BE và DB đặt mã, migration vào kho này (P-02); prototype LAB-3 chỉ còn là tài liệu tham chiếu nghiệp vụ.
+  gap_refs: []
+  mo_ta: 'Phần 1/3 của khung repo mã hệ đích và CI: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, tách khỏi kho spec LAB-4, bảo vệ nhánh chính và cấp quyền đẩy mã cho đội. Phần 2 dựng khung module, phần 3 nối CI; phần này dừng ở kho có quyền đúng và README hai kho trỏ nhau.'
   pham_vi:
   - Kho mã tách khỏi kho spec LAB-4, README hai kho trỏ nhau (P-02).
-  - Các module theo mục thành phần của thiết kế hệ thống, lớp api-gateway và module migration của ADR-016 (G-E15-01); không có module cho cân hay máy in (ADR-012).
-  - Công cụ migration với khung trống; script của 45 bảng do leaf DB từng story viết (P-04).
+  - 'Bảo vệ nhánh chính: không đẩy thẳng, chỉ nhận gộp qua yêu cầu gộp mã có người thứ hai duyệt.'
+  - Quyền đẩy mã cho từng thành viên đội; danh sách quyền ghi trong README.
   luong_chinh:
-  - Infra tạo repo, bảo vệ nhánh chính, cấp quyền đẩy mã cho đội.
-  - Infra dựng khung dự án, mỗi module một gói, module chỉ gọi nhau qua hàm công khai.
-  - 'Infra thêm luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc, quét bí mật.'
-  - Một thành viên mở một yêu cầu gộp mã có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
+  - Infra tạo repo mã hệ đích, tách khỏi kho spec LAB-4.
+  - 'Infra bật bảo vệ nhánh chính: không đẩy thẳng, chỉ gộp qua yêu cầu gộp mã.'
+  - Infra cấp quyền đẩy mã cho đội và ghi danh sách quyền vào README.
+  - Một thành viên thử đẩy thẳng lên nhánh chính rồi mở một yêu cầu gộp mã; kết quả ghi vào story.
   tieu_chi_nghiem_thu:
-  - Khi yêu cầu gộp mã có kiểm thử đỏ thì CI đỏ và nhánh chính không nhận gộp.
-  - Khi module gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ (ADR-009).
-  - Khi mã chứa bí mật hay chuỗi kết nối thì bước quét làm CI đỏ (NFR-SEC-04).
-  - Khi người mới làm theo README thì chạy được kiểm thử và một migration rỗng trên máy mình.
+  - Khi thành viên đẩy thẳng lên nhánh chính thì kho từ chối; qua yêu cầu gộp mã có người duyệt thì nhận.
+  - Khi mở README kho mã thì có đường trỏ sang kho spec LAB-4 và ngược lại (P-02).
+  - Khi người ngoài danh sách quyền đẩy mã thì kho từ chối.
   dinh_nghia_xong:
   - README hai kho trỏ nhau và ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).
-- key: PLT-01/INFRA
-  cha: PLT-01
+- key: PLT-01-1/INFRA
+  cha: PLT-01-1
   tracker: devtask
-  title_vi: Dựng khung dự án và luồng CI
+  title_vi: 'Hạ tầng: Kho mã, bảo vệ nhánh và quyền đẩy mã (1/3)'
   spec_refs:
     sc: []
     api: []
@@ -96,18 +92,407 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: Dựng khung dự án Java 21, Spring Boot 3 theo danh sách module của thiết kế hệ thống và luồng CI chạy ở mỗi yêu cầu gộp mã.
+  mo_ta: Tạo kho mã hệ đích tách khỏi kho spec LAB-4, bật bảo vệ nhánh chính và cấp quyền đẩy mã cho đội.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Nhánh chính không nhận đẩy thẳng, chỉ nhận gộp qua yêu cầu gộp mã có người thứ hai duyệt.
+  - README hai kho trỏ nhau; danh sách quyền đẩy mã ghi trong README.
+  dinh_nghia_xong: []
+- key: PLT-01-2
+  cha: E15
+  tracker: story
+  title_vi: Khung module theo vùng dữ liệu (2/3)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: Infra
+  priority: 3
+  premise_refs:
+  - P-02
+  - P-04
+  gap_refs:
+  - G-E15-01
+  mo_ta: 'Phần 2/3: trên kho đã có quyền của phần 1, Infra dựng khung dự án Java 21, Spring Boot 3 một khối triển khai, chia module theo vùng dữ liệu (ADR-008, ADR-009), mỗi module một gói, kèm công cụ migration với khung trống. Phần 3 mới nối CI; phần này chỉ cần kiểm thử mẫu và migration rỗng chạy trên máy của Infra.'
+  pham_vi:
+  - Các module theo mục thành phần của thiết kế hệ thống, lớp api-gateway và module migration của ADR-016 (G-E15-01); không có module cho cân hay máy in (ADR-012).
+  - Mỗi module một gói, chỉ gọi nhau qua hàm công khai (ADR-009); lá BE, DB của FG-01…FG-14 đặt mã và migration vào gói của module chủ (P-02).
+  - Công cụ migration với khung trống; script của 45 bảng do leaf DB từng story viết (P-04).
+  luong_chinh:
+  - Infra dựng khung dự án một khối triển khai, mỗi module trong danh sách một gói.
+  - Infra đặt hàm công khai làm cửa duy nhất giữa các module; lớp ghi của module không lộ ra ngoài.
+  - Infra thêm công cụ migration và một migration rỗng.
+  - Infra chạy kiểm thử mẫu của từng module và migration rỗng trên CSDL trống, ghi kết quả vào story.
+  tieu_chi_nghiem_thu:
+  - Khi rà danh sách gói thì mỗi module của thiết kế hệ thống có đúng một gói, không có gói cho cân hay máy in (ADR-012).
+  - Khi chạy kiểm thử mẫu thì mọi module xanh; migration rỗng chạy trên CSDL trống, chạy lại không lỗi.
+  - Khi lá BE hay DB của một story cần đặt mã thì có sẵn gói của module chủ, không phải tạo thêm gói.
+  dinh_nghia_xong:
+  - README kho mã có danh sách module và gói tương ứng, ghi rõ module nào thuộc vùng dữ liệu nào.
+- key: PLT-01-2/INFRA
+  cha: PLT-01-2
+  tracker: devtask
+  title_vi: 'Hạ tầng: Khung module theo vùng dữ liệu (2/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng khung dự án Java 21, Spring Boot 3 theo danh sách module của thiết kế hệ thống, mỗi module một gói, kèm công cụ migration với khung trống.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi module trong danh sách có gói riêng và một kiểm thử mẫu chạy xanh.
+  - Công cụ migration chạy được một migration rỗng trên CSDL trống, chạy lại không lỗi.
+  - Không có gói cho cân hay máy in (ADR-012).
+  dinh_nghia_xong: []
+- key: PLT-01-3
+  cha: E15
+  tracker: story
+  title_vi: Luồng CI và README cho người mới (3/3)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:story
+  owner: Infra
+  priority: 3
+  premise_refs:
+  - P-02
+  gap_refs: []
+  mo_ta: 'Phần 3/3, khép lại khung repo: Infra thêm luồng CI chạy ở mỗi yêu cầu gộp mã trên khung của phần 2 và viết README để người mới tự chạy được kiểm thử và migration rỗng. Phần này mang tiêu chí tổng của PLT-01; xong phần này thì lá BE, DB của FG-01…FG-14 bắt đầu đặt mã vào kho (P-02).'
+  pham_vi:
+  - 'Luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc theo ADR-009, quét bí mật (NFR-SEC-04); một bước đỏ thì chặn gộp.'
+  - 'README kho mã cho người mới: dựng máy, chạy kiểm thử, chạy migration rỗng; ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).'
+  - Luật kiểm kiến trúc ở phần này dùng danh sách module của phần 2; luật «mỗi bảng một module ghi» thuộc PLT-03-3.
+  luong_chinh:
+  - 'Infra thêm luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc, quét bí mật.'
+  - 'Infra nối kết quả CI vào bảo vệ nhánh của phần 1: CI đỏ thì nhánh chính không nhận gộp.'
+  - Infra viết README cho người mới và nhờ một thành viên chưa đụng kho làm theo.
+  - Một thành viên mở một yêu cầu gộp mã có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
+  tieu_chi_nghiem_thu:
+  - Khi yêu cầu gộp mã có kiểm thử đỏ thì CI đỏ và nhánh chính không nhận gộp.
+  - Khi module gọi thẳng lớp ghi của module khác thì luật kiểm kiến trúc làm CI đỏ (ADR-009).
+  - Khi mã chứa bí mật hay chuỗi kết nối thì bước quét làm CI đỏ (NFR-SEC-04).
+  - Khi người mới làm theo README thì chạy được kiểm thử và một migration rỗng trên máy mình.
+  dinh_nghia_xong:
+  - README kho mã có mục cho người mới và ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).
+- key: PLT-01-3/INFRA
+  cha: PLT-01-3
+  tracker: devtask
+  title_vi: 'Hạ tầng: Luồng CI và README cho người mới (3/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-008
+    - ADR-009
+    - ADR-012
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs:
+  - P-02
+  gap_refs: []
+  mo_ta: Thêm luồng CI chạy ở mỗi yêu cầu gộp mã và viết README cho người mới trên khung đã dựng ở PLT-01-2.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Luồng CI chạy biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc và quét bí mật; một bước đỏ thì chặn gộp.
-  - Mỗi module trong danh sách có gói riêng và một kiểm thử mẫu chạy xanh.
-  - Công cụ migration chạy được một migration rỗng trên CSDL trống, chạy lại không lỗi.
+  - Người mới làm theo README chạy được kiểm thử và một migration rỗng trên máy mình.
   dinh_nghia_xong: []
-- key: PLT-02
+- key: PLT-02-1
   cha: E15
   tracker: story
-  title_vi: Môi trường AWS dev và môi trường thử
+  title_vi: Cấu hình hạ tầng dạng mã cho dev (1/5)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:story
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Phần 1/5 của việc dựng dev và môi trường thử trên AWS: Infra viết bộ cấu hình hạ tầng dạng mã trong repo, dùng chung cho hai môi trường, chỉ khác tham số, và dùng nó dựng nền của dev ở vùng ap-northeast-1 (ADR-015). Dịch vụ cụ thể của dev lên ở phần 2; phần này dừng ở cấu hình chạy được trên tài khoản trống.'
+  pham_vi:
+  - Một bộ cấu hình hạ tầng dạng mã cho cả hai môi trường, chỉ khác tham số; tham số của dev là bộ đầu tiên.
+  - 'Nền của dev: vùng ap-northeast-1, mạng, vai và quyền cho công cụ triển khai (ADR-015).'
+  - 'README hạ tầng: cách chạy cấu hình trên tài khoản trống.'
+  luong_chinh:
+  - Infra chọn công cụ hạ tầng dạng mã và đặt cấu hình trong repo của PLT-01.
+  - Infra viết lớp nền dùng chung và tệp tham số riêng của dev.
+  - Infra chạy cấu hình trên tài khoản trống để dựng nền dev, ghi các bước vào README hạ tầng.
+  - Tech Lead rà cấu hình; chỗ còn làm tay phải ghi lại.
+  tieu_chi_nghiem_thu:
+  - Khi chạy cấu hình với tham số dev trên tài khoản trống thì nền dev lên, không có bước tay ngoài README.
+  - Khi rà tài nguyên đã tạo thì mọi thứ ở ap-northeast-1 (ADR-015).
+  - Khi đổi sang tham số của môi trường thử thì không phải sửa mã cấu hình, chỉ đổi tệp tham số.
+  dinh_nghia_xong:
+  - README hạ tầng có mục chạy cấu hình trên tài khoản trống.
+- key: PLT-02-1/INFRA
+  cha: PLT-02-1
+  tracker: devtask
+  title_vi: 'Hạ tầng: Cấu hình hạ tầng dạng mã cho dev (1/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Viết bộ cấu hình hạ tầng dạng mã dùng chung cho hai môi trường và dựng nền của dev ở vùng Tokyo từ tài khoản trống.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Một bộ cấu hình, hai tệp tham số; chạy với tham số dev trên tài khoản trống thì nền dev lên.
+  - README hạ tầng ghi các bước chạy; không có bước tay ngoài README.
+  dinh_nghia_xong: []
+- key: PLT-02-2
+  cha: E15
+  tracker: story
+  title_vi: 'Môi trường dev: dịch vụ ADR-015 và bí mật (2/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:story
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Phần 2/5: trên nền của phần 1, Infra dựng đủ dịch vụ của dev theo bảng dịch vụ của ADR-015 và đưa khoá, bí mật vào Secrets Manager. Dev chỉ chứa dữ liệu giả cho lập trình và kiểm thử tự động; môi trường thử là phần 3, nạp dữ liệu là phần 5.'
+  pham_vi:
+  - 'Dịch vụ của dev theo ADR-015: máy ứng dụng sau cân bằng tải có TLS, PostgreSQL, Cognito, S3, Secrets Manager, CloudWatch, CloudTrail.'
+  - Khoá và bí mật đặt trong Secrets Manager, không để trong mã hay bản dựng (NFR-SEC-04).
+  - Không gồm bản dự phòng đồng bộ của CSDL (phần 3) và nạp dữ liệu (phần 5).
+  luong_chinh:
+  - Infra thêm từng dịch vụ của ADR-015 vào cấu hình dạng mã, chạy lên dev.
+  - Infra tạo bí mật trong Secrets Manager và cho ứng dụng đọc lúc khởi động.
+  - Infra triển khai tay một bản dựng của PLT-01 lên dev và gọi API-220.
+  - Infra ghi tên dịch vụ và cách đọc bí mật vào README hạ tầng.
+  tieu_chi_nghiem_thu:
+  - Khi rà dev thì có đủ dịch vụ của bảng ADR-015 và đều ở ap-northeast-1.
+  - Khi quét repo và bản dựng thì không có khoá hay chuỗi kết nối; ứng dụng đọc bí mật từ Secrets Manager (NFR-SEC-04).
+  - Khi gọi API-220 trên dev sau lần triển khai đầu thì trả 200.
+  dinh_nghia_xong:
+  - README hạ tầng ghi danh sách dịch vụ của dev và cách đọc bí mật.
+- key: PLT-02-2/INFRA
+  cha: PLT-02-2
+  tracker: devtask
+  title_vi: 'Hạ tầng: Môi trường dev: dịch vụ ADR-015 và bí mật (2/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thêm dịch vụ của dev theo bảng ADR-015 vào cấu hình dạng mã và đưa bí mật vào Secrets Manager.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dev có đủ dịch vụ của bảng ADR-015, đều ở ap-northeast-1.
+  - Repo và bản dựng không chứa khoá hay chuỗi kết nối; API-220 trên dev trả 200.
+  dinh_nghia_xong: []
+- key: PLT-02-3
+  cha: E15
+  tracker: story
+  title_vi: 'Môi trường thử: CSDL dự phòng, sao lưu (3/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:story
+  owner: Infra
+  priority: 3
+  premise_refs:
+  - P-19
+  gap_refs: []
+  mo_ta: 'Phần 3/5: Infra dựng môi trường thử bằng cùng bộ cấu hình, giống production ở quy mô nhỏ: PostgreSQL có bản dự phòng đồng bộ, sao lưu và khôi phục theo thời điểm, nhật ký và sao lưu đều ở ap-northeast-1 (ADR-015). Môi trường thử dùng cho nghiệm thu và diễn tập; dữ liệu nạp vào ở phần 5, nơi lưu lạnh chỉ thêm khi INV-Q-19 có đáp (P-19).'
+  pham_vi:
+  - Môi trường thử từ cùng cấu hình với tệp tham số riêng; đủ dịch vụ như dev.
+  - CSDL có bản dự phòng đồng bộ, sao lưu tự động và khôi phục theo thời điểm, cùng kiểu cấu hình với production.
+  - 'Nơi lưu lạnh cho dữ liệu đến hạn: chừa chỗ trong cấu hình, thêm khi INV-Q-19 có đáp (P-19).'
+  luong_chinh:
+  - Infra chạy cấu hình với tham số môi trường thử trên tài khoản trống.
+  - Infra bật bản dự phòng đồng bộ và sao lưu cho CSDL, thử khôi phục về một thời điểm.
+  - Infra triển khai tay một bản dựng lên môi trường thử và gọi API-220.
+  - Tech Lead rà danh sách tài nguyên và vùng.
+  tieu_chi_nghiem_thu:
+  - Khi dựng lại môi trường thử từ cấu hình trong repo trên tài khoản trống thì môi trường lên đủ, không có bước tay ngoài README.
+  - Khi rà tài nguyên thì máy chạy, CSDL, sao lưu và nhật ký đều ở ap-northeast-1.
+  - Khi tắt máy CSDL chính thì bản dự phòng nhận việc; khôi phục về một thời điểm chạy được trên môi trường thử.
+  dinh_nghia_xong:
+  - README hạ tầng ghi cách khôi phục CSDL theo thời điểm và chỗ chừa cho nơi lưu lạnh (P-19).
+- key: PLT-02-3/INFRA
+  cha: PLT-02-3
+  tracker: devtask
+  title_vi: 'Hạ tầng: Môi trường thử: CSDL dự phòng, sao lưu (3/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dựng môi trường thử từ cùng bộ cấu hình; CSDL có bản dự phòng đồng bộ, sao lưu và khôi phục theo thời điểm.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Môi trường thử lên đủ từ tài khoản trống, chỉ khác dev ở tệp tham số.
+  - 'CSDL của môi trường thử dùng cùng kiểu cấu hình với production: bản dự phòng đồng bộ và khôi phục theo thời điểm.'
+  - Khôi phục về một thời điểm chạy thử được, kết quả ghi vào README hạ tầng.
+  dinh_nghia_xong: []
+- key: PLT-02-4
+  cha: E15
+  tracker: story
+  title_vi: 'Nối CI: tự lên dev, duyệt lên môi trường thử (4/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:story
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Phần 4/5: Infra nối luồng CI của PLT-01-3 với hai môi trường đã dựng ở phần 2 và 3: bản đã gộp vào nhánh chính tự lên dev, lên môi trường thử khi có người duyệt. Từ phần này đội không còn triển khai tay.'
+  pham_vi:
+  - 'Bước triển khai trong CI: gộp vào nhánh chính thì tự lên dev.'
+  - Bước lên môi trường thử cần một người duyệt; ai duyệt và bản nào lên phải tra lại được.
+  - Chứng danh triển khai lấy từ Secrets Manager của phần 2, không nằm trong cấu hình CI (NFR-SEC-04).
+  luong_chinh:
+  - Infra thêm bước triển khai lên dev vào luồng CI, chạy sau khi gộp.
+  - Infra thêm bước lên môi trường thử có cổng duyệt.
+  - Infra gộp một thay đổi nhỏ và theo dõi bản lên dev rồi lên môi trường thử sau khi duyệt.
+  - Infra ghi cách duyệt và cách lùi về bản trước vào README hạ tầng.
+  tieu_chi_nghiem_thu:
+  - Khi một yêu cầu gộp mã được gộp thì bản mới tự lên dev và API-220 trên dev trả 200.
+  - Khi chưa có người duyệt thì môi trường thử giữ bản cũ; duyệt xong thì bản mới lên.
+  - Khi rà cấu hình CI thì không có chứng danh nào nằm trong repo (NFR-SEC-04).
+  dinh_nghia_xong:
+  - README hạ tầng ghi cách duyệt lên môi trường thử và cách lùi bản.
+- key: PLT-02-4/INFRA
+  cha: PLT-02-4
+  tracker: devtask
+  title_vi: 'Hạ tầng: Nối CI: tự lên dev, duyệt lên môi trường thử (4/5)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-015
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: 'Nối luồng CI với hai môi trường: gộp thì tự lên dev, có người duyệt thì lên môi trường thử.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Bản gộp vào nhánh chính tự lên dev; môi trường thử chỉ đổi bản sau khi duyệt.
+  - Chứng danh triển khai đọc từ Secrets Manager, không nằm trong cấu hình CI.
+  dinh_nghia_xong: []
+- key: PLT-02-5
+  cha: E15
+  tracker: story
+  title_vi: Che dữ liệu và nạp dữ liệu hai môi trường (5/5)
   spec_refs:
     sc: []
     api: []
@@ -120,33 +505,32 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: Infra
   priority: 3
-  premise_refs:
-  - P-19
+  premise_refs: []
   gap_refs:
   - G-E15-03
-  mo_ta: Infra dựng dev và môi trường thử trên AWS, chỉ ở vùng ap-northeast-1 (ADR-015). Dev chỉ chứa dữ liệu giả cho lập trình và kiểm thử tự động; môi trường thử giống production ở quy mô nhỏ, chỉ nhận dữ liệu đã che, dùng cho nghiệm thu và các buổi diễn tập.
+  mo_ta: 'Phần 5/5, khép lại PLT-02: Infra viết quy trình che dữ liệu cho môi trường thử (G-E15-03) và nạp dữ liệu giả vào dev, dữ liệu đã che vào môi trường thử. Phần này mang tiêu chí tổng của PLT-02: dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che, API-220 trả 200 trên cả hai.'
   pham_vi:
-  - 'Thành phần theo bảng dịch vụ của ADR-015: máy ứng dụng sau cân bằng tải có TLS, PostgreSQL có bản dự phòng đồng bộ, Cognito, S3, Secrets Manager, CloudWatch, CloudTrail.'
-  - Một bộ cấu hình hạ tầng dạng mã cho cả hai môi trường, chỉ khác tham số.
-  - Quy trình che dữ liệu cho môi trường thử (G-E15-03); nơi lưu lạnh thêm khi INV-Q-19 có đáp (P-19).
+  - Script che dữ liệu dùng chung; danh sách trường cá nhân lấy theo FG-13; Tech Lead duyệt bộ dữ liệu sau khi che (G-E15-03).
+  - Bộ dữ liệu giả cho dev và cách nạp lại từ đầu.
+  - Nạp dữ liệu đã che vào môi trường thử; MIG-03 và E17 dùng lại quy trình này.
   luong_chinh:
-  - Infra viết cấu hình hạ tầng cho dev và môi trường thử trong repo.
-  - Infra đặt khoá và bí mật trong Secrets Manager, không để trong mã hay bản dựng (NFR-SEC-04).
-  - 'Infra nối CI của PLT-01: bản đã gộp tự lên dev, lên môi trường thử khi có người duyệt.'
+  - Infra cùng Tech Lead chốt danh sách trường phải che và cách che từng trường.
+  - Infra viết script che, chạy thử hai lần trên cùng bản nguồn và so kết quả.
   - Infra nạp dữ liệu giả vào dev và dữ liệu đã che vào môi trường thử.
+  - Tech Lead rà bộ dữ liệu đã che; Infra gọi API-220 trên hai môi trường.
   tieu_chi_nghiem_thu:
-  - Khi dựng lại môi trường thử từ cấu hình trong repo trên tài khoản trống thì môi trường lên đủ, không có bước tay ngoài README.
-  - Khi rà tài nguyên thì máy chạy, CSDL, sao lưu và nhật ký đều ở ap-northeast-1.
   - Khi kiểm dữ liệu thì dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che.
+  - Khi chạy script che hai lần trên cùng bản nguồn thì kết quả giống nhau.
   - Khi gọi API-220 trên hai môi trường sau lần triển khai đầu thì đều trả 200.
+  - Khi dựng lại một trong hai môi trường thì nạp lại dữ liệu bằng script, không có bước tay ngoài README.
   dinh_nghia_xong:
   - Quy trình che dữ liệu có Tech Lead duyệt và ghi trong README hạ tầng (G-E15-03).
-- key: PLT-02/INFRA
-  cha: PLT-02
+- key: PLT-02-5/INFRA
+  cha: PLT-02-5
   tracker: devtask
-  title_vi: 'Hạ tầng: Môi trường AWS dev và môi trường thử'
+  title_vi: 'Hạ tầng: Che dữ liệu và nạp dữ liệu hai môi trường (5/5)'
   spec_refs:
     sc: []
     api: []
@@ -164,18 +548,18 @@ items:
   premise_refs: []
   gap_refs:
   - G-E15-03
-  mo_ta: Viết cấu hình hạ tầng và dựng dev, môi trường thử theo bảng dịch vụ của ADR-015, chỉ ở vùng Tokyo, cùng quy trình nạp dữ liệu giả và dữ liệu đã che.
+  mo_ta: Viết script che dữ liệu dùng chung, nạp dữ liệu giả vào dev và dữ liệu đã che vào môi trường thử.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Một bộ cấu hình dựng được cả hai môi trường từ tài khoản trống, chỉ khác tham số.
-  - 'CSDL của môi trường thử dùng cùng kiểu cấu hình với production: bản dự phòng đồng bộ và khôi phục theo thời điểm.'
   - Script che dữ liệu chạy lại được và cho cùng kết quả trên cùng bản nguồn.
+  - Dev không có bản ghi thật; môi trường thử không còn trường cá nhân chưa che, có Tech Lead duyệt.
+  - Script nạp dữ liệu chạy lại được sau khi dựng lại môi trường.
   dinh_nghia_xong: []
-- key: PLT-03
+- key: PLT-03-1
   cha: E15
   tracker: story
-  title_vi: Khung ghi chỉ-thêm và bút toán đảo
+  title_vi: Chốt chủ ghi từng bảng và ba hàm ghi (1/3)
   spec_refs:
     sc: []
     api: []
@@ -188,31 +572,32 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs:
   - G-FG06-04
   - G-E15-01
-  - G-E15-04
-  mo_ta: 'BE làm khung dùng chung để 27 bảng chỉ-thêm chỉ có ba đường ghi: dòng gốc, dòng sửa trỏ về dòng cũ và dòng đảo, không có lệnh sửa hay xoá (ADR-003). Khung chặn ở ba lớp: luật kiểm kiến trúc trong CI, tầng dịch vụ không có hàm sửa, xoá, và quyền CSDL. Báo cáo đọc số hiện tại qua khung nhìn chuẩn nên không cộng nhầm dòng đảo.'
-  pham_vi: Thư viện ghi và mẫu khung nhìn chuẩn ở phần dùng chung; danh sách bảng và module chủ ghi (G-E15-01); vai CSDL của ứng dụng không có quyền sửa, xoá. Migration của từng bảng thuộc leaf DB của story làm chủ bảng.
+  mo_ta: 'Phần 1/3 của khung ghi chỉ-thêm: BE cùng Tech Lead chốt nơi giữ dòng đảo (G-FG06-04) và module chủ ghi của từng bảng trong 27 bảng chỉ-thêm (G-E15-01), rồi làm thư viện ghi với ba hàm: ghi gốc, ghi sửa trỏ về dòng cũ, ghi đảo (ADR-003). Khung nhìn chuẩn là phần 2; quyền CSDL và luật CI là phần 3.'
+  pham_vi:
+  - Danh sách 27 bảng chỉ-thêm và module chủ ghi của từng bảng, lập từ mục thành phần và mô hình dữ liệu hiện hành, Tech Lead duyệt (G-E15-01).
+  - Nơi giữ dòng đảo theo kết luận của INV-FG06-DONG-DAO (G-FG06-04).
+  - 'Thư viện ghi ở phần dùng chung: ba hàm ghi, không có hàm sửa hay xoá; người ghi lấy từ phiên, giờ ghi lấy từ máy chủ. Migration của từng bảng thuộc leaf DB của story làm chủ bảng.'
   luong_chinh:
   - BE cùng Tech Lead chốt nơi giữ dòng đảo (G-FG06-04) và module chủ ghi của từng bảng (G-E15-01).
-  - BE làm ba hàm ghi; người ghi lấy từ phiên, giờ ghi lấy từ máy chủ.
-  - BE làm mẫu khung nhìn và ca kiểm so tổng trên bảng thô với tổng trên khung nhìn (G-E15-04).
-  - Infra thu hồi quyền sửa, xoá của vai ứng dụng và đưa luật kiểm kiến trúc vào CI.
+  - BE ghi danh sách chủ ghi vào SKM_DB và README kho mã.
+  - BE làm ba hàm ghi trong phần dùng chung; người ghi lấy từ phiên, giờ ghi lấy từ máy chủ.
+  - BE viết kiểm thử cho ba hàm trên một bảng mẫu, chạy bằng vai CSDL mà Infra cấp trên dev.
   tieu_chi_nghiem_thu:
-  - Khi module không phải chủ bảng ghi vào bảng chỉ-thêm thì CI đỏ.
-  - Khi ứng dụng sửa hay xoá trực tiếp dòng của bảng chỉ-thêm thì CSDL từ chối.
-  - Khi ghi một dòng đảo thì dòng gốc giữ nguyên và khung nhìn trả số đã trừ dòng đảo.
-  - Khi bảng có dòng đảo thì tổng trên bảng thô khác tổng trên khung nhìn; ca kiểm này chạy trong CI.
+  - Khi rà danh sách thì mỗi bảng chỉ-thêm có đúng một module chủ ghi và Tech Lead đã duyệt.
+  - Khi ghi một dòng sửa hay dòng đảo thì dòng gốc giữ nguyên và dòng mới trỏ về dòng cũ.
+  - Khi phía gọi gửi người ghi hay giờ ghi thì giá trị bị bỏ qua, lấy từ phiên và giờ máy chủ.
   dinh_nghia_xong:
-  - SKM_DB ghi nơi giữ dòng đảo, danh sách chủ ghi và khung nhìn chuẩn đã chốt.
-- key: PLT-03/BE
-  cha: PLT-03
+  - SKM_DB ghi nơi giữ dòng đảo và danh sách chủ ghi đã chốt.
+- key: PLT-03-1/BE
+  cha: PLT-03-1
   tracker: devtask
-  title_vi: 'Phía máy chủ: Khung ghi chỉ-thêm và bút toán đảo'
+  title_vi: 'Phía máy chủ: Chốt chủ ghi từng bảng và ba hàm ghi (1/3)'
   spec_refs:
     sc: []
     api: []
@@ -230,19 +615,203 @@ items:
   premise_refs: []
   gap_refs:
   - G-E15-01
-  - G-E15-04
-  mo_ta: Làm thư viện ghi chỉ-thêm với ba hàm ghi gốc, ghi sửa, ghi đảo và mẫu khung nhìn chuẩn, đặt ở phần dùng chung cho mọi module.
+  mo_ta: Lập danh sách chủ ghi của 27 bảng chỉ-thêm, chốt nơi giữ dòng đảo cùng Tech Lead và làm thư viện ghi với ba hàm ghi gốc, ghi sửa, ghi đảo ở phần dùng chung.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
+  - Danh sách chủ ghi có Tech Lead duyệt, ghi vào SKM_DB.
   - Kho ghi của bảng chỉ-thêm không có hàm sửa hay xoá nào.
   - Người ghi và giờ ghi lấy từ phiên và giờ máy chủ; giá trị phía gọi gửi lên bị bỏ qua.
-  - Có ca kiểm đơn vị cho thấy tổng trên bảng thô khác tổng trên khung nhìn khi có dòng đảo.
   dinh_nghia_xong: []
-- key: PLT-03/INFRA
-  cha: PLT-03
+- key: PLT-03-1/INFRA
+  cha: PLT-03-1
   tracker: devtask
-  title_vi: 'Hạ tầng: Khung ghi chỉ-thêm và bút toán đảo'
+  title_vi: 'Hạ tầng: Chốt chủ ghi từng bảng và ba hàm ghi (1/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Cấp vai CSDL của ứng dụng tách khỏi vai quản trị trên dev để BE chạy kiểm thử ba hàm ghi trên bảng mẫu; thu quyền sửa, xoá làm ở PLT-03-3.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Dev có vai CSDL của ứng dụng tách khỏi vai quản trị, tên vai ghi vào README hạ tầng.
+  - Kiểm thử ba hàm ghi chạy xanh trong CI bằng vai này.
+  dinh_nghia_xong: []
+- key: PLT-03-2
+  cha: E15
+  tracker: story
+  title_vi: Khung nhìn chuẩn và ca so tổng (2/3)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-04
+  mo_ta: 'Phần 2/3: BE làm mẫu khung nhìn chuẩn để báo cáo đọc số hiện tại đã trừ dòng đảo (G-E15-04) và ca kiểm so tổng trên bảng thô với tổng trên khung nhìn. Phần này dựa trên ba hàm ghi của phần 1; các story báo cáo của FG-11 đọc qua khung nhìn này.'
+  pham_vi:
+  - 'Mẫu khung nhìn chuẩn ở phần dùng chung: trừ dòng đảo, bỏ dòng đã bị thay, lọc theo dấu nguồn di trú (G-E15-04).'
+  - Khung nhìn mẫu cho một bảng tiền và cách nhân ra cho bảng khác.
+  - Ca kiểm so tổng bảng thô với tổng khung nhìn, chạy trong CI.
+  luong_chinh:
+  - BE viết mẫu khung nhìn trên bảng mẫu của phần 1.
+  - BE ghi dữ liệu có dòng sửa và dòng đảo bằng ba hàm ghi rồi so hai tổng.
+  - BE đưa ca kiểm so tổng vào bộ kiểm thử; Infra cho ca này chạy trên CSDL thử trong CI.
+  - BE ghi cách dựng khung nhìn cho bảng mới vào README kho mã.
+  tieu_chi_nghiem_thu:
+  - Khi ghi một dòng đảo thì dòng gốc giữ nguyên và khung nhìn trả số đã trừ dòng đảo.
+  - Khi bảng có dòng đảo thì tổng trên bảng thô khác tổng trên khung nhìn; ca kiểm này chạy trong CI.
+  - Khi lá DB của một story thêm bảng chỉ-thêm thì dựng được khung nhìn theo mẫu, không viết lại cách trừ dòng đảo.
+  dinh_nghia_xong:
+  - SKM_DB ghi khung nhìn chuẩn đã chốt.
+- key: PLT-03-2/BE
+  cha: PLT-03-2
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khung nhìn chuẩn và ca so tổng (2/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-04
+  mo_ta: Làm mẫu khung nhìn chuẩn trừ dòng đảo và ca kiểm so tổng bảng thô với tổng khung nhìn, đặt ở phần dùng chung.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khung nhìn mẫu trả số đã trừ dòng đảo và bỏ dòng đã bị thay.
+  - Có ca kiểm đơn vị cho thấy tổng trên bảng thô khác tổng trên khung nhìn khi có dòng đảo.
+  - README kho mã ghi cách dựng khung nhìn cho bảng mới.
+  dinh_nghia_xong: []
+- key: PLT-03-2/INFRA
+  cha: PLT-03-2
+  tracker: devtask
+  title_vi: 'Hạ tầng: Khung nhìn chuẩn và ca so tổng (2/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:infrastructure
+  owner: Infra
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Cho ca so tổng của PLT-03-2/BE chạy trên CSDL thử trong luồng CI và tạo khung nhìn mẫu bằng migration trên dev, môi trường thử.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ca so tổng chạy trong CI trên CSDL thử; đỏ thì chặn gộp.
+  - Migration tạo khung nhìn mẫu chạy lại không lỗi trên dev và môi trường thử.
+  dinh_nghia_xong: []
+- key: PLT-03-3
+  cha: E15
+  tracker: story
+  title_vi: Quyền CSDL và luật kiểm kiến trúc trong CI (3/3)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-01
+  mo_ta: 'Phần 3/3, khép lại khung ghi chỉ-thêm với hai lớp chặn còn lại: Infra thu hồi quyền sửa, xoá của vai CSDL ứng dụng trên bảng chỉ-thêm và đưa luật «mỗi bảng chỉ một module được ghi» vào CI, sinh từ danh sách chủ ghi của phần 1 (G-E15-01). Phần này mang tiêu chí tổng của PLT-03: ba lớp chặn cùng có hiệu lực.'
+  pham_vi:
+  - Vai CSDL của ứng dụng không có quyền sửa, xoá trên 27 bảng chỉ-thêm; quyền cấp bằng script trong repo.
+  - 'Luật kiểm kiến trúc trong CI: module không phải chủ bảng ghi vào bảng chỉ-thêm thì CI đỏ, sinh từ danh sách chủ ghi (G-E15-01).'
+  - Không gồm migration của từng bảng (leaf DB của story làm chủ bảng).
+  luong_chinh:
+  - Infra viết script cấp quyền cho vai ứng dụng, bỏ quyền sửa, xoá trên bảng chỉ-thêm.
+  - Infra sinh luật kiểm kiến trúc từ danh sách chủ ghi và đưa vào luồng CI của PLT-01-3.
+  - BE thử ghi từ module không phải chủ bảng và thử sửa, xoá trực tiếp trên môi trường thử.
+  - Kết quả hai lần thử ghi vào story; kẽ hở nếu có thì BE sửa thư viện ghi.
+  tieu_chi_nghiem_thu:
+  - Khi module không phải chủ bảng ghi vào bảng chỉ-thêm thì CI đỏ.
+  - Khi ứng dụng sửa hay xoá trực tiếp dòng của bảng chỉ-thêm thì CSDL từ chối.
+  - Khi chạy lại script cấp quyền trên môi trường thử thì không lỗi và quyền không đổi.
+  dinh_nghia_xong:
+  - README kho mã ghi cách thêm bảng chỉ-thêm mới vào danh sách chủ ghi và script quyền.
+- key: PLT-03-3/BE
+  cha: PLT-03-3
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Quyền CSDL và luật kiểm kiến trúc trong CI (3/3)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-003
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E15-01
+  mo_ta: 'Thử phá hai lớp chặn trên môi trường thử: ghi từ module không phải chủ bảng và sửa, xoá trực tiếp; sửa thư viện ghi nếu còn kẽ hở.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Ghi từ module không phải chủ bảng làm CI đỏ, có ghi kết quả.
+  - Sửa hay xoá trực tiếp qua vai ứng dụng bị CSDL từ chối; thư viện ghi không có đường vòng.
+  dinh_nghia_xong: []
+- key: PLT-03-3/INFRA
+  cha: PLT-03-3
+  tracker: devtask
+  title_vi: 'Hạ tầng: Quyền CSDL và luật kiểm kiến trúc trong CI (3/3)'
   spec_refs:
     sc: []
     api: []
@@ -267,6 +836,195 @@ items:
   - Yêu cầu gộp mã vi phạm luật kiểm kiến trúc bị CI chặn gộp.
   - Quyền được cấp bằng script trong repo, chạy lại không lỗi.
   dinh_nghia_xong: []
+- key: UI-01
+  cha: E15
+  tracker: story
+  title_vi: Khung giao diện và thành phần dùng chung
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-010
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-54
+  - P-55
+  gap_refs:
+  - G-E20-phan-trang
+  - G-E20-ma-loi-ngon-ngu
+  mo_ta: 'FE dựng khung giao diện dùng chung cho 72 màn và 2 khuôn báo cáo: bố cục trang, menu theo vai, bảng danh sách có lọc và phân trang, biểu mẫu báo lỗi tại ô, lớp gọi API hiện câu báo theo mã lỗi M_nn, nhãn ngày giờ theo JST. Lá FE của từng màn chỉ ghép item và luật của màn mình, không dựng lại bảng, biểu mẫu hay cách bắt lỗi. Giao diện chỉ tiếng Nhật (P-55), chuỗi nhãn đặt một chỗ để đáp của INV-UI-NGON-NGU không làm sửa từng màn.'
+  pham_vi: 'Thư viện thành phần ở kho mã hệ đích: khung trang hai lớp văn phòng và tablet (chuẩn P-11: vùng chạm 64 px, tương phản 7 trên 1), menu đọc vai từ phiên, bảng lọc và phân trang theo quy ước CMN-01, biểu mẫu báo lỗi tại ô, lớp gọi API xử lý 401 M_29, 403 M_05, 500 M_06 và câu báo theo mã, ngày giờ dạng YYYY/MM/DD HH:mm theo JST, chỉ báo mất kết nối cho ba thao tác của ADR-010 (hàng đợi thuộc FG-14). Không gồm màn nghiệp vụ. Nguồn: P-54, P-55, P-11.'
+  luong_chinh:
+  - FE-2 cùng Tech Lead chốt danh sách thành phần dùng chung, ghi vào README kho mã.
+  - FE-2 dựng khung trang, menu theo vai, hai lớp bố cục văn phòng và tablet.
+  - FE-2 làm bảng danh sách lọc, phân trang theo quy ước của CMN-01 và biểu mẫu báo lỗi tại ô.
+  - 'FE-2 làm lớp gọi API: 401 về màn đăng nhập rồi trở lại màn dở, 403 và 500 hiện câu chung, mã M_nn tra câu từ một bảng.'
+  - FE-2 làm thành phần ngày giờ JST và một màn mẫu để lá FE khác chép theo.
+  tieu_chi_nghiem_thu:
+  - Khi lá FE dựng màn danh sách bằng thành phần bảng thì ô lọc, phân trang và trạng thái rỗng, lỗi, đang tải có sẵn, không viết lại.
+  - Khi API trả 401 M_29 thì người dùng về màn đăng nhập, đăng nhập lại thì trở về màn dở, dữ liệu đã nhập còn nguyên.
+  - Khi API trả mã M_nn thì câu báo đúng câu tiếng Nhật của bảng mã lỗi chung; 500 chỉ hiện câu chung.
+  - Khi máy người dùng đặt UTC+7 thì ngày giờ trên màn vẫn theo JST; trên tablet, vùng chạm và tương phản đạt chuẩn P-11.
+  dinh_nghia_xong:
+  - README kho mã có danh sách thành phần dùng chung và màn mẫu.
+- key: UI-01/FE
+  cha: UI-01
+  tracker: devtask
+  title_vi: 'Giao diện: Khung giao diện và thành phần dùng chung'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:devtask
+  - team:frontend
+  owner: FE-2
+  priority: 3
+  premise_refs:
+  - P-55
+  gap_refs:
+  - G-E20-ma-loi-ngon-ngu
+  mo_ta: 'Dựng thư viện thành phần dùng chung: khung trang và menu theo vai, bảng có lọc và phân trang, biểu mẫu báo lỗi tại ô, lớp gọi API hiện câu theo mã lỗi, nhãn ngày giờ JST, cùng một màn mẫu.'
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Màn mẫu dùng đủ thành phần, chạy trên hai lớp bố cục văn phòng và tablet, có kiểm thử thành phần chạy xanh trong CI.
+  - Lớp gọi API xử lý 401 M_29, 403 M_05, 500 M_06 theo một chỗ; câu báo theo mã M_nn tra từ một bảng tiếng Nhật, không rải chuỗi trong màn.
+  - Thành phần ngày giờ nhận chuỗi có múi giờ của API và hiện theo JST bất kể múi giờ máy người dùng.
+  dinh_nghia_xong: []
+- key: UI-01/TEST
+  cha: UI-01
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khung giao diện và thành phần dùng chung'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm cho thư viện thành phần dùng chung, chạy trên màn mẫu, để lá FE của màn nghiệp vụ không phải kiểm lại phần khung.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Phiên hết hạn giữa lúc nhập trên màn mẫu: về màn đăng nhập, đăng nhập lại thì trở về màn dở và dữ liệu đã nhập còn nguyên.'
+  - 'Bảng danh sách: lọc kết hợp nhiều ô, chuyển trang, trạng thái rỗng và lỗi tải; API trả 403 và 500 thì hiện câu chung, dữ liệu trên màn không đổi.'
+  - 'Máy chạy kiểm thử đặt UTC+7: nhãn ngày giờ trên màn mẫu hiện theo JST; trên tablet vùng chạm và tương phản đạt chuẩn P-11.'
+  dinh_nghia_xong: []
+- key: CMN-01
+  cha: E15
+  tracker: story
+  title_vi: Khung máy chủ dùng chung
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-011
+    nfr: []
+  labels:
+  - type:story
+  - spec-gap
+  owner: BE-1
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs:
+  - G-E20-phan-trang
+  - G-E20-ma-loi-ngon-ngu
+  - G-E20-chu-ham-audit
+  mo_ta: 'BE làm khung máy chủ dùng chung ở lớp api-gateway: xác thực qua Cognito với phiên cookie HttpOnly, kiểm vai theo ma trận quyền, bảng mã lỗi M_nn và định dạng lỗi chung, quy ước phân trang, hàm ghi nhật ký kiểm toán dùng chung. Lá BE của từng API chỉ còn viết luật nghiệp vụ; SC-001/BE làm API-201 trên nền phiên này (ADR-011). Ngưỡng phiên và khoá tạm đọc từ cấu hình (P-15).'
+  pham_vi: 'Bộ lọc xác thực và phiên; kiểm vai đọc ma trận quyền, thiếu dòng là không cho phép (P-12); bảng mã lỗi 29 mã M_01 tới M_29 cộng hai mã theo P-46, câu tiếng Nhật (P-55), giữ ba cột ja/en/vi; quy ước phân trang cho API đọc danh sách của 55 màn chưa có API (P-01); hàm ghi audit_log trong giao dịch của bên gọi. Không gồm luật nghiệp vụ. Nguồn: P-54; ADR-011.'
+  luong_chinh:
+  - 'BE-1 làm bộ lọc ở api-gateway: không phiên thì 401 M_29; vai không có dòng trong ma trận thì 403 M_05, không chạm dữ liệu.'
+  - 'BE-1 làm bảng mã lỗi và bộ xử lý lỗi: lỗi nghiệp vụ trả câu báo và mã; ngoại lệ bất ngờ trả 500 M_06, chi tiết vào nhật ký máy chủ.'
+  - BE-1 viết quy ước phân trang, sắp xếp, lọc cho API đọc danh sách vào README kho mã.
+  - BE-1 cùng SC-130/BE chốt hàm ghi audit_log dùng chung (người ghi từ phiên, giờ máy chủ, giá trị trước và sau) và luật kiểm kiến trúc chặn module khác tự ghi.
+  tieu_chi_nghiem_thu:
+  - Khi gọi API cần xác thực mà không có phiên hoặc phiên hết hạn thì trả 401 M_29; vai không có dòng trong ma trận thì 403 M_05, dữ liệu không đổi.
+  - Khi có ngoại lệ bất ngờ thì trả 500 M_06, thân không lộ chi tiết; nhật ký máy chủ có một dòng chi tiết.
+  - Khi API đọc danh sách nhận tham số trang ngoài khoảng thì trả 400; trang hợp lệ trả kèm tổng số dòng.
+  - Khi module gọi hàm ghi audit_log thì dòng ghi nằm trong cùng giao dịch CSDL với thao tác; module tự thêm dòng thì CI đỏ.
+  dinh_nghia_xong:
+  - README kho mã có quy ước phân trang, bảng mã lỗi, cách gọi hàm ghi audit_log.
+- key: CMN-01/BE
+  cha: CMN-01
+  tracker: devtask
+  title_vi: 'Phía máy chủ: Khung máy chủ dùng chung'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr:
+    - ADR-011
+    nfr: []
+  labels:
+  - type:devtask
+  - team:backend
+  owner: BE-1
+  priority: 3
+  premise_refs: []
+  gap_refs:
+  - G-E20-phan-trang
+  - G-E20-ma-loi-ngon-ngu
+  - G-E20-chu-ham-audit
+  mo_ta: Làm bộ lọc xác thực và phiên ở api-gateway, kiểm vai theo ma trận quyền, bảng mã lỗi chung với bộ xử lý lỗi, quy ước phân trang và hàm ghi audit_log dùng chung.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Không phiên trả 401 M_29, sai vai trả 403 M_05, ngoại lệ trả 500 M_06 không lộ chi tiết; cả ba có kiểm thử tích hợp chạy xanh trong CI.
+  - Thời hạn phiên, số lần sai và thời gian khoá đọc từ cấu hình (P-15); bảng mã lỗi giữ ba cột ja/en/vi, mặc định trả cột tiếng Nhật.
+  - Quy ước phân trang và cách gọi hàm ghi audit_log ghi ở README kho mã; luật kiểm kiến trúc chặn module khác ghi thẳng audit_log.
+  dinh_nghia_xong: []
+- key: CMN-01/TEST
+  cha: CMN-01
+  tracker: testdesign
+  title_vi: 'Ca kiểm thử: Khung máy chủ dùng chung'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:testdesign
+  owner: QA
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Thiết kế ca kiểm cho khung máy chủ dùng chung, nhắm vào ba lớp chặn (phiên, vai, lỗi) và quy ước phân trang, chạy trước khi lá BE của API nghiệp vụ dùng khung.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - 'Gọi một API mẫu không phiên, phiên hết hạn, vai không có dòng trong ma trận: lần lượt 401 M_29, 401 M_29, 403 M_05; không dòng nào trong bảng nghiệp vụ đổi.'
+  - 'Gây ngoại lệ bất ngờ trên môi trường thử: thân trả 500 M_06 không có chi tiết, nhật ký máy chủ có dòng lỗi; ném mã M_nn: câu báo khớp bảng mã lỗi chung.'
+  - 'API danh sách mẫu: trang đầu, trang cuối, trang ngoài khoảng (400), tổng số dòng đúng; một thao tác qua hàm ghi audit_log rồi bị hoàn tác thì dòng audit_log cũng không còn.'
+  dinh_nghia_xong: []
 - key: API-220
   cha: E15
   tracker: story
@@ -284,7 +1042,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: PM
+  owner: BE-2
   priority: 3
   premise_refs: []
   gap_refs:
@@ -320,7 +1078,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs: []
   gap_refs:
@@ -386,4 +1144,35 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu: []
+  dinh_nghia_xong: []
+- key: INV-UI-NGON-NGU
+  cha: E15
+  tracker: investigation
+  title_vi: Giao diện chỉ tiếng Nhật hay thêm ngôn ngữ khác
+  han: 23/11/2026 (trước Sprint 2)
+  nguoi_tra_loi: Khách, qua BrSE
+  nguon: specs/_common/common-spec.md (LAB-4, nhãn màn tiếng Nhật) · LAB-4 không có ADR đa ngôn ngữ · P-55
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+  labels:
+  - type:investigation
+  - spec-gap
+  owner: BrSE
+  priority: 3
+  premise_refs:
+  - P-55
+  gap_refs:
+  - G-E20-ma-loi-ngon-ngu
+  mo_ta: Giao diện của hệ đích chỉ cần tiếng Nhật, hay khách muốn thêm tiếng Anh hoặc tiếng Việt cho đội vận hành và hỗ trợ? Nếu thêm, dùng ở màn nào (văn phòng, hiện trường, báo cáo xuất) và câu báo lỗi có cần dịch không? LAB-4 ghi nhãn màn bằng tiếng Nhật và không có ADR về đa ngôn ngữ; prototype LAB-3 chạy ba thứ tiếng nên bảng mã lỗi chung còn ba cột câu báo, hệ đích đang làm theo giả định chỉ tiếng Nhật (P-55).
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Khi khách đáp thì P-55 cập nhật, UI-01 và CMN-01 ghi quyết định về chuỗi giao diện và cột câu báo lỗi được dùng.
+  - Khi khách muốn thêm ngôn ngữ thì PM ghi phần dịch nhãn của 72 màn và 2 khuôn báo cáo thành việc có giờ trước khi xếp sprint cho các màn đó.
   dinh_nghia_xong: []
