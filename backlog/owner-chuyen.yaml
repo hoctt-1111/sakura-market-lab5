@@ -152,6 +152,11 @@ owner_chuyen:
   ly_do: 'cân ±10%: FE-2 448.5 → 442 giờ/người'
 - story: SC-109
   loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 961.2 → 956.2 giờ/người'
+- story: SC-109
+  loai:
   - FE
   sang: FE-1
   ly_do: 'cân ±10%: FE-2 442 → 435.5 giờ/người'
@@ -162,9 +167,19 @@ owner_chuyen:
   ly_do: 'cân ±10%: FE-2 435.5 → 429 giờ/người'
 - story: SC-111
   loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 956.2 → 951.2 giờ/người'
+- story: SC-111
+  loai:
   - FE
   sang: FE-1
   ly_do: 'cân ±10%: FE-2 429 → 422.5 giờ/người'
+- story: SC-112
+  loai:
+  - BE
+  sang: BE-2
+  ly_do: 'cân ±10%: BE-1 951.2 → 946.2 giờ/người'
 - story: SC-112
   loai:
   - FE

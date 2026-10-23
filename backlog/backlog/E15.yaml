@@ -21,7 +21,7 @@ epic:
   - P-02
   - P-04
   gap_refs: []
-  mo_ta: 'Nhóm việc này dựng nền kỹ thuật cho hệ đích Java 21, Spring Boot 3 chạy thành một khối triển khai trên AWS vùng Tokyo: kho mã cùng CI, môi trường phát triển (dev) và môi trường thử, khung ghi chỉ-thêm dùng chung và API kiểm sống. Mọi sub-issue BE, DB của FG-01…FG-14 đặt mã và migration vào kho này, nên PLT-01 và PLT-02 phải xong trước các sub-issue đó. Nền tảng là lựa chọn của giai đoạn thiết kế (ADR-008, ADR-015), chưa phải điều khoản hợp đồng với khách.'
+  mo_ta: 'Nhóm việc này dựng nền kỹ thuật cho hệ đích Java 21, Spring Boot 3 chạy thành một khối triển khai trên AWS vùng Tokyo: kho mã cùng CI, môi trường phát triển (dev) và môi trường thử, khung ghi chỉ-thêm dùng chung và API kiểm sống. Mọi sub-issue BE, DB của FG-01…FG-14 đặt mã và migration vào kho này, nên mốc nền quyết định khi nào việc chức năng đóng được: kho mã và CI tối thiểu (PLT-01-1) trước khi gộp mã lá FE, BE, DB; môi trường dev (PLT-02-2) trước khi chạy ca TEST; môi trường thử (PLT-02-4) trước nghiệm thu AC, UAT, REG. Sprint của từng mốc in ở báo cáo tiến độ, tính từ chuỗi việc Infra. Nền tảng là lựa chọn của giai đoạn thiết kế (ADR-008, ADR-015), chưa phải điều khoản hợp đồng với khách.'
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -34,7 +34,7 @@ items:
 - key: PLT-01-1
   cha: E15
   tracker: story
-  title_vi: Kho mã, bảo vệ nhánh và quyền đẩy mã (1/3)
+  title_vi: Kho mã, bảo vệ nhánh và CI tối thiểu (1/3)
   spec_refs:
     sc: []
     api: []
@@ -53,26 +53,29 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: 'Phần 1/3 của khung repo mã hệ đích và CI: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, tách khỏi kho spec LAB-4, bảo vệ nhánh chính và cấp quyền đẩy mã cho đội. Phần 2 dựng khung module, phần 3 nối CI; phần này dừng ở kho có quyền đúng và README hai kho trỏ nhau.'
+  mo_ta: 'Phần 1/3 của khung repo mã hệ đích và CI: Infra tạo kho mã của hệ đích Java 21, Spring Boot 3, tách khỏi kho spec LAB-4, bảo vệ nhánh chính, cấp quyền đẩy mã cho đội và bật luồng CI tối thiểu (biên dịch, kiểm thử đơn vị) ở mỗi yêu cầu gộp mã, để lá FE, BE, DB đóng được theo định nghĩa xong ngay từ sprint đầu. Phần 2 dựng khung module (Tech Lead), phần 3 nối CI đầy đủ; phần này dừng ở kho có quyền đúng, CI tối thiểu chặn gộp khi đỏ và README hai kho trỏ nhau.'
   pham_vi:
   - Kho mã tách khỏi kho spec LAB-4, README hai kho trỏ nhau (P-02).
   - 'Bảo vệ nhánh chính: không đẩy thẳng, chỉ nhận gộp qua yêu cầu gộp mã có người thứ hai duyệt.'
   - Quyền đẩy mã cho từng thành viên đội; danh sách quyền ghi trong README.
+  - 'CI tối thiểu: biên dịch và kiểm thử đơn vị chạy ở mỗi yêu cầu gộp mã, đỏ thì chặn gộp; luật kiến trúc và quét bí mật thuộc phần 3.'
   luong_chinh:
   - Infra tạo repo mã hệ đích, tách khỏi kho spec LAB-4.
   - 'Infra bật bảo vệ nhánh chính: không đẩy thẳng, chỉ gộp qua yêu cầu gộp mã.'
   - Infra cấp quyền đẩy mã cho đội và ghi danh sách quyền vào README.
+  - Infra bật luồng CI tối thiểu (biên dịch, kiểm thử đơn vị) và nối kết quả vào bảo vệ nhánh.
   - Một thành viên thử đẩy thẳng lên nhánh chính rồi mở một yêu cầu gộp mã; kết quả ghi vào story.
   tieu_chi_nghiem_thu:
   - Khi thành viên đẩy thẳng lên nhánh chính thì kho từ chối; qua yêu cầu gộp mã có người duyệt thì nhận.
   - Khi mở README kho mã thì có đường trỏ sang kho spec LAB-4 và ngược lại (P-02).
   - Khi người ngoài danh sách quyền đẩy mã thì kho từ chối.
+  - Khi yêu cầu gộp mã có kiểm thử đơn vị đỏ thì CI đỏ và nhánh chính không nhận gộp.
   dinh_nghia_xong:
   - README hai kho trỏ nhau và ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).
 - key: PLT-01-1/INFRA
   cha: PLT-01-1
   tracker: devtask
-  title_vi: 'Hạ tầng: Kho mã, bảo vệ nhánh và quyền đẩy mã (1/3)'
+  title_vi: 'Hạ tầng: Kho mã, bảo vệ nhánh và CI tối thiểu (1/3)'
   spec_refs:
     sc: []
     api: []
@@ -92,12 +95,13 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: Tạo kho mã hệ đích tách khỏi kho spec LAB-4, bật bảo vệ nhánh chính và cấp quyền đẩy mã cho đội.
+  mo_ta: Tạo kho mã hệ đích tách khỏi kho spec LAB-4, bật bảo vệ nhánh chính, cấp quyền đẩy mã cho đội và bật CI tối thiểu (biên dịch, kiểm thử đơn vị) chặn gộp khi đỏ.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Nhánh chính không nhận đẩy thẳng, chỉ nhận gộp qua yêu cầu gộp mã có người thứ hai duyệt.
   - README hai kho trỏ nhau; danh sách quyền đẩy mã ghi trong README.
+  - Yêu cầu gộp mã có kiểm thử đơn vị đỏ thì nhánh chính không nhận gộp.
   dinh_nghia_xong: []
 - key: PLT-01-2
   cha: E15
@@ -117,23 +121,23 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: Infra
+  owner: BE-1
   priority: 3
   premise_refs:
   - P-02
   - P-04
   gap_refs:
   - G-E15-01
-  mo_ta: 'Phần 2/3: trên kho đã có quyền của phần 1, Infra dựng khung dự án Java 21, Spring Boot 3 một khối triển khai, chia module theo vùng dữ liệu (ADR-008, ADR-009), mỗi module một gói, kèm công cụ migration với khung trống. Phần 3 mới nối CI; phần này chỉ cần kiểm thử mẫu và migration rỗng chạy trên máy của Infra.'
+  mo_ta: 'Phần 2/3: trên kho đã có quyền và CI tối thiểu của phần 1, Tech Lead (BE-1) dựng khung dự án Java 21, Spring Boot 3 một khối triển khai, chia module theo vùng dữ liệu (ADR-008, ADR-009), mỗi module một gói, kèm công cụ migration với khung trống. Phần 3 nối CI đầy đủ; phần này cần kiểm thử mẫu và migration rỗng chạy xanh trên CI tối thiểu của phần 1.'
   pham_vi:
   - Các module theo mục thành phần của thiết kế hệ thống, lớp api-gateway và module migration của ADR-016 (G-E15-01); không có module cho cân hay máy in (ADR-012).
   - Mỗi module một gói, chỉ gọi nhau qua hàm công khai (ADR-009); lá BE, DB của FG-01…FG-14 đặt mã và migration vào gói của module chủ (P-02).
   - Công cụ migration với khung trống; script của 45 bảng do leaf DB từng story viết (P-04).
   luong_chinh:
-  - Infra dựng khung dự án một khối triển khai, mỗi module trong danh sách một gói.
-  - Infra đặt hàm công khai làm cửa duy nhất giữa các module; lớp ghi của module không lộ ra ngoài.
-  - Infra thêm công cụ migration và một migration rỗng.
-  - Infra chạy kiểm thử mẫu của từng module và migration rỗng trên CSDL trống, ghi kết quả vào story.
+  - Tech Lead (BE-1) dựng khung dự án một khối triển khai, mỗi module trong danh sách một gói.
+  - Tech Lead đặt hàm công khai làm cửa duy nhất giữa các module; lớp ghi của module không lộ ra ngoài.
+  - Tech Lead thêm công cụ migration và một migration rỗng.
+  - Tech Lead chạy kiểm thử mẫu của từng module và migration rỗng trên CSDL trống qua CI tối thiểu, ghi kết quả vào story.
   tieu_chi_nghiem_thu:
   - Khi rà danh sách gói thì mỗi module của thiết kế hệ thống có đúng một gói, không có gói cho cân hay máy in (ADR-012).
   - Khi chạy kiểm thử mẫu thì mọi module xanh; migration rỗng chạy trên CSDL trống, chạy lại không lỗi.
@@ -158,7 +162,7 @@ items:
   labels:
   - type:devtask
   - team:infrastructure
-  owner: Infra
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs: []
@@ -173,7 +177,7 @@ items:
 - key: PLT-01-3
   cha: E15
   tracker: story
-  title_vi: Luồng CI và README cho người mới (3/3)
+  title_vi: CI đầy đủ, quét bí mật và README (3/3)
   spec_refs:
     sc: []
     api: []
@@ -192,13 +196,13 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: 'Phần 3/3, khép lại khung repo: Infra thêm luồng CI chạy ở mỗi yêu cầu gộp mã trên khung của phần 2 và viết README để người mới tự chạy được kiểm thử và migration rỗng. Phần này mang tiêu chí tổng của PLT-01; xong phần này thì lá BE, DB của FG-01…FG-14 bắt đầu đặt mã vào kho (P-02).'
+  mo_ta: 'Phần 3/3, khép lại khung repo: Infra nâng luồng CI tối thiểu của phần 1 thành CI đầy đủ (luật kiểm kiến trúc, quét bí mật) trên khung của phần 2 và viết README để người mới tự chạy được kiểm thử và migration rỗng. Phần này mang tiêu chí tổng của PLT-01; xong phần này thì lá BE, DB của FG-01…FG-14 bắt đầu đặt mã vào kho (P-02).'
   pham_vi:
-  - 'Luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc theo ADR-009, quét bí mật (NFR-SEC-04); một bước đỏ thì chặn gộp.'
+  - 'Luồng CI đầy đủ: thêm luật kiểm kiến trúc theo ADR-009 và quét bí mật (NFR-SEC-04) vào CI tối thiểu của phần 1; một bước đỏ thì chặn gộp.'
   - 'README kho mã cho người mới: dựng máy, chạy kiểm thử, chạy migration rỗng; ghi rõ prototype LAB-3 chỉ để đối chiếu nghiệp vụ (P-02).'
   - Luật kiểm kiến trúc ở phần này dùng danh sách module của phần 2; luật «mỗi bảng một module ghi» thuộc PLT-03-3.
   luong_chinh:
-  - 'Infra thêm luồng CI: biên dịch, kiểm thử đơn vị, luật kiểm kiến trúc, quét bí mật.'
+  - 'Infra thêm vào CI tối thiểu: luật kiểm kiến trúc, quét bí mật.'
   - 'Infra nối kết quả CI vào bảo vệ nhánh của phần 1: CI đỏ thì nhánh chính không nhận gộp.'
   - Infra viết README cho người mới và nhờ một thành viên chưa đụng kho làm theo.
   - Một thành viên mở một yêu cầu gộp mã có kiểm thử đỏ và một bản sạch; kết quả CI ghi vào story.
@@ -212,7 +216,7 @@ items:
 - key: PLT-01-3/INFRA
   cha: PLT-01-3
   tracker: devtask
-  title_vi: 'Hạ tầng: Luồng CI và README cho người mới (3/3)'
+  title_vi: 'Hạ tầng: CI đầy đủ, quét bí mật và README (3/3)'
   spec_refs:
     sc: []
     api: []
@@ -232,7 +236,7 @@ items:
   premise_refs:
   - P-02
   gap_refs: []
-  mo_ta: Thêm luồng CI chạy ở mỗi yêu cầu gộp mã và viết README cho người mới trên khung đã dựng ở PLT-01-2.
+  mo_ta: Nâng CI tối thiểu thành CI đầy đủ (luật kiểm kiến trúc, quét bí mật) và viết README cho người mới trên khung đã dựng ở PLT-01-2.
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
@@ -505,21 +509,21 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: Infra
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs:
   - G-E15-03
-  mo_ta: 'Phần 5/5, khép lại PLT-02: Infra viết quy trình che dữ liệu cho môi trường thử (G-E15-03) và nạp dữ liệu giả vào dev, dữ liệu đã che vào môi trường thử. Phần này mang tiêu chí tổng của PLT-02: dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che, API-220 trả 200 trên cả hai.'
+  mo_ta: 'Phần 5/5, khép lại PLT-02: BE-1 viết quy trình che dữ liệu cho môi trường thử (G-E15-03) và nạp dữ liệu giả vào dev, dữ liệu đã che vào môi trường thử. Phần này mang tiêu chí tổng của PLT-02: dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che, API-220 trả 200 trên cả hai.'
   pham_vi:
   - Script che dữ liệu dùng chung; danh sách trường cá nhân lấy theo FG-13; Tech Lead duyệt bộ dữ liệu sau khi che (G-E15-03).
   - Bộ dữ liệu giả cho dev và cách nạp lại từ đầu.
   - Nạp dữ liệu đã che vào môi trường thử; MIG-03 và E17 dùng lại quy trình này.
   luong_chinh:
-  - Infra cùng Tech Lead chốt danh sách trường phải che và cách che từng trường.
-  - Infra viết script che, chạy thử hai lần trên cùng bản nguồn và so kết quả.
-  - Infra nạp dữ liệu giả vào dev và dữ liệu đã che vào môi trường thử.
-  - Tech Lead rà bộ dữ liệu đã che; Infra gọi API-220 trên hai môi trường.
+  - BE-1 cùng Tech Lead chốt danh sách trường phải che và cách che từng trường; làm song song với phần 3 và 4 của Infra.
+  - BE-1 viết script che, chạy thử hai lần trên cùng bản nguồn và so kết quả.
+  - BE-1 nạp dữ liệu giả vào dev và dữ liệu đã che vào môi trường thử khi phần 4 đã lên.
+  - Tech Lead rà bộ dữ liệu đã che; BE-1 gọi API-220 trên hai môi trường.
   tieu_chi_nghiem_thu:
   - Khi kiểm dữ liệu thì dev không có bản ghi thật, môi trường thử không còn trường cá nhân chưa che.
   - Khi chạy script che hai lần trên cùng bản nguồn thì kết quả giống nhau.
@@ -543,7 +547,7 @@ items:
   labels:
   - type:devtask
   - team:infrastructure
-  owner: Infra
+  owner: BE-1
   priority: 3
   premise_refs: []
   gap_refs:

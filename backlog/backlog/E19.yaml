@@ -417,19 +417,20 @@ items:
   priority: 3
   premise_refs:
   - P-17
+  - P-59
   gap_refs:
   - G-E19-03
   mo_ta: 'Phần 2/2 của REL-02: khi đã vận hành thật, khoá 業務日 (ngày nghiệp vụ) và tệp xuất kế toán đã gửi là hai bước không quay lại được, nên kế hoạch chỉ có đường bù cho hai bước này (G-E19-03). Phần này đặt mốc không quay lại trên lịch và đưa khách duyệt toàn bộ kế hoạch, kể cả phần 1.'
   pham_vi:
   - Bảng business_day_locks; lô xuất export_batches (ADR-014, P-17); mốc không quay lại trên lịch phát hành.
-  - 'Đường bù: sai sót sau khoá đi qua điều chỉnh có duyệt của FG-06; tệp xuất sai thì chạy lại cùng mã lô để bên nhận đối chiếu.'
+  - 'Đường bù: sai sót sau khoá đi qua điều chỉnh có duyệt của FG-06. Tệp xuất đã gửi: lỗi truyền nhận thì chạy lại cùng mã lô để bên nhận đối chiếu; sai nội dung thì không sửa hay thay tệp đã gửi, điều chỉnh có duyệt của FG-06 ở 業務日 kế tiếp và xuất ở lô của ngày đó (P-59).'
   luong_chinh:
   - Tech Lead ghi hai bước không hoàn tác vào kế hoạch, mỗi bước kèm đường bù thay cho bước lùi.
   - 'PM đặt mốc không quay lại trên lịch: sau lần khoá ngày hoặc lần xuất kế toán thật đầu tiên chỉ còn đường bù.'
   - BrSE giải thích hai đường bù cho khách bằng ví dụ; khách duyệt kế hoạch qua BrSE trước ngày phát hành.
   tieu_chi_nghiem_thu:
   - Khi ngày đã khoá có sai sót thì kế hoạch dẫn sang điều chỉnh có duyệt, không có bước xoá bản khoá.
-  - Khi tệp xuất đã gửi bị sai thì kế hoạch chạy lại cùng mã lô, không sinh lô mới (ADR-014).
+  - Khi tệp xuất đã gửi bị lỗi truyền nhận thì kế hoạch chạy lại cùng mã lô, không sinh lô mới (ADR-014); khi tệp đã gửi sai nội dung thì kế hoạch dẫn sang điều chỉnh có duyệt của FG-06 và lô của 業務日 kế tiếp, không có bước sửa hay thay tệp đã gửi (P-59).
   - Khi đọc lịch phát hành thì mốc không quay lại có ngày và khách đã biết trước.
   dinh_nghia_xong:
   - Kế hoạch hoàn nguyên có ngày khách duyệt, và mốc không quay lại được ghi trên lịch phát hành (G-E19-03).
@@ -969,7 +970,7 @@ items:
   tieu_chi_nghiem_thu:
   - Khi QA làm theo từng bước với tài khoản của vai thì tới được kết quả tài liệu mô tả, không bước nào cần quyền của vai khác.
   - Khi tài liệu gửi khách thì bản tiếng Nhật đã có người thứ hai đọc, ngày gửi và người nhận ghi ở issue.
-  - Khi một thao tác cần người xác nhận (duyệt bản quy tắc, 確定 (xác nhận cuối) khoản thưởng, khoá ngày) thì tài liệu nêu ai làm, điều kiện và hệ thống ghi gì.
+  - Khi một thao tác cần người xác nhận (duyệt bản quy tắc, 確定 (xác nhận cuối) khoản thưởng, khoá ngày) thì tài liệu nêu ai làm, điều kiện và hệ thống ghi gì theo quyền của đúng thao tác đó (FG-10 tách người lập và người duyệt; TECH-304 thì không).
   - Khi một màn trong tài liệu đổi sau ngày chụp ảnh thì ảnh và bước được cập nhật trước phát hành production.
   dinh_nghia_xong:
   - Khách đã góp ý và bản cuối nằm trong gói bàn giao REL-04.
@@ -998,7 +999,7 @@ items:
   luong_chinh: []
   tieu_chi_nghiem_thu:
   - Mỗi mục của tài liệu được đi hết bằng tài khoản của vai đó; bước lệch so với màn ghi lại kèm ảnh.
-  - 'Mỗi thao tác có người xác nhận ở DOC-01: làm theo tài liệu với tài khoản người lập thì bị chặn, với tài khoản người duyệt thì qua; tài liệu nói đúng điều đó.'
+  - 'Mỗi thao tác có người xác nhận ở DOC-01 kiểm theo quyền của đúng thao tác: duyệt bản quy tắc — tài khoản người lập bị chặn (M_26), tài khoản người duyệt khác người lập thì qua (FG-10); 確定 khoản thưởng — cùng tài khoản đã 判定 vẫn qua và hệ ghi người, thời điểm (TECH-304); khoá ngày — theo quyền của FG-08; tài liệu nói đúng từng trường hợp.'
   - 'Sau lần sửa cuối, đi lại các mục có ghi nhận lệch: không còn chỗ lệch.'
   dinh_nghia_xong: []
 - key: DOC-01/BRSE
@@ -1124,4 +1125,194 @@ items:
   - Bản tiếng Nhật có người thứ hai đọc trước khi gửi; người nhận là người phụ trách nghiệp vụ phía khách, bản sao cho PM và QA; ngày gửi ghi ở issue.
   - Ảnh màn chụp trên môi trường thử, không có dữ liệu thật; mỗi bước nêu ai làm và màn hiện gì.
   - Góp ý của khách và chỗ lệch QA ghi nhận đều có dòng xử lý ở issue trước khi bản cuối vào REL-04.
+  dinh_nghia_xong: []
+- key: DOC-03-1
+  cha: E19
+  tracker: story
+  title_vi: Hai lớp đào tạo vai văn phòng (1/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 1/2 của việc tổ chức bốn lớp đào tạo theo vai (EF-26 LAB-1, BrSE 22 man-day; tách hai phần theo nhóm vai vì lá BrSE vượt trần một sprint, P-58): lớp một về tài khoản, tư cách, bản quy tắc và 完納奨励金 (thưởng thanh toán đủ hạn); lớp hai về đối soát ngày, khoá 業務日 (ngày nghiệp vụ), báo cáo và xuất kế toán, trên giáo trình DOC-01 cho 照合事務, người duyệt, bộ phận đối soát và kế toán. Học trên môi trường thử với dữ liệu đã che, tài khoản đúng vai, có bài thực hành và xác nhận của khách. Thành issue 23/10 theo review 22/10 vì viết giáo trình chưa phải thực hiện đào tạo của EF-26.'
+  pham_vi:
+  - Hai lớp, mỗi lớp nửa ngày, tối đa mười hai người.
+  - Tài khoản theo vai và dữ liệu đã che trên môi trường thử (PLT-02-5); bài thực hành bám luồng chính của story liên quan.
+  - Điểm danh, phiếu góp ý; lỗi tài liệu phát hiện trong lớp ghi về DOC-01.
+  - Không gồm huấn luyện đội vận hành của khách (REL-04) và tài liệu kỹ thuật.
+  luong_chinh:
+  - PM chốt lịch hai lớp và danh sách học viên với khách qua BrSE, ít nhất hai tuần trước lớp đầu.
+  - BrSE dạy từng lớp theo giáo trình, QA hỗ trợ tài khoản; học viên làm bài thực hành trên đúng vai.
+  - PM thu điểm danh, phiếu góp ý và kết quả thực hành; lỗi tài liệu chuyển về DOC-01.
+  - BrSE gửi khách biên bản hai lớp; khách xác nhận bằng văn bản, biên bản vào gói bàn giao REL-04.
+  tieu_chi_nghiem_thu:
+  - Khi một lớp kết thúc thì có danh sách tham dự ký tên, bài thực hành của từng học viên hoàn thành trên tài khoản đúng vai và phiếu góp ý.
+  - Khi học viên làm bài thực hành thì không bước nào cần quyền của vai khác và không dùng dữ liệu thật (dữ liệu che của PLT-02-5).
+  - Khi lớp phát hiện tài liệu lệch màn thì ghi nhận chuyển về DOC-01 trong ngày và sửa trước phát hành.
+  - Khi đủ hai lớp thì khách xác nhận bằng văn bản, ghi ngày và người xác nhận ở issue.
+  dinh_nghia_xong:
+  - Hai biên bản lớp và xác nhận của khách nằm trong gói bàn giao REL-04; DOC-01 đã sửa theo lỗi phát hiện trong lớp.
+- key: DOC-03-1/PM
+  cha: DOC-03-1
+  tracker: devtask
+  title_vi: 'Quản lý: Hai lớp đào tạo vai văn phòng (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Chốt lịch và danh sách học viên hai lớp vai văn phòng với khách, chuẩn bị phòng, thiết bị, tài khoản theo vai trên môi trường thử; thu điểm danh, phiếu góp ý và chuyển lỗi tài liệu về DOC-01.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lịch hai lớp và danh sách học viên có xác nhận của khách ít nhất hai tuần trước lớp đầu; tài khoản theo vai và dữ liệu che sẵn trước mỗi lớp.
+  - Sau mỗi lớp có điểm danh, phiếu góp ý và danh sách lỗi tài liệu đã chuyển về DOC-01 trong ngày.
+  dinh_nghia_xong: []
+- key: DOC-03-1/BRSE
+  cha: DOC-03-1
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Hai lớp đào tạo vai văn phòng (1/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dạy hai lớp vai văn phòng trên giáo trình DOC-01 ở môi trường thử, chấm bài thực hành và gửi khách biên bản xin xác nhận.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi lớp dạy đủ các mục của giáo trình cho vai đó; bài thực hành của từng học viên được chấm và ghi kết quả ở issue.
+  - Biên bản hai lớp bằng tiếng Nhật có người thứ hai đọc trước khi gửi khách; xác nhận của khách ghi ngày và người xác nhận.
+  dinh_nghia_xong: []
+- key: DOC-03-2
+  cha: E19
+  tracker: story
+  title_vi: Hai lớp đào tạo vai hiện trường (2/2)
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:story
+  owner: PM
+  priority: 3
+  premise_refs:
+  - P-54
+  gap_refs: []
+  mo_ta: 'Phần 2/2 của việc tổ chức bốn lớp đào tạo theo vai (EF-26 LAB-1, BrSE 22 man-day; tách hai phần theo nhóm vai vì lá BrSE vượt trần một sprint, P-58): lớp ba về tiếp nhận lô, 相対取引 (giao dịch thỏa thuận) và kết quả せり (đấu giá); lớp bốn về giao hàng, ngoại lệ và làm việc khi mất kết nối, trên giáo trình DOC-02 cho nhân viên hiện trường và giao hàng. Học trên môi trường thử với dữ liệu đã che, tài khoản đúng vai, có bài thực hành và xác nhận của khách. Thành issue 23/10 theo review 22/10 vì viết giáo trình chưa phải thực hiện đào tạo của EF-26.'
+  pham_vi:
+  - Hai lớp, mỗi lớp nửa ngày, tối đa mười hai người; có tablet dùng chung (EF-33 LAB-1).
+  - Tài khoản theo vai và dữ liệu đã che trên môi trường thử (PLT-02-5); bài thực hành bám luồng chính của story liên quan.
+  - Điểm danh, phiếu góp ý; lỗi tài liệu phát hiện trong lớp ghi về DOC-02.
+  - Không gồm huấn luyện đội vận hành của khách (REL-04) và tài liệu kỹ thuật.
+  luong_chinh:
+  - PM chốt lịch hai lớp và danh sách học viên với khách qua BrSE, ít nhất hai tuần trước lớp đầu.
+  - BrSE dạy từng lớp theo giáo trình, QA hỗ trợ tài khoản; học viên làm bài thực hành trên đúng vai.
+  - PM thu điểm danh, phiếu góp ý và kết quả thực hành; lỗi tài liệu chuyển về DOC-02.
+  - BrSE gửi khách biên bản hai lớp; khách xác nhận bằng văn bản, biên bản vào gói bàn giao REL-04.
+  tieu_chi_nghiem_thu:
+  - Khi một lớp kết thúc thì có danh sách tham dự ký tên, bài thực hành của từng học viên hoàn thành trên tài khoản đúng vai và phiếu góp ý.
+  - Khi học viên làm bài thực hành thì không bước nào cần quyền của vai khác và không dùng dữ liệu thật (dữ liệu che của PLT-02-5).
+  - Khi lớp phát hiện tài liệu lệch màn thì ghi nhận chuyển về DOC-02 trong ngày và sửa trước phát hành.
+  - Khi đủ hai lớp thì khách xác nhận bằng văn bản, ghi ngày và người xác nhận ở issue.
+  dinh_nghia_xong:
+  - Hai biên bản lớp và xác nhận của khách nằm trong gói bàn giao REL-04; DOC-02 đã sửa theo lỗi phát hiện trong lớp.
+- key: DOC-03-2/PM
+  cha: DOC-03-2
+  tracker: devtask
+  title_vi: 'Quản lý: Hai lớp đào tạo vai hiện trường (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:devtask
+  - team:pm
+  owner: PM
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Chốt lịch và danh sách học viên hai lớp vai hiện trường với khách, chuẩn bị phòng, thiết bị, tài khoản theo vai trên môi trường thử; thu điểm danh, phiếu góp ý và chuyển lỗi tài liệu về DOC-02.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Lịch hai lớp và danh sách học viên có xác nhận của khách ít nhất hai tuần trước lớp đầu; tài khoản theo vai và dữ liệu che sẵn trước mỗi lớp.
+  - Sau mỗi lớp có điểm danh, phiếu góp ý và danh sách lỗi tài liệu đã chuyển về DOC-02 trong ngày.
+  dinh_nghia_xong: []
+- key: DOC-03-2/BRSE
+  cha: DOC-03-2
+  tracker: devtask
+  title_vi: 'Cầu nối khách: Hai lớp đào tạo vai hiện trường (2/2)'
+  spec_refs:
+    sc: []
+    api: []
+    tech: []
+    bang: []
+    fr: []
+    adr: []
+    nfr: []
+    sd:
+    - trien_khai.d
+  labels:
+  - type:devtask
+  - team:brse
+  owner: BrSE
+  priority: 3
+  premise_refs: []
+  gap_refs: []
+  mo_ta: Dạy hai lớp vai hiện trường trên giáo trình DOC-02 ở môi trường thử, chấm bài thực hành và gửi khách biên bản xin xác nhận.
+  pham_vi: ''
+  luong_chinh: []
+  tieu_chi_nghiem_thu:
+  - Mỗi lớp dạy đủ các mục của giáo trình cho vai đó; bài thực hành của từng học viên được chấm và ghi kết quả ở issue.
+  - Biên bản hai lớp bằng tiếng Nhật có người thứ hai đọc trước khi gửi khách; xác nhận của khách ghi ngày và người xác nhận.
   dinh_nghia_xong: []

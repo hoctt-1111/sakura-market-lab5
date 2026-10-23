@@ -31,8 +31,10 @@ owner_theo_leaf:
 owner_mien:
   giao_dich: [FG-03, FG-04, FG-05, FG-06, FG-07, FG-08]
   tai_chinh_nen: [FG-01, FG-02, FG-09, FG-10, FG-11, FG-12, FG-13, FG-14, E15, E16, E17, E18, E19, E20]
-owner_ngoai_le:
+owner_ngoai_le:   # khoá = tiền tố story hoặc key story đầy đủ (khớp key trước); áp cả lá có luật owner là chuỗi (INFRA)
   DSG: {BE: BE-1}
+  PLT-01-2: {INFRA: BE-1}   # 23/10 C06: khung module theo vùng dữ liệu là việc Tech Lead (slot BE-1), rút chuỗi Infra một người
+  PLT-02-5: {INFRA: BE-1}   # 23/10 C06: script che dữ liệu và nạp là việc BE, Tech Lead duyệt; song song với Infra
 
 sprint: {ten: Sprint, bat_dau: "2026-11-09", so_ngay: 14, so_luong: 6}   # P2 21/10: Sprint 1 = kickoff LAB-1 (P-51); 6 Iteration = 6 sprint đầu của 19
 
@@ -154,6 +156,10 @@ cau_truc:
     - {key: DSG-01, ly_do: "Tách theo sprint (P-58): lá BRSE 54.5 giờ > trần 47.6 giờ của BrSE; việc chuyển sang 2 story con DSG-01-1, DSG-01-2, mỗi story con một phần vừa một sprint."}
     - {key: DSG-01/BE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DSG-01-1/BE, DSG-01-2/BE."}
     - {key: DSG-01/BRSE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DSG-01-1/BRSE, DSG-01-2/BRSE."}
+    # 23/10 (plan 261023-0010): DOC-03 thêm theo review 22/10 rồi tách ngay vì lá BRSE vượt trần.
+    - {key: DOC-03, ly_do: "Tách theo sprint (P-58): lá BRSE 54.5 giờ > trần 47.6 giờ của BrSE; việc chuyển sang 2 story con DOC-03-1, DOC-03-2, mỗi story con hai lớp đào tạo vừa một sprint."}
+    - {key: DOC-03/BRSE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DOC-03-1/BRSE, DOC-03-2/BRSE."}
+    - {key: DOC-03/PM, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang DOC-03-1/PM, DOC-03-2/PM."}
     - {key: MIG-02, ly_do: "Tách theo sprint (P-58): lá BE 160 giờ > trần 95.2 giờ của BE-1; việc chuyển sang 2 story con MIG-02-1, MIG-02-2, mỗi story con một phần vừa một sprint."}
     - {key: MIG-02/BE, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang MIG-02-1/BE, MIG-02-2/BE."}
     - {key: MIG-02/DB, ly_do: "Lá gốc của story tách theo sprint (P-58); việc chuyển sang MIG-02-1/DB, MIG-02-2/DB."}

@@ -592,7 +592,7 @@ p:
     chot: "Cách thứ hai. Epic E20 có sáu story vận hành sprint MGT-01 tới MGT-06 (một cho mỗi Iteration đang có, lá PM) và bốn story chốt thiết kế với khách DSG-01 tới DSG-04 (lá BE của Tech Lead và lá BRSE); dưới E15 thêm UI-01 khung giao diện và CMN-01 khung máy chủ; dưới E17 thêm QA-00 khung kiểm thử tích hợp và REG-01 hồi quy trước phát hành; dưới E19 thêm DOC-01, DOC-02 hướng dẫn người dùng theo vai. Cầu nối tiếng Nhật xuyên suốt của BrSE và việc thiết kế đã nằm trong gói LAB-4 vẫn ở ngoài backlog."
     vi_sao: "Bản soát 21/10 chỉ ra hơn bốn nghìn giờ việc của LAB-1 (EF-01, EF-26, EF-30, EF-31 và phần thiết kế) không có ticket nên burndown không thấy, còn định nghĩa xong của lá FE và BE đòi kiểm thử chạy xanh trong CI mà không có việc dựng khung kiểm thử nào. Tách thành issue thì ước được, xếp sprint được và khách thấy việc chốt thiết kế trước khi nhóm chức năng vào sprint."
     nguon: "`lab-01/registry/effort-other.yaml` (EF-01, EF-22, EF-26, EF-30, EF-31) · `lab-05/registry/team.yaml` «dinh_nghia_xong_mau» (FE, BE đòi kiểm thử chạy xanh trong CI) · `lab-05/registry/xuyen-suot.yaml` «xuyen_suot» (15 story mới) · bản soát của senior PM/dev ngày 21/10 (nội bộ)"
-    anh_huong: [E20, UI-01, CMN-01, QA-00, REG-01-1, REG-01-2, DOC-01, DOC-02]
+    anh_huong: [E20, UI-01, CMN-01, QA-00, REG-01-1, REG-01-2, DOC-01, DOC-02, DOC-03-1, DOC-03-2]
   - ma: P-56
     nhom: huong_chot
     spec: "Giờ ước lượng của issue điều tra"
@@ -623,3 +623,14 @@ p:
     vi_sao: "Sau khi hệ số k hiệu chuẩn theo nhóm (P-57), 19 lá hạ tầng, nghiệm thu, di trú và chốt thiết kế có giờ từ 54,5 tới 231, lớn hơn trần 47,6 hay 95,2 giờ một sprint của vai; để nguyên thì Sprint 1 không có lá nền tảng nào và kế hoạch sprint không phản ánh được việc. Tách theo sprint giữ nguyên tổng giờ, cho từng phần có tiêu chí xong riêng và đặt được Start/Due Date thật."
     nguon: "`lab-05/registry/uoc-luong/quy-uoc-sprint.yaml` «nang_luc_gio, brse_inv, tran, so_nguoi» · `lab-05/registry/uoc-luong/gio-final.json` · `lab-05/registry/xuyen-suot.yaml` «tach_theo_sprint» · `lab-05/registry/team.yaml` «dong_thua» · quyết định người duyệt ngày 22/10 (nội bộ)"
     anh_huong: [E15, E16, E17, E18, E19, E20]
+  - ma: P-59
+    nhom: huong_chot
+    spec: "Tệp xuất kế toán đã gửi mà sai nội dung"
+    phuong_an_lab4:
+      - "Chạy lại cùng mã lô như ADR-014 §2 và mục hoàn nguyên của thiết kế hệ thống nói: KH-182 trả đúng tệp đã lưu để bên nhận đối chiếu, nên chỉ chữa được lỗi truyền nhận, không chữa được nội dung sai vì nghiệp vụ (review PM/dev 22/10, C03)."
+      - "Sửa hoặc thay tệp đã gửi, hoặc xuất lô thứ hai cùng 業務日: phá bất biến một ngày một lô và tệp đã gửi là bản gốc (ADR-014, A7), hai bên lệch nhau về cái gì đã được gửi."
+      - "Tách hai trường hợp: lỗi truyền nhận chạy lại cùng mã lô; sai nội dung đi qua điều chỉnh có duyệt của FG-06 trên 業務日 kế tiếp và xuất ở lô của ngày đó, dòng điều chỉnh mang tham chiếu giao dịch gốc."
+    chot: "Cách thứ ba, không mở câu hỏi khách: đường bù nằm trọn trong quy tắc đã có (điều chỉnh có duyệt của FG-06 vốn là đường bù cho sai sót sau khoá ngày), tệp đã gửi không sửa, không thay, không lô thứ hai cùng ngày; chạy lại cùng mã lô chỉ cho lỗi truyền nhận. Khách xác nhận đường bù ở buổi duyệt kế hoạch hoàn nguyên (định nghĩa xong của REL-02-2) trước ngày phát hành; khách đòi chứng từ hiệu chỉnh riêng hoặc xuất lại lô đã gửi thì thêm story ở FG-11 và ca nghiệm thu ở E17. REL-02-2, KH-182/BE và G-E19-03 viết theo hướng này; không thêm issue."
+    vi_sao: "Giữ bất biến của ADR-014 và A7 mà vẫn có đường sửa sai nghiệp vụ; dùng lại cơ chế FG-06 thay vì đẻ cơ chế mới; quyết định nằm trong phạm vi thiết kế đã chốt với khách nên không cần câu hỏi riêng, chỉ cần khách duyệt kế hoạch hoàn nguyên."
+    nguon: "`lab-05/registry/backlog/E19.yaml` REL-02-2 «Đường bù» · `lab-05/registry/backlog/FG-11.yaml` KH-182/BE «chạy lại cùng mã lô trả tệp đã lưu» · ADR-014 §2, §4 của bộ spec LAB-4 · review PM/dev 22/10 C03 (nội bộ)"
+    anh_huong: [REL-02-2, KH-182, SC-114]

@@ -1211,7 +1211,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-23
@@ -1275,7 +1275,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -1463,7 +1463,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-23
@@ -1526,7 +1526,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -1588,7 +1588,7 @@ items:
   labels:
   - type:story
   - spec-gap
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-12
@@ -1653,7 +1653,7 @@ items:
   labels:
   - type:devtask
   - team:backend
-  owner: BE-1
+  owner: BE-2
   priority: 3
   premise_refs:
   - P-01
@@ -2206,6 +2206,7 @@ items:
   - P-01
   - P-11
   - P-17
+  - P-59
   gap_refs:
   - G-FG11-05
   - G-FG11-08
@@ -2214,7 +2215,7 @@ items:
   pham_vi: ''
   luong_chinh: []
   tieu_chi_nghiem_thu:
-  - Mỗi 業務日 (ngày nghiệp vụ) có tối đa một lô; chạy lại cùng mã lô trả tệp đã lưu, không tính lại từ dữ liệu (G-FG11-05).
+  - Mỗi 業務日 (ngày nghiệp vụ) có tối đa một lô; chạy lại cùng mã lô trả tệp đã lưu, không tính lại từ dữ liệu (G-FG11-05); tệp đã gửi không sửa, sai nội dung đi qua điều chỉnh có duyệt ở ngày kế (P-59).
   - Tổng tiền theo người tham gia dùng luật đếm giao dịch còn hiệu lực của SC-070/BE; số thuế tính theo bảng ba mức ở cấu hình, mức áp cho từng dòng là tham số chờ INV-GD-04 (P-11, G-FG11-08).
   - Ngày chưa khoá trả một mã lỗi riêng thêm vào bảng mã lỗi chung; lỗi ghi tệp trả 500 M_25, lần chạy mang trạng thái lỗi và gọi dịch vụ thông báo của SC-121/BE (G-FG12-06).
   dinh_nghia_xong: []
