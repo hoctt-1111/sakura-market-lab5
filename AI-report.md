@@ -381,13 +381,13 @@ Giờ người, giờ agent và giờ máy, đo theo nhật ký hoặc ước t�
 <!-- gen:ai-gio:start -->
 | Loại giờ | Đo (phút) | Ước (phút) | Tổng (giờ) |
 | --- | --- | --- | --- |
-| agent (AI chạy) | 237 | 2.985 | 53,7 |
-| người (đọc, duyệt, quyết) | 0 | 338 | 5,6 |
+| agent (AI chạy) | 237 | 3.200 | 57,3 |
+| người (đọc, duyệt, quyết) | 0 | 363 | 6 |
 | máy (lệnh ghi, gate, chụp) | 448 | 3 | 7,5 |
 | dùng chung với lab khác | 0 | 50 | 0,8 |
-| Tổng | 685 | 3.376 | 67,6 |
+| Tổng | 685 | 3.616 | 71,6 |
 
-Phạm vi bảng giờ: 12–23/10/2026, từ bước chia việc tới báo cáo tiến độ và đợt sửa trước nộp.
+Phạm vi bảng giờ: 12–24/10/2026, từ bước chia việc tới báo cáo tiến độ và đợt sửa trước nộp.
 
 Nguồn: nhật ký giờ theo chặng (`nhat-ky-gio.tsv`); cột Đo lấy từ mốc giờ trong nhật ký lệnh và giờ bắt đầu/kết thúc lượt agent, cột Ước là ước của người ghi; dòng ghi `uoc-mtime` ước từ giờ sửa file đầu và cuối của chặng.
 <!-- gen:ai-gio:end -->

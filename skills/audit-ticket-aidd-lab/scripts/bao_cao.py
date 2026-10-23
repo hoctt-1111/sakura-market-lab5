@@ -78,8 +78,9 @@ def dung(nc, kq: dict, toi_da: int = TOI_DA) -> str:
 
 def bang_tieu_chi(tc: dict) -> str:
     ra = ["# Tiêu chí audit", "", f"Thước đo: {tc.get('nguon_quy_uoc', '')}. Ngày: {tc.get('ngay', '')}.", "",
-          "| Mã | Chiều | Tiêu chí | Nguồn | Cách đo | Mức | Áp dụng | Lý do / ghi chú |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+          "| Mã | Chiều | Tiêu chí | Nguồn | Cách đo | Mức | Áp dụng | Lý do / ghi chú | Cách sửa |",
+          "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for t in tc["tieu_chi"]:
         ra.append(f"| {t['ma']} | {t['chieu']} | {_o(t['ten'])} | {_o(t['nguon'])} | {_o(t['cach_do'])} | {t['muc']} | "
-                  f"{'có' if t['ap_dung'] else 'không'} | {_o(t.get('ly_do') or t.get('ghi_chu') or '')} |")
+                  f"{'có' if t['ap_dung'] else 'không'} | {_o(t.get('ly_do') or t.get('ghi_chu') or '')} | {_o(t.get('cach_sua') or '')} |")
     return "\n".join(ra) + "\n"

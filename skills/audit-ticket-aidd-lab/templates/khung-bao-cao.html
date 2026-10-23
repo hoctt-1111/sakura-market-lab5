@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TIEU_DE__</title>
+<style>
+:root { --nen:#f7f7f5; --the:#ffffff; --chu:#1f2328; --mo:#59636e; --vien:#d8dee4;
+  --b:#c62828; --b-nen:#fdecea; --w:#b26a00; --w-nen:#fff4e0; --i:#1565c0; --i-nen:#e8f1fb; --nhan:#eef1f4; }
+@media (prefers-color-scheme: dark) { :root { --nen:#16181c; --the:#1f2228; --chu:#e6e8eb; --mo:#9aa4af; --vien:#343a42;
+  --b:#ef9a9a; --b-nen:#3a1f1f; --w:#ffcc80; --w-nen:#3a2e1a; --i:#90caf9; --i-nen:#1a2a3a; --nhan:#2a2f36; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--nen); color:var(--chu); font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; overflow-wrap:anywhere; }
+main { max-width:1100px; margin:0 auto; padding:16px; }
+h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:16px; margin:20px 0 8px; }
+a { color:var(--i); } .mo { color:var(--mo); font-size:13px; }
+.kpi { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+.kpi div { background:var(--the); border:1px solid var(--vien); border-radius:8px; padding:8px 12px; min-width:120px; }
+.kpi b { display:block; font-size:22px; }
+.dk { position:sticky; top:0; z-index:2; background:var(--nen); padding:8px 0; border-bottom:1px solid var(--vien);
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.dk button { border:1px solid var(--vien); background:var(--the); color:var(--chu); border-radius:6px; padding:5px 10px; cursor:pointer; }
+.dk button[aria-pressed=true] { border-color:var(--chu); font-weight:600; }
+.dk input, .dk select { border:1px solid var(--vien); background:var(--the); color:var(--chu); border-radius:6px; padding:5px 8px; }
+.dk input[type=search] { flex:1; min-width:180px; }
+details.ticket, details.rule { background:var(--the); border:1px solid var(--vien); border-radius:8px; margin:6px 0; }
+summary { cursor:pointer; padding:8px 12px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.so { font-weight:600; min-width:48px; } .td { flex:1; min-width:200px; }
+.chip { font-size:12px; border-radius:10px; padding:1px 8px; white-space:nowrap; }
+.B { color:var(--b); background:var(--b-nen); } .W { color:var(--w); background:var(--w-nen); } .I { color:var(--i); background:var(--i-nen); }
+.than { padding:4px 12px 12px; }
+.hien { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:2px 12px; background:var(--nhan);
+  border-radius:6px; padding:8px; font-size:13px; margin-bottom:8px; }
+.hien span { color:var(--mo); }
+.vp { border-left:4px solid var(--vien); padding:6px 10px; margin:8px 0; }
+.vp.B { border-color:var(--b); background:none; color:inherit; } .vp.W { border-color:var(--w); background:none; color:inherit; }
+.vp.I { border-color:var(--i); background:none; color:inherit; }
+.vp p { margin:2px 0; display:flex; gap:8px; } .vp .nhan-dong { color:var(--mo); flex:0 0 92px; }
+table { width:100%; border-collapse:collapse; background:var(--the); font-size:13px; }
+th, td { border:1px solid var(--vien); padding:5px 8px; text-align:left; vertical-align:top; overflow-wrap:normal; word-break:normal; }
+.bang { overflow-x:auto; }
+@media (max-width:640px) { .td { min-width:100%; } .kpi div { min-width:45%; } .vp p { flex-direction:column; gap:0; }
+  .vp .nhan-dong { flex:none; } .dk input[type=search] { min-width:100%; } }
+</style>
+</head>
+<body>
+<main>
+__NOI_DUNG__
+</main>
+<script>
+(function () {
+  var tabs = document.querySelectorAll("[data-tab]"), secs = document.querySelectorAll("section.tab");
+  function moTab(id) {
+    secs.forEach(function (s) { s.hidden = s.id !== id; });
+    tabs.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.tab === id); });
+  }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { moTab(b.dataset.tab); }); });
+  moTab("tab-ticket");
+  var tim = document.getElementById("tim"), rule = document.getElementById("loc-rule"), muc = document.querySelectorAll(".loc-muc");
+  function loc() {
+    var q = tim.value.trim().toLowerCase(), r = rule.value, bat = {};
+    muc.forEach(function (c) { bat[c.value] = c.checked; });
+    document.querySelectorAll("details.ticket").forEach(function (t) {
+      var con = 0;
+      t.querySelectorAll(".vp").forEach(function (v) {
+        var ok = bat[v.dataset.muc] && (!r || v.dataset.ma === r); v.hidden = !ok; if (ok) con++;
+      });
+      t.hidden = !con || (q && t.dataset.tim.indexOf(q) < 0);
+    });
+    document.querySelectorAll("details.rule").forEach(function (d) {
+      d.hidden = !bat[d.dataset.muc] || (r && d.dataset.ma !== r);
+    });
+  }
+  [tim, rule].forEach(function (e) { e.addEventListener("input", loc); });
+  muc.forEach(function (c) { c.addEventListener("change", loc); });
+  function moHash() {
+    var t = null;
+    try { t = location.hash ? document.querySelector(decodeURIComponent(location.hash)) : null; } catch (e) { t = null; }
+    if (!t) return;
+    var s = t.closest("section.tab");
+    if (s) moTab(s.id);
+    if (t.tagName === "DETAILS") { t.hidden = false; t.open = true; t.querySelectorAll(".vp").forEach(function (v) { v.hidden = false; }); }
+    t.scrollIntoView();
+  }
+  window.addEventListener("hashchange", moHash);
+  document.addEventListener("click", function (ev) {   // bấm lại cùng một #neo: hashchange không bắn
+    if (ev.target.closest && ev.target.closest('a[href^="#"]')) setTimeout(moHash, 0);
+  });
+  moHash();
+})();
+</script>
+</body>
+</html>

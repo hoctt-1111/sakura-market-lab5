@@ -1,6 +1,6 @@
 ---
 name: audit-ticket-aidd-lab
-description: Audit ticket trên GitHub Project v2 theo bảng tiêu chí YAML (quy ước vận hành Project của công ty, bản mã hoá, cộng quy ước tự khai của dự án) — chụp Project chỉ đọc, chạy luật trên ảnh chụp, xuất báo cáo Markdown theo mức Chặn / Lệch quy ước / Ghi nhận. Dùng khi người dùng nói «audit ticket», «kiểm board theo quy ước», «ticket có đúng quy định không», «/audit-ticket-aidd-lab».
+description: Audit ticket trên GitHub Project v2 theo bảng tiêu chí YAML (quy ước vận hành Project của công ty, bản mã hoá, cộng quy ước tự khai của dự án) — chụp Project chỉ đọc, chạy luật trên ảnh chụp, xuất báo cáo HTML liệt kê từng ticket vi phạm, rule bị phạm, sai ở đâu và cách sửa, theo mức Chặn / Lệch quy ước / Ghi nhận. Dùng khi người dùng nói «audit ticket», «kiểm board theo quy ước», «ticket có đúng quy định không», «/audit-ticket-aidd-lab».
 ---
 
 # audit-ticket-aidd-lab
@@ -28,6 +28,7 @@ Không dùng để: sửa board, đọc thân issue (skill chỉ đọc field v�
 | `scripts/audit_board.py` | Ba lệnh `snapshot`, `audit`, `tieu-chi` |
 | `scripts/luat_*.py` | Một hàm cho mỗi tiêu chí áp dụng, đăng ký theo mã |
 | `docs/tieu-chi.md` | Bảng tiêu chí sinh từ `tieu-chi.yaml` (lệnh `tieu-chi`) |
+| `templates/khung-bao-cao.html` | Khung HTML của báo cáo (CSS, JS lọc và tìm nội tuyến) |
 | `vi-du/` | Ảnh chụp mẫu 26 issue, seed, kế hoạch sprint, phụ thuộc mẫu; khoá `mong_doi` trong ảnh ghi tập issue mỗi tiêu chí phải bắt |
 
 ## Các lệnh
@@ -38,14 +39,14 @@ S=skills/audit-ticket-aidd-lab/scripts
 # 0. Chạy thử không cần mạng trên ảnh chụp mẫu đi kèm (26 issue, mỗi tiêu chí có vi phạm cài sẵn)
 V=skills/audit-ticket-aidd-lab/vi-du
 python3 $S/audit_board.py audit --snapshot $V/anh-chup-mau.json --seed-dir $V/seed-mau \
-  --sprint-plan $V/sprint-plan-mau.json --phu-thuoc $V/phu-thuoc-mau.yaml --out bao-cao-mau.md
+  --sprint-plan $V/sprint-plan-mau.json --phu-thuoc $V/phu-thuoc-mau.yaml --out bao-cao-mau.html
 # 1. Chụp Project (chỉ đọc) → ảnh chụp JSON
 python3 $S/audit_board.py snapshot --config skills/audit-ticket-aidd-lab/config/lab5.yaml --out bang-chung/anh-chup.json
 # 2. Audit trên ảnh chụp (không gọi mạng); ba nguồn ngoài là tuỳ chọn, tệp của dự án bạn.
 #    Repo này: seed epic ở backlog/backlog/ (backlog/ ngoài cùng là tệp đội, nhãn, tiền đề — không phải seed)
 python3 $S/audit_board.py audit --snapshot bang-chung/anh-chup.json \
   --seed-dir backlog/backlog --sprint-plan sprint-plan.json --phu-thuoc phu-thuoc-la.yaml \
-  --out bao-cao-audit.md
+  --out bao-cao-audit.html        # bỏ --out cũng ra tệp này; --out *.md ra Markdown
 # 3. In bảng tiêu chí
 python3 $S/audit_board.py tieu-chi --out skills/audit-ticket-aidd-lab/docs/tieu-chi.md
 ```
@@ -62,7 +63,15 @@ Nguồn ngoài, thiếu thì tiêu chí in «bỏ qua: thiếu nguồn», không
 
 ## Đầu ra
 
-Báo cáo Markdown: dòng đầu ghi Project, giờ chụp, ngày xét, số issue → «Kết luận» đếm theo mức và nêu mã bị bỏ qua → ba bảng Chặn (B), Lệch quy ước (W), Ghi nhận (I), mỗi dòng có link issue và lý do → «Không áp dụng» kèm lý do → «Phủ chiều» liệt kê mọi tiêu chí áp dụng, in cả số 0 → phụ lục đếm theo tracker và Status, và danh sách đủ số issue khi bảng chi tiết bị cắt (mặc định 60 dòng mỗi tiêu chí).
+Mặc định là **một tệp HTML tự chứa** (không tải gì từ mạng, mở thẳng bằng trình duyệt, sáng/tối theo máy, đọc được trên điện thoại):
+
+- Đầu trang: Project, giờ chụp, ngày xét, số issue; ô đếm Chặn / Lệch quy ước / Ghi nhận, số ticket vi phạm, số rule có vi phạm, mã bị bỏ qua vì thiếu nguồn.
+- Thanh lọc: tab **Theo ticket** · **Theo rule** · **Tiêu chí**, bật tắt từng mức, chọn một rule, ô tìm theo `#số` hoặc khoá.
+- **Theo ticket** (mặc định): mỗi ticket vi phạm một dòng, xếp mức nặng nhất trước; mở ra thấy giá trị hiện tại của ticket (Status, Owner, Priority, Sprint, ngày, Story Point, giờ, trạng thái issue GitHub, cha, nhãn) và từng rule nó phạm: mã, mức, rule nói gì, **sai ở đâu** (lý do do luật sinh, có giá trị cụ thể), **cách sửa** (khoá `cach_sua` của `tieu-chi.yaml`), nguồn rule. Số issue là link mở GitHub; thêm `#t-<số>` vào URL để mở thẳng ticket đó.
+- **Phát hiện không gắn một ticket**: khoá seed thiếu issue, tải vượt trần theo Owner × Sprint, Project chưa public hay thiếu field.
+- **Theo rule**: mỗi rule có vi phạm một mục, liệt kê ticket kèm lý do. **Tiêu chí**: đủ 39 tiêu chí với kết quả (số phát hiện, bỏ qua, không áp dụng kèm lý do) và cách sửa.
+
+`--out <tệp>.md` ra báo cáo Markdown cùng nội dung theo rule (dùng để so bằng diff): Kết luận → Chặn / Lệch quy ước / Ghi nhận → Không áp dụng → Phủ chiều (in cả số 0) → phụ lục, danh sách đủ khi bảng bị cắt (60 dòng mỗi tiêu chí).
 
 ## Dùng cho board khác
 
