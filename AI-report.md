@@ -35,10 +35,10 @@ Ghi SWP đã chốt lên trường point bằng Agent: Agent đọc file SWP đ�
 | owner | Owner ← vai theo miền và cân giờ trong seed | 263 | 0 |
 | than | Thân, title, nhãn issue ← seed | 826 | 0 |
 | iteration | Cấu hình Iteration của field Sprint | 1 | 0 |
-| readme | README và mô tả ngắn của Project | 2 | 0 |
+| readme | README và mô tả ngắn của Project | 3 | 0 |
 | dong-thua | Bình luận lý do, nhãn thừa, đóng issue thừa | 156 | 0 |
 
-Tổng 3478 lệnh ghi field thành công (các pha của `push-fields`: mỗi lệnh một item·field, so trước khi ghi); 985 lệnh ghi thân issue, Iteration và README thành công (hàng `than` gồm mọi lượt sửa thân từ khi đẩy backlog, mỗi lần gọi GitHub một dòng).
+Tổng 3478 lệnh ghi field thành công (các pha của `push-fields`: mỗi lệnh một item·field, so trước khi ghi); 986 lệnh ghi thân issue, Iteration và README thành công (hàng `than` gồm mọi lượt sửa thân từ khi đẩy backlog, mỗi lần gọi GitHub một dòng).
 <!-- gen:ai-ghi-field:end -->
 
 Pha giả lập có số lệnh lớn hơn số ô của kịch bản: kịch bản được sửa một lần sau khi phát hiện mâu thuẫn (mục Sự cố), rồi ghi lại đúng phần ô đổi và xoá hai ngày Done Date cũ; các pha khác mỗi ô ghi một lần.
@@ -380,11 +380,11 @@ Giờ người, giờ agent và giờ máy, đo theo nhật ký hoặc ước t�
 <!-- gen:ai-gio:start -->
 | Loại giờ | Đo (phút) | Ước (phút) | Tổng (giờ) |
 | --- | --- | --- | --- |
-| agent (AI chạy) | 237 | 2.965 | 53,4 |
-| người (đọc, duyệt, quyết) | 0 | 334 | 5,6 |
-| máy (lệnh ghi, gate, chụp) | 432 | 3 | 7,2 |
+| agent (AI chạy) | 237 | 2.985 | 53,7 |
+| người (đọc, duyệt, quyết) | 0 | 338 | 5,6 |
+| máy (lệnh ghi, gate, chụp) | 448 | 3 | 7,5 |
 | dùng chung với lab khác | 0 | 50 | 0,8 |
-| Tổng | 669 | 3.352 | 67 |
+| Tổng | 685 | 3.376 | 67,6 |
 
 Phạm vi bảng giờ: 12–23/10/2026, từ bước chia việc tới báo cáo tiến độ và đợt sửa trước nộp.
 
