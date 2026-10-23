@@ -1,0 +1,9 @@
+cung_story:
+  TEST:
+  - FE
+  - BE
+  - DB
+  - INFRA
+moc: {}
+ngoai_le_epic: []
+ngoai_le_tien_to: []

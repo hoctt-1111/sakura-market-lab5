@@ -47,7 +47,7 @@ Bảng liệt kê mọi mục ở gốc repo, đọc từ cây thư mục thật
 | `progress-report.md` | Báo cáo tiến độ của sprint giả lập |
 | `AI-report.md` | Cách dùng AI cho break task, chấm SWP, quy giờ, báo cáo tiến độ |
 | `reports/` | Báo cáo HTML của skill chấm SWP: estimate-swp-github-hoctt-1111-projects-3-20261019-224426.html, swp-bo-sung-20261021.html, swp-bo-sung-20261022-2.html, swp-bo-sung-20261022.html, swp-bo-sung-20261023-2.html, swp-bo-sung-20261023.html |
-| `skills/` | Skill tự viết: `create-gh-issues` |
+| `skills/` | Skill tự viết: `audit-ticket-aidd-lab`, `create-gh-issues` |
 | `backlog/` | Danh sách việc nguồn dạng YAML, cùng nguồn với issue trên Project (25 file: epic, đội, nhãn, PREMISE, chỗ hở) |
 | `.gitignore` | Bỏ khỏi git file tạm của máy, file PDF và file `.env*` |
 <!-- gen:readme-cau-truc:end -->

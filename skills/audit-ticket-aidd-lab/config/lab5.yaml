@@ -1,0 +1,76 @@
+# Cấu hình board mẫu (LAB-5). Board khác: sửa repo, project_*, field_map, luồng Status, nhãn, năng lực.
+# Giá trị chép từ registry/team.yaml, labels.yaml, uoc-luong/quy-uoc-sprint.yaml, tools/board_seed_rules.py (23/10/2026).
+repo: hoctt-1111/sakura-market-lab5
+project_owner: hoctt-1111
+project_number: 3
+field_map: {status: Status, priority: Priority, owner: Owner, sprint: Sprint, point: Story Point, uoc: Estimated time,
+            da_lam: Spent time, bat_dau: Start Date, han: Due Date, xong: Done Date}
+status_luong: [New, Planning, In Progress, In Review, QA Testing, Pending, Closed]
+status_chua_lam: [New, Planning]
+status_xong: Closed
+ngay_xet: "2026-11-19"   # ngày chụp giả lập Sprint 1 (sprint-1-ket-qua.json › ngay_chup); bỏ khoá này với board chạy thật
+status_chi_test: [QA Testing]          # trạng thái chỉ hợp lệ ở lá kiểm thử
+tracker_tien_to: {epic: "[EPIC]", story: "[STORY]", devtask: "[DEV TASK]", testdesign: "[TEST DESIGN]", investigation: "[INVESTIGATION]"}
+tracker_la: [devtask, testdesign]          # chấm trực tiếp, nhận Sprint
+tracker_sprint: [devtask, testdesign, investigation]
+cha_hop_le: {story: [epic], investigation: [epic], devtask: [story], testdesign: [story]}
+la_hau_to: {FE: devtask, BE: devtask, DB: devtask, INFRA: devtask, PM: devtask, BRSE: devtask, TEST: testdesign}
+nhan_type: {epic: "type:epic", story: "type:story", devtask: "type:devtask", testdesign: "type:testdesign", investigation: "type:investigation"}
+nhan_team: {FE: "team:frontend", BE: "team:backend", DB: "team:backend", INFRA: "team:infrastructure", PM: "team:pm", BRSE: "team:brse"}
+nhan_rang_buoc_tien_to: "constraint:"
+nhan_thay_the: da-thay-the
+priority: [Urgent, High, Normal]
+priority_cao: [Urgent, High]
+epic_uu_tien: [FG-01, FG-03, FG-04, FG-07, FG-08]
+epic_re: "^(FG-\\d{2}|E(1[5-9]|20))$"
+story_re: "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$"
+tieu_de_re: "^\\[[A-Z ]+\\] (\\S+) "
+nang_luc_sprint: {gio: 56, brse_inv: 56, tran: 0.85,
+                  so_nguoi: {BE-1: 2, BE-2: 1, FE-1: 1, FE-2: 1, QA: 2, Infra: 1, BrSE: 1, PM: 1}}
+owner:
+  epic: PM
+  story: PM
+  investigation: [BrSE, BE-1, PM]
+  la: {FE: {giao_dich: FE-1, tai_chinh_nen: FE-2}, BE: {giao_dich: BE-2, tai_chinh_nen: BE-1},
+       DB: {giao_dich: BE-2, tai_chinh_nen: BE-1}, TEST: QA, INFRA: Infra, PM: PM, BRSE: BrSE}
+  mien: {giao_dich: [FG-03, FG-04, FG-05, FG-06, FG-07, FG-08]}   # epic khác → tai_chinh_nen
+  ngoai_le: {DSG: {BE: BE-1}, PLT-01-2: {INFRA: BE-1}, PLT-02-5: {INFRA: BE-1}}
+  # Chuyển lá giữa hai vị trí cùng bộ phận để cân tải (chép từ owner-chuyen.yaml; áp sau ngoại lệ, trước miền)
+  chuyen:
+    - {story: API-202, loai: [BE], sang: BE-2}
+    - {story: API-220, loai: [BE], sang: BE-2}
+    - {story: DATA-FG12, loai: [DB], sang: BE-2}
+    - {story: DATA-FG13, loai: [DB], sang: BE-2}
+    - {story: SC-001, loai: [FE], sang: FE-1}
+    - {story: SC-002, loai: [BE], sang: BE-2}
+    - {story: SC-002, loai: [FE], sang: FE-1}
+    - {story: SC-004, loai: [BE], sang: BE-2}
+    - {story: SC-010, loai: [BE], sang: BE-2}
+    - {story: SC-012, loai: [BE], sang: BE-2}
+    - {story: SC-033, loai: [BE], sang: BE-1}
+    - {story: SC-081, loai: [BE], sang: BE-2}
+    - {story: SC-082, loai: [BE], sang: BE-2}
+    - {story: SC-090, loai: [BE], sang: BE-2}
+    - {story: SC-100, loai: [BE], sang: BE-2}
+    - {story: SC-100, loai: [FE], sang: FE-1}
+    - {story: SC-101, loai: [BE], sang: BE-2}
+    - {story: SC-101, loai: [FE], sang: FE-1}
+    - {story: SC-102, loai: [FE], sang: FE-1}
+    - {story: SC-103, loai: [BE], sang: BE-2}
+    - {story: SC-104, loai: [BE], sang: BE-2}
+    - {story: SC-104, loai: [FE], sang: FE-1}
+    - {story: SC-105, loai: [BE], sang: BE-2}
+    - {story: SC-105, loai: [FE], sang: FE-1}
+    - {story: SC-106, loai: [BE], sang: BE-2}
+    - {story: SC-106, loai: [FE], sang: FE-1}
+    - {story: SC-107, loai: [BE], sang: BE-2}
+    - {story: SC-107, loai: [FE], sang: FE-1}
+    - {story: SC-108, loai: [BE], sang: BE-2}
+    - {story: SC-108, loai: [FE], sang: FE-1}
+    - {story: SC-109, loai: [BE], sang: BE-2}
+    - {story: SC-109, loai: [FE], sang: FE-1}
+    - {story: SC-110, loai: [FE], sang: FE-1}
+    - {story: SC-111, loai: [BE], sang: BE-2}
+    - {story: SC-111, loai: [FE], sang: FE-1}
+    - {story: SC-112, loai: [BE], sang: BE-2}
+    - {story: SC-112, loai: [FE], sang: FE-1}

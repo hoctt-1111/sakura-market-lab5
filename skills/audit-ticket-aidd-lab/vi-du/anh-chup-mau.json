@@ -1,0 +1,939 @@
+{
+ "chup_luc": "2026-11-19T10:00:00",
+ "co_bam_than": false,
+ "mong_doi": {
+  "A1": [
+   9012,
+   9018,
+   9022,
+   "ZZ-03/TEST"
+  ],
+  "A2": [
+   9024
+  ],
+  "A3": [
+   9014
+  ],
+  "B1": [
+   9004,
+   9019,
+   9024,
+   9027
+  ],
+  "B2": [
+   9024
+  ],
+  "B3": [
+   9019
+  ],
+  "B4": [
+   "Infra|Sprint 1"
+  ],
+  "C1": [
+   9017
+  ],
+  "C2": [
+   9018
+  ],
+  "C3": [
+   9019
+  ],
+  "C3b": [
+   9005,
+   9008
+  ],
+  "C4": [
+   9016
+  ],
+  "C5": [
+   9013,
+   9016
+  ],
+  "C6": [
+   9010
+  ],
+  "C7": [
+   9013
+  ],
+  "D1": [
+   9002
+  ],
+  "D2": [
+   9010
+  ],
+  "D3": [
+   9006
+  ],
+  "D4": [
+   9004,
+   9011
+  ],
+  "E1": [
+   9020
+  ],
+  "E2": [
+   9021,
+   9023
+  ],
+  "E3": [],
+  "F1": [
+   9003,
+   9013
+  ],
+  "G1": [
+   9010
+  ],
+  "G2": [
+   9011
+  ],
+  "G3": [
+   9003,
+   9008,
+   9010,
+   9027
+  ],
+  "G4": [
+   9008
+  ],
+  "H1": [
+   9004,
+   9019
+  ],
+  "H2": [
+   9027
+  ],
+  "L1": [
+   9007
+  ],
+  "L2": [
+   9011
+  ],
+  "L3": []
+ },
+ "project": {
+  "id": "PVT_mau",
+  "number": 99,
+  "title": "Board mẫu audit",
+  "url": "https://example.invalid/projects/99",
+  "public": true,
+  "fields": [
+   "Assignees",
+   "Title",
+   "Labels",
+   "Parent issue",
+   "Sub-issues progress",
+   "Status",
+   "Priority",
+   "Owner",
+   "Sprint",
+   "Story Point",
+   "Estimated time",
+   "Spent time",
+   "Start Date",
+   "Due Date",
+   "Done Date"
+  ]
+ },
+ "repo": "mau/board-audit",
+ "items": [
+  {
+   "item_id": "PVTI_9001",
+   "loai": "ISSUE",
+   "so": 9001,
+   "title": "[EPIC] E20 Mục mẫu 9001",
+   "state": "OPEN",
+   "labels": [
+    "type:epic"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": null,
+   "con": {
+    "total": 7,
+    "completed": 1
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 34,
+    "Estimated time": 136,
+    "Spent time": 44,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9002",
+   "loai": "ISSUE",
+   "so": 9002,
+   "title": "[STORY] ZZ-01 Mục mẫu 9002",
+   "state": "OPEN",
+   "labels": [
+    "type:story",
+    "constraint:hitl"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 4,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "High",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 14,
+    "Estimated time": 30,
+    "Spent time": 9,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9003",
+   "loai": "ISSUE",
+   "so": 9003,
+   "title": "[DEV TASK] ZZ-01/FE Mục mẫu 9003",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:frontend",
+    "constraint:hitl"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9002,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "Closed",
+    "Priority": "High",
+    "Owner": "FE-2",
+    "Sprint": "Sprint 1",
+    "Story Point": 2,
+    "Estimated time": 6,
+    "Spent time": 5,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": "2026-11-12"
+   }
+  },
+  {
+   "item_id": "PVTI_9004",
+   "loai": "ISSUE",
+   "so": 9004,
+   "title": "[DEV TASK] ZZ-01/BE Mục mẫu 9004",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:backend",
+    "constraint:hitl"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9002,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "High",
+    "Owner": "BE-2",
+    "Sprint": "Sprint 1",
+    "Story Point": 3,
+    "Estimated time": 10,
+    "Spent time": 3,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-15",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9005",
+   "loai": "ISSUE",
+   "so": 9005,
+   "title": "[TEST DESIGN] ZZ-01/TEST Mục mẫu 9005",
+   "state": "OPEN",
+   "labels": [
+    "type:testdesign",
+    "constraint:hitl"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9002,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "High",
+    "Owner": "QA",
+    "Sprint": null,
+    "Story Point": 2,
+    "Estimated time": 8,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9006",
+   "loai": "ISSUE",
+   "so": 9006,
+   "title": "[STORY] ZZ-02 Mục mẫu 9006",
+   "state": "OPEN",
+   "labels": [
+    "type:story"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 8,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 15,
+    "Estimated time": 88,
+    "Spent time": 25,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9007",
+   "loai": "ISSUE",
+   "so": 9007,
+   "title": "[DEV TASK] ZZ-02/INFRA Mục mẫu 9007",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:infrastructure"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "Normal",
+    "Owner": "Infra",
+    "Sprint": "Sprint 1",
+    "Story Point": 8,
+    "Estimated time": 60,
+    "Spent time": 20,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9008",
+   "loai": "ISSUE",
+   "so": 9008,
+   "title": "[TEST DESIGN] ZZ-02/TEST Mục mẫu 9008",
+   "state": "OPEN",
+   "labels": [
+    "type:testdesign"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "Closed",
+    "Priority": "Normal",
+    "Owner": "QA",
+    "Sprint": "Sprint 1",
+    "Story Point": 2,
+    "Estimated time": 8,
+    "Spent time": 4,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": "2026-11-10"
+   }
+  },
+  {
+   "item_id": "PVTI_9009",
+   "loai": "ISSUE",
+   "so": 9009,
+   "title": "[INVESTIGATION] INV-ZZ Mục mẫu 9009",
+   "state": "OPEN",
+   "labels": [
+    "type:investigation"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "Pending",
+    "Priority": "Normal",
+    "Owner": "BrSE",
+    "Sprint": "Sprint 1",
+    "Story Point": 2,
+    "Estimated time": 8,
+    "Spent time": 2,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9010",
+   "loai": "ISSUE",
+   "so": 9010,
+   "title": "[STORY] ZZ-03 Mục mẫu 9010",
+   "state": "OPEN",
+   "labels": [
+    "type:story",
+    "constraint:jst"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 1,
+    "completed": 0
+   },
+   "field": {
+    "Status": "Closed",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": 2,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": "2026-11-15"
+   }
+  },
+  {
+   "item_id": "PVTI_9011",
+   "loai": "ISSUE",
+   "so": 9011,
+   "title": "[DEV TASK] ZZ-03/DB Mục mẫu 9011",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:backend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9010,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "FE-1",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": 2,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9012",
+   "loai": "ISSUE",
+   "so": 9012,
+   "title": "[DEV TASK] ZZ-99/FE Mục mẫu 9012",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:frontend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "FE-2",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9013",
+   "loai": "ISSUE",
+   "so": 9013,
+   "title": "[DEV TASK] ZZ-01/FE Mục mẫu 9013",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:frontend",
+    "constraint:hitl"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9002,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "QA Testing",
+    "Priority": null,
+    "Owner": "FE-2",
+    "Sprint": "Sprint 1",
+    "Story Point": 2,
+    "Estimated time": 6,
+    "Spent time": 1,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9014",
+   "loai": "ISSUE",
+   "so": 9014,
+   "title": "[DEV TASK] ZZ-OLD/BE Mục mẫu 9014",
+   "state": "CLOSED",
+   "labels": [
+    "type:devtask",
+    "team:backend",
+    "da-thay-the"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9015,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "BE-1",
+    "Sprint": "Sprint 1",
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": 3,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9015",
+   "loai": "ISSUE",
+   "so": 9015,
+   "title": "[STORY] ZZ-OLD Mục mẫu 9015",
+   "state": "CLOSED",
+   "labels": [
+    "type:story",
+    "da-thay-the"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 1,
+    "completed": 1
+   },
+   "field": {
+    "Status": "Closed",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9016",
+   "loai": "ISSUE",
+   "so": 9016,
+   "title": "[DEV TASK] ZZ-02/BE Mục mẫu 9016",
+   "state": "OPEN",
+   "labels": [
+    "type:story",
+    "team:backend"
+   ],
+   "assignees": [],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "BE-1",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9017",
+   "loai": "ISSUE",
+   "so": 9017,
+   "title": "[TASK] ZZ-02/DB Mục mẫu 9017",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:backend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "BE-1",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9018",
+   "loai": "ISSUE",
+   "so": 9018,
+   "title": "[DEV TASK] ZZ-02/QA Mục mẫu 9018",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "QA",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9019",
+   "loai": "ISSUE",
+   "so": 9019,
+   "title": "[DEV TASK] ZZ-02/PM Mục mẫu 9019",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:backend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9006,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": "Sprint 1",
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": 1,
+    "Start Date": "2026-11-22",
+    "Due Date": "2026-11-09",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9020",
+   "loai": "ISSUE",
+   "so": 9020,
+   "title": "[DEV TASK] ZZ-03/FE Mục mẫu 9020",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:frontend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": null,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "FE-2",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9021",
+   "loai": "ISSUE",
+   "so": 9021,
+   "title": "[STORY] ZZ-04 Mục mẫu 9021",
+   "state": "OPEN",
+   "labels": [
+    "type:story"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9022,
+   "con": {
+    "total": 1,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9022",
+   "loai": "ISSUE",
+   "so": 9022,
+   "title": "[EPIC] E19 Mục mẫu 9022",
+   "state": "OPEN",
+   "labels": [
+    "type:epic"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": null,
+   "con": {
+    "total": 1,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9023",
+   "loai": "ISSUE",
+   "so": 9023,
+   "title": "[DEV TASK] ZZ-04/FE Mục mẫu 9023",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:frontend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9021,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "FE-2",
+    "Sprint": null,
+    "Story Point": 1,
+    "Estimated time": 4,
+    "Spent time": null,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9024",
+   "loai": "ISSUE",
+   "so": 9024,
+   "title": "[STORY] ZZ-05 Mục mẫu 9024",
+   "state": "OPEN",
+   "labels": [
+    "type:story"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "New",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": "Sprint 1",
+    "Story Point": 0,
+    "Estimated time": 0,
+    "Spent time": null,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-22",
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9026",
+   "loai": "ISSUE",
+   "so": 9026,
+   "title": "[STORY] ZZ-06 Mục mẫu 9026",
+   "state": "OPEN",
+   "labels": [
+    "type:story"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9001,
+   "con": {
+    "total": 1,
+    "completed": 0
+   },
+   "field": {
+    "Status": "In Progress",
+    "Priority": "Normal",
+    "Owner": "PM",
+    "Sprint": null,
+    "Story Point": 2,
+    "Estimated time": 6,
+    "Spent time": 6,
+    "Start Date": null,
+    "Due Date": null,
+    "Done Date": null
+   }
+  },
+  {
+   "item_id": "PVTI_9027",
+   "loai": "ISSUE",
+   "so": 9027,
+   "title": "[DEV TASK] ZZ-06/BE Mục mẫu 9027",
+   "state": "OPEN",
+   "labels": [
+    "type:devtask",
+    "team:backend"
+   ],
+   "assignees": [
+    "u-mau"
+   ],
+   "cha": 9026,
+   "con": {
+    "total": 0,
+    "completed": 0
+   },
+   "field": {
+    "Status": "Closed",
+    "Priority": "Normal",
+    "Owner": "BE-1",
+    "Sprint": "Sprint 1",
+    "Story Point": 2,
+    "Estimated time": 6,
+    "Spent time": 6,
+    "Start Date": "2026-11-09",
+    "Due Date": "2026-11-17",
+    "Done Date": "2026-11-18"
+   }
+  }
+ ]
+}
